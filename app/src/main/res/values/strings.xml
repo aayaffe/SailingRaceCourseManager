@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SailingRaceCourseManager</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="dlg_location_error">Error with location</string>
+    <string name="dlg_ok">OK</string>
+    <string name="dlg_cancel">Cancel</string>
+</resources>
