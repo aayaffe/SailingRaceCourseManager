@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.communication.*;
 import com.aayaffe.sailingracecoursemanager.communication.Object;
@@ -127,18 +128,19 @@ public class MainActivity extends Activity {
         //qb.login("SRCMWorker"+ID, "Aa123456z", "1");
         qb.login(SP.getString("username","Manager1"), "Aa123456z", "1");
         runnable.run();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         if ((myLoc!=null)&&(myLoc.getLatLong()!=null)){
             this.mapView.getModel().mapViewPosition.setCenter(myLoc.getLatLong());
         }
         else {
             this.mapView.getModel().mapViewPosition.setCenter(new LatLong(32.9, 34.9));
         }
-        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) 06);
+        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) 8);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         windArrow.setRotation(Float.parseFloat(SP.getString("windDir","90"))+90);
         // tile renderer layer using internal render theme
 //        MapDataStore mapDataStore = new MapFile(getMapFile());
@@ -331,6 +333,27 @@ public class MainActivity extends Activity {
 
         workerLocs.clear();
         workerTexts.clear();
+    }
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+            System.exit(0);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+
+        }
+
     }
 
 }
