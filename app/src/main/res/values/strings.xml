@@ -6,4 +6,24 @@
     <string name="dlg_location_error">Error with location</string>
     <string name="dlg_ok">OK</string>
     <string name="dlg_cancel">Cancel</string>
+    <string name="inline_preferences">title1</string>
+    <string name="title_checkbox_preference">checkboxtitle2</string>
+    <string name="summary_checkbox_preference">summary</string>
+    <string name="dialog_based_preferences">dialog</string>
+    <string name="title_edittext_preference">title 3</string>
+    <string name="summary_edittext_preference">title4</string>
+    <string name="dialog_title_edittext_preference">dialog2</string>
+    <string name="title_list_preference">title5</string>
+    <string name="summary_list_preference">summary 2</string>
+    <string name="dialog_title_list_preference">dialog</string>
+    <string name="launch_preferences">launce</string>
+    <string name="title_fragment_preference">title10</string>
+    <string name="summary_fragment_preference">sammary2</string>
+    <string name="title_intent_preference">titleintent</string>
+    <string name="summary_intent_preference">sumamry intent</string>
+    <string name="preference_attributes">atribs</string>
+    <string name="title_parent_preference">titlae parent</string>
+    <string name="summary_parent_preference">sammary parent</string>
+    <string name="title_child_preference">titlechild</string>
+    <string name="summary_child_preference">sammary child</string>
 </resources>

@@ -105,4 +105,11 @@ public class TextMarker extends Marker {
     public void setOffsetY(int offsetY) {
         this.offsetY = offsetY;
     }
+    public void setText(String s) {
+        this.text = s;
+    }
+    public void setPaing(Paint p) {
+        this.paint = p;
+    }
+
 }

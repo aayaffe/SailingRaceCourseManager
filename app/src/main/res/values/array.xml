@@ -1,0 +1,16 @@
+<resources>
+    <string-array name="listArray">
+        <item>Manager1</item>
+        <item>Worker1</item>
+        <item>Worker2</item>
+        <item>Worker3</item>
+        <item>Worker4</item>
+    </string-array>
+    <string-array name="listValues">
+        <item>Manager1</item>
+        <item>Worker1</item>
+        <item>Worker2</item>
+        <item>Worker3</item>
+        <item>Worker4</item>
+    </string-array>
+</resources>

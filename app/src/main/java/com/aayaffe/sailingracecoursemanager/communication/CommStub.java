@@ -2,6 +2,8 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.location.Location;
 
+import java.util.List;
+
 /**
  * Created by aayaffe on 22/09/2015.
  */
@@ -22,6 +24,11 @@ public class CommStub implements ICommManager {
         ret.setLatitude(42.556418);
         ret.setLongitude(1.535633);
         return ret;
+    }
+
+    @Override
+    public List<Object> getAllLocs() {
+        return null;
     }
 
     @Override
