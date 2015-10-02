@@ -13,8 +13,8 @@
         android:defaultValue="Manager1"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues" />
-    <CheckBoxPreference android:title="Race Officer?"
+<!--    <CheckBoxPreference android:title="Race Officer?"
         android:defaultValue="false"
         android:summary="Select this If you are the Race Officer..."
-        android:key="manager"/>
+        android:key="manager"/> -->
 </PreferenceScreen>

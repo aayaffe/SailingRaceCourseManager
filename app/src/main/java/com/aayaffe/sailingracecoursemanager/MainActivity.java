@@ -5,9 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,12 +20,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.communication.*;
+import com.aayaffe.sailingracecoursemanager.communication.CommStub;
+import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.communication.Object;
+import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
+import com.aayaffe.sailingracecoursemanager.communication.QuickBlox;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
-import com.aayaffe.sailingracecoursemanager.geographical.MockLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
 
@@ -48,7 +47,6 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.HashMap;
@@ -130,7 +128,7 @@ public class MainActivity extends Activity {
                 this.mapView.getModel().frameBufferModel.getOverdrawFactor());
         gps = new OwnLocation(this);
         qb = new QuickBlox(this,getResources());
-        //qb.login("SRCMWorker"+ID, "Aa123456z", "1");
+        //qb = new CommStub();
         qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
         runnable.run();
         if ((myLoc!=null)&&(myLoc.getLatLong()!=null)){
@@ -212,14 +210,6 @@ public class MainActivity extends Activity {
     public void redrawLayers()
     {
         GraphicFactory gf = AndroidGraphicFactory.INSTANCE;
-
-//        Paint paintStroke = gf.createPaint();
-//        paintStroke.setStyle(Style.STROKE);
-//        paintStroke.setStrokeWidth(7);
-//        paintStroke.setColor(Color.BLUE);
-//        paintStroke.setDashPathEffect(new float[] { 25, 15 });
-//        paintStroke.setStrokeWidth(5);
-//        paintStroke.setStrokeWidth(3);
         Location myLocation = gps.getLoc();
         if (myLocation!=null) {
             if (SP.getString("username","Manager1").contains("Manager")){
@@ -227,10 +217,12 @@ public class MainActivity extends Activity {
             }else
                 myLoc.setBitmap(AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatgold)));
             myLoc.setLatLong(new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
-            this.mapView.getLayerManager().getLayers().remove(myLoc);
-            this.mapView.getLayerManager().getLayers().add(myLoc);
-            //this.mapView.getModel().mapViewPosition.setCenter(new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
-
+            try {
+                this.mapView.getLayerManager().getLayers().remove(myLoc);
+                this.mapView.getLayerManager().getLayers().add(myLoc);
+            }catch (IllegalStateException e) {
+                Log.e(TAG, "Error adding layers", e);
+            }
         }
         List<Object> l = qb.getAllLocs();
         for (Object o: l) {
@@ -261,12 +253,18 @@ public class MainActivity extends Activity {
                     m = new Marker(GeoUtils.toLatLong(o.location),b,0,0);
                 }
                 workerLocs.put(o.name, m);
-                this.mapView.getLayerManager().getLayers().remove(m);
-                this.mapView.getLayerManager().getLayers().add(m);
+                try {
+                    this.mapView.getLayerManager().getLayers().remove(m);
+                    this.mapView.getLayerManager().getLayers().add(m);
+                }catch (IllegalStateException e)
+                {
+                    Log.e(TAG,"Error adding layers",e);
+                }
+
                 if (myLocation!=null){
                     Paint p = gf.createPaint();
                     p.setColor(Color.BLACK);
-                    p.setTextSize(50);
+                    p.setTextSize((int) (16 * getResources().getDisplayMetrics().density));
                     int distance = myLocation.distanceTo(o.location)<5000?(int)myLocation.distanceTo(o.location):((int)(myLocation.distanceTo(o.location)/1609.34));
                     Log.v(TAG, "Distance to user " + o.name + " " + myLocation.distanceTo(o.location));
                     String units = myLocation.distanceTo(o.location)<5000?"m":"NM";
@@ -278,18 +276,19 @@ public class MainActivity extends Activity {
                         tm.setLatLong(GeoUtils.toLatLong(o.location));
                     }
                     else{
-                        tm = new TextMarker(bearing + "\\" + distance + units,p,GeoUtils.toLatLong(o.location),AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.worker)));
+                        tm = new TextMarker(bearing + "\\" + distance + units,p,GeoUtils.toLatLong(o.location),AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue)));
                     }
                     workerTexts.put(o.name, tm);
-                    this.mapView.getLayerManager().getLayers().remove(tm);
-                    this.mapView.getLayerManager().getLayers().add(tm);
+                    try {
+                        this.mapView.getLayerManager().getLayers().remove(tm);
+                        this.mapView.getLayerManager().getLayers().add(tm);
+                    }catch (IllegalStateException e) {
+                        Log.e(TAG, "Error adding layers", e);
+                    }
                 }
             }
         }
-//        if((l!=null)&&(myLocation!=null)){
-//
-//
-//
+
 ////            rbLine.setPaintStroke(paintStroke);
 ////            List<LatLong> geoPoints = rbLine.getLatLongs();
 ////            geoPoints.clear();
@@ -297,20 +296,8 @@ public class MainActivity extends Activity {
 ////            geoPoints.add(new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
 ////            this.mapView.getLayerManager().getLayers().remove(rbLine);
 ////            this.mapView.getLayerManager().getLayers().add(rbLine);
-//            Paint p = gf.createPaint();
-//            p.setColor(Color.BLACK);
-//            p.setTextSize(50);
-//            int distance = myLocation.distanceTo(l)>10?(int)myLocation.distanceTo(l):((int)(myLocation.distanceTo(l)/1609.34));
-//            String units = myLocation.distanceTo(l)>10?"NM":"Yd";
-//            int bearing = myLocation.bearingTo(l) > 0 ? (int) myLocation.bearingTo(l) : (int) myLocation.bearingTo(l)+360;
-//            workerText.setText(bearing + "\\" + distance + units);
-//            workerText.setPaing(p);
-//            workerText.setLatLong(new LatLong(l.getLatitude(), l.getLongitude()));
-//            workerText.setBitmap(AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.worker)));
-//            this.mapView.getLayerManager().getLayers().remove(workerText);
-//            this.mapView.getLayerManager().getLayers().add(workerText);
 //            //zoomToBounds(new LatLong(l.getLatitude(), l.getLongitude()),new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
-//        }
+
     }
 
     private void zoomToBounds(LatLong ll1, LatLong ll2)
