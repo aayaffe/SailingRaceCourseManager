@@ -1,6 +1,8 @@
 package com.aayaffe.sailingracecoursemanager;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -12,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +74,8 @@ public class MainActivity extends Activity {
     private ConfigChange unc = new ConfigChange();
     private ImageView windArrow;
     public static int REFRESH_RATE = 10000;
+    NotificationCompat.Builder mBuilder;
+    NotificationManager mNotifyMgr;
 
     SharedPreferences SP;
 
@@ -126,7 +131,7 @@ public class MainActivity extends Activity {
         gps = new OwnLocation(this);
         qb = new QuickBlox(this,getResources());
         //qb.login("SRCMWorker"+ID, "Aa123456z", "1");
-        qb.login(SP.getString("username","Manager1"), "Aa123456z", "1");
+        qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
         runnable.run();
         if ((myLoc!=null)&&(myLoc.getLatLong()!=null)){
             this.mapView.getModel().mapViewPosition.setCenter(myLoc.getLatLong());
@@ -135,6 +140,25 @@ public class MainActivity extends Activity {
             this.mapView.getModel().mapViewPosition.setCenter(new LatLong(32.9, 34.9));
         }
         this.mapView.getModel().mapViewPosition.setZoomLevel((byte) 8);
+        mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
+        Intent resultIntent = new Intent(this,MainActivity.class);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setOngoing(true);
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+        mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
     }
 
     @Override
@@ -165,6 +189,8 @@ public class MainActivity extends Activity {
         File file = new File(Environment.getExternalStorageDirectory(), MAPFILE);
         return file;
     }
+
+
 
 
     public Location getLoc() {
@@ -339,6 +365,8 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (exit) {
+            //mBuilder.setOngoing(false);
+            mNotifyMgr.cancelAll();
             finish(); // finish activity
             System.exit(0);
         } else {
