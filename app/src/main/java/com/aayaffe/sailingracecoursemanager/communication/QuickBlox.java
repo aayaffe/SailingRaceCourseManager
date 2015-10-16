@@ -54,7 +54,7 @@ public class QuickBlox implements ICommManager {
                 QBUsers.signIn(u, new QBEntityCallbackImpl<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
-                        // success
+                        Log.d(TAG,"signIn success");
                     }
 
                     @Override

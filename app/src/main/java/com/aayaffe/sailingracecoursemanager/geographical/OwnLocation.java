@@ -23,23 +23,23 @@ public class OwnLocation implements IGeo {
     }
     private Location getLastBestLocation() {
         Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        //Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         long GPSLocationTime = 0;
         if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
 
         long NetLocationTime = 0;
 
-        if (null != locationNet) {
-            NetLocationTime = locationNet.getTime();
-        }
-
-        if ( 0 < GPSLocationTime - NetLocationTime ) {
-            return locationGPS;
-        }
-        else {
-            return locationNet;
-        }
+//        if (null != locationNet) {
+//            NetLocationTime = locationNet.getTime();
+//        }
+        return locationGPS;
+//        if ( 0 < GPSLocationTime - NetLocationTime ) {
+//            return locationGPS;
+//        }
+//        else {
+//            return locationNet;
+//        }
     }
     private void InitGPS(Activity a){
         locationManager = (LocationManager) a.getSystemService(Context.LOCATION_SERVICE);
