@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class AppPreferences extends PreferenceActivity {
+    public static final String RENDERTHEME_MENU = "renderthememenu";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

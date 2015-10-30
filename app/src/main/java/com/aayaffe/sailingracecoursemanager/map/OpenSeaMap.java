@@ -3,6 +3,7 @@ package com.aayaffe.sailingracecoursemanager.map;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
+import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
@@ -16,6 +17,7 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.reader.MapDataStore;
@@ -32,23 +34,24 @@ public class OpenSeaMap {
     private TileCache tileCache;
     private TileRendererLayer tileRendererLayer;
 
-    private static final String MAPFILE = "andorra.map";
+    private static final String MAPFILE = "germany.map";
 
-    public MapView MapInit(Context c)
+    public void MapInit(Context c, MapView mv)
     {
-        if (mapView==null) {
-            mapView = new MapView(c);
-            this.mapView.setClickable(true);
-            this.mapView.getMapScaleBar().setVisible(false);
-            this.mapView.setBuiltInZoomControls(false);
-            this.mapView.getMapZoomControls().setZoomLevelMin((byte) 10);
-            this.mapView.getMapZoomControls().setZoomLevelMax((byte) 20);
-
-            tileCache = AndroidUtil.createTileCache(c, "mapcache",
-                    mapView.getModel().displayModel.getTileSize(), 1f,
-                    this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-        }
-        return mapView;
+//        if (mapView==null) {
+//            mapView = new MapView(c);
+//            this.mapView.setClickable(true);
+//            this.mapView.getMapScaleBar().setVisible(false);
+//            this.mapView.setBuiltInZoomControls(false);
+//            this.mapView.getMapZoomControls().setZoomLevelMin((byte) 10);
+//            this.mapView.getMapZoomControls().setZoomLevelMax((byte) 20);
+//
+//            tileCache = AndroidUtil.createTileCache(c, "mapcache",
+//                    mapView.getModel().displayModel.getTileSize(), 1f,
+//                    this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+//        }
+//        return mapView;
+        mapView = mv;
 
     }
 
@@ -126,5 +129,6 @@ public class OpenSeaMap {
         File file = new File(Environment.getExternalStorageDirectory(), MAPFILE);
         return file;
     }
+
 
 }

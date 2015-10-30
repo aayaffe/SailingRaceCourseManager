@@ -50,13 +50,11 @@ public class QuickBlox implements ICommManager {
         QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
             @Override
             public void onSuccess(QBSession session, Bundle params) {
-
                 QBUsers.signIn(u, new QBEntityCallbackImpl<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
                         Log.d(TAG,"signIn success");
                     }
-
                     @Override
                     public void onError(List<String> errors) {
                         Log.e(TAG, "Error Signing in");
@@ -64,7 +62,6 @@ public class QuickBlox implements ICommManager {
                 });
 
             }
-
             @Override
             public void onError(List<String> errors) {
                 Log.e(TAG, "Error creating session");
@@ -80,27 +77,21 @@ public class QuickBlox implements ICommManager {
         //Random randomGenerator = new Random();
         double latitude = l.getLatitude();//randomGenerator.nextDouble()+32.9;
         double longitude = l.getLongitude();//randomGenerator.nextDouble()+34.9;
-        String status = "Checked here!";
-//
+        String status = "";
         final QBLocation location = new QBLocation(latitude, longitude, status);
-
         QBLocations.createLocation(location, new QBEntityCallbackImpl<QBLocation>() {
             @Override
             public void onSuccess(QBLocation qbLocation, Bundle args) {
-
                 Log.d(TAG, "Success sending Loc");
             }
-
             @Override
             public void onError(List<String> errors) {
                 Log.e(TAG, "Error sending Loc");
                 for (String error: errors){
                     Log.e(TAG, error);
                 }
-
             }
         });
-
         return 0;
     }
 
