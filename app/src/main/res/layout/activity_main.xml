@@ -23,9 +23,9 @@
             android:layout_alignParentEnd="true"
             android:layout_gravity="top|right|end"
             android:src="@drawable/arrow"
-            android:layout_alignStart="@+id/fab" />
+            android:layout_alignStart="@+id/configFAB" />
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/configFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right|end"
@@ -34,4 +34,14 @@
             android:src="@drawable/settings"
             android:clickable="true"
             android:onClick="fabOnClick"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right|end"
+            android:src="@drawable/ic_add_white_48dp"
+            android:clickable="true"
+            android:layout_above="@+id/configFAB"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="25dp" />
    </RelativeLayout>

@@ -37,6 +37,7 @@ import com.aayaffe.sailingracecoursemanager.SamplesApplication;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
+import org.mapsforge.core.model.Point;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.util.MapViewerTemplate;
@@ -82,9 +83,21 @@ public abstract class SamplesBaseActivity extends MapViewerTemplate implements S
 
 	@Override
 	protected void createLayers() {
-		TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(this.tileCaches.get(0),
-				mapView.getModel().mapViewPosition, getMapFile(), getRenderTheme(), false, true);
-		this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
+//		TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(this.tileCaches.get(0),
+//				mapView.getModel().mapViewPosition, getMapFile(), getRenderTheme(), false, true	);
+//		this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
+		TileRendererLayer tileRendererLayer = new TileRendererLayer(
+				this.tileCaches.get(0), getMapFile(),
+				this.mapView.getModel().mapViewPosition,
+				false, true,
+				org.mapsforge.map.android.graphics.AndroidGraphicFactory.INSTANCE) {
+			@Override
+			public boolean onLongPress(LatLong tapLatLong, Point thisXY,
+									   Point tapXY) {
+				this.onLongPress(tapLatLong, thisXY, tapXY);
+				return true;
+			}
+		};
 
 		// needed only for samples to hook into Settings.
 		setMaxTextWidthFactor();
@@ -94,7 +107,7 @@ public abstract class SamplesBaseActivity extends MapViewerTemplate implements S
 	protected void createControls() {
 		setMapScaleBar();
 	}
-
+	public abstract boolean onLongPress(LatLong tapLatLong, Point thisXY, Point tapXY);
 	protected void createTileCaches() {
 		boolean persistent = sharedPreferences.getBoolean(SamplesApplication.SETTING_TILECACHE_PERSISTENCE, true);
 

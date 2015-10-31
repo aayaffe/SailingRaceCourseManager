@@ -1,27 +1,23 @@
 package com.aayaffe.sailingracecoursemanager;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.communication.CommStub;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.communication.Object;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
@@ -29,8 +25,6 @@ import com.aayaffe.sailingracecoursemanager.communication.QuickBlox;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
-import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
-import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
 import com.aayaffe.sailingracecoursemanager.map.OpenSeaMap;
 import com.aayaffe.sailingracecoursemanager.map.SamplesBaseActivity;
@@ -45,30 +39,21 @@ import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Color;
 import org.mapsforge.core.graphics.GraphicFactory;
 import org.mapsforge.core.graphics.Paint;
-import org.mapsforge.core.model.BoundingBox;
-import org.mapsforge.core.model.Dimension;
 import org.mapsforge.core.model.LatLong;
-import org.mapsforge.core.model.MapPosition;
-import org.mapsforge.core.util.LatLongUtils;
+import org.mapsforge.core.model.Point;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.util.AndroidUtil;
-import org.mapsforge.map.android.util.MapViewerTemplate;
-import org.mapsforge.map.android.view.MapView;
-import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
-import org.mapsforge.map.layer.download.tilesource.OnlineTileSource;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends SamplesBaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
+public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMenuItemClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
 
     // name of the map file in the external storage
     private static OpenSeaMap map = new OpenSeaMap();
@@ -88,10 +73,9 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
     SharedPreferences SP;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    protected TileDownloadLayer downloadLayer;
+    Marks marks = new Marks();
 
 
-    EditText mEdit;
     private Runnable runnable = new Runnable()
     {
 
@@ -103,6 +87,11 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
         }
     };
 
+    @Override
+    public boolean onLongPress(LatLong tapLatLong, Point thisXY, Point tapXY) {
+        Log.d(TAG,"LongPress in " + tapLatLong.toString());
+        return true;
+    }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -147,15 +136,7 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
 
     @Override
     protected void createLayers() {
-        this.downloadLayer = new TileDownloadLayer(this.tileCaches.get(0),
-                this.mapView.getModel().mapViewPosition, OpenStreetMapMapnik.INSTANCE,
-                AndroidGraphicFactory.INSTANCE);
-        mapView.getLayerManager().getLayers().add(this.downloadLayer);
-
-        mapView.getModel().mapViewPosition.setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
-        mapView.getModel().mapViewPosition.setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
-        mapView.getMapZoomControls().setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
-        mapView.getMapZoomControls().setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
+        return;
     }
 
 
@@ -166,7 +147,7 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
         this.mapView.getModel().displayModel.setFixedTileSize(256);
     }
     public void fabOnClick(View v) {
-        Log.d(TAG,"FAB Setting Clicked");
+        Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), AppPreferences.class);
         startActivity(i);
     }
@@ -177,11 +158,11 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.configFAB);
         windArrow = (ImageView) findViewById(R.id.windArrow);
 
         buildGoogleApiClient();
-        map.MapInit(this, getMapView());
+        map.MapInit(this, this, getMapView(),getMapFileName(),SP);
         qb = new QuickBlox(this,getResources());
         //qb = new CommStub();
         qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
@@ -195,7 +176,28 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
         map.setZoomLevel(8);
         notification.InitNotification(this);
     }
+    public void PopUpMenu(Context c, Activity a)
+    {
+        PopupMenu popupMenu = new PopupMenu(c, findViewById(R.id.addFAB));
+        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener)a);
+        popupMenu.inflate(R.menu.map_popup_menu);
+        popupMenu.show();
+    }
 
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_buoy:
+                Toast.makeText(this, map.getLastTapLatLong().toString(), Toast.LENGTH_SHORT).show();
+                Object o = new Object();
+                o.type = ObjectTypes.Buoy;
+                o.name = "1";
+                o.color = "RED";
+                o.location = GeoUtils.toLocation(map.getLastTapLatLong());
+                marks.marks.add(o);
+                return true;
+        }
+        return false;
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -204,7 +206,7 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
         Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         windArrow.setRotation(rotation + 90);
-        Log.d(TAG, "New wind arrow icon rotation is "+windArrow.getRotation());
+        Log.d(TAG, "New wind arrow icon rotation is " + windArrow.getRotation());
         redrawLayers();
     }
 
@@ -305,6 +307,21 @@ public class MainActivity extends SamplesBaseActivity implements GoogleApiClient
                 }catch (IllegalStateException e) {
                     Log.e(TAG, "Error adding layers", e);
                 }
+            }
+
+
+        }
+        for (Object o : marks.marks){
+            Marker m; //TODO Refactor as hell!
+            Bitmap b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.buoyblack));
+            m = new Marker(GeoUtils.toLatLong(o.location),b,0,0);
+            workerLocs.put(o.name, m);
+            try {
+                map.removeMark(m);
+                map.addMark(m);
+            }catch (IllegalStateException e)
+            {
+                Log.e(TAG,"Error adding layers",e);
             }
         }
 
