@@ -83,6 +83,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         {
             qb.sendLoc(mLastLocation);
             redrawLayers();
+            Log.d(TAG, "Delaying runnable for " + REFRESH_RATE + " ms");
             handler.postDelayed(runnable, REFRESH_RATE);
         }
     };
@@ -222,6 +223,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
             Log.d(TAG,"login to " + id);
         }
     }
+    @Override
     public void redrawLayers()
     {
         super.redrawLayers();

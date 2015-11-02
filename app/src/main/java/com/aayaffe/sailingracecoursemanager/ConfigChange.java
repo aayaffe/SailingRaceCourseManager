@@ -15,6 +15,8 @@ public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeL
 {
 
 
+    private static final String TAG = "ConfigChange";
+
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
     {
         Log.v("ConfigChange", "Configuration key " + key + " Changed.");
@@ -23,8 +25,9 @@ public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeL
             MainActivity.login(id);
             MainActivity.resetMap();
         }
-        if (key.equals("refeshRate")){
+        if (key.equals("refreshRate")){
             MainActivity.REFRESH_RATE = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
+            Log.d(TAG, "New refresh rate is: " + MainActivity.REFRESH_RATE);
         }
 
 //        if (sharedPreferences.getBoolean("manager",false)){
