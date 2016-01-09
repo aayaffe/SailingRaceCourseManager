@@ -8,22 +8,23 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.communication.Object;
+import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
-import com.aayaffe.sailingracecoursemanager.communication.QuickBlox;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
 import com.aayaffe.sailingracecoursemanager.map.OpenSeaMap;
@@ -42,13 +43,11 @@ import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.Point;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.layer.download.TileDownloadLayer;
-import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.overlay.Polyline;
-import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +70,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     private Notification notification = new Notification();
     GoogleApiClient mGoogleApiClient;
     SharedPreferences SP;
-    Location mLastLocation;
+    AviLocation mLastLocation;
     LocationRequest mLocationRequest;
     Marks marks = new Marks();
 
@@ -81,7 +80,13 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
         public void run()
         {
-            qb.sendLoc(mLastLocation);
+            AviObject o = new AviObject();
+            o.name = SP.getString("username", "Manager1");
+            o.location = mLastLocation;
+            o.color = "Blue"; //TODO Set properly
+            o.type = ObjectTypes.WorkerBoat;//TODO Set properly
+            //TODO Think about last update time (Exists in Location also)
+            qb.writeBoatObject(o);
             redrawLayers();
             Log.d(TAG, "Delaying runnable for " + REFRESH_RATE + " ms");
             handler.postDelayed(runnable, REFRESH_RATE);
@@ -164,8 +169,8 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
         buildGoogleApiClient();
         map.MapInit(this, this, getMapView(),getMapFileName(),SP);
-        qb = new QuickBlox(this,getResources());
-        //qb = new CommStub();
+        //qb = new QuickBlox(this,getResources());
+        qb = new Firebase(this);
         qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
         runnable.run();
         if ((myLoc!=null)&&(myLoc.getLatLong()!=null)){
@@ -176,6 +181,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         }
         map.setZoomLevel(8);
         notification.InitNotification(this);
+        createControls();
     }
     public void PopUpMenu(Context c, Activity a)
     {
@@ -189,11 +195,11 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         switch (item.getItemId()) {
             case R.id.add_buoy:
                 Toast.makeText(this, map.getLastTapLatLong().toString(), Toast.LENGTH_SHORT).show();
-                Object o = new Object();
+                AviObject o = new AviObject();
                 o.type = ObjectTypes.Buoy;
                 o.name = "1";
                 o.color = "RED";
-                o.location = GeoUtils.toLocation(map.getLastTapLatLong());
+                o.location = GeoUtils.toAviLocation(map.getLastTapLatLong());
                 marks.marks.add(o);
                 return true;
         }
@@ -228,10 +234,9 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     {
         super.redrawLayers();
         GraphicFactory gf = AndroidGraphicFactory.INSTANCE;
-        Location myLocation = mLastLocation;
-
-        List<Object> l = qb.getAllLocs();
-        for (Object o: l) {
+        Location myLocation = GeoUtils.toLocation(mLastLocation);
+        List<AviObject> l = qb.getAllLocs();
+        for (AviObject o: l) {
             if ((o != null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
                 Marker m;
                 if (workerLocs.containsKey(o.name))
@@ -240,20 +245,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                     m.setLatLong(GeoUtils.toLatLong(o.location));
                 }
                 else{
-                    Bitmap b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatred));
-                    if(o.color.contains("blue")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue));
-                    if(o.color.contains("cyan")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatcyan));
-                    if(o.color.contains("orange")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatorange));
-                    if(o.color.contains("green")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatgreen));
-                    if(o.color.contains("pink")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatpink));
-                    if (o.type==ObjectTypes.RaceManager){
-                        b =AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.managerblue));
-                    }
-
-                    if((o.lastUpdate!=null)&&(GeneralUtils.dateDifference(o.lastUpdate)>2000))
-                    {
-                        b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatred));
-                    }
+                    Bitmap b = getBoatBitmap(o);
                     b = MapUtils.addBoatNumber(b,Character.getNumericValue(o.name.charAt(o.name.length() - 1)),getResources());
 
                     m = new Marker(GeoUtils.toLatLong(o.location),b,0,0);
@@ -269,25 +261,9 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                 }
 
                 if (myLocation!=null){
-                    Paint p = gf.createPaint();
-                    p.setColor(Color.BLACK);
-                    p.setTextSize((int) (16 * getResources().getDisplayMetrics().density));
-                    int distance = myLocation.distanceTo(o.location)<5000?(int)myLocation.distanceTo(o.location):((int)(myLocation.distanceTo(o.location)/1609.34));
-                    Log.v(TAG, "Distance to user " + o.name + " " + myLocation.distanceTo(o.location));
-                    String units = myLocation.distanceTo(o.location)<5000?"m":"NM";
-                    int bearing = myLocation.bearingTo(o.location) > 0 ? (int) myLocation.bearingTo(o.location) : (int) myLocation.bearingTo(o.location)+360;
-                    TextMarker tm;
-                    if (workerTexts.containsKey(o.name)){
-                        tm = workerTexts.get(o.name);
-                        tm.setText(bearing + "\\" + distance + units);
-                        tm.setLatLong(GeoUtils.toLatLong(o.location));
-                    }
-                    else{
-                        tm = new TextMarker(bearing + "\\" + distance + units,p,GeoUtils.toLatLong(o.location),AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue)));
-                    }
+                    TextMarker tm = getTextMarker(gf, myLocation, o);
                     workerTexts.put(o.name, tm);
                     try {
-//
                         map.removeMark(tm);
                         map.addMark(tm);
                     }catch (IllegalStateException e) {
@@ -313,7 +289,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
 
         }
-        for (Object o : marks.marks){
+        for (AviObject o : marks.marks){
             Marker m; //TODO Refactor as hell!
             Bitmap b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.buoyblack));
             m = new Marker(GeoUtils.toLatLong(o.location),b,0,0);
@@ -338,23 +314,54 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
     }
 
+    @NonNull
+    private TextMarker getTextMarker(GraphicFactory gf, Location myLocation, AviObject o) {
+        Paint p = gf.createPaint();
+        p.setColor(Color.BLACK);
+        p.setTextSize((int) (16 * getResources().getDisplayMetrics().density));
+        int distance = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?(int)myLocation.distanceTo(GeoUtils.toLocation(o.location)):((int)(myLocation.distanceTo(GeoUtils.toLocation(o.location))/1609.34));
+        Log.v(TAG, "Distance to user " + o.name + " " + myLocation.distanceTo(GeoUtils.toLocation(o.location)));
+        String units = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?"m":"NM";
+        int bearing = myLocation.bearingTo(GeoUtils.toLocation(o.location)) > 0 ? (int) myLocation.bearingTo(GeoUtils.toLocation(o.location)) : (int) myLocation.bearingTo(GeoUtils.toLocation(o.location))+360;
+        TextMarker tm;
+        if (workerTexts.containsKey(o.name)){
+            tm = workerTexts.get(o.name);
+            tm.setText(bearing + "\\" + distance + units);
+            tm.setLatLong(GeoUtils.toLatLong(o.location));
+        }
+        else{
+            tm = new TextMarker(bearing + "\\" + distance + units,p,GeoUtils.toLatLong(o.location), AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue)));
+        }
+        return tm;
+    }
 
+    @NonNull
+    private Bitmap getBoatBitmap(AviObject o) {
+        Bitmap b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatred));
+        if(o.color.contains("blue")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue));
+        if(o.color.contains("cyan")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatcyan));
+        if(o.color.contains("orange")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatorange));
+        if(o.color.contains("green")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatgreen));
+        if(o.color.contains("pink")) b =  AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatpink));
+        if (o.type==ObjectTypes.RaceManager){
+            b =AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.managerblue));
+        }
 
-
-
+        if((o.lastUpdate!=null)&&(GeneralUtils.dateDifference(o.lastUpdate)>2000))
+        {
+            b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatred));
+        }
+        return b;
+    }
     public static void resetMap(){
-
-
         for(Marker m: workerLocs.values()){
             map.removeMark(m);
         }
         for(TextMarker tm:workerTexts.values()){
             map.removeMark(tm);
         }
-
         workerLocs.clear();
         workerTexts.clear();
-        //map.destroy();
     }
 
     private Boolean exit = false;
@@ -375,9 +382,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                     exit = false;
                 }
             }, 3 * 1000);
-
         }
-
     }
 
     @Override
@@ -386,8 +391,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         //if (mRequestingLocationUpdates) {
             startLocationUpdates();
         //}
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
+        mLastLocation = GeoUtils.toAviLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
     }
 
     @Override
@@ -402,14 +406,14 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
     @Override
     public void onLocationChanged(Location location) {
-        mLastLocation = location;
+        mLastLocation = GeoUtils.toAviLocation(location);
+        mLastLocation.lastUpdate = new Date();
     }
 
     protected void stopLocationUpdates() {
         if (mGoogleApiClient.isConnected())
         {LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);}
-
     }
 
     @Override

@@ -16,16 +16,42 @@ public class GeoUtils {
         ret.setLongitude(l.longitude);
         return ret;
     }
+    static public Location toLocation(AviLocation l){
+        if (l==null)
+            return null;
+        Location ret = new Location("Converted");
+        ret.setLatitude(l.lat);
+        ret.setLongitude(l.lon);
+        return ret;
+    }
     static public LatLong toLatLong(Location l){
         if (l==null)
             return null;
         LatLong ret = new LatLong(l.getLatitude(),l.getLongitude());
         return ret;
     }
+    static public LatLong toLatLong(AviLocation l){
+        if (l==null)
+            return null;
+        LatLong ret = new LatLong(l.lat,l.lon);
+        return ret;
+    }
     static public Location createLocation(double lat, double lon){
         Location ret = new Location("Converted");
         ret.setLatitude(lat);
         ret.setLongitude(lon);
+        return ret;
+    }
+    static public AviLocation toAviLocation(Location l){
+        if (l==null)
+            return null;
+        AviLocation ret = new AviLocation(l.getLatitude(),l.getLongitude());
+        return ret;
+    }
+    static public AviLocation toAviLocation(LatLong l){
+        if (l==null)
+            return null;
+        AviLocation ret = new AviLocation(l.latitude,l.longitude);
         return ret;
     }
 }

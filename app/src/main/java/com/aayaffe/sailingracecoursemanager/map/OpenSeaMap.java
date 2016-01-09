@@ -25,6 +25,7 @@ import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
+import org.mapsforge.map.layer.download.tilesource.OnlineTileSource;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
@@ -70,9 +71,20 @@ public class OpenSeaMap {
     }
     protected void createLayers() {
 
+//        this.downloadLayer = new TileDownloadLayer(this.tileCaches.get(0),
+//                this.mapView.getModel().mapViewPosition, OpenStreetMapMapnik.INSTANCE,
+//                AndroidGraphicFactory.INSTANCE) {
+        OnlineTileSource onlineTileSource = new OnlineTileSource(new String[]{
+                "otile1.mqcdn.com", "otile2.mqcdn.com", "otile3.mqcdn.com",
+                "otile4.mqcdn.com"}, 80);
+        onlineTileSource.setName("MapQuest").setAlpha(false)
+                .setBaseUrl("/tiles/1.0.0/map/").setExtension("png")
+                .setParallelRequestsLimit(8).setProtocol("http")
+                .setTileSize(256).setZoomLevelMax((byte) 18)
+                .setZoomLevelMin((byte) 0);
         this.downloadLayer = new TileDownloadLayer(this.tileCaches.get(0),
-                this.mapView.getModel().mapViewPosition, OpenStreetMapMapnik.INSTANCE,
-                AndroidGraphicFactory.INSTANCE) {
+                this.mapView.getModel().mapViewPosition, onlineTileSource,
+                AndroidGraphicFactory.INSTANCE){
             @Override
             public boolean onLongPress(LatLong tapLatLong, Point thisXY,
                                        Point tapXY) {

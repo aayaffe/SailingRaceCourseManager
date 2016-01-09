@@ -1,7 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.location.Location;
 
 import java.util.List;
@@ -11,8 +9,9 @@ import java.util.List;
  */
 public interface ICommManager {
     public int login (String user, String password, String nickname);
-    public int sendLoc (Location l);
-    public Location getLoc(int id);
-    public List<Object> getAllLocs();
-    public int sendAction (RaceManagerAction a);
+    public int writeBoatObject(AviObject o);
+    public int writeBuoyObject(AviObject o);
+
+    public List<AviObject> getAllLocs();
+    public int sendAction (RaceManagerAction a, AviObject o);
 }

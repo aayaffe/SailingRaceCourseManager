@@ -83,24 +83,24 @@ public abstract class SamplesBaseActivity extends MapViewerTemplate implements S
 
 	@Override
 	protected void createLayers() {
-//		TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(this.tileCaches.get(0),
-//				mapView.getModel().mapViewPosition, getMapFile(), getRenderTheme(), false, true	);
-//		this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
-		TileRendererLayer tileRendererLayer = new TileRendererLayer(
-				this.tileCaches.get(0), getMapFile(),
-				this.mapView.getModel().mapViewPosition,
-				false, true,
-				org.mapsforge.map.android.graphics.AndroidGraphicFactory.INSTANCE) {
-			@Override
-			public boolean onLongPress(LatLong tapLatLong, Point thisXY,
-									   Point tapXY) {
-				this.onLongPress(tapLatLong, thisXY, tapXY);
-				return true;
-			}
-		};
+////		TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(this.tileCaches.get(0),
+////				mapView.getModel().mapViewPosition, getMapFile(), getRenderTheme(), false, true	);
+////		this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
+//		TileRendererLayer tileRendererLayer = new TileRendererLayer(
+//				this.tileCaches.get(0), getMapFile(),
+//				this.mapView.getModel().mapViewPosition,
+//				false, true,
+//				org.mapsforge.map.android.graphics.AndroidGraphicFactory.INSTANCE) {
+//			@Override
+//			public boolean onLongPress(LatLong tapLatLong, Point thisXY,
+//									   Point tapXY) {
+//				this.onLongPress(tapLatLong, thisXY, tapXY);
+//				return true;
+//			}
+//		};
 
 		// needed only for samples to hook into Settings.
-		setMaxTextWidthFactor();
+//		setMaxTextWidthFactor();
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public abstract class SamplesBaseActivity extends MapViewerTemplate implements S
 	 * Sets the scale bar from preferences.
 	 */
 	protected void setMapScaleBar() {
-		String value = this.sharedPreferences.getString(SETTING_SCALEBAR, SETTING_SCALEBAR_BOTH);
+		String value = this.sharedPreferences.getString(SETTING_SCALEBAR, SETTING_SCALEBAR_NAUTICAL);
 
 		if (SETTING_SCALEBAR_NONE.equals(value)) {
 			AndroidUtil.setMapScaleBar(this.mapView, null, null);

@@ -10,5 +10,5 @@ import java.util.List;
  */
 public class Marks {
 
-    public List<com.aayaffe.sailingracecoursemanager.communication.Object> marks = new ArrayList<>();
+    public List<AviObject> marks = new ArrayList<>();
 }

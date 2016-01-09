@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import android.location.Location;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
 import java.util.Date;
 import java.util.Objects;
@@ -8,9 +8,9 @@ import java.util.Objects;
 /**
  * Created by aayaffe on 30/09/2015.
  */
-public class Object {
+public class AviObject {
     public String name;
-    public Location location;
+    public AviLocation location;
     public ObjectTypes type;
     public String color;
     public Date lastUpdate;
@@ -18,14 +18,14 @@ public class Object {
     @Override
     public boolean equals(java.lang.Object o) {
         boolean result = false;
-        if (o instanceof Object) {
-            Object that = (Object) o;
+        if (o instanceof AviObject) {
+            AviObject that = (AviObject) o;
             result = (that.canEqual(this) && Objects.equals(this.name,that.name));
         }
         return result;
     }
-    public boolean canEqual(Object other) {
-        return (other instanceof Object);
+    public boolean canEqual(AviObject other) {
+        return (other instanceof AviObject);
     }
 
     @Override
