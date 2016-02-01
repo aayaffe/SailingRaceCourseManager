@@ -12,6 +12,8 @@ public interface ICommManager {
     public int writeBoatObject(AviObject o);
     public int writeBuoyObject(AviObject o);
 
-    public List<AviObject> getAllLocs();
+    public List<AviObject> getAllBoats();
+    public List<AviObject> getAllBuoys();
+
     public int sendAction (RaceManagerAction a, AviObject o);
 }

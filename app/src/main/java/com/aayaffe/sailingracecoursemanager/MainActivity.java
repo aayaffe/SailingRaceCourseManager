@@ -26,6 +26,7 @@ import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.map.MapLayer;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
 import com.aayaffe.sailingracecoursemanager.map.OpenSeaMap;
 import com.aayaffe.sailingracecoursemanager.map.SamplesBaseActivity;
@@ -55,7 +56,7 @@ import java.util.Map;
 public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMenuItemClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
 
     // name of the map file in the external storage
-    private static OpenSeaMap map = new OpenSeaMap();
+    private static MapLayer map = new OpenSeaMap();
     private static ICommManager qb;
     private Handler handler = new Handler();
     private Marker myLoc = new Marker(null,null,0,0);
@@ -168,7 +169,11 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         windArrow = (ImageView) findViewById(R.id.windArrow);
 
         buildGoogleApiClient();
-        map.MapInit(this, this, getMapView(),getMapFileName(),SP);
+        Location center = new Location("Manual");
+        center.setLatitude(32.9);
+        center.setLongitude(34.9);
+
+        map.Init(this, this, getMapView(), SP, center,1/*TODO: Not used*/);
         //qb = new QuickBlox(this,getResources());
         qb = new Firebase(this);
         qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
@@ -201,6 +206,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                 o.color = "RED";
                 o.location = GeoUtils.toAviLocation(map.getLastTapLatLong());
                 marks.marks.add(o);
+                qb.writeBuoyObject(o);
                 return true;
         }
         return false;
@@ -235,7 +241,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         super.redrawLayers();
         GraphicFactory gf = AndroidGraphicFactory.INSTANCE;
         Location myLocation = GeoUtils.toLocation(mLastLocation);
-        List<AviObject> l = qb.getAllLocs();
+        List<AviObject> l = qb.getAllBoats();
         for (AviObject o: l) {
             if ((o != null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
                 Marker m;
@@ -289,7 +295,9 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
 
         }
-        for (AviObject o : marks.marks){
+        List<AviObject> markList = qb.getAllBuoys();
+        for (AviObject o : markList){
+            //TODO: Delete old buoys first
             Marker m; //TODO Refactor as hell!
             Bitmap b = AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.buoyblack));
             m = new Marker(GeoUtils.toLatLong(o.location),b,0,0);
@@ -319,8 +327,14 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         Paint p = gf.createPaint();
         p.setColor(Color.BLACK);
         p.setTextSize((int) (16 * getResources().getDisplayMetrics().density));
-        int distance = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?(int)myLocation.distanceTo(GeoUtils.toLocation(o.location)):((int)(myLocation.distanceTo(GeoUtils.toLocation(o.location))/1609.34));
-        Log.v(TAG, "Distance to user " + o.name + " " + myLocation.distanceTo(GeoUtils.toLocation(o.location)));
+        int distance;
+        try {
+            distance = myLocation.distanceTo(GeoUtils.toLocation(o.location)) < 5000 ? (int) myLocation.distanceTo(GeoUtils.toLocation(o.location)) : ((int) (myLocation.distanceTo(GeoUtils.toLocation(o.location)) / 1609.34));
+        }catch (NullPointerException e)
+        {
+            distance = -1;
+        }
+        Log.v(TAG, "Distance to user " + o.name + " " + distance);
         String units = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?"m":"NM";
         int bearing = myLocation.bearingTo(GeoUtils.toLocation(o.location)) > 0 ? (int) myLocation.bearingTo(GeoUtils.toLocation(o.location)) : (int) myLocation.bearingTo(GeoUtils.toLocation(o.location))+360;
         TextMarker tm;
@@ -406,7 +420,9 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG,"GPS Location: "+ location);
         mLastLocation = GeoUtils.toAviLocation(location);
+        Log.d(TAG,"OwnLocation: "+ mLastLocation.toLocation());
         mLastLocation.lastUpdate = new Date();
     }
 

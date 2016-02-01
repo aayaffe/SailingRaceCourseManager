@@ -118,7 +118,7 @@ public class QuickBlox implements ICommManager {
 
 
     @Override
-    public List<AviObject> getAllLocs() {
+    public List<AviObject> getAllBoats() {
         QBLocationRequestBuilder getLocationsBuilder = new QBLocationRequestBuilder();
         getLocationsBuilder.setPerPage(10);
         getLocationsBuilder.setLastOnly();
@@ -176,6 +176,11 @@ public class QuickBlox implements ICommManager {
 //            }
 //        });
         return aviObjects;
+    }
+
+    @Override
+    public List<AviObject> getAllBuoys() {
+        return null;
     }
 
     @Override

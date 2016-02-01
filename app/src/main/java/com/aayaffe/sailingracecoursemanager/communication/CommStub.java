@@ -33,7 +33,7 @@ public class CommStub implements ICommManager {
 
 
     @Override
-    public List<AviObject> getAllLocs() {
+    public List<AviObject> getAllBoats() {
         AviObject o = new AviObject();
         o.lastUpdate = new Date(System.currentTimeMillis());;
         o.name = "Worker1";
@@ -55,6 +55,11 @@ public class CommStub implements ICommManager {
             aviObjects.add(o);
         } else aviObjects.add(o);
         return aviObjects;
+    }
+
+    @Override
+    public List<AviObject> getAllBuoys() {
+        return null;
     }
 
     @Override

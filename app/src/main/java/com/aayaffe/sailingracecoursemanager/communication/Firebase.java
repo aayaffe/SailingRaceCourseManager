@@ -50,7 +50,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public List<AviObject> getAllLocs() {
+    public List<AviObject> getAllBoats() {
         ArrayList<AviObject> ret = new ArrayList<>();
         if (ds==null||ds.getValue()==null) return ret;
         for (DataSnapshot ps: ds.child("Boats").getChildren()){
@@ -59,6 +59,16 @@ public class Firebase implements ICommManager {
         }
         return ret;
     }
+
+    @Override
+    public List<AviObject> getAllBuoys() {
+        ArrayList<AviObject> ret = new ArrayList<>();
+        if (ds==null||ds.getValue()==null) return ret;
+        for (DataSnapshot ps: ds.child("Buoys").getChildren()){
+            AviObject o = ps.getValue(AviObject.class);
+            ret.add(o);
+        }
+        return ret;    }
 
     @Override
     public int sendAction(RaceManagerAction a, AviObject o) {

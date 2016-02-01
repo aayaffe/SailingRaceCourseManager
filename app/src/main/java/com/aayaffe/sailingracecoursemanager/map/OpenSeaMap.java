@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Created by aayaffe on 04/10/2015.
  */
-public class OpenSeaMap {
+public class OpenSeaMap implements MapLayer {
     private static final String TAG = "OpenSeaMap";
     public MapView mapView;
     private TileCache tileCache;
@@ -116,55 +116,48 @@ public class OpenSeaMap {
         mapView.getMapZoomControls().setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
         mapView.getMapZoomControls().setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
     }
-    public void MapInit(Activity a, Context c, MapView mv, String mapFileName, SharedPreferences sp)
+
+    @Override
+    public void Init(Activity a, Context c, MapView mv, SharedPreferences sp, Location center, int zoom)
     {
         this.c =c;
         this.a = a;
-        _mapFile = mapFileName;
         mapView = mv;
         this.sp = sp;
         createTileCaches();
         createLayers();
-
-// if (mapView==null) {
-//            mapView = new MapView(c);
-//            this.mapView.setClickable(true);
-//            this.mapView.getMapScaleBar().setVisible(false);
-//            this.mapView.setBuiltInZoomControls(false);
-//            this.mapView.getMapZoomControls().setZoomLevelMin((byte) 10);
-//            this.mapView.getMapZoomControls().setZoomLevelMax((byte) 20);
-//
-//            tileCache = AndroidUtil.createTileCache(c, "mapcache",
-//                    mapView.getModel().displayModel.getTileSize(), 1f,
-//                    this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-//        }
-//        return mapView;
-
-
     }
 
-    public void setCenter(Location l){
+    @Override
+    public void setCenter(Location l) {
         setCenter(GeoUtils.toLatLong(l));
     }
+    @Override
     public void setCenter(LatLong ll){
         mapView.getModel().mapViewPosition.setCenter(ll);
     }
-    public void setCenter(double lat, double lon){
+    @Override
+    public void setCenter(double lat, double lon) {
         setCenter(new LatLong(lat, lon));
     }
+    @Override
     public void setZoomLevel(int zoom){
         mapView.getModel().mapViewPosition.setZoomLevel((byte) zoom);
     }
+    @Override
     public void destroy(){
         mapView.destroyAll();
     }
+    @Override
     public Marker addMark(Marker m){
         mapView.getLayerManager().getLayers().add(m);
         return m;
     }
+    @Override
     public boolean contains(Marker m){
         return mapView.getLayerManager().getLayers().contains(m);
     }
+    @Override
     public Marker removeMark(Marker m){
         mapView.getLayerManager().getLayers().remove(m);
         return m;
@@ -203,6 +196,7 @@ public class OpenSeaMap {
     }
 
 
+    @Override
     public void loadMap(){
         // tile renderer layer using internal render theme
         MapDataStore mapDataStore = getMapFile();
@@ -222,7 +216,9 @@ public class OpenSeaMap {
     }
 
 
+    @Override
     public LatLong getLastTapLatLong() {
         return lastTapLatLong;
     }
+
 }
