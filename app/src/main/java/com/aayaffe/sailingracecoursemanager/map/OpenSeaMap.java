@@ -6,12 +6,11 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.PopupMenu;
 
 import com.aayaffe.sailingracecoursemanager.MainActivity;
-import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.SamplesApplication;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.google.android.gms.maps.GoogleMap;
 
 
 import org.mapsforge.core.model.BoundingBox;

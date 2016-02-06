@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.overlay.Marker;

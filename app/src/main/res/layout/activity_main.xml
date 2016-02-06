@@ -15,6 +15,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:clickable="true"/>
+        <!--<com.google.android.gms.maps.MapView-->
+            <!--android:id="@+id/googleMapView"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:clickable="true"/>-->
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -43,5 +48,6 @@
             android:clickable="true"
             android:layout_above="@+id/configFAB"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="25dp" />
+            android:layout_marginBottom="25dp"
+            android:onClick="plusIconOnclick"/>
    </RelativeLayout>

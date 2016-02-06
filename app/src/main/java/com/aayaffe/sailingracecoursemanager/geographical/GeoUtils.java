@@ -2,6 +2,8 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.mapsforge.core.model.LatLong;
 
 /**
@@ -36,6 +38,25 @@ public class GeoUtils {
         LatLong ret = new LatLong(l.lat,l.lon);
         return ret;
     }
+    static public LatLng toLatLng(Location l){
+        if (l==null)
+            return null;
+        LatLng ret = new LatLng(l.getLatitude(), l.getLongitude());
+        return ret;
+    }
+    static public LatLng toLatLng(AviLocation l){
+        if (l==null)
+            return null;
+        LatLng ret = new LatLng(l.lat, l.lon);
+        return ret;
+    }
+    static public LatLng toLatLng(LatLong l){
+        if (l==null)
+            return null;
+        LatLng ret = new LatLng(l.latitude, l.longitude);
+        return ret;
+    }
+
     static public Location createLocation(double lat, double lon){
         Location ret = new Location("Converted");
         ret.setLatitude(lat);

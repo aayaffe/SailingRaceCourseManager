@@ -18,25 +18,22 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
-import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
+import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
+import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.map.MapLayer;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
 import com.aayaffe.sailingracecoursemanager.map.OpenSeaMap;
 import com.aayaffe.sailingracecoursemanager.map.SamplesBaseActivity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
-//import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Color;
 import org.mapsforge.core.graphics.GraphicFactory;
@@ -48,32 +45,28 @@ import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMenuItemClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
+
+public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMenuItemClickListener{
 
     // name of the map file in the external storage
     private static MapLayer map = new OpenSeaMap();
-    private static ICommManager qb;
+    public static ICommManager commManager;
     private Handler handler = new Handler();
     private Marker myLoc = new Marker(null,null,0,0);
-    private static Map<String,Marker> workerLocs = new HashMap<String, Marker>();
-    private static Map<String,TextMarker> workerTexts = new HashMap<String, TextMarker>();
-    private Polyline rbLine = new Polyline(null, AndroidGraphicFactory.INSTANCE);
-    private int ID = 1;
+    private static Map<String,Marker> workerLocs = new HashMap<>();
+    private static Map<String,TextMarker> workerTexts = new HashMap<>();
     private static String TAG = "MainActivity";
     private ConfigChange unc = new ConfigChange();
     private ImageView windArrow;
     public static int REFRESH_RATE = 10000;
     private Notification notification = new Notification();
-    GoogleApiClient mGoogleApiClient;
     SharedPreferences SP;
-    AviLocation mLastLocation;
-    LocationRequest mLocationRequest;
-    Marks marks = new Marks();
+    public static Marks marks = new Marks();
+    private IGeo iGeo;
 
 
     private Runnable runnable = new Runnable()
@@ -83,11 +76,11 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         {
             AviObject o = new AviObject();
             o.name = SP.getString("username", "Manager1");
-            o.location = mLastLocation;
+            o.location = iGeo.getLoc();
             o.color = "Blue"; //TODO Set properly
             o.type = ObjectTypes.WorkerBoat;//TODO Set properly
             //TODO Think about last update time (Exists in Location also)
-            qb.writeBoatObject(o);
+            commManager.writeBoatObject(o);
             redrawLayers();
             Log.d(TAG, "Delaying runnable for " + REFRESH_RATE + " ms");
             handler.postDelayed(runnable, REFRESH_RATE);
@@ -100,23 +93,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         return true;
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(2000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
-    }
+
 
     @Override
     protected int getLayoutId() {
@@ -164,19 +141,17 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
 //        setContentView(getLayoutId());
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
-
+        iGeo =  new OwnLocation(this.getBaseContext());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.configFAB);
         windArrow = (ImageView) findViewById(R.id.windArrow);
 
-        buildGoogleApiClient();
         Location center = new Location("Manual");
         center.setLatitude(32.9);
         center.setLongitude(34.9);
 
         map.Init(this, this, getMapView(), SP, center,1/*TODO: Not used*/);
-        //qb = new QuickBlox(this,getResources());
-        qb = new Firebase(this);
-        qb.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
+        commManager = new Firebase(this);
+        commManager.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
         runnable.run();
         if ((myLoc!=null)&&(myLoc.getLatLong()!=null)){
             map.setCenter(myLoc.getLatLong());
@@ -206,7 +181,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                 o.color = "RED";
                 o.location = GeoUtils.toAviLocation(map.getLastTapLatLong());
                 marks.marks.add(o);
-                qb.writeBuoyObject(o);
+                commManager.writeBuoyObject(o);
                 return true;
         }
         return false;
@@ -214,7 +189,6 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
         windArrow = (ImageView) findViewById(R.id.windArrow);
         Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
@@ -230,8 +204,8 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         map.destroy();
     }
      public static void login(String id){
-        if (qb!=null) {
-            qb.login(id, "Aa123456z", "1");
+        if (commManager !=null) {
+            commManager.login(id, "Aa123456z", "1");
             Log.d(TAG,"login to " + id);
         }
     }
@@ -240,9 +214,9 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     {
         super.redrawLayers();
         GraphicFactory gf = AndroidGraphicFactory.INSTANCE;
-        Location myLocation = GeoUtils.toLocation(mLastLocation);
-        List<AviObject> l = qb.getAllBoats();
-        for (AviObject o: l) {
+        Location myLocation = GeoUtils.toLocation(iGeo.getLoc());
+        marks.marks = commManager.getAllBoats();
+        for (AviObject o: marks.marks) {
             if ((o != null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
                 Marker m;
                 if (workerLocs.containsKey(o.name))
@@ -258,7 +232,6 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                 }
                 workerLocs.put(o.name, m);
                 try {
-
                     map.removeMark(m);
                     map.addMark(m);
                 }catch (IllegalStateException e)
@@ -292,10 +265,8 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                     Log.e(TAG, "Error adding layers", e);
                 }
             }
-
-
         }
-        List<AviObject> markList = qb.getAllBuoys();
+        List<AviObject> markList = commManager.getAllBuoys();
         for (AviObject o : markList){
             //TODO: Delete old buoys first
             Marker m; //TODO Refactor as hell!
@@ -310,15 +281,6 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
                 Log.e(TAG,"Error adding layers",e);
             }
         }
-
-////            rbLine.setPaintStroke(paintStroke);
-////            List<LatLong> geoPoints = rbLine.getLatLongs();
-////            geoPoints.clear();
-////            geoPoints.add(new LatLong(l.getLatitude(), l.getLongitude()));
-////            geoPoints.add(new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
-////            this.mapView.getLayerManager().getLayers().remove(rbLine);
-////            this.mapView.getLayerManager().getLayers().add(rbLine);
-//            //zoomToBounds(new LatLong(l.getLatitude(), l.getLongitude()),new LatLong(myLocation.getLatitude(), myLocation.getLongitude()));
 
     }
 
@@ -400,51 +362,22 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-        createLocationRequest();
-        //if (mRequestingLocationUpdates) {
-            startLocationUpdates();
-        //}
-        mLastLocation = GeoUtils.toAviLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG,"GPS Location: "+ location);
-        mLastLocation = GeoUtils.toAviLocation(location);
-        Log.d(TAG,"OwnLocation: "+ mLastLocation.toLocation());
-        mLastLocation.lastUpdate = new Date();
-    }
-
-    protected void stopLocationUpdates() {
-        if (mGoogleApiClient.isConnected())
-        {LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);}
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        iGeo.stopLocationUpdates();
         resetMap();
     }
     @Override
     public void onResume() {
         super.onResume();
-        if (mGoogleApiClient.isConnected()/* && !mRequestingLocationUpdates*/) {
-            startLocationUpdates();
-        }
+        iGeo.startLocationUpdates();
         redrawLayers();
+    }
+
+    public void plusIconOnclick(View view) {
+        Log.d(TAG, "Plus Fab Clicked");
+        Intent i = new Intent(getApplicationContext(), GoogleMapsActivity.class);
+        startActivity(i);
     }
 }
 
