@@ -27,6 +27,7 @@ import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.map.MapLayer;
 import com.aayaffe.sailingracecoursemanager.map.MapUtils;
@@ -61,7 +62,8 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     private static Map<String,TextMarker> workerTexts = new HashMap<>();
     private static String TAG = "MainActivity";
     private ConfigChange unc = new ConfigChange();
-    private ImageView windArrow;
+    //private ImageView windArrow;
+    private WindArrow wa;
     public static int REFRESH_RATE = 10000;
     private Notification notification = new Notification();
     SharedPreferences SP;
@@ -78,7 +80,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
             o.name = SP.getString("username", "Manager1");
             o.location = iGeo.getLoc();
             o.color = "Blue"; //TODO Set properly
-            o.type = ObjectTypes.WorkerBoat;//TODO Set properly
+            o.type = ObjectTypes.RaceManager;//TODO Set properly
             //TODO Think about last update time (Exists in Location also)
             commManager.writeBoatObject(o);
             redrawLayers();
@@ -143,7 +145,7 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         SP.registerOnSharedPreferenceChangeListener(unc);
         iGeo =  new OwnLocation(this.getBaseContext());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.configFAB);
-        windArrow = (ImageView) findViewById(R.id.windArrow);
+        wa = new WindArrow((ImageView) findViewById(R.id.windArrow));
 
         Location center = new Location("Manual");
         center.setLatitude(32.9);
@@ -189,11 +191,12 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
     @Override
     protected void onStart() {
         super.onStart();
-        windArrow = (ImageView) findViewById(R.id.windArrow);
+        //windArrow = (ImageView) findViewById(R.id.windArrow);
+        wa = new WindArrow((ImageView) findViewById(R.id.windArrow));
         Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
-        windArrow.setRotation(rotation + 90);
-        Log.d(TAG, "New wind arrow icon rotation is " + windArrow.getRotation());
+        wa.setDirection(rotation);
+        Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
         redrawLayers();
     }
 
@@ -289,26 +292,39 @@ public class MainActivity extends SamplesBaseActivity implements PopupMenu.OnMen
         Paint p = gf.createPaint();
         p.setColor(Color.BLACK);
         p.setTextSize((int) (16 * getResources().getDisplayMetrics().density));
+//        int distance;
+//        try {
+//            distance = myLocation.distanceTo(GeoUtils.toLocation(o.location)) < 5000 ? (int) myLocation.distanceTo(GeoUtils.toLocation(o.location)) : ((int) (myLocation.distanceTo(GeoUtils.toLocation(o.location)) / 1609.34));
+//        }catch (NullPointerException e)
+//        {
+//            distance = -1;
+//        }
+//        Log.v(TAG, "Distance to user " + o.name + " " + distance);
+//        String units = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?"m":"NM";
+//        int bearing = myLocation.bearingTo(GeoUtils.toLocation(o.location)) > 0 ? (int) myLocation.bearingTo(GeoUtils.toLocation(o.location)) : (int) myLocation.bearingTo(GeoUtils.toLocation(o.location))+360;
+        TextMarker tm;
+        if (workerTexts.containsKey(o.name)){
+            tm = workerTexts.get(o.name);
+            tm.setText(getDirDistTXT(myLocation,GeoUtils.toLocation(o.location)));
+            tm.setLatLong(GeoUtils.toLatLong(o.location));
+        }
+        else{
+            tm = new TextMarker(getDirDistTXT(myLocation,GeoUtils.toLocation(o.location)),p,GeoUtils.toLatLong(o.location), AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue)));
+        }
+        return tm;
+    }
+
+    private String getDirDistTXT(Location src, Location dst){
         int distance;
         try {
-            distance = myLocation.distanceTo(GeoUtils.toLocation(o.location)) < 5000 ? (int) myLocation.distanceTo(GeoUtils.toLocation(o.location)) : ((int) (myLocation.distanceTo(GeoUtils.toLocation(o.location)) / 1609.34));
+            distance = src.distanceTo(dst) < 5000 ? (int) src.distanceTo(dst) : ((int) (src.distanceTo(dst) / 1609.34));
         }catch (NullPointerException e)
         {
             distance = -1;
         }
-        Log.v(TAG, "Distance to user " + o.name + " " + distance);
-        String units = myLocation.distanceTo(GeoUtils.toLocation(o.location))<5000?"m":"NM";
-        int bearing = myLocation.bearingTo(GeoUtils.toLocation(o.location)) > 0 ? (int) myLocation.bearingTo(GeoUtils.toLocation(o.location)) : (int) myLocation.bearingTo(GeoUtils.toLocation(o.location))+360;
-        TextMarker tm;
-        if (workerTexts.containsKey(o.name)){
-            tm = workerTexts.get(o.name);
-            tm.setText(bearing + "\\" + distance + units);
-            tm.setLatLong(GeoUtils.toLatLong(o.location));
-        }
-        else{
-            tm = new TextMarker(bearing + "\\" + distance + units,p,GeoUtils.toLatLong(o.location), AndroidGraphicFactory.convertToBitmap(ContextCompat.getDrawable(MainActivity.this.getApplicationContext(), R.drawable.boatblue)));
-        }
-        return tm;
+        String units = src.distanceTo(dst)<5000?"m":"NM";
+        int bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst)+360;
+        return bearing + "\\" + distance + units;
     }
 
     @NonNull

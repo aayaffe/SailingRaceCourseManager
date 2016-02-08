@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by aayaffe on 04/10/2015.
  */
-public class GoogleMaps  {
+public class GoogleMaps implements GoogleMap.OnMapLongClickListener {
     private static final String TAG = "OpenSeaMap";
     public GoogleMap mapView;
     private Context c;
@@ -59,6 +59,7 @@ public class GoogleMaps  {
         this.sp = sp;
         setCenter(center);
         createLayers();
+        mapView.setOnMapLongClickListener(this);
     }
 
 
@@ -85,14 +86,15 @@ public class GoogleMaps  {
 
     }
 
-    public Marker addMark(LatLng ll, String name, int ResourceID){
+    public Marker addMark(LatLng ll, String name,String caption, int ResourceID){
         if (markers.containsKey(name)){
             Marker m = markers.get(name);
             m.setPosition(ll);
             m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
+            m.setSnippet(caption);
             return m;
         }
-        Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
+        Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
         markers.put(name,m);
         return m;
 
@@ -152,6 +154,14 @@ public class GoogleMaps  {
     }
 
 
+
+    @Override //TODO Allow adding from outside the class
+    public void onMapLongClick(LatLng point) {
+        mapView.addMarker(new MarkerOptions()
+                .position(point)
+                .title("You are here")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+    }
 
     protected File getMapFileDirectory() {
         return Environment.getExternalStorageDirectory();
