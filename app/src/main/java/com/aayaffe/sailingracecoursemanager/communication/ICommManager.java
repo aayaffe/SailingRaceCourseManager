@@ -16,4 +16,8 @@ public interface ICommManager {
     public List<AviObject> getAllBuoys();
 
     public int sendAction (RaceManagerAction a, AviObject o);
+
+    public long getNewBuoyId();
+
+    void removeBueyObject(String title);
 }

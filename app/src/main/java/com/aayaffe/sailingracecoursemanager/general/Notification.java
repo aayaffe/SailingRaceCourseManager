@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.aayaffe.sailingracecoursemanager.MainActivity;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
 
 /**
  * Created by aayaffe on 04/10/2015.
@@ -19,7 +19,7 @@ public class Notification {
 
     public void InitNotification(Context c){
         mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.drawable.notification_icon).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
-        Intent resultIntent = new Intent(c,MainActivity.class);
+        Intent resultIntent = new Intent(c,GoogleMapsActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(c,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);

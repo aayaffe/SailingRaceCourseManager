@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
+import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.mapsforge.core.model.LatLong;
@@ -74,5 +75,20 @@ public class GeoUtils {
             return null;
         AviLocation ret = new AviLocation(l.latitude,l.longitude);
         return ret;
+    }
+
+    public static AviLocation getLocationFromDirDist(AviLocation loc, Float dir, int dist) {
+        double dis = (dist/1000.0)/6378.1;
+        double brng = Math.toRadians(dir);
+        double lat1 = Math.toRadians(loc.lat);
+        double lon1 = Math.toRadians(loc.lon);
+
+        double lat2 = Math.asin( Math.sin(lat1)*Math.cos(dis) + Math.cos(lat1)*Math.sin(dis)*Math.cos(brng) );
+        double a = Math.atan2(Math.sin(brng)*Math.sin(dis)*Math.cos(lat1), Math.cos(dis)-Math.sin(lat1)*Math.sin(lat2));
+        double lon2 = lon1 + a;
+
+        lon2 = (lon2+ 3*Math.PI) % (2*Math.PI) - Math.PI;
+
+        return new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
     }
 }

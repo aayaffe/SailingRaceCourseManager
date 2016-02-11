@@ -17,6 +17,7 @@ public class Firebase implements ICommManager {
     public Firebase(Context c){
         this.c =c;
     }
+    private String EventName = "Event1";//TODO Handle different events
 
     @Override
     public int login(String user, String password, String nickname) {
@@ -46,6 +47,7 @@ public class Firebase implements ICommManager {
     public int writeBuoyObject(AviObject o) {
         if (o==null||o.name==null||o.name.isEmpty()) return -1;
         fb.child("Buoys").child(o.name).setValue(o); //TODO: Save string in a concentrated place
+        fb.child("Events").child(EventName).child("LastBuoyId").setValue(o.id);
         return 0;
     }
 
@@ -74,5 +76,20 @@ public class Firebase implements ICommManager {
     public int sendAction(RaceManagerAction a, AviObject o) {
         //TODO Implement
         return 0;
+    }
+
+    @Override
+    public long getNewBuoyId() {
+        if (ds==null||ds.getValue()==null) return 1;
+        Long id = (Long)ds.child("Events").child(EventName).child("LastBuoyId").getValue();
+        if (id!=null){
+            return id+1;
+        }
+        else return 1;
+    }
+
+    @Override
+    public void removeBueyObject(String title) {
+        fb.child("Buoys").child(title).removeValue();
     }
 }

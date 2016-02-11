@@ -14,7 +14,7 @@ public class AviObject {
     public ObjectTypes type;
     public String color;
     public Date lastUpdate;
-
+    public long id;
     @Override
     public boolean equals(java.lang.Object o) {
         boolean result = false;

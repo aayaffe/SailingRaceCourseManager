@@ -111,4 +111,6 @@
     <string name="menu_position_enter_coordinates">Map Position</string>
     <string name="menu_svgclear">Clear SVG icon cache</string>
     <string name="title_activity_google_maps">Map</string>
+    <string name="dir">Direction</string>
+    <string name="dist">Distance(Meters)</string>
 </resources>

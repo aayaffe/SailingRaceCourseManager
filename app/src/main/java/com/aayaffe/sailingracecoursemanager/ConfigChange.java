@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.aayaffe.sailingracecoursemanager.map.GoogleMaps;
+import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
+
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -22,12 +25,12 @@ public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeL
         Log.v("ConfigChange", "Configuration key " + key + " Changed.");
         if (key.equals("username")) {
             String id = sharedPreferences.getString("username", "Manager1");
-            MainActivity.login(id);
-            MainActivity.resetMap();
+            GoogleMapsActivity.login(id);
+            GoogleMapsActivity.resetMap();
         }
         if (key.equals("refreshRate")){
-            MainActivity.REFRESH_RATE = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
-            Log.d(TAG, "New refresh rate is: " + MainActivity.REFRESH_RATE);
+            GoogleMapsActivity.REFRESH_RATE = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
+            Log.d(TAG, "New refresh rate is: " + GoogleMapsActivity.REFRESH_RATE);
         }
 
 //        if (sharedPreferences.getBoolean("manager",false)){
