@@ -1,6 +1,11 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
+import android.location.Location;
+
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.firebase.client.*;
 
 import java.util.Date;
 import java.util.Objects;
@@ -10,7 +15,7 @@ import java.util.Objects;
  */
 public class AviObject {
     public String name;
-    public AviLocation location;
+    private AviLocation aviLocation;
     public ObjectTypes type;
     public String color;
     public Date lastUpdate;
@@ -31,5 +36,21 @@ public class AviObject {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    public AviLocation getAviLocation(){
+        return aviLocation;
+    }
+    public void setAviLocation(AviLocation al){
+        aviLocation = al;
+    }
+
+    @JsonIgnore
+    public Location getLoc() {
+        return GeoUtils.toLocation(aviLocation);
+    }
+    @JsonIgnore
+    public void setLoc(Location Location) {
+        this.aviLocation = GeoUtils.toAviLocation(Location);
     }
 }

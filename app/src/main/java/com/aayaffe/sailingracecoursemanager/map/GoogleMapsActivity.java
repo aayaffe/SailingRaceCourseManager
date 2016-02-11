@@ -91,7 +91,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         {
             AviObject o = new AviObject();
             o.name = SP.getString("username", "Manager1");
-            o.location = iGeo.getLoc();
+            o.setLoc(iGeo.getLoc());
             o.color = "Blue"; //TODO Set properly
             if (getElementType(o.name)==ObjectTypes.RaceManager) {
                 o.type = ObjectTypes.RaceManager;
@@ -114,22 +114,22 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
 
     public void redrawLayers()
     {
-        Location myLocation = GeoUtils.toLocation(iGeo.getLoc());
+        Location myLocation = iGeo.getLoc();
         marks.marks = commManager.getAllBoats();
         for (AviObject o: marks.marks) {
-            if ((o != null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
+            if ((o != null)&&(o.getLoc()!=null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
                 int id = getIconId(SP.getString("username","Manager1"),o);
-                mapLayer.addMark(GeoUtils.toLatLng(o.location), o.name, getDirDistTXT(myLocation, GeoUtils.toLocation(o.location)), id);
+                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation,o.getLoc()), id);
             }
-            if ((o != null)&&(o.name.equals(SP.getString("username","Manager1")))) {
+            if ((o != null)&&(o.getLoc()!=null)&&(o.name.equals(SP.getString("username","Manager1")))) {
                 int id = getIconId(SP.getString("username","Manager1"),o);
-                mapLayer.addMark(GeoUtils.toLatLng(o.location), o.name, null, id);
+                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, null, id);
             }
         }
         List<AviObject> markList = commManager.getAllBuoys();
         for (AviObject o : markList){
             //TODO: Delete old buoys first
-            mapLayer.addMark(GeoUtils.toLatLng(o.location),o.name,getDirDistTXT(myLocation, GeoUtils.toLocation(o.location)),R.drawable.buoyblack);
+            mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
 
         }
     }
@@ -210,7 +210,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         o.type = ObjectTypes.Buoy;//// TODO: 11/02/2016 Add bouy types
         o.color = "Black";
         o.lastUpdate = new Date(System.currentTimeMillis());
-        o.location = GeoUtils.getLocationFromDirDist(GeoUtils.toAviLocation(loc),dir,dist);
+        o.setLoc(GeoUtils.getLocationFromDirDist(loc,dir,dist));
         o.name = "Buoy"+id;
         o.id = id;
         commManager.writeBuoyObject(o);
@@ -223,10 +223,10 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         EditText distText = (EditText) dialog.getDialog().findViewById(R.id.dist);
         long buoyId = ((BuoyInputDialog)df).buoy_id;
         if (buoyId!=-1){
-            addMark(buoyId,GeoUtils.toLocation(iGeo.getLoc()), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+            addMark(buoyId,iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
         }
         else
-            addMark(newBuoyId(),GeoUtils.toLocation(iGeo.getLoc()), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+            addMark(newBuoyId(),iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
     }
 
 

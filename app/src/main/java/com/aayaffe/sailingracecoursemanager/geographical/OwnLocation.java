@@ -21,7 +21,7 @@ import java.util.Date;
 public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private LocationManager locationManager;
-    private AviLocation mLastLocation = new AviLocation(0,0);
+    private Location mLastLocation;// = new Location("New);
     private static String TAG = "OwnLocation";
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
@@ -35,7 +35,7 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
     }
 
     @Override
-    public AviLocation getLoc() {
+    public Location getLoc() {
         return mLastLocation;
         //return getLastBestLocation();
     }
@@ -71,9 +71,9 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "GPS Location: " + location);
-        mLastLocation = GeoUtils.toAviLocation(location);
-        Log.d(TAG, "OwnLocation: " + mLastLocation.toLocation());
-        mLastLocation.lastUpdate = new Date();
+        mLastLocation = location;
+        //Log.d(TAG, "OwnLocation: " + mLastLocation);
+        //mLastLocation.getTime() = new Date();
     }
     @Override
     public void onConnected(Bundle bundle) {
@@ -81,7 +81,7 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
         //if (mRequestingLocationUpdates) {
         startLocationUpdates();
         //}
-        mLastLocation = GeoUtils.toAviLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();

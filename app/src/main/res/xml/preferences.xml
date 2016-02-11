@@ -3,6 +3,9 @@
     <EditTextPreference android:title="Wind Direction"
         android:key="windDir"
         android:summary="Input Wind direction in degrees true"></EditTextPreference>
+    <EditTextPreference android:title="Wind Speed"
+        android:key="windSpd"
+        android:summary="Input Wind speed in knots"></EditTextPreference>
     <EditTextPreference android:title="Refresh Rate"
         android:key="refreshRate"
         android:defaultValue="10"

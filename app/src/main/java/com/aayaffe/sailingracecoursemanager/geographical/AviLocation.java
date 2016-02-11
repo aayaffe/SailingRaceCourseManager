@@ -11,7 +11,7 @@ public class AviLocation {
     public double lat;
     public double lon;
     public double sog;
-    public double cog;
+    public float cog;
     public double depth;
     public Date lastUpdate;
 
@@ -22,7 +22,7 @@ public class AviLocation {
         lat = latitude;
         lon = longitude;
     }
-    public AviLocation(double latitude, double longitude, double sog, double cog, double depth, Date lastUpdate) {
+    public AviLocation(double latitude, double longitude,  float cog, double sog, double depth, Date lastUpdate) {
         lat = latitude;
         lon = longitude;
         this.sog = sog;
@@ -31,6 +31,8 @@ public class AviLocation {
         this.lastUpdate = lastUpdate;
 
     }
+
+
 
     public Location toLocation(){
         return GeoUtils.createLocation(lat,lon);

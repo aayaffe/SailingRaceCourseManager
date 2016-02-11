@@ -144,13 +144,14 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
 
     }
 
-    public Marker addMark(LatLng ll, String name,String caption, int ResourceID){
+    public Marker addMark(LatLng ll,float cog, String name,String caption, int ResourceID){
         if (ll==null) return null;
         if (markers.containsKey(name)){
             Marker m = markers.get(name);
             m.setPosition(ll);
             m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
             m.setSnippet(caption);
+            m.setRotation(cog);
             return m;
         }
         Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
