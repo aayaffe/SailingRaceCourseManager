@@ -256,6 +256,7 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
     @Override
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "Plus Fab Clicked");
+        try{
         String t = marker.getTitle();
         Pattern p = Pattern.compile("-?\\d+");
         Matcher m = p.matcher(t);
@@ -265,7 +266,10 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
 //        df.show(a.getFragmentManager(), "Edit_Buoy");
         if (marker.getTitle().contains("Buoy")){
             removeMark(marker);
+        }}catch(Exception e){
+            Log.d(TAG,"Failed on info click", e);
         }
+
     }
 
     public void removeMark(long id) {

@@ -2,6 +2,8 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.location.Location;
 
+import com.aayaffe.sailingracecoursemanager.Users.User;
+
 import java.util.List;
 
 /**
@@ -20,4 +22,8 @@ public interface ICommManager {
     public long getNewBuoyId();
 
     void removeBueyObject(String title);
+
+    User findUser(String uid);
+
+    void addUser(User u);
 }

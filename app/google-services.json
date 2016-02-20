@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_id": "fiery-bit-121312",
+    "project_number": "184836723027",
+    "name": "SailingRaceCourseManager"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184836723027:android:afec38b964a54f5b",
+        "client_id": "android:com.aayaffe.sailingracecoursemanager",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.aayaffe.sailingracecoursemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184836723027-08c5188kigv5ited31n23vfjol5fgfh8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aayaffe.sailingracecoursemanager",
+            "certificate_hash": "93DFD7D846CC19F34BB84A82360CE5EBF23B62A0"
+          }
+        },
+        {
+          "client_id": "184836723027-d6asmlgg9qlhmkmme4gh06pa0gal47gl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

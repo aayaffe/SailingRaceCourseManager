@@ -21,8 +21,10 @@ import com.aayaffe.sailingracecoursemanager.AppPreferences;
 import com.aayaffe.sailingracecoursemanager.BuoyEditDialog;
 import com.aayaffe.sailingracecoursemanager.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
@@ -35,8 +37,6 @@ import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 
 import java.util.Date;
 import java.util.List;
-
-//import com.aayaffe.sailingracecoursemanager.MainActivity;
 
 public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDialog.BuoyInputDialogListener, BuoyEditDialog.BuoyEditDialogListener{
 
@@ -52,24 +52,30 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     public static Marks marks = new Marks();
     private DialogFragment df;
     private Notification notification = new Notification();
+    private Users users;
+    private Event currentEvent;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
-        commManager = new Firebase(this);
-        commManager.login(SP.getString("username", "Manager1"), "Aa123456z", "1");
 
+        commManager = new Firebase(this);
+        commManager.login(null, null,null/*SP.getString("username", "Manager1"), "Aa123456z", "1"*/);
+        users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, SP);
         iGeo  = new OwnLocation(getBaseContext());
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         notification.InitNotification(this);
-        runnable.run();
+        Intent i = getIntent();
+        currentEvent =  i.getParcelableExtra("currentEvent");
+        String name = i.getStringExtra("eventName");
 
     }
 
@@ -90,13 +96,18 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         public void run()
         {
             AviObject o = new AviObject();
-            o.name = SP.getString("username", "Manager1");
+            if (users.getCurrentUser()!=null)
+                o.name = users.getCurrentUser().DisplayName;
+            else
+                o.name = SP.getString("username", "Manager1");
             o.setLoc(iGeo.getLoc());
             o.color = "Blue"; //TODO Set properly
             if (getElementType(o.name)==ObjectTypes.RaceManager) {
                 o.type = ObjectTypes.RaceManager;
             } else o.type = ObjectTypes.WorkerBoat;
             //TODO Think about last update time (Exists in Location also)
+
+
             commManager.writeBoatObject(o);
             redrawLayers();
             Log.d(TAG, "Delaying runnable for " + (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000) + " ms");
@@ -117,12 +128,12 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         Location myLocation = iGeo.getLoc();
         marks.marks = commManager.getAllBoats();
         for (AviObject o: marks.marks) {
-            if ((o != null)&&(o.getLoc()!=null)&&(!o.name.equals(SP.getString("username","Manager1")))) {
-                int id = getIconId(SP.getString("username","Manager1"),o);
+            if ((o != null)&&(o.getLoc()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
+                int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
                 mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation,o.getLoc()), id);
             }
-            if ((o != null)&&(o.getLoc()!=null)&&(o.name.equals(SP.getString("username","Manager1")))) {
-                int id = getIconId(SP.getString("username","Manager1"),o);
+            if ((o != null)&&(o.getLoc()!=null)&&(o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
+                int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
                 mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, null, id);
             }
         }
@@ -176,6 +187,8 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         return bearing + "\\" + distance + units;
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -184,7 +197,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         wa.setDirection(rotation);
         Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
-        //redrawLayers();
+        runnable.run();
     }
     public void fabOnClick(View v) {
         Log.d(TAG, "FAB Setting Clicked");
@@ -238,7 +251,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     public static void login(String id){
         if (commManager !=null) {
             commManager.login(id, "Aa123456z", "1");
-            Log.d(TAG,"login to " + id);
+            Log.d(TAG, "login to " + id);
         }
     }
 
@@ -281,4 +294,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     public void onEditDialogPositiveClick(DialogFragment dialog) {
 
     }
+
+
+
 }
