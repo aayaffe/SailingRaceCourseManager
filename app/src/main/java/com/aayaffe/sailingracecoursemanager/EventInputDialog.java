@@ -11,22 +11,22 @@ import android.os.Bundle;
  * Created by aayaffe on 09/02/2016.
  */
     public class EventInputDialog extends DialogFragment {
-    public long buoy_id;
-    public static EventInputDialog newInstance(long id) {
+    public String eventName;
+    public static EventInputDialog newInstance(String eventName) {
         EventInputDialog frag = new EventInputDialog();
         Bundle args = new Bundle();
-        args.putLong("buoy_id", id);
+        args.putString("eventName", eventName);
         frag.setArguments(args);
         return frag;
     }
     /* The activity that creates an instance of this dialog fragment must
          * implement this interface in order to receive event callbacks.
          * Each method passes the DialogFragment in case the host needs to query it. */
-    public interface BuoyInputDialogListener {
+    public interface EventInputDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
     }
     // Use this instance of the interface to deliver action events
-    BuoyInputDialogListener mListener;
+   EventInputDialogListener mListener;
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
     public void onAttach(Activity activity) {
@@ -34,7 +34,7 @@ import android.os.Bundle;
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (BuoyInputDialogListener) activity;
+            mListener = (EventInputDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(activity.toString()
@@ -43,12 +43,12 @@ import android.os.Bundle;
     }
     @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-        buoy_id = getArguments().getLong("buoy_id",-1);
-        String title = (buoy_id==-1)?"Add Buoy":"Edit Buoy: "+ buoy_id;
+        eventName = getArguments().getString("eventName", "");
+        String title = "Add new Event";//(buoy_id==-1)?"Add Buoy":"Edit Buoy: "+ buoy_id;
 
         // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setView(R.layout.buoy_input_dialog)
+            builder.setView(R.layout.event_input_dialog)
                     .setTitle(title)
                     // Add action buttons
                     .setPositiveButton("Add", new DialogInterface.OnClickListener() {

@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.location.Location;
 
+import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public interface ICommManager {
     User findUser(String uid);
 
     void addUser(User u);
+
+    void logout();
+
+    Event getEvent(String eventName);
 }

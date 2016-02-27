@@ -202,6 +202,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="eventName">Event Name</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

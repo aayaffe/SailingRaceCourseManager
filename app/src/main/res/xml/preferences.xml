@@ -10,12 +10,12 @@
         android:key="refreshRate"
         android:defaultValue="10"
         android:summary="Input Desired refresh rate in seconds. Higher consumes more bandwidth, lower updates slower"></EditTextPreference>
-    <ListPreference android:title="User Name"
+    <!--<ListPreference android:title="User Name"
         android:summary="Select your user name"
         android:key="username"
         android:defaultValue="Manager1"
         android:entries="@array/listArray"
-        android:entryValues="@array/listValues" />
+        android:entryValues="@array/listValues" />-->
 <!--    <CheckBoxPreference android:title="Race Officer?"
         android:defaultValue="false"
         android:summary="Select this If you are the Race Officer..."

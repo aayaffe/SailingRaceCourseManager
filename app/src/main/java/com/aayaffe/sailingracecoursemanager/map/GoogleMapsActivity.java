@@ -51,9 +51,8 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     public static ICommManager commManager;
     public static Marks marks = new Marks();
     private DialogFragment df;
-    private Notification notification = new Notification();
     private Users users;
-    private Event currentEvent;
+    private String currentEventName;
 
 
 
@@ -72,15 +71,12 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         mapLayer.Init(this, this, SP);
         iGeo  = new OwnLocation(getBaseContext());
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
-        notification.InitNotification(this);
         Intent i = getIntent();
-        currentEvent =  i.getParcelableExtra("currentEvent");
-        String name = i.getStringExtra("eventName");
+        //currentEvent =  i.getParcelableExtra("currentEvent");
+        currentEventName = i.getStringExtra("eventName");
 
+        Log.d(TAG,"Selected Event name is: " + currentEventName);
     }
-
-
-
 
     public void PopUpMenu(Context c, Activity a)
     {
@@ -96,38 +92,37 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         public void run()
         {
             AviObject o = new AviObject();
-            if (users.getCurrentUser()!=null)
+            if (users.getCurrentUser()!=null) {
                 o.name = users.getCurrentUser().DisplayName;
-            else
-                o.name = SP.getString("username", "Manager1");
-            o.setLoc(iGeo.getLoc());
-            o.color = "Blue"; //TODO Set properly
-            if (getElementType(o.name)==ObjectTypes.RaceManager) {
-                o.type = ObjectTypes.RaceManager;
-            } else o.type = ObjectTypes.WorkerBoat;
-            //TODO Think about last update time (Exists in Location also)
-
-
-            commManager.writeBoatObject(o);
+                o.setLoc(iGeo.getLoc());
+                o.color = "Blue"; //TODO Set properly
+                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                    o.type = ObjectTypes.RaceManager;
+                } else o.type = ObjectTypes.WorkerBoat;
+                //TODO Think about last update time (Exists in Location also)
+                commManager.writeBoatObject(o);
+            }
             redrawLayers();
             Log.d(TAG, "Delaying runnable for " + (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000) + " ms");
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000));
         }
     };
 
-    private ObjectTypes getElementType(String name) {
-        if (name.contains("Manager"))
-            return ObjectTypes.RaceManager;
-        else if (name.contains("Worker"))
-            return ObjectTypes.WorkerBoat;
-        else return ObjectTypes.Other;
+    private boolean isCurrentEventManager(String Uid){
+        if (commManager.getEvent(currentEventName)==null)
+            return false;
+        if (Uid == null||Uid.isEmpty())
+            return false;
+        if (commManager.getEvent(currentEventName).getEventManager().Uid.equals(Uid))
+            return true;
+        return false;
     }
 
-    public void redrawLayers()
-    {
+    public void redrawLayers() {
         Location myLocation = iGeo.getLoc();
         marks.marks = commManager.getAllBoats();
         for (AviObject o: marks.marks) {
+            //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
                 int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
                 mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation,o.getLoc()), id);
@@ -197,6 +192,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         wa.setDirection(rotation);
         Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
+
         runnable.run();
     }
     public void fabOnClick(View v) {
@@ -258,26 +254,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     public static void resetMap(){
         
     }
-    private Boolean exit = false;
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            //mBuilder.setOngoing(false);
-            notification.cancelAll();
-            finish(); // finish activity
-            System.exit(0);
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-        }
-    }
+
 
     public void onMoveButtonClick() {
         long id = ((BuoyEditDialog)mapLayer.df).buoy_id;

@@ -57,7 +57,7 @@
         <!-- android:value="@string/facebook_app_id" /> -->
         <activity
             android:name=".ChooseEvent"
-            android:label="@string/title_activity_choose_event"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

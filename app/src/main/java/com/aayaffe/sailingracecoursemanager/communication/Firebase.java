@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
@@ -21,13 +22,13 @@ public class Firebase implements ICommManager {
     private Context c;
     private static com.firebase.client.Firebase fb;
     private DataSnapshot ds;
-
+    private String currentEventName = "Event1";//TODO Handle different events
+    private String Uid;
+    private Users users;
     public Firebase(Context c) {
         this.c = c;
+        users = new Users(this);
     }
-
-    private String EventName = "Event1";//TODO Handle different events
-    private String Uid;
 
     @Override
     public int login(String user, String password, String nickname) {
@@ -50,11 +51,13 @@ public class Firebase implements ICommManager {
                 public void onAuthStateChanged(AuthData authData) {
                     if (authData != null) {
                         Uid = authData.getUid();
-
-                        Log.d(TAG, "Uid " + Uid + " Is logged in.");
+                        Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
+                        users.setCurrentUser(findUser(Uid));
 
                     } else {
-                        // user is not logged in
+                        Uid = null;
+                        users.logout();
+                        Log.d(TAG,"User has logged out.");
                     }
                 }
             });
@@ -73,7 +76,7 @@ public class Firebase implements ICommManager {
     public int writeBuoyObject(AviObject o) {
         if (o == null || o.name == null || o.name.isEmpty()) return -1;
         fb.child("Buoys").child(o.name).setValue(o); //TODO: Save string in a concentrated place
-        fb.child("Events").child(EventName).child("lastBuoyId").setValue(o.id);
+        fb.child("Events").child(getCurrentEventName()).child("lastBuoyId").setValue(o.id);
         return 0;
     }
 
@@ -108,7 +111,7 @@ public class Firebase implements ICommManager {
     @Override
     public long getNewBuoyId() {
         if (ds == null || ds.getValue() == null) return 1;
-        Long id = (Long) ds.child("Events").child(EventName).child("lastBuoyId").getValue();
+        Long id = (Long) ds.child("Events").child(getCurrentEventName()).child("lastBuoyId").getValue();
         if (id != null) {
             return id + 1;
         } else return 1;
@@ -134,6 +137,23 @@ public class Firebase implements ICommManager {
         fb.child("Users").child(u.Uid).setValue(u);
     }
 
+    @Override
+    public void logout() {
+        fb.unauth();
+        Uid = null;
+
+    }
+
+    @Override
+    public Event getEvent(String eventName) {
+        try {
+            Event e = ds.child("Events").child(eventName).getValue(Event.class);
+            return e;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public com.firebase.client.Firebase getFireBaseRef() {
         return fb;
     }
@@ -142,4 +162,21 @@ public class Firebase implements ICommManager {
         fb.child("Events").child(neu.getName()).setValue(neu);
     }
 
+
+    public String getCurrentEventName() {
+        return currentEventName;
+    }
+
+    public void setCurrentEventName(String currentEventName) {
+        this.currentEventName = currentEventName;
+    }
+
+    /***
+     *
+     * @return the Uid of the currently logged in user.
+     * Null if not logged in
+     */
+    public String getLoggedInUid() {
+        return Uid;
+    }
 }
