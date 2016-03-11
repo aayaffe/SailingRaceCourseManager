@@ -6,8 +6,8 @@ android {
         applicationId "com.aayaffe.sailingracecoursemanager"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.22"
+        versionCode 7
+        versionName "1.23"
     }
     buildTypes {
         release {

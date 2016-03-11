@@ -203,6 +203,8 @@
     </string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="eventName">Event Name</string>
+    <string name="action_add_event">Add Event</string>
+    <string name="action_logout">Logout</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

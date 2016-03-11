@@ -115,14 +115,17 @@ public class ChooseEvent extends FirebaseLoginBaseActivity implements EventInput
     @Override
     protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
         //TODO: Handle correctly
+        Log.d(TAG, "Login provider error: " + firebaseLoginError.message);
     }
 
     @Override
     protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
         //TODO: Handle correctly
+        Log.d(TAG, "Login User error: " + firebaseLoginError.message);
     }
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
+        Log.d(TAG, "Logged in: " +authData.getUid());
         String displayName;
         try{
             displayName = authData.getProviderData().get("displayName").toString();

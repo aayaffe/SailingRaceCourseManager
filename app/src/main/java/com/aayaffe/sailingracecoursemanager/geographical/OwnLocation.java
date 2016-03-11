@@ -70,7 +70,7 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "GPS Location: " + location);
+        //Log.d(TAG, "GPS Location: " + location);
         mLastLocation = location;
         //Log.d(TAG, "OwnLocation: " + mLastLocation);
         //mLastLocation.getTime() = new Date();

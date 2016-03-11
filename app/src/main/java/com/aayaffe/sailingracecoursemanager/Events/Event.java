@@ -12,17 +12,10 @@ import java.util.ArrayList;
  */
 public class Event implements Parcelable {
     private String name;
-//    private ArrayList<User> users;
     private int lastBuoyId;
     private User eventManager;
 
-//    public ArrayList<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(ArrayList<User> users) {
-//        this.users = users;
-//    }
+
 
     private Event(Parcel in) {
         name = in.readString();

@@ -36,10 +36,14 @@ public class Firebase implements ICommManager {
         if (fb == null) {
             fb = new com.firebase.client.Firebase("https://avi.firebaseio.com"); //TODO: Save string in a concentrated place
         }
-            fb.addValueEventListener(new ValueEventListener() {
+
+        fb.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ds = dataSnapshot;
+                    if(users.getCurrentUser()==null){
+                        users.setCurrentUser(findUser(Uid));
+                    }
                 }
 
                 @Override
@@ -125,7 +129,8 @@ public class Firebase implements ICommManager {
     @Override
     public User findUser(String uid) {
         try {
-            User u = ds.child("Users").child(uid).getValue(User.class);
+            User u;
+            u = ds.child("Users").child(uid).getValue(User.class);
             return u;
         } catch (Exception e) {
             return null;
