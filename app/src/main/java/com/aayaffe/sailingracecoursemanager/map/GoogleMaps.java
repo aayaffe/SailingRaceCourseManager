@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.BuoyEditDialog;
 import com.aayaffe.sailingracecoursemanager.BuoyInputDialog;
@@ -42,7 +44,7 @@ import java.util.regex.Pattern;
 /**
  * Created by aayaffe on 04/10/2015.
  */
-public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.OnInfoWindowClickListener,OnMapReadyCallback {
+public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapReadyCallback {
     private static final String TAG = "OpenSeaMap";
     public GoogleMap mapView;
     private Context c;
@@ -63,6 +65,7 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity)a).getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
 
 
@@ -89,14 +92,12 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
         ZoomToMarks();
 
         setCenter(center);
-        mapView.setOnMapLongClickListener(this);
         mapView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             public boolean onMarkerClick(Marker marker) {
                 // Check if there is an open info window
                 if (lastOpenned != null) {
                     // Close the info window
                     lastOpenned.hideInfoWindow();
-
                     // Is the marker the same marker that was already open
                     if (lastOpenned.equals(marker)) {
                         // Nullify the lastOpenned object
@@ -110,12 +111,12 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
                 marker.showInfoWindow();
                 // Re-assign the last openned such that we can close it later
                 lastOpenned = marker;
-
                 // Event was handled by our code do not launch default behaviour.
                 return true;
             }
         });
         mapView.setOnInfoWindowClickListener(this);
+
 
 
     }
@@ -148,10 +149,15 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
         if (ll==null) return null;
         if (markers.containsKey(name)){
             Marker m = markers.get(name);
+            boolean infoWindows=m.isInfoWindowShown();
+
             m.setPosition(ll);
             m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
             m.setSnippet(caption);
             m.setRotation(cog);
+            if (infoWindows) {
+                m.showInfoWindow();
+            }
             return m;
         }
         Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
@@ -236,13 +242,7 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
 
 
 
-    @Override //TODO Allow adding from outside the class
-    public void onMapLongClick(LatLng point) {
-        mapView.addMarker(new MarkerOptions()
-                .position(point)
-                .title("You are here")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-    }
+
 
 
 
@@ -257,20 +257,36 @@ public class GoogleMaps implements GoogleMap.OnMapLongClickListener,GoogleMap.On
     public void onInfoWindowClick(Marker marker) {
         Log.d(TAG, "Plus Fab Clicked");
         try{
-        String t = marker.getTitle();
-        Pattern p = Pattern.compile("-?\\d+");
-        Matcher m = p.matcher(t);
-        m.find();
-        long id = Integer.parseInt(m.group());
+            String t = marker.getTitle();
+            Pattern p = Pattern.compile("-?\\d+");
+            Matcher m = p.matcher(t);
+            m.find();
+            long id = Integer.parseInt(m.group());
 //        df = BuoyEditDialog.newInstance(id);
 //        df.show(a.getFragmentManager(), "Edit_Buoy");
-        if (marker.getTitle().contains("Buoy")){
-            removeMark(marker);
-        }}catch(Exception e){
+            if (marker.getTitle().contains("Buoy")){
+                if (deleteMark){
+                    removeMark(marker);
+                }
+                else {
+                    Toast.makeText(c, "Press the buoys info window again to delete.", Toast.LENGTH_SHORT).show();
+                    deleteMark = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            deleteMark = false;
+                        }
+                    }, 3 * 1000);
+                }
+
+            }}catch(Exception e){
             Log.d(TAG,"Failed on info click", e);
         }
 
     }
+    private Boolean deleteMark = false;
+
+
 
     public void removeMark(long id) {
         removeMark(markers.get("Buoy" + id));

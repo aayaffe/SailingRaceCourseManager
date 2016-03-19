@@ -4,6 +4,8 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,22 +18,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseListAdapter;
 import com.firebase.ui.auth.core.AuthProviderType;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventInputDialog.EventInputDialogListener {
@@ -41,9 +39,10 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
     private Event selectedEvent;
-    private String selectedEventName;
+    private static String selectedEventName;
     private DialogFragment addevent;
     private Notification notification = new Notification();
+    private boolean loggedIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,14 +91,22 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
 
         setEnabledAuthProvider(AuthProviderType.GOOGLE);
         setEnabledAuthProvider(AuthProviderType.PASSWORD);
-        if (commManager.getFireBaseRef().getAuth()==null){
+        if ((commManager.getFireBaseRef().getAuth()==null)&&(!loggedIn)){
             showFirebaseLoginPrompt();
         }
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_event_toolbar, menu);
+        if (loggedIn)
+        {
+            enableLogin(false);
+        }
+        else{
+            enableLogin(true);
+        }
         return true;
     }
     @Override
@@ -112,11 +119,14 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
                 return true;
 
             case R.id.action_logout:
-                users.logout();
-                Toast.makeText(this, "You have been logged out.",
-                        Toast.LENGTH_SHORT).show();
-                //MenuItem log_item = (MenuItem) findViewById(R.id.action_logout);
-                //log_item.setIcon(R.id.) //TODO change login\logout icons
+                if (loggedIn) {
+                    users.logout();
+                    enableLogin(true);
+                }
+                else{
+                    showFirebaseLoginPrompt();
+                }
+
 
                 return true;
 
@@ -136,17 +146,23 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
     protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
         //TODO: Handle correctly
         Log.d(TAG, "Login provider error: " + firebaseLoginError.message);
+        Toast.makeText(this, firebaseLoginError.message,
+                Toast.LENGTH_LONG).show();
+        resetFirebaseLoginPrompt();
     }
 
     @Override
     protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
         //TODO: Handle correctly
         Log.d(TAG, "Login User error: " + firebaseLoginError.message);
+        Toast.makeText(this, firebaseLoginError.message,Toast.LENGTH_LONG).show();
+        resetFirebaseLoginPrompt();
     }
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
         Log.d(TAG, "Logged in: " +authData.getUid());
         String displayName;
+        enableLogin(false);
         try{
             displayName = authData.getProviderData().get("displayName").toString();
         }catch (Exception e){
@@ -185,7 +201,10 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
 
     @Override
     public void onFirebaseLoggedOut() {
-        // TODO: Handle logout - currently handeled in FireBase class
+
+        Toast.makeText(this, "You have been logged out.",
+                Toast.LENGTH_SHORT).show();
+        enableLogin(true);
     }
     @Override
     protected void onDestroy() {
@@ -214,6 +233,35 @@ public class ChooseEventNew extends FirebaseLoginBaseActivity implements EventIn
                     exit = false;
                 }
             }, 3 * 1000);
+        }
+    }
+
+    private void enableLogin(boolean toLogin){
+        if (toLogin) {
+
+            try {
+                ActionMenuItemView log_item = (ActionMenuItemView) findViewById(R.id.action_logout);
+                log_item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
+                log_item.setTitle("Login");
+                ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                add_event_item.setEnabled(false);
+            }catch (Exception e){
+
+            }
+            loggedIn = false;
+        }
+        else{
+            try {
+                ActionMenuItemView log_item = (ActionMenuItemView) findViewById(R.id.action_logout);
+                log_item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
+                log_item.setTitle("Logout");
+                ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                add_event_item.setEnabled(true);
+
+            }catch (Exception e){
+
+            }
+            loggedIn = true;
         }
     }
 }

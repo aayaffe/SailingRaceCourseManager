@@ -3,6 +3,7 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 import android.location.Location;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by aayaffe on 09/01/2016.
@@ -36,5 +37,12 @@ public class AviLocation {
 
     public Location toLocation(){
         return GeoUtils.createLocation(lat,lon);
+    }
+
+    public static long Age(AviLocation aviLocation) {
+        if (aviLocation==null) return -1;
+        if (aviLocation.lastUpdate==null) return -1;
+        long diffInMs = new Date().getTime() - aviLocation.lastUpdate.getTime();
+        return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
     }
 }

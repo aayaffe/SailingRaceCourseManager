@@ -205,6 +205,11 @@
     <string name="eventName">Event Name</string>
     <string name="action_add_event">Add Event</string>
     <string name="action_logout">Logout</string>
+    <string name="db_boats">boats</string>
+    <string name="db_buoys">buoys</string>
+    <string name="db_events">Events</string>
+    <string name="db_users">Users</string>
+    <string name="db_lastbuoyid">lastBuoyId</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

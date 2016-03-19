@@ -4,8 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.communication.AviObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
+import java.util.Dictionary;
 
 /**
  * Created by aayaffe on 19/02/2016.
@@ -14,6 +16,10 @@ public class Event implements Parcelable {
     private String name;
     private int lastBuoyId;
     private User eventManager;
+    @JsonIgnore
+    private Dictionary<String,AviObject> boats;
+    @JsonIgnore
+    private Dictionary<String,AviObject> buoys;
 
 
 
@@ -70,5 +76,21 @@ public class Event implements Parcelable {
         dest.writeString(name);
         dest.writeInt(lastBuoyId);
         dest.writeParcelable(eventManager,0);
+    }
+
+    public Dictionary<String, AviObject> getBoats() {
+        return boats;
+    }
+
+    public void setBoats(Dictionary<String, AviObject> boats) {
+        this.boats = boats;
+    }
+
+    public Dictionary<String, AviObject> getBuoys() {
+        return buoys;
+    }
+
+    public void setBuoys(Dictionary<String, AviObject> buoys) {
+        this.buoys = buoys;
     }
 }

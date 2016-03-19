@@ -30,6 +30,7 @@ import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
@@ -103,7 +104,6 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
                 commManager.writeBoatObject(o);
             }
             redrawLayers();
-            Log.d(TAG, "Delaying runnable for " + (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000) + " ms");
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000));
         }
     };
@@ -144,7 +144,10 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         int ret = R.drawable.boatred;
         if (o.name.equals(string)){
             switch(o.type) {
-                case WorkerBoat: ret = R.drawable.boatgold;
+                case WorkerBoat:
+                    ret = R.drawable.boatgold;
+                    if (AviLocation.Age(o.getAviLocation())>300)
+                        ret = R.drawable.boatred;
                     break;
                 case RaceManager: ret = R.drawable.managergold;
                     break;
@@ -155,6 +158,8 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
             switch (o.type) {
                 case WorkerBoat:
                     ret = R.drawable.boatcyan;
+                    if (AviLocation.Age(o.getAviLocation())>300)
+                        ret = R.drawable.boatred;
                     break;
                 case RaceManager:
                     ret = R.drawable.managerblue;
