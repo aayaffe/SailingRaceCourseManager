@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface ICommManager {
     public int login (String user, String password, String nickname);
+
+    void setCommManagerEventListener(CommManagerEventListener listener);
+
     public int writeBoatObject(AviObject o);
     public int writeBuoyObject(AviObject o);
 
@@ -31,4 +34,6 @@ public interface ICommManager {
     void logout();
 
     Event getEvent(String eventName);
+
+    public long getSupportedVersion();
 }

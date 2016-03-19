@@ -18,7 +18,7 @@ public class Notification {
 
 
     public void InitNotification(Context c){
-        mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.drawable.notification_icon).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
+        mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
         Intent resultIntent = new Intent(c,GoogleMapsActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(c,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);

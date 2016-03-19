@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.aayaffe.sailingracecoursemanager.ChooseEventNew"
-    tools:showIn="@layout/activity_choose_event_new">
+    tools:context="com.aayaffe.sailingracecoursemanager.ChooseEvent"
+    tools:showIn="@layout/activity_choose_event">
 
 
 

@@ -2,11 +2,36 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+
+        <item name="android:windowActionBarOverlay">true</item>
+        <!--For compatibility-->
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">-->
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
+        <!--<item name="android:windowActionBarOverlay">true</item>-->
+        <!--&lt;!&ndash;For compatibility&ndash;&gt;-->
+        <!--<item name="actionBarStyle">@style/MyActionBar</item>-->
+        <!--<item name="windowActionBarOverlay">true</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+
+    <!--<color name="transparent_black">#400000000</color>-->
+    <!--<style name="MyActionBar" parent="Widget.AppCompat.ActionBar.Solid">-->
+        <!--<item name="android:background">@color/transparent_black</item>-->
+        <!--&lt;!&ndash;For compatibility&ndash;&gt;-->
+        <!--<item name="background">@color/transparent_black</item>-->
+    <!--</style>-->
+
+
+
+
 
 </resources>

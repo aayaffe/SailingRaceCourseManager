@@ -5,21 +5,16 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.BuoyEditDialog;
-import com.aayaffe.sailingracecoursemanager.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -30,11 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.mapsforge.core.model.BoundingBox;
 import org.mapsforge.core.model.LatLong;
-import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
-import org.mapsforge.map.layer.renderer.TileRendererLayer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,23 +139,33 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
     public Marker addMark(LatLng ll,float cog, String name,String caption, int ResourceID){
         if (ll==null) return null;
-        if (markers.containsKey(name)){
-            Marker m = markers.get(name);
-            boolean infoWindows=m.isInfoWindowShown();
+        try{
+            if (markers.containsKey(name)){
+                Marker m = markers.get(name);
+                boolean infoWindows=m.isInfoWindowShown();
 
-            m.setPosition(ll);
-            m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
-            m.setSnippet(caption);
-            m.setRotation(cog);
-            if (infoWindows) {
-                m.showInfoWindow();
+                m.setPosition(ll);
+                m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
+                m.setSnippet(caption);
+                m.setRotation(cog);
+                if (infoWindows) {
+                    m.showInfoWindow();
+                }
+                return m;
             }
-            return m;
+            if (null != mapView) {
+                Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
+                markers.put(name,m);
+                return m;
+            } else {
+                Log.d(TAG, "mapView is null");
+                return null;
+            }
+        }catch(Exception e)
+        {
+            Log.d(TAG,"Failed to add mark",e);
         }
-        Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
-        markers.put(name,m);
-        return m;
-
+        return null;
     }
 
     public boolean contains(Marker m){
@@ -267,6 +269,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
             if (marker.getTitle().contains("Buoy")){
                 if (deleteMark){
                     removeMark(marker);
+                    deleteMark = false;
                 }
                 else {
                     Toast.makeText(c, "Press the buoys info window again to delete.", Toast.LENGTH_SHORT).show();

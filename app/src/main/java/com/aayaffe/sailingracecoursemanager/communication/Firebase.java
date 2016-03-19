@@ -13,6 +13,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -21,66 +22,76 @@ import java.util.Random;
  */
 public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
-    private Context c;
+    private static Context c;
     private static com.firebase.client.Firebase fb;
-    private DataSnapshot ds;
+    private static DataSnapshot ds;
     private static String currentEventName;
     private String Uid;
     private Users users;
+    private int CompatibleVersion;
+    private CommManagerEventListener listener;
+    private boolean connected = false;
+
     public Firebase(Context c) {
-        this.c = c;
+        if (this.c==null)
+            this.c = c;
         users = new Users(this);
     }
 
     @Override
     public int login(String user, String password, String nickname) {
-        com.firebase.client.Firebase.setAndroidContext(c);//TODO Better login indviduals
         if (fb == null) {
-            fb = new com.firebase.client.Firebase("https://avi.firebaseio.com"); //TODO: Save string in a concentrated place
+            com.firebase.client.Firebase.setAndroidContext(c);
+            fb = new com.firebase.client.Firebase(c.getString(R.string.db_base_address));
         }
-
         fb.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ds = dataSnapshot;
-                    if(users.getCurrentUser()==null){
-                        users.setCurrentUser(findUser(Uid));
-                    }
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ds = dataSnapshot;
+                if(users.getCurrentUser()==null){
+                    users.setCurrentUser(findUser(Uid));
                 }
+                if ((listener != null)&&(!connected))
+                    listener.onConnect(new Date());
+                connected = true;
+            }
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                }
-            });
-            fb.addAuthStateListener(new com.firebase.client.Firebase.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(AuthData authData) {
-                    if (authData != null) {
-                        Uid = authData.getUid();
-                        Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
-                        if (findUser(Uid) == null){
-                            String displayName;
-                            try {
-                                displayName = authData.getProviderData().get("displayName").toString();
-                            }catch(Exception e){
-                                Random r = new Random();
-                                displayName = "User" + r.nextInt(10000);
-                            }
-                            users.setCurrentUser(Uid, displayName);
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+        fb.addAuthStateListener(new com.firebase.client.Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (authData != null) {
+                    Uid = authData.getUid();
+                    Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
+                    if (findUser(Uid) == null){
+                        String displayName;
+                        try {
+                            displayName = authData.getProviderData().get("displayName").toString();
+                        }catch(Exception e){
+                            Random r = new Random();
+                            displayName = "User" + r.nextInt(10000);
                         }
-                        users.setCurrentUser(findUser(Uid));
-
-                    } else {
-                        Uid = null;
-                        users.logout();
-                        Log.d(TAG,"User has logged out.");
+                        users.setCurrentUser(Uid, displayName);
                     }
+                    users.setCurrentUser(findUser(Uid));
+
+                } else {
+                    Uid = null;
+                    users.logout();
+                    Log.d(TAG,"User has logged out.");
                 }
-            });
+            }
+        });
 
         return 0;
     }
-
+    @Override
+    public void setCommManagerEventListener(CommManagerEventListener listener){
+        this.listener = listener;
+    }
 
     @Override
     public int writeBoatObject(AviObject o) {
@@ -170,6 +181,13 @@ public class Firebase implements ICommManager {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public long getSupportedVersion() {
+       if (ds == null || ds.getValue() == null) return -1;
+       long id = (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
+       return id;
     }
 
     public com.firebase.client.Firebase getFireBaseRef() {

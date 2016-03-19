@@ -1,27 +1,26 @@
 package com.aayaffe.sailingracecoursemanager.map;
 
-import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
 import com.aayaffe.sailingracecoursemanager.AppPreferences;
-import com.aayaffe.sailingracecoursemanager.BuoyEditDialog;
-import com.aayaffe.sailingracecoursemanager.BuoyInputDialog;
+import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyEditDialog;
+import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
-import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -29,17 +28,17 @@ import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
-import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
 import java.util.List;
 
-public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDialog.BuoyInputDialogListener, BuoyEditDialog.BuoyEditDialogListener{
+public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener, BuoyEditDialog.BuoyEditDialogListener{
 
     private static final String TAG = "GoogleMapsActivity";
     public static  int REFRESH_RATE = 1000;
@@ -54,7 +53,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
     private DialogFragment df;
     private Users users;
     private String currentEventName;
-
+    private Tracker mTracker;
 
 
     @Override
@@ -75,17 +74,50 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
         Intent i = getIntent();
         //currentEvent =  i.getParcelableExtra("currentEvent");
         currentEventName = i.getStringExtra("eventName");
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(currentEventName);
         Log.d(TAG,"Selected Event name is: " + currentEventName);
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
     }
 
-    public void PopUpMenu(Context c, Activity a)
-    {
-        PopupMenu popupMenu = new PopupMenu(c, findViewById(R.id.addFAB));
-        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener)a);
-        popupMenu.inflate(R.menu.map_popup_menu);
-        popupMenu.show();
+//    public void PopUpMenu(Context c, Activity a)
+//    {
+//        PopupMenu popupMenu = new PopupMenu(c, findViewById(R.id.addFAB));
+//        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener)a);
+//        popupMenu.inflate(R.menu.map_popup_menu);
+//        popupMenu.show();
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.map_toolbar, menu);
+        return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Log.d(TAG, "Plus Fab Clicked");
+                SettingsMenuItemOnClick();
+                return true;
+
+            case R.id.action_add_object:
+                AddMenuItemOnClick();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
 
 
     private Runnable runnable = new Runnable()
@@ -200,7 +232,8 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
 
         runnable.run();
     }
-    public void fabOnClick(View v) {
+
+    public void SettingsMenuItemOnClick() {
         Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), AppPreferences.class);
         startActivity(i);
@@ -211,7 +244,7 @@ public class GoogleMapsActivity extends FragmentActivity implements BuoyInputDia
 //        super.onDestroy();
 //        map.destroy();
 //    }
-    public void plusIconOnclick(View view) {
+    public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
         df = BuoyInputDialog.newInstance(-1);
         df.show(getFragmentManager(), "Add_Buoy");
