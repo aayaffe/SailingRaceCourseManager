@@ -77,12 +77,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         Location center = new Location("Manual");
         center.setLatitude(32.831653);
         center.setLongitude(35.019216);
-
-//        if ((iGeo.getLoc().lat != 0)||(iGeo.getLoc().lon!=0)) {
-//            mapLayer.setCenter(GeoUtils.toLocation(iGeo.getLoc()));
-//        }
         ZoomToMarks();
-
         setCenter(center);
         mapView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             public boolean onMarkerClick(Marker marker) {
@@ -98,7 +93,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                         return true;
                     }
                 }
-
                 // Open the info window for the marker
                 marker.showInfoWindow();
                 // Re-assign the last openned such that we can close it later
@@ -108,7 +102,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
             }
         });
         mapView.setOnInfoWindowClickListener(this);
-
+        mapView.setPadding(0,170,0,0);
 
 
     }
@@ -122,7 +116,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         setCenter(GeoUtils.toLatLng(ll));
     }
     public void setCenter(LatLng ll){
-        mapView.moveCamera(CameraUpdateFactory.newLatLng(ll));
+        mapView.animateCamera(CameraUpdateFactory.newLatLng(ll));
     }
 
     public void setCenter(double lat, double lon) {
@@ -168,49 +162,23 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         return null;
     }
 
-    public boolean contains(Marker m){
-//        return mapView.getLayerManager().getLayers().contains(m);
-        return true;
-    }
+
 
     public void removeMark(Marker m){
         m.remove();
         GoogleMapsActivity.commManager.removeBueyObject(m.getTitle());
         markers.remove(m);
     }
-    private void zoomToBounds(LatLong ll1, LatLong ll2)
-    {
-//        BoundingBox bb = getBoundingBox(ll1,ll2);
-//        Dimension dimension = this.mapView.getModel().mapViewDimension.getDimension();
-//        this.mapView.getModel().mapViewPosition.setMapPosition(new MapPosition(
-//                bb.getCenterPoint(),
-//                LatLongUtils.zoomForBounds(dimension, bb, this.mapView.getModel().displayModel.getTileSize())));
-    }
-    private BoundingBox getBoundingBox(LatLong ll1, LatLong ll2){
-        double minLat,maxLat,minLon,maxLon;
-        if (ll1.latitude<ll2.latitude)
-        {
-            minLat = ll1.latitude;
-            maxLat = ll2.latitude;
-        }
-        else {
-            minLat = ll2.latitude;
-            maxLat = ll1.latitude;
-        }
-        if (ll1.longitude<ll2.longitude)
-        {
-            minLon = ll1.longitude;
-            maxLon = ll2.longitude;
-        }
-        else {
-            minLon = ll2.longitude;
-            maxLon = ll1.longitude;
-        }
-        BoundingBox bb = new BoundingBox(minLat,
-                minLon, maxLat, maxLon);
-        return bb;
-    }
+
     public void ZoomToMarks(){
+        ArrayList<Marker> ms = new ArrayList<>(markers.values());
+        if (ms.size()==1) {
+            setCenter((ms.get(0).getPosition()));
+            return;
+        }
+        if (ms.size()==0){
+            return;
+        }
         ZoomToBounds(new ArrayList<>(markers.values()));
     }
     public void ZoomToBounds(List<Marker> marks){
@@ -220,35 +188,14 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         }
         try{
             LatLngBounds bounds = builder.build();
-            int padding = 50; // offset from edges of the map in pixels
+            int padding = 100; // offset from edges of the map in pixels
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             //googleMap.moveCamera(cu);
             mapView.animateCamera(cu);
         } catch (Exception e){
 
         }
-
-
     }
-
-
-    public void loadMap(){
-//        // tile renderer layer using internal render theme
-//        MapDataStore mapDataStore = getMapFile();
-//        this.tileRendererLayer = new TileRendererLayer(tileCache, mapDataStore,
-//                this.mapView.getModel().mapViewPosition, false, true, AndroidGraphicFactory.INSTANCE);
-//        tileRendererLayer.setXmlRenderTheme(InternalRenderTheme.OSMARENDER);
-////         only once a layer is associated with a mapView the rendering starts
-//        this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
-    }
-
-
-
-
-
-
-
-
 
     public LatLong getLastTapLatLong() {
         return lastTapLatLong;

@@ -2,9 +2,11 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,11 +29,15 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
     GoogleApiClient mGoogleApiClient;
     private Activity activity;
     private Context context;
+    private long mLastLocationMillis;
+    private boolean isGPSFix;
+
 
 
     public OwnLocation (Context c){
         this.context = c;
         InitGPS(context);
+
     }
 
     @Override
@@ -64,16 +70,22 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
 
         mGoogleApiClient.connect();
         locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.addGpsStatusListener(new MyGPSListener());
+
 
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        if (location == null) return;
+
         //Log.d(TAG, "GPS Location: " + location);
         mLastLocation = location;
         //Log.d(TAG, "OwnLocation: " + mLastLocation);
         //mLastLocation.getTime() = new Date();
+
+        mLastLocationMillis = SystemClock.elapsedRealtime();
     }
     @Override
     public void onConnected(Bundle bundle) {
@@ -115,5 +127,25 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    public boolean isGPSFix() {
+        isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+        return isGPSFix;
+    }
+
+    private class MyGPSListener implements GpsStatus.Listener {
+        public void onGpsStatusChanged(int event) {
+            switch (event) {
+                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                    if (mLastLocation != null)
+                        isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+                    break;
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                    // Do something.
+                    isGPSFix = true;
+                    break;
+            }
+        }
     }
 }

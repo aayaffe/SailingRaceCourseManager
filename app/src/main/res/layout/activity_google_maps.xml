@@ -54,29 +54,40 @@
         android:layout_alignStart="@+id/configFAB"
         android:layout_marginTop="0dp"
         android:layout_marginRight="15dp"/>
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/configFAB"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right|end"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:src="@drawable/settings"-->
-        <!--android:clickable="true"-->
-        <!--android:onClick="SettingsMenuItemOnClick"-->
-        <!--android:layout_marginBottom="15dp"-->
-        <!--android:layout_marginRight="15dp"/>-->
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/addFAB"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right|end"-->
-        <!--android:src="@drawable/ic_add_white_48dp"-->
-        <!--android:clickable="true"-->
-        <!--android:layout_above="@+id/configFAB"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginBottom="25dp"-->
-        <!--android:layout_marginRight="15dp"-->
-        <!--android:onClick="AddMenuItemOnClick"/>-->
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/gps_indicator"
+        android:layout_below="@id/toolbar_linear_layout"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="top|right|end"
+        android:src="@drawable/ic_gps_off_black_24dp"
+        android:layout_alignStart="@+id/configFAB"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="15dp"
+        android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/own_location"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="top|right|end"
+        android:src="@drawable/ic_my_location_96dp1"
+        android:layout_alignStart="@+id/configFAB"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/zoom_to_bounds"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="top|right|end"
+        android:src="@drawable/ic_crop_free_24dp"
+        android:layout_alignStart="@+id/configFAB"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"/>
+
 
 </RelativeLayout>

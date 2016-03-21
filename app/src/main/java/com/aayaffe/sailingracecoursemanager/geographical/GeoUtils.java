@@ -97,4 +97,8 @@ public class GeoUtils {
         ret.setLatitude(Math.toDegrees(lat2));
         return ret;
     }
+
+    public static int relativeToTrueDirection(int trueDir, int relativDir){
+        return ((trueDir + relativDir) % 360);
+    }
 }

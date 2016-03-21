@@ -13,14 +13,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
 import com.aayaffe.sailingracecoursemanager.AppPreferences;
+import com.aayaffe.sailingracecoursemanager.ChooseEvent;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyEditDialog;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.Dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -32,6 +36,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.google.android.gms.analytics.Tracker;
 
@@ -74,10 +79,60 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Intent i = getIntent();
         //currentEvent =  i.getParcelableExtra("currentEvent");
         currentEventName = i.getStringExtra("eventName");
+        ImageView ownLocationButton = (ImageView) findViewById(R.id.own_location);
+        ownLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    mapLayer.setCenter(iGeo.getLoc());
+                }catch (Exception e)
+                {
+                    Log.d(TAG,"Unable to zoom to own location",e);
+                }
+            }
+        });
+        ImageView zoomToBoundsButton = (ImageView) findViewById(R.id.zoom_to_bounds);
+        zoomToBoundsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    mapLayer.ZoomToMarks();
+                }catch (Exception e)
+                {
+                    Log.d(TAG,"Unable to zoom to marks",e);
+                }
+            }
+        });
+        ImageView noGPSIcon = (ImageView) findViewById(R.id.gps_indicator);
+        noGPSIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    Toast.makeText(GoogleMapsActivity.this, "No GPS signal Available",
+                            Toast.LENGTH_LONG).show();
+                }catch (Exception e)
+                {
+                    Log.d(TAG,"Error showing no GPS message",e);
+                }
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+
         setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         toolbar.setTitle(currentEventName);
-        Log.d(TAG,"Selected Event name is: " + currentEventName);
+
+        Log.d(TAG, "Selected Event name is: " + currentEventName);
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
@@ -109,6 +164,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 AddMenuItemOnClick();
                 return true;
 
+            case R.id.action_add_race_course:
+                AddRaceCourse();
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -117,7 +176,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-
+    private void AddRaceCourse() {
+        RaceCourse rc = new RaceCourse();
+        rc.setNumOfBoats(12);
+        rc.setSignalBoatLoc(GeoUtils.toAviLocation(iGeo.getLoc()));
+        rc.setWindDir((int) Float.parseFloat(SP.getString("windDir", "90"))); //TODO putout to special function to get wind dir
+        rc.calculateCourse();
+        Marks marks = rc.getMarks();
+        for (AviObject m: marks.marks) {
+            addMark(m);
+        }
+    }
 
 
     private Runnable runnable = new Runnable()
@@ -125,6 +194,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         public void run()
         {
             AviObject o = new AviObject();
+            if (((OwnLocation)iGeo).isGPSFix()){
+                ((ImageView) findViewById(R.id.gps_indicator)).setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                ((ImageView) findViewById(R.id.gps_indicator)).setVisibility(View.VISIBLE);
+            }
             if (users.getCurrentUser()!=null) {
                 o.name = users.getCurrentUser().DisplayName;
                 o.setLoc(iGeo.getLoc());
@@ -132,7 +208,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                     o.type = ObjectTypes.RaceManager;
                 } else o.type = ObjectTypes.WorkerBoat;
-                //TODO Think about last update time (Exists in Location also)
                 commManager.writeBoatObject(o);
             }
             redrawLayers();
@@ -260,7 +335,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         o.setLoc(GeoUtils.getLocationFromDirDist(loc,dir,dist));
         o.name = "Buoy"+id;
         o.id = id;
-        commManager.writeBuoyObject(o);
+        addMark(o);
+
+    }
+
+    private void addMark(AviObject m){
+        commManager.writeBuoyObject(m);
     }
 
 
@@ -308,6 +388,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     public void onEditDialogPositiveClick(DialogFragment dialog) {
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent(GoogleMapsActivity.this, ChooseEvent.class);
+        startActivity(i);
+        finish();
     }
 
 

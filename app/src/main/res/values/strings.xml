@@ -215,6 +215,7 @@
     <string name="db_base_address">https://avi.firebaseio.com</string>
     <string name="version_not_supported_dialog_title">Version not supported</string>
     <string name="version_not_supported_dialog_message">The version installed is not supported any more. Press OK to open Play store and download a newer version.</string>
+    <string name="action_add_race_course">Add Race Course</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

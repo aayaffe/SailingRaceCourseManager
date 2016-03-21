@@ -96,14 +96,14 @@ public class Firebase implements ICommManager {
     @Override
     public int writeBoatObject(AviObject o) {
         if (o == null || o.name == null || o.name.isEmpty() || currentEventName == null) return -1;
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.name).setValue(o); //TODO: Save string in a concentrated place
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.name).setValue(o);
         return 0;
     }
 
     @Override
     public int writeBuoyObject(AviObject o) {
         if (o == null || o.name == null || o.name.isEmpty()|| currentEventName == null) return -1;
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.name).setValue(o); //TODO: Save string in a concentrated place
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.name).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
         return 0;
     }

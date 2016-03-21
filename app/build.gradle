@@ -5,10 +5,10 @@ android {
     buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "com.aayaffe.sailingracecoursemanager"
-        minSdkVersion 21
-        targetSdkVersion 23
-        versionCode 9
-        versionName "1.25"
+        minSdkVersion 18
+        targetSdkVersion 21
+        versionCode 11
+        versionName "1.27"
     }
     buildTypes {
         release {

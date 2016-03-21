@@ -12,7 +12,7 @@ public class AppPreferences extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
+        //TODO validate preferences.
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
     }

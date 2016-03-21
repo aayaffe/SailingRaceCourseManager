@@ -8,10 +8,14 @@
         android:title="@string/action_settings"
         app:showAsAction="ifRoom"/>
 
-    <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_add_object"
         android:icon="@drawable/ic_add_black_48dp"
         android:title="@string/action_add"
+        app:showAsAction="ifRoom"/>
+<!--TODO Change Icon!!-->
+    <item android:id="@+id/action_add_race_course"
+        android:icon="@drawable/ic_done"
+        android:title="@string/action_add_race_course"
         app:showAsAction="ifRoom"/>
 
 </menu>
