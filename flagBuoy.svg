@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg4749"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="flagBuoy.svg">
+  <defs
+     id="defs4751" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-52.142857"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4754">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3974-9"
+       transform="matrix(-0.69969003,-0.25950254,-0.25950254,0.69969003,783.86053,-18.808121)">
+      <ellipse
+         style="fill:#ff6600;fill-opacity:1;fill-rule:nonzero;stroke:#ff6600;stroke-width:0.9826982;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path3943-1"
+         transform="matrix(0.68180195,0,0,0.68180195,546.06381,856.45491)"
+         cx="-325.97623"
+         cy="-181.44911"
+         rx="8.6927309"
+         ry="6.6586876" />
+      <path
+         style="fill:#ff6600;stroke:#000000;stroke-width:1.34001112px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 324.35917,732.53782 15.01069,-23.94385 8.44493,7.70748 -6.10068,8.20722 -7.59437,-6.20352"
+         id="path3937-8-3"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc" />
+    </g>
+  </g>
+</svg>

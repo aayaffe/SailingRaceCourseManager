@@ -24,7 +24,6 @@ import com.aayaffe.sailingracecoursemanager.ChooseEvent;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyEditDialog;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
-import com.aayaffe.sailingracecoursemanager.Dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -178,10 +177,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void AddRaceCourse() {
         RaceCourse rc = new RaceCourse();
-        rc.setNumOfBoats(12);
         rc.setSignalBoatLoc(GeoUtils.toAviLocation(iGeo.getLoc()));
-        rc.setWindDir((int) Float.parseFloat(SP.getString("windDir", "90"))); //TODO putout to special function to get wind dir
-        rc.calculateCourse();
+        rc.setWindDir(Integer.parseInt(SP.getString("windDir", "0"))); //TODO putout to special function to get wind dir
+        rc.setWindSpeed((int) Float.parseFloat(SP.getString("windSpd", "14")));
+        rc.setBoatLength(Float.parseFloat(SP.getString("boatLength", "4.7")));
+        rc.setBoatVMG(Float.parseFloat(SP.getString("boatVMG", "5.0")));
+        rc.setGoalTime(Integer.parseInt(SP.getString("goalTime", "50")));
+        rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windwar-leeward")));
+        rc.setNumOfBoats(Integer.parseInt(SP.getString("numOfBoats", "25")));
+
+                rc.calculateCourse();
         Marks marks = rc.getMarks();
         for (AviObject m: marks.marks) {
             addMark(m);
@@ -242,7 +247,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         List<AviObject> markList = commManager.getAllBuoys();
         for (AviObject o : markList){
             //TODO: Delete old buoys first
-            mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
+            if(o.type==ObjectTypes.FlagBuoy){
+                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
+            }else
+                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
 
         }
     }
@@ -336,7 +344,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         o.name = "Buoy"+id;
         o.id = id;
         addMark(o);
-
     }
 
     private void addMark(AviObject m){
@@ -390,12 +397,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
-    @Override
-    public void onBackPressed(){
-        Intent i = new Intent(GoogleMapsActivity.this, ChooseEvent.class);
-        startActivity(i);
-        finish();
-    }
+//    @Override
+//    public void onBackPressed(){
+////        Intent i = new Intent(GoogleMapsActivity.this, ChooseEvent.class);
+////        startActivity(i);
+//        finish();
+//    }
 
 
 

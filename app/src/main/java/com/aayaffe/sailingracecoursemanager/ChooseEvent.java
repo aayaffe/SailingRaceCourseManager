@@ -203,6 +203,7 @@ public class ChooseEvent extends FirebaseLoginBaseActivity implements EventInput
         if (exit) {
             //mBuilder.setOngoing(false);
             notification.cancelAll();
+            System.exit(0);
             finish(); // finish activity
             System.exit(0);
         } else {

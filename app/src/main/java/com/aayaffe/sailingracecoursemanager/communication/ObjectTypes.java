@@ -7,5 +7,6 @@ public enum ObjectTypes {
     RaceManager,
     WorkerBoat,
     Buoy,
+    FlagBuoy,
     Other
 }

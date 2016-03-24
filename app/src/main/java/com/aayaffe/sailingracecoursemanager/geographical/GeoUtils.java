@@ -101,4 +101,8 @@ public class GeoUtils {
     public static int relativeToTrueDirection(int trueDir, int relativDir){
         return ((trueDir + relativDir) % 360);
     }
+
+    public static double toHours(int minutes){
+        return ((double)minutes)/((double)60);
+    }
 }
