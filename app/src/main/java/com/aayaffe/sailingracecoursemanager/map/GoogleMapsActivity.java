@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.Preference;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -58,6 +60,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Users users;
     private String currentEventName;
     private Tracker mTracker;
+    private static AviObject myBoat;
+    private RaceCourse rc;
 
 
     @Override
@@ -135,6 +139,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
+
     }
 
 //    public void PopUpMenu(Context c, Activity a)
@@ -149,6 +154,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
+        if(!isCurrentEventManager(users.getCurrentUser().Uid)) {
+            menu.getItem(2).setEnabled(false);
+            menu.getItem(2).setVisible(false);
+        }
+        else
+        {
+            menu.getItem(2).setEnabled(true);
+            menu.getItem(2).setVisible(true);
+        }
+
         return true;
     }
     @Override
@@ -176,7 +191,21 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void AddRaceCourse() {
-        RaceCourse rc = new RaceCourse();
+        if (rc==null){
+            rc = new RaceCourse();
+        }
+        if (rc.getMarks()!=null){
+            for(AviObject ao:rc.getMarks().marks){
+                mapLayer.removeMark(ao.getUuid());
+            }
+        }
+        if ((commManager!=null)&&(commManager.getAllBuoys()!=null)) {
+            for (AviObject ao : commManager.getAllBuoys()) {
+                if (ao.getRaceCourseUUID() != null) {
+                    mapLayer.removeMark(ao.getUuid());
+                }
+            }
+        }
         rc.setSignalBoatLoc(GeoUtils.toAviLocation(iGeo.getLoc()));
         rc.setWindDir(Integer.parseInt(SP.getString("windDir", "0"))); //TODO putout to special function to get wind dir
         rc.setWindSpeed((int) Float.parseFloat(SP.getString("windSpd", "14")));
@@ -185,8 +214,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         rc.setGoalTime(Integer.parseInt(SP.getString("goalTime", "50")));
         rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windwar-leeward")));
         rc.setNumOfBoats(Integer.parseInt(SP.getString("numOfBoats", "25")));
-
-                rc.calculateCourse();
+        rc.calculateCourse();
         Marks marks = rc.getMarks();
         for (AviObject m: marks.marks) {
             addMark(m);
@@ -198,22 +226,35 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     {
         public void run()
         {
-            AviObject o = new AviObject();
+            if ((users.getCurrentUser()!=null)&&(commManager.getAllBoats()!=null)) {
+                if (myBoat == null) {
+                    for(AviObject ao: commManager.getAllBoats()){
+                        if (ao.name == users.getCurrentUser().DisplayName)
+                        {
+                            myBoat=ao;
+                            break;
+                        }
+                    }
+                    if(myBoat==null){
+                        myBoat = new AviObject();
+                    }
+                    myBoat.name = users.getCurrentUser().DisplayName;
+                    myBoat.setLoc(iGeo.getLoc());
+                    myBoat.color = "Blue"; //TODO Set properly
+                    if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                        myBoat.type = ObjectTypes.RaceManager;
+                    } else myBoat.type = ObjectTypes.WorkerBoat;
+                } else {
+                    myBoat.setLoc(iGeo.getLoc());
+                }
+                commManager.writeBoatObject(myBoat);
+            }
             if (((OwnLocation)iGeo).isGPSFix()){
-                ((ImageView) findViewById(R.id.gps_indicator)).setVisibility(View.INVISIBLE);
+                findViewById(R.id.gps_indicator).setVisibility(View.INVISIBLE);
             }
             else
             {
-                ((ImageView) findViewById(R.id.gps_indicator)).setVisibility(View.VISIBLE);
-            }
-            if (users.getCurrentUser()!=null) {
-                o.name = users.getCurrentUser().DisplayName;
-                o.setLoc(iGeo.getLoc());
-                o.color = "Blue"; //TODO Set properly
-                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                    o.type = ObjectTypes.RaceManager;
-                } else o.type = ObjectTypes.WorkerBoat;
-                commManager.writeBoatObject(o);
+                findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
             }
             redrawLayers();
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000));
@@ -237,20 +278,28 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
                 int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
-                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation,o.getLoc()), id);
+                mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
             }
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
                 int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
-                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(), o.name, null, id);
+                mapLayer.addMark(o, null, id);
             }
         }
         List<AviObject> markList = commManager.getAllBuoys();
         for (AviObject o : markList){
             //TODO: Delete old buoys first
-            if(o.type==ObjectTypes.FlagBuoy){
-                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
-            }else
-                mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()),o.getLoc().getBearing(),o.name,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
+            if(o.type==ObjectTypes.FlagBuoy) {
+                mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
+                //mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()), o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.flag_buoy);
+            }
+            else if(o.type==ObjectTypes.TomatoBuoy) {
+                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy);
+            }
+            else if(o.type==ObjectTypes.TriangleBuoy) {
+                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy);
+            }
+            else
+                mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
 
         }
     }
@@ -298,12 +347,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         {
             return "NoGPS";
         }
-
         return bearing + "\\" + distance + units;
     }
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -319,14 +364,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void SettingsMenuItemOnClick() {
         Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), AppPreferences.class);
+        if (isCurrentEventManager(users.getCurrentUser().Uid)){
+            i.putExtra("MANAGER", true);
+        }
+        else{
+            i.putExtra("MANAGER", false);
+        }
+
         startActivity(i);
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        map.destroy();
-//    }
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
         df = BuoyInputDialog.newInstance(-1);
@@ -363,8 +410,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             addMark(newBuoyId(),iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
     }
 
-
-
     private long newBuoyId() {
         return commManager.getNewBuoyId();
     }
@@ -375,11 +420,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             Log.d(TAG, "login to " + id);
         }
     }
-
-    public static void resetMap(){
-        
-    }
-
 
     public void onMoveButtonClick() {
         long id = ((BuoyEditDialog)mapLayer.df).buoy_id;
@@ -396,14 +436,4 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onEditDialogPositiveClick(DialogFragment dialog) {
 
     }
-
-//    @Override
-//    public void onBackPressed(){
-////        Intent i = new Intent(GoogleMapsActivity.this, ChooseEvent.class);
-////        startActivity(i);
-//        finish();
-//    }
-
-
-
 }

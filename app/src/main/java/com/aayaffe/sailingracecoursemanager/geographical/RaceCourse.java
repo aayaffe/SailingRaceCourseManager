@@ -7,6 +7,7 @@ import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.UUID;
 
 /**
  * Created by aayaffe on 21/03/2016.
@@ -24,6 +25,7 @@ public class RaceCourse {
     private RaceCourseType raceCourseType;
     private Marks marks = new Marks();
     private static Dictionary<String,RaceCourseType> raceCourseTypes = new Hashtable<>();
+    private UUID uuid;
 
     private static void setRaceCourseTypes(){
         raceCourseTypes.put("Windward-leeward", RaceCourseType.WINDWARD_LEEWARD);
@@ -32,11 +34,13 @@ public class RaceCourse {
     }
 
     public RaceCourse(){
+        uuid = UUID.randomUUID();
         setRaceCourseTypes();
     }
     public RaceCourseType getRaceCourseType(String rc){
         return raceCourseTypes.get(rc);
     }
+
 
 
 
@@ -50,6 +54,7 @@ public class RaceCourse {
     }
 
     public void calculateCourse(){ //TODO calculate everything automatically always
+        marks = new Marks();
         addPinEndMark(getBoatLength(), numOfBoats, 1.5, signalBoatLoc, windDir); //TODO obtain details from DB
         AviLocation rp = findReferencePoint(signalBoatLoc, calculateStartLineLength(boatLength,numOfBoats,1.5));
         addMarks(rp, windDir);
@@ -65,21 +70,23 @@ public class RaceCourse {
         int dir = GeoUtils.relativeToTrueDirection(windDir, 0);
         AviLocation l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(rp.toLocation(), (float) dir, length));
         AviObject m = new AviObject();
-        m.type = ObjectTypes.Buoy;
+        m.type = ObjectTypes.TriangleBuoy;
         m.name = "No1Mark";
         m.setAviLocation(l);
         m.color = "Orange";
         m.lastUpdate = new Date();
+        m.setRaceCourseUUID(uuid);
         //TODO check setting ID - enter as mandatory to AVIObject constructor?
         marks.marks.add(m);
         dir = GeoUtils.relativeToTrueDirection(windDir, 180);
         l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(rp.toLocation(), (float) dir, length));
         m = new AviObject();
-        m.type = ObjectTypes.Buoy;
+        m.type = ObjectTypes.TomatoBuoy;
         m.name = "No4Mark";
         m.setAviLocation(l);
         m.color = "Orange";
         m.lastUpdate = new Date();
+        m.setRaceCourseUUID(uuid);
         //TODO check setting ID - enter as mandatory to AVIObject constructor?
         marks.marks.add(m);
     }
@@ -99,6 +106,7 @@ public class RaceCourse {
         m.setAviLocation(l);
         m.color = "Orange";
         m.lastUpdate = new Date();
+        m.setRaceCourseUUID(uuid);
         //TODO check setting ID - enter as mandatory to AVIObject constructor?
         marks.marks.add(m);
 
@@ -178,6 +186,9 @@ public class RaceCourse {
     }
     public void setRaceCourseType(RaceCourseType raceCourseType) {
         this.raceCourseType = raceCourseType;
+    }
+    public UUID getUuid() {
+        return uuid;
     }
 
 }

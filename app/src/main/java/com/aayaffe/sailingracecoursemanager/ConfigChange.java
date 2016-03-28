@@ -26,20 +26,12 @@ public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeL
         if (key.equals("username")) {
             String id = sharedPreferences.getString("username", "Manager1");
             GoogleMapsActivity.login(id);
-            GoogleMapsActivity.resetMap();
         }
         if (key.equals("refreshRate")){
             GoogleMapsActivity.REFRESH_RATE = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
             Log.d(TAG, "New refresh rate is: " + GoogleMapsActivity.REFRESH_RATE);
         }
 
-//        if (sharedPreferences.getBoolean("manager",false)){
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            HashSet<String> hs = new HashSet<>();
-//            hs.add("Manager1");
-//            hs.add("Manager2");
-//            editor.putStringSet("UserNames",hs);
-//            editor.commit();
-//        }
+
     }
 }

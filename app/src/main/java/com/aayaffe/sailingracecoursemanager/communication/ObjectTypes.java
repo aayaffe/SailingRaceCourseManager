@@ -8,5 +8,7 @@ public enum ObjectTypes {
     WorkerBoat,
     Buoy,
     FlagBuoy,
+    TomatoBuoy,
+    TriangleBuoy,
     Other
 }

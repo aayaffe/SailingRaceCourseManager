@@ -5,8 +5,6 @@ import android.location.Location;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.mapsforge.core.model.LatLong;
-
 import java.util.Date;
 
 /**
@@ -31,12 +29,7 @@ public class GeoUtils {
         ret.setAltitude(l.depth);
         return ret;
     }
-    static public LatLong toLatLong(Location l){
-        if (l==null)
-            return null;
-        LatLong ret = new LatLong(l.getLatitude(),l.getLongitude());
-        return ret;
-    }
+
 //    static public LatLong toLatLong(AviLocation l){
 //        if (l==null)
 //            return null;
@@ -55,12 +48,7 @@ public class GeoUtils {
         LatLng ret = new LatLng(l.lat, l.lon);
         return ret;
     }
-    static public LatLng toLatLng(LatLong l){
-        if (l==null)
-            return null;
-        LatLng ret = new LatLng(l.latitude, l.longitude);
-        return ret;
-    }
+
 
     static public Location createLocation(double lat, double lon){
         Location ret = new Location("Converted");

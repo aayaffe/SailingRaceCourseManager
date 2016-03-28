@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,14 +23,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import org.mapsforge.core.model.BoundingBox;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +49,10 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     private LatLong lastTapLatLong;
     private SharedPreferences sp;
     private TileDownloadLayer downloadLayer;
-    private HashMap<String, Marker> markers = new HashMap<>();
+    //private HashMap<String, Marker> markers = new HashMap<>();
+    public BiMap<UUID,Marker> marks = HashBiMap.create();
+//    private HashMap<UUID, Marker> marks1 = new HashMap<>();
+//    private HashMap<Marker, UUID> marks2 = new HashMap<>();
     private Marker lastOpenned = null;
     public DialogFragment df;
 
@@ -57,10 +65,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity)a).getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-
-
     }
     /**
      * Manipulates the map once available.
@@ -78,7 +82,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         center.setLatitude(32.831653);
         center.setLongitude(35.019216);
         ZoomToMarks();
-        setCenter(center);
+        setCenter(GeoUtils.toLatLng(center));
         mapView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             public boolean onMarkerClick(Marker marker) {
                 // Check if there is an open info window
@@ -102,76 +106,94 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
             }
         });
         mapView.setOnInfoWindowClickListener(this);
-        mapView.setPadding(0,170,0,0);
+        mapView.setPadding(0, 170, 0, 0);
 
 
     }
 
-
-    public void setCenter(Location l) {
-        setCenter(GeoUtils.toLatLong(l));
-    }
-
-    public void setCenter(LatLong ll){
-        setCenter(GeoUtils.toLatLng(ll));
+    public void setCenter(Location l){
+        setCenter(GeoUtils.toLatLng(l));
     }
     public void setCenter(LatLng ll){
         mapView.animateCamera(CameraUpdateFactory.newLatLng(ll));
     }
-
-    public void setCenter(double lat, double lon) {
-        setCenter(new LatLong(lat, lon));
-    }
-
-    public void setZoomLevel(int zoom){
-        //mapView.
-    }
-
-    public void destroy(){
-
-    }
-
-    public Marker addMark(LatLng ll,float cog, String name,String caption, int ResourceID){
-        if (ll==null) return null;
-        try{
-            if (markers.containsKey(name)){
-                Marker m = markers.get(name);
-                boolean infoWindows=m.isInfoWindowShown();
-
-                m.setPosition(ll);
-                m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
-                m.setSnippet(caption);
-                m.setRotation(cog);
-                if (infoWindows) {
-                    m.showInfoWindow();
-                }
+    public Marker addMark(AviObject ao,String caption, int resourceID){
+        Marker m;
+        try {
+            if (marks.containsKey(ao.getUuid())) {
+                m = marks.get(ao.getUuid());
+                m = updateMark(ao, m, resourceID, caption);
+                return m;
+            } else if (mapView!=null) {
+                m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
+                marks.put(ao.getUuid(),m);
                 return m;
             }
-            if (null != mapView) {
-                Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
-                markers.put(name,m);
-                return m;
-            } else {
-                Log.d(TAG, "mapView is null");
-                return null;
-            }
-        }catch(Exception e)
-        {
+        } catch(Exception e){
             Log.d(TAG,"Failed to add mark",e);
         }
         return null;
     }
 
+    private Marker updateMark(AviObject ao, Marker m, int resourceID, String caption) {
+        if (isValid(ao)){
+            m.setPosition(ao.getLatLng());
+            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
+            m.setSnippet(caption);
+            m.setRotation(ao.getAviLocation().cog);
+        }
+        return m;
+    }
+    private boolean isValid(AviObject ao) {
+        if ((ao!=null)&&(ao.getAviLocation()!=null)&&(ao.name!=null)&&(ao.type!=null)&&(ao.lastUpdate!=null))
+            return true;
+        return false;
+    }
 
-
+//    public Marker addMark(LatLng ll,float cog, String name,String caption, int ResourceID){
+//        if (ll==null) return null;
+//        try{
+//            if (markers.containsKey(name)){
+//                Marker m = markers.get(name);
+//                boolean infoWindows=m.isInfoWindowShown();
+//                m.setPosition(ll);
+//                m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
+//                m.setSnippet(caption);
+//                m.setRotation(cog);
+//                if (infoWindows) {
+//                    m.showInfoWindow();
+//                }
+//                return m;
+//            }
+//            if (null != mapView) {
+//                Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
+//                markers.put(name,m);
+//                return m;
+//            } else {
+//                Log.d(TAG, "mapView is null");
+//                return null;
+//            }
+//        }catch(Exception e)
+//        {
+//            Log.d(TAG,"Failed to add mark",e);
+//        }
+//        return null;
+//    }
     public void removeMark(Marker m){
         m.remove();
         GoogleMapsActivity.commManager.removeBueyObject(m.getTitle());
-        markers.remove(m);
+        marks.remove(m);
     }
-
+    public void removeMark(UUID uuid){
+        Marker m = marks.get(uuid);
+        if(m!=null) {
+            m.remove();
+            GoogleMapsActivity.commManager.removeBueyObject(m.getTitle()); //TODO Check if mapping correct using title
+            marks.remove(m);
+        }
+    }
     public void ZoomToMarks(){
-        ArrayList<Marker> ms = new ArrayList<>(markers.values());
+        ArrayList<Marker> ms = new ArrayList<>(marks.values());
         if (ms.size()==1) {
             setCenter((ms.get(0).getPosition()));
             return;
@@ -179,7 +201,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         if (ms.size()==0){
             return;
         }
-        ZoomToBounds(new ArrayList<>(markers.values()));
+        ZoomToBounds(new ArrayList<>(marks.values()));
     }
     public void ZoomToBounds(List<Marker> marks){
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -196,15 +218,11 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
         }
     }
-
     public LatLong getLastTapLatLong() {
         return lastTapLatLong;
     }
-
-
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Log.d(TAG, "Plus Fab Clicked");
         try{
             String t = marker.getTitle();
             Pattern p = Pattern.compile("-?\\d+");
@@ -235,11 +253,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
     }
     private Boolean deleteMark = false;
-
-
-
     public void removeMark(long id) {
-        removeMark(markers.get("Buoy" + id));
+        removeMark(marks.get("Buoy" + id));
 
     }
 }

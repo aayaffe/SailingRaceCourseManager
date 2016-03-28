@@ -5,7 +5,9 @@ package com.aayaffe.sailingracecoursemanager;
  */
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceGroup;
 
 public class AppPreferences extends PreferenceActivity {
     public static final String RENDERTHEME_MENU = "renderthememenu";
@@ -15,6 +17,17 @@ public class AppPreferences extends PreferenceActivity {
         //TODO validate preferences.
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        boolean manager = true;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            manager = extras.getBoolean("MANAGER");
+        }
+        if(!manager) {
+
+            ((PreferenceGroup) findPreference("category_race_course")).setEnabled(false);
+            ((PreferenceGroup) findPreference("category_conditions")).setEnabled(false);
+
+        }
     }
 
 }

@@ -1,46 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:title="Wind Direction"
-        android:key="windDir"
-        android:defaultValue="000"
-        android:inputType="number"
-        android:summary="Input Wind direction in degrees true"></EditTextPreference>
-    <EditTextPreference android:title="Wind Speed"
-        android:key="windSpd"
-        android:defaultValue="14"
-        android:inputType="number"
-        android:summary="Input Wind speed in knots"></EditTextPreference>
-    <EditTextPreference android:title="Refresh Rate"
-        android:key="refreshRate"
-        android:inputType="number"
-        android:defaultValue="10"
-        android:summary="Input Desired refresh rate in seconds. Higher consumes more bandwidth, lower updates slower"></EditTextPreference>
-    <ListPreference android:title="Race Course Type"
-        android:summary="Select the required race course"
-        android:key="rcType"
-        android:defaultValue="Windward-leeward"
-        android:entries="@array/listArray"
-        android:entryValues="@array/listValues" />
-    <EditTextPreference android:title="Boat Length"
-        android:key="boatLength"
-        android:defaultValue="4.7"
-        android:inputType="numberDecimal"
-        android:summary="Input the racing boat length in meters"></EditTextPreference>
-    <EditTextPreference android:title="Goal time"
-        android:key="goalTime"
-        android:defaultValue="50"
-        android:inputType="number"
-        android:summary="Input the goal time in minutes"></EditTextPreference>
-    <EditTextPreference android:title="Boat VMG"
-        android:key="boatVMG"
-        android:defaultValue="5.0"
-        android:inputType="numberDecimal"
-        android:summary="Input the boat VMG to this wind speed"></EditTextPreference>
-    <EditTextPreference android:title="Number of competitors"
-        android:key="numOfBoats"
-        android:defaultValue="25"
-        android:inputType="number"
-        android:summary="Input the number of boats racing"></EditTextPreference>
+    <PreferenceCategory
+        android:key="category_conditions"
+        android:title="Current conditions"
+        android:shouldDisableView="true"
+        android:enabled="true">
+        <EditTextPreference android:title="Wind Direction"
+            android:key="windDir"
+            android:defaultValue="000"
+            android:inputType="number"
+            android:summary="Input Wind direction in degrees true"/>
+        <EditTextPreference android:title="Wind Speed"
+            android:key="windSpd"
+            android:defaultValue="14"
+            android:inputType="number"
+            android:summary="Input Wind speed in knots"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_race_course"
+        android:title="Race Course Settigs"
+        android:shouldDisableView="true"
+        android:enabled="true">
+        <ListPreference android:title="Race Course Type"
+            android:summary="Select the required race course"
+            android:key="rcType"
+            android:defaultValue="Windward-leeward"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues" />
+        <EditTextPreference android:title="Boat Length"
+            android:key="boatLength"
+            android:defaultValue="4.7"
+            android:inputType="numberDecimal"
+            android:summary="Input the racing boat length in meters"/>
+        <EditTextPreference android:title="Goal time"
+            android:key="goalTime"
+            android:defaultValue="50"
+            android:inputType="number"
+            android:summary="Input the goal time in minutes"/>
+        <EditTextPreference android:title="Boat VMG"
+            android:key="boatVMG"
+            android:defaultValue="5.0"
+            android:inputType="numberDecimal"
+            android:summary="Input the boat VMG to this wind speed" />
+        <EditTextPreference android:title="Number of competitors"
+            android:key="numOfBoats"
+            android:defaultValue="25"
+            android:inputType="number"
+            android:summary="Input the number of boats racing"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="category_program_settings"
+        android:title="Program settings"
+        android:shouldDisableView="true"
+        android:enabled="true">
+        <EditTextPreference android:title="Refresh Rate"
+            android:key="refreshRate"
+            android:inputType="number"
+            android:defaultValue="10"
+            android:summary="Input Desired refresh rate in seconds. Higher consumes more bandwidth, lower updates slower"/>
+    </PreferenceCategory>
 
 
 </PreferenceScreen>
