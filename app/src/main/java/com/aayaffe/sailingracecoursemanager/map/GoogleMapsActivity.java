@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +20,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
 import com.aayaffe.sailingracecoursemanager.AppPreferences;
-import com.aayaffe.sailingracecoursemanager.ChooseEvent;
-import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyEditDialog;
+import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Marks;
@@ -37,14 +34,15 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
-import com.aayaffe.sailingracecoursemanager.geographical.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener, BuoyEditDialog.BuoyEditDialogListener{
+public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener{
 
     private static final String TAG = "GoogleMapsActivity";
     public static  int REFRESH_RATE = 1000;
@@ -62,6 +60,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Tracker mTracker;
     private static AviObject myBoat;
     private RaceCourse rc;
+    private HashMap<String, BoatTypes> boatTypes;
+    private boolean firstBoatLoad = true;
 
 
     @Override
@@ -139,6 +139,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
+        boatTypes = ((Firebase)commManager).getAllBoatTypes();
 
     }
 
@@ -154,7 +155,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
-        if(!isCurrentEventManager(users.getCurrentUser().Uid)) {
+        if((users.getCurrentUser()==null)||(!isCurrentEventManager(users.getCurrentUser().Uid))) {
             menu.getItem(2).setEnabled(false);
             menu.getItem(2).setVisible(false);
         }
@@ -206,21 +207,59 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
             }
         }
+        String boatClass = SP.getString("boatClass", "470 Men");
+        rc.setBoatVMGUpwind(getVMGUpwind(boatClass,(int) Float.parseFloat(SP.getString("windSpd", "14"))));
+        rc.setBoatVMGRun(getVMGRun(boatClass, (int) Float.parseFloat(SP.getString("windSpd", "14"))));
+        rc.setBoatVMGReach(getVMGReach(boatClass, (int) Float.parseFloat(SP.getString("windSpd", "14"))));
         rc.setSignalBoatLoc(GeoUtils.toAviLocation(iGeo.getLoc()));
         rc.setWindDir(Integer.parseInt(SP.getString("windDir", "0"))); //TODO putout to special function to get wind dir
         rc.setWindSpeed((int) Float.parseFloat(SP.getString("windSpd", "14")));
-        rc.setBoatLength(Float.parseFloat(SP.getString("boatLength", "4.7")));
-        rc.setBoatVMG(Float.parseFloat(SP.getString("boatVMG", "5.0")));
+        rc.setBoatLength(getBoatLength(boatClass));
+
+        //rc.setBoatVMG(Float.parseFloat(SP.getString("boatVMG", "5.0")));
         rc.setGoalTime(Integer.parseInt(SP.getString("goalTime", "50")));
-        rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windwar-leeward")));
+        rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward"))); //TODO redundant
         rc.setNumOfBoats(Integer.parseInt(SP.getString("numOfBoats", "25")));
-        rc.calculateCourse();
+        rc.calculateCourse(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward")));
         Marks marks = rc.getMarks();
+        removeAllRaceCourseMarks();
         for (AviObject m: marks.marks) {
             addMark(m);
         }
     }
 
+    private void removeAllRaceCourseMarks() {
+        marks.marks = commManager.getAllBuoys();
+        for(AviObject m:marks.marks){
+            if (m.getRaceCourseUUID()!=null){
+                mapLayer.removeMark(m.getUuid());
+            }
+        }
+    }
+
+
+    private double getVMGUpwind(String boatClass, int windSpeed){
+        if (windSpeed<=8) return boatTypes.get(boatClass).getUpwind5_8();
+        if (windSpeed<=12) return boatTypes.get(boatClass).getUpwind8_12();
+        if (windSpeed<=15) return boatTypes.get(boatClass).getUpwind12_15();
+        else return boatTypes.get(boatClass).getUpwind15_();
+    }
+    private double getVMGRun(String boatClass, int windSpeed){
+        if (windSpeed<=8) return boatTypes.get(boatClass).getRun5_8();
+        if (windSpeed<=12) return boatTypes.get(boatClass).getRun8_12();
+        if (windSpeed<=15) return boatTypes.get(boatClass).getRun12_15();
+        else return boatTypes.get(boatClass).getRun15_();
+    }
+    private double getVMGReach(String boatClass, int windSpeed){
+        if (windSpeed<=8) return boatTypes.get(boatClass).getReach5_8();
+        if (windSpeed<=12) return boatTypes.get(boatClass).getReach8_12();
+        if (windSpeed<=15) return boatTypes.get(boatClass).getReach12_15();
+        else return boatTypes.get(boatClass).getReach15_();
+    }
+    private double getBoatLength(String boatClass){
+        return boatTypes.get(boatClass).getLength();
+
+    }
 
     private Runnable runnable = new Runnable()
     {
@@ -273,7 +312,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void redrawLayers() {
         Location myLocation = iGeo.getLoc();
+
         marks.marks = commManager.getAllBoats();
+
         for (AviObject o: marks.marks) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
@@ -301,6 +342,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             else
                 mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
 
+        }
+        if ((marks.marks.size()>0)&&(firstBoatLoad)&&(mapLayer.mapView!=null))
+        {
+            firstBoatLoad = false;
+            mapLayer.ZoomToMarks();
         }
     }
 
@@ -352,6 +398,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onStart() {
         super.onStart();
+        firstBoatLoad = true;
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
@@ -421,19 +468,4 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    public void onMoveButtonClick() {
-        long id = ((BuoyEditDialog)mapLayer.df).buoy_id;
-        //dialog.dismiss();
-        df = BuoyInputDialog.newInstance(id);
-        df.show(getFragmentManager(), "Edit_Buoy");
-    }
-    public void onDeleteButtonClick() {
-        long id = ((BuoyEditDialog)mapLayer.df).buoy_id;
-        //dialog.dismiss();
-        mapLayer.removeMark(id);
-    }
-    @Override
-    public void onEditDialogPositiveClick(DialogFragment dialog) {
-
-    }
 }

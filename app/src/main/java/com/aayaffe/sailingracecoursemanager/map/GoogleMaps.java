@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
+import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,22 +46,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     private static final String TAG = "OpenSeaMap";
     public GoogleMap mapView;
     private Context c;
-    private Activity a;
-    private LatLong lastTapLatLong;
-    private SharedPreferences sp;
-    private TileDownloadLayer downloadLayer;
-    //private HashMap<String, Marker> markers = new HashMap<>();
     public BiMap<UUID,Marker> marks = HashBiMap.create();
-//    private HashMap<UUID, Marker> marks1 = new HashMap<>();
-//    private HashMap<Marker, UUID> marks2 = new HashMap<>();
     private Marker lastOpenned = null;
     public DialogFragment df;
 
     public void Init(Activity a, Context c, SharedPreferences sp)
     {
         this.c =c;
-        this.a = a;
-        this.sp = sp;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity)a).getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -69,8 +61,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -122,7 +112,11 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         try {
             if (marks.containsKey(ao.getUuid())) {
                 m = marks.get(ao.getUuid());
+                boolean infoWindows=m.isInfoWindowShown();
                 m = updateMark(ao, m, resourceID, caption);
+                if (infoWindows) {
+                    m.showInfoWindow();
+                }
                 return m;
             } else if (mapView!=null) {
                 m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
@@ -182,14 +176,14 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public void removeMark(Marker m){
         m.remove();
         GoogleMapsActivity.commManager.removeBueyObject(m.getTitle());
-        marks.remove(m);
+        marks.inverse().remove(m);
     }
     public void removeMark(UUID uuid){
         Marker m = marks.get(uuid);
         if(m!=null) {
             m.remove();
             GoogleMapsActivity.commManager.removeBueyObject(m.getTitle()); //TODO Check if mapping correct using title
-            marks.remove(m);
+            marks.remove(uuid);
         }
     }
     public void ZoomToMarks(){
@@ -201,7 +195,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         if (ms.size()==0){
             return;
         }
-        ZoomToBounds(new ArrayList<>(marks.values()));
+        ZoomToBounds(ms);
     }
     public void ZoomToBounds(List<Marker> marks){
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -218,20 +212,29 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
         }
     }
-    public LatLong getLastTapLatLong() {
-        return lastTapLatLong;
-    }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         try{
-            String t = marker.getTitle();
-            Pattern p = Pattern.compile("-?\\d+");
-            Matcher m = p.matcher(t);
-            m.find();
-            long id = Integer.parseInt(m.group());
+//            String t = marker.getTitle();
+//            Pattern p = Pattern.compile("-?\\d+");
+//            Matcher m = p.matcher(t);
+//            m.find();
+//            long id = Integer.parseInt(m.group());
 //        df = BuoyEditDialog.newInstance(id);
 //        df.show(a.getFragmentManager(), "Edit_Buoy");
-            if (marker.getTitle().contains("Buoy")){
+            boolean isBuoy = false;
+            UUID u = marks.inverse().get(marker);
+            for (AviObject ao: GoogleMapsActivity.commManager.getAllBuoys()){
+                if (ao.getUuid().equals(u)){
+                    if ((ao.type != ObjectTypes.RaceManager)&&(ao.type!=ObjectTypes.WorkerBoat)){
+                        isBuoy = true;
+                    }
+                    break;
+                }
+            }
+
+            if (isBuoy){
                 if (deleteMark){
                     removeMark(marker);
                     deleteMark = false;
@@ -253,8 +256,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
     }
     private Boolean deleteMark = false;
-    public void removeMark(long id) {
-        removeMark(marks.get("Buoy" + id));
 
-    }
+
+
 }

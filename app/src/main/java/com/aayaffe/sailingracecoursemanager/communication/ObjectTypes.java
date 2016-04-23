@@ -10,5 +10,9 @@ public enum ObjectTypes {
     FlagBuoy,
     TomatoBuoy,
     TriangleBuoy,
+    StartLine,
+    FinishLine,
+    StartFinishLine,
+    Gate,
     Other
 }

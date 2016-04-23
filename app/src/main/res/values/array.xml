@@ -9,4 +9,26 @@
         <item>Trapezoid</item>
         <item>Triangular</item>
     </string-array>
+    <string-array name="array_boat_types">
+        <item>470 Men</item>
+        <item>470 Women</item>
+        <item>49er</item>
+        <item>Finn</item>
+        <item>Laser</item>
+        <item>Laser Radial</item>
+        <item>RSX Men</item>
+        <item>RSX Women</item>
+        <item>Star</item>
+    </string-array>
+    <string-array name="values_boat_types">
+        <item>470 Men</item>
+        <item>470 Women</item>
+        <item>49er</item>
+        <item>Finn</item>
+        <item>Laser</item>
+        <item>Laser Radial</item>
+        <item>RSX Men</item>
+        <item>RSX Women</item>
+        <item>Star</item>
+    </string-array>
 </resources>

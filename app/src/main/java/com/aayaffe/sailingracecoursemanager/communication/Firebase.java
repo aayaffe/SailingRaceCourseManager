@@ -3,6 +3,7 @@ package com.aayaffe.sailingracecoursemanager.communication;
 import android.content.Context;
 import android.util.Log;
 
+import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -14,6 +15,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -207,6 +209,16 @@ public class Firebase implements ICommManager {
         this.currentEventName = currentEventName;
     }
 
+
+    public HashMap<String, BoatTypes> getAllBoatTypes() {
+        HashMap<String, BoatTypes> ret = new HashMap<>();
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        for (DataSnapshot ps : ds.child("BoatTypes").getChildren()) {
+            BoatTypes o = ps.getValue(BoatTypes.class);
+            ret.put(o.getBoatClass(),o);
+        }
+        return ret;
+    }
     /***
      *
      * @return the Uid of the currently logged in user.

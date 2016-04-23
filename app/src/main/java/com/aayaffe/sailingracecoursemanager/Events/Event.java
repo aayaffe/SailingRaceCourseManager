@@ -8,12 +8,14 @@ import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Dictionary;
+import java.util.UUID;
 
 /**
  * Created by aayaffe on 19/02/2016.
  */
-public class Event implements Parcelable {
+public class Event {
     private String name;
+    private UUID uuid;
     private int lastBuoyId;
     private User eventManager;
     @JsonIgnore
@@ -21,26 +23,9 @@ public class Event implements Parcelable {
     @JsonIgnore
     private Dictionary<String,AviObject> buoys;
 
-
-
-    private Event(Parcel in) {
-        name = in.readString();
-        lastBuoyId = in.readInt();
-        eventManager = in.readParcelable(User.class.getClassLoader());
+    public Event(){
+        setUuid(UUID.randomUUID());
     }
-    public Event(){}
-
-    public static final Creator<Event> CREATOR = new Creator<Event>() {
-        @Override
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
-        }
-
-        @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -66,17 +51,6 @@ public class Event implements Parcelable {
         this.eventManager = eventManager;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeInt(lastBuoyId);
-        dest.writeParcelable(eventManager,0);
-    }
 
     public Dictionary<String, AviObject> getBoats() {
         return boats;
@@ -92,5 +66,13 @@ public class Event implements Parcelable {
 
     public void setBuoys(Dictionary<String, AviObject> buoys) {
         this.buoys = buoys;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

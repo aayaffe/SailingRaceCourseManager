@@ -45,4 +45,37 @@ public class AviLocation {
         long diffInMs = new Date().getTime() - aviLocation.lastUpdate.getTime();
         return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
     }
+
+    /**
+     * Returns the approximate distance in meters between this
+     * location and the given location.  Distance is defined using
+     * the WGS84 ellipsoid.
+     *
+     * @param dest the destination location
+     * @return the approximate distance in meters, -1 if error
+     */
+    public float distanceTo(AviLocation dest) {
+        if (dest!=null) {
+            return GeoUtils.toLocation(this).distanceTo(GeoUtils.toLocation(dest));
+        }
+        return -1;
+    }
+
+
+    /**
+     * Returns the approximate initial bearing in degrees East of true
+     * North when traveling along the shortest path between this
+     * location and the given location.  The shortest path is defined
+     * using the WGS84 ellipsoid.  Locations that are (nearly)
+     * antipodal may produce meaningless results.
+     *
+     * @param dest the destination location
+     * @return the initial bearing in degrees
+     */
+    public float bearingTo(AviLocation dest) {
+        if (dest!=null) {
+            return GeoUtils.toLocation(this).bearingTo(GeoUtils.toLocation(dest));
+        }
+        return -1;
+    }
 }

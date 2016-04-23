@@ -1,0 +1,515 @@
+{
+  "BoatTypes" : {
+    "470 Men" : {
+      "boatClass" : "470 Men",
+      "length" : "4.7",
+      "reach12_15" : "5.5",
+      "reach15_" : "5.5",
+      "reach5_8" : "8",
+      "reach8_12" : "7",
+      "run12_15" : "7.5",
+      "run15_" : "6.5",
+      "run5_8" : "1",
+      "run8_12" : "10",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "11",
+      "upwind15_" : "10",
+      "upwind5_8" : "15",
+      "upwind8_12" : "13",
+      "windward_Leeward" : "false"
+    },
+    "470 Women" : {
+      "boatClass" : "470 Women",
+      "length" : "4.7",
+      "reach12_15" : "5.5",
+      "reach15_" : "5.5",
+      "reach5_8" : "8",
+      "reach8_12" : "7",
+      "run12_15" : "7.5",
+      "run15_" : "6.5",
+      "run5_8" : "1",
+      "run8_12" : "10",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "11",
+      "upwind15_" : "10",
+      "upwind5_8" : "15",
+      "upwind8_12" : "13",
+      "windward_Leeward" : "false"
+    },
+    "49er" : {
+      "boatClass" : "49er",
+      "length" : "4.995",
+      "run12_15" : "4.5",
+      "run15_" : "4",
+      "run5_8" : "1",
+      "run8_12" : "5.5",
+      "trapezoid" : "false",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "9",
+      "upwind15_" : "7.5",
+      "upwind5_8" : "22.5",
+      "upwind8_12" : "11",
+      "windward_Leeward" : "true"
+    },
+    "Finn" : {
+      "boatClass" : "Finn",
+      "length" : "4.5",
+      "reach12_15" : "7",
+      "reach15_" : "6",
+      "reach5_8" : "15",
+      "reach8_12" : "10",
+      "run12_15" : "9",
+      "run15_" : "7",
+      "run5_8" : "1",
+      "run8_12" : "11",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "15",
+      "upwind15_" : "15",
+      "upwind5_8" : "16",
+      "upwind8_12" : "15",
+      "windward_Leeward" : "true"
+    },
+    "Laser" : {
+      "boatClass" : "Laser",
+      "length" : "4.19",
+      "reach12_15" : "6.5",
+      "reach15_" : "6",
+      "reach5_8" : "12",
+      "reach8_12" : "9",
+      "run12_15" : "9.5",
+      "run15_" : "8.5",
+      "run5_8" : "1",
+      "run8_12" : "12",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "15.5",
+      "upwind15_" : "14.5",
+      "upwind5_8" : "20",
+      "upwind8_12" : "18.5",
+      "windward_Leeward" : "false"
+    },
+    "Laser Radial" : {
+      "boatClass" : "Laser Radial",
+      "length" : "4.19",
+      "reach12_15" : "7.5",
+      "reach15_" : "6.5",
+      "reach5_8" : "13",
+      "reach8_12" : "10",
+      "run12_15" : "9.5",
+      "run15_" : "8.5",
+      "run5_8" : "1",
+      "run8_12" : "14",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "16.5",
+      "upwind15_" : "15.5",
+      "upwind5_8" : "22",
+      "upwind8_12" : "20",
+      "windward_Leeward" : "false"
+    },
+    "RSX Men" : {
+      "boatClass" : "RSX Men",
+      "length" : "2.86",
+      "reach12_15" : "3",
+      "reach15_" : "3",
+      "reach5_8" : "9",
+      "reach8_12" : "4",
+      "run12_15" : "5",
+      "run15_" : "4",
+      "run5_8" : "1",
+      "run8_12" : "8",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "12",
+      "upwind15_" : "11",
+      "upwind5_8" : "18",
+      "upwind8_12" : "14",
+      "windward_Leeward" : "true"
+    },
+    "RSX Women" : {
+      "boatClass" : "RSX Women",
+      "length" : "2.86",
+      "reach12_15" : "3",
+      "reach15_" : "3",
+      "reach5_8" : "9",
+      "reach8_12" : "4",
+      "run12_15" : "5",
+      "run15_" : "4",
+      "run5_8" : "1",
+      "run8_12" : "8",
+      "trapezoid" : "true",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "12",
+      "upwind15_" : "11",
+      "upwind5_8" : "18",
+      "upwind8_12" : "14",
+      "windward_Leeward" : "true"
+    },
+    "Star" : {
+      "boatClass" : "Star",
+      "length" : "6.922",
+      "run12_15" : "10",
+      "run15_" : "10",
+      "run5_8" : "1",
+      "run8_12" : "13",
+      "trapezoid" : "false",
+      "triangular" : "false",
+      "updated" : "2016-04-02T19:58:48.206Z",
+      "upwind12_15" : "11",
+      "upwind15_" : "11",
+      "upwind5_8" : "13",
+      "upwind8_12" : "12",
+      "windward_Leeward" : "true"
+    }
+  },
+  "CompatibleVersion" : 11,
+  "Events" : {
+    "Event 5" : {
+      "boats" : {
+        "Amit Y" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : -18.555356979370117,
+            "lastUpdate" : 1459432754895,
+            "lat" : 32.8753661,
+            "lon" : 35.0166885,
+            "sog" : 0.35046616196632385
+          },
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Amit Y",
+          "type" : "WorkerBoat",
+          "uuid" : "b9e3d6b3-e055-43ef-ba9e-4cf32a3c5f2e"
+        },
+        "None Of your Business" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : -33.93228530883789,
+            "lastUpdate" : 1459197149122,
+            "lat" : 32.5355871,
+            "lon" : 34.8587879,
+            "sog" : 0.12697122991085052
+          },
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "None Of your Business",
+          "type" : "WorkerBoat",
+          "uuid" : "15077d8e-4a60-4a39-b3b8-b6bfa35b50ea"
+        },
+        "Uri Maor" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Uri Maor",
+          "type" : "WorkerBoat",
+          "uuid" : "983b994c-2fcd-4fb6-9afe-cddbfe717734"
+        }
+      },
+      "buoys" : {
+        "No1Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.570241701231076,
+            "lon" : 34.857852815492315,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459197114009,
+          "name" : "No1Mark",
+          "raceCourseUUID" : "34d07a16-d1d7-41ad-9ba1-9582c917cd89",
+          "type" : "TriangleBuoy",
+          "uuid" : "37517689-9ca7-4efa-847c-eef10b418b1d"
+        },
+        "No4Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.50092729181089,
+            "lon" : 34.857852815492315,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459197114009,
+          "name" : "No4Mark",
+          "raceCourseUUID" : "34d07a16-d1d7-41ad-9ba1-9582c917cd89",
+          "type" : "TomatoBuoy",
+          "uuid" : "a35b4257-8094-4fbe-b72e-b0da3b794481"
+        },
+        "PinEnd" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.53558448608389,
+            "lon" : 34.85691513098482,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459197114009,
+          "name" : "PinEnd",
+          "raceCourseUUID" : "34d07a16-d1d7-41ad-9ba1-9582c917cd89",
+          "type" : "FlagBuoy",
+          "uuid" : "241ad753-8062-4ff4-9a94-5e6f8543f9c2"
+        }
+      },
+      "eventManager" : {
+        "DisplayName" : "None Of your Business",
+        "Uid" : "google:105635416962964722622"
+      },
+      "lastBuoyId" : 0,
+      "name" : "Event 5"
+    },
+    "Palzur2016" : {
+      "boats" : {
+        "Amit Y" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : -20.16584014892578,
+            "lastUpdate" : 1459881599753,
+            "lat" : 32.8754676,
+            "lon" : 35.0166154,
+            "sog" : 0.4632309377193451
+          },
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Amit Y",
+          "type" : "RaceManager",
+          "uuid" : "91e0128b-3747-4e30-af50-054bf14be3c0"
+        },
+        "None Of your Business" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "None Of your Business",
+          "type" : "WorkerBoat",
+          "uuid" : "15077d8e-4a60-4a39-b3b8-b6bfa35b50ea"
+        },
+        "Uri Maor" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Uri Maor",
+          "type" : "WorkerBoat",
+          "uuid" : "983b994c-2fcd-4fb6-9afe-cddbfe717734"
+        },
+        "roei edi" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "roei edi",
+          "type" : "WorkerBoat"
+        },
+        "roman gurevitch" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "roman gurevitch",
+          "type" : "WorkerBoat"
+        }
+      },
+      "buoys" : {
+        "No1Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.887387794179176,
+            "lon" : 35.015818198197266,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459881587915,
+          "name" : "No1Mark",
+          "raceCourseUUID" : "1cf1b727-2ca1-4266-a293-7f6c488f8c52",
+          "type" : "TriangleBuoy",
+          "uuid" : "febd5026-c659-48c9-aed2-40097eb0dfb4"
+        },
+        "No4Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.86363620028247,
+            "lon" : 35.015818198197266,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459881587915,
+          "name" : "No4Mark",
+          "raceCourseUUID" : "1cf1b727-2ca1-4266-a293-7f6c488f8c52",
+          "type" : "TomatoBuoy",
+          "uuid" : "00442c75-864a-4904-b68f-3921cf3ab0d7"
+        },
+        "PinEnd" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.87551198878088,
+            "lon" : 35.0149732002177,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459881587915,
+          "name" : "PinEnd",
+          "raceCourseUUID" : "1cf1b727-2ca1-4266-a293-7f6c488f8c52",
+          "type" : "FlagBuoy",
+          "uuid" : "8211e414-e490-4cce-aaf5-8c9c5676b196"
+        }
+      },
+      "eventManager" : {
+        "DisplayName" : "Amit Y",
+        "Uid" : "google:110163866229709027050"
+      },
+      "lastBuoyId" : 0,
+      "name" : "Palzur2016"
+    },
+    "roei edi" : {
+      "boats" : {
+        "Amit Y" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Amit Y",
+          "type" : "WorkerBoat",
+          "uuid" : "f8e6ce61-a77e-4e08-ad38-6af3dd8289ed"
+        },
+        "None Of your Business" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : -35.525733947753906,
+            "lastUpdate" : 1459197098001,
+            "lat" : 32.5355897,
+            "lon" : 34.8587942,
+            "sog" : 0.43861788511276245
+          },
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "None Of your Business",
+          "type" : "WorkerBoat",
+          "uuid" : "15077d8e-4a60-4a39-b3b8-b6bfa35b50ea"
+        },
+        "Uri Maor" : {
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "Uri Maor",
+          "type" : "WorkerBoat",
+          "uuid" : "983b994c-2fcd-4fb6-9afe-cddbfe717734"
+        },
+        "roei edi" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 117.32028245141596,
+            "lastUpdate" : 1458392560213,
+            "lat" : 32.8182068,
+            "lon" : 34.9684335,
+            "sog" : 0.0
+          },
+          "color" : "Blue",
+          "id" : 0,
+          "name" : "roei edi",
+          "type" : "RaceManager"
+        }
+      },
+      "buoys" : {
+        "No1Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.57021700123107,
+            "lon" : 34.857861815750226,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459196738942,
+          "name" : "No1Mark",
+          "raceCourseUUID" : "11ebe17a-ef2c-4324-99d6-a95ed279542c",
+          "type" : "TriangleBuoy",
+          "uuid" : "c4b3a234-dac8-45f4-8a81-a7b19a232464"
+        },
+        "No4Mark" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.50090259181088,
+            "lon" : 34.857861815750226,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459196738942,
+          "name" : "No4Mark",
+          "raceCourseUUID" : "11ebe17a-ef2c-4324-99d6-a95ed279542c",
+          "type" : "TomatoBuoy",
+          "uuid" : "6e59052b-9db4-4707-814e-ee46d3773de4"
+        },
+        "PinEnd" : {
+          "aviLocation" : {
+            "cog" : 0.0,
+            "depth" : 0.0,
+            "lastUpdate" : 0,
+            "lat" : 32.53555978608391,
+            "lon" : 34.856924131500534,
+            "sog" : 0.0
+          },
+          "color" : "Orange",
+          "id" : 0,
+          "lastUpdate" : 1459196738942,
+          "name" : "PinEnd",
+          "raceCourseUUID" : "11ebe17a-ef2c-4324-99d6-a95ed279542c",
+          "type" : "FlagBuoy",
+          "uuid" : "c5172d40-e81c-4129-ad69-82732723e262"
+        }
+      },
+      "eventManager" : {
+        "DisplayName" : "roei edi",
+        "Uid" : "google:103228221131529995964"
+      },
+      "lastBuoyId" : 0,
+      "name" : "roei edi"
+    }
+  },
+  "Users" : {
+    "google:103228221131529995964" : {
+      "DisplayName" : "roei edi",
+      "Uid" : "google:103228221131529995964"
+    },
+    "google:105635416962964722622" : {
+      "DisplayName" : "None Of your Business",
+      "Uid" : "google:105635416962964722622"
+    },
+    "google:110163866229709027050" : {
+      "DisplayName" : "Amit Y",
+      "Uid" : "google:110163866229709027050"
+    },
+    "google:113111858043881869853" : {
+      "DisplayName" : "Natan Gamoran",
+      "Uid" : "google:113111858043881869853"
+    },
+    "google:113198174313916788941" : {
+      "DisplayName" : "roman gurevitch",
+      "Uid" : "google:113198174313916788941"
+    },
+    "google:114171167303925566898" : {
+      "DisplayName" : "Uri Maor",
+      "Uid" : "google:114171167303925566898"
+    }
+  }
+}

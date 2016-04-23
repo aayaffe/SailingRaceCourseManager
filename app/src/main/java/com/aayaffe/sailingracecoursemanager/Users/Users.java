@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 
+import java.util.Date;
+
 /**
  * Created by aayaffe on 16/02/2016.
  */
@@ -28,11 +30,15 @@ public class Users {
         User u = commManager.findUser(Uid);
         if (u!=null) {
             this.currentUser = u;
+            u.lastConnection = new Date();
+            commManager.addUser(u);;
        }
         else{
             u = new User();
             u.Uid = Uid;
             u.DisplayName = displayName;
+            u.joined = new Date();
+            u.lastConnection = new Date();
             commManager.addUser(u);
         }
     }
