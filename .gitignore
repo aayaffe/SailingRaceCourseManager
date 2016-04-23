@@ -6,6 +6,7 @@
 /build
 /captures
 /Docs
+/Assets
 *.iml
 .idea
 *.apk
