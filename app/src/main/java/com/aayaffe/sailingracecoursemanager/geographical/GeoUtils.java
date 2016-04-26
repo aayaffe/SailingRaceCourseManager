@@ -62,28 +62,27 @@ public class GeoUtils {
         AviLocation ret = new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
         return ret;
     }
-//    static public AviLocation toAviLocation(LatLong l){
-//        if (l==null)
-//            return null;
-//        AviLocation ret = new AviLocation(l.latitude,l.longitude);
-//        return ret;
-//    }
 
-    public static Location getLocationFromDirDist(Location loc, Float dir, int dist) {
-        double dis = (dist/1000.0)/6378.1;
+    public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, int dist) {
+        double dis = (dist/1000.0)/6371;
         double brng = Math.toRadians(dir);
-        double lat1 = Math.toRadians(loc.getLatitude());
-        double lon1 = Math.toRadians(loc.getLongitude());
+        double lat1 = Math.toRadians(loc.lat);
+        double lon1 = Math.toRadians(loc.lon);
 
         double lat2 = Math.asin(Math.sin(lat1) * Math.cos(dis) + Math.cos(lat1) * Math.sin(dis) * Math.cos(brng));
         double a = Math.atan2(Math.sin(brng)*Math.sin(dis)*Math.cos(lat1), Math.cos(dis)-Math.sin(lat1)*Math.sin(lat2));
         double lon2 = lon1 + a;
 
         lon2 = (lon2+ 3*Math.PI) % (2*Math.PI) - Math.PI;
-        Location ret = new Location("Generated");
-        ret.setLongitude(Math.toDegrees(lon2));
-        ret.setLatitude(Math.toDegrees(lat2));
+        AviLocation ret = new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
         return ret;
+
+
+
+    }
+
+    public static Location getLocationFromDirDist(Location loc, float dir, int dist) {
+        return toLocation(getLocationFromDirDist(toAviLocation(loc),(int)dir,dist));
     }
 
     public static int relativeToTrueDirection(int trueDir, int relativDir){

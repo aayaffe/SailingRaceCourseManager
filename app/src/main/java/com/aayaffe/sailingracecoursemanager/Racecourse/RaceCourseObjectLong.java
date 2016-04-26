@@ -9,15 +9,16 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
  */
 public abstract class RaceCourseObjectLong extends RaceCourseObject {
     public AviLocation getStbLoc(){
-        return locs.get(0);
+        return stbd;
     }
 
     public AviLocation getPrtLoc(){
-        return locs.get(1);
+        return port;
     }
 
-    public AviLocation getMidLoc(){
-        return GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(GeoUtils.toLocation(getStbLoc()), getDirection(), getLength() / 2));
+    @Override
+    public AviLocation getLoc(){
+        return GeoUtils.getLocationFromDirDist(getStbLoc(), (int)getDirection(), (int)getLength() / 2);
     }
 
     /***
@@ -38,9 +39,8 @@ public abstract class RaceCourseObjectLong extends RaceCourseObject {
 
     public RaceCourseObjectLong(AviLocation stbd, AviLocation port){
         super(null);
-        locs.clear();
-        locs.add(stbd);
-        locs.add(port);
+        this.stbd = stbd;
+        this.port = port;
     }
 
 }

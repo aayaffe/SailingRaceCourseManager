@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 public class AviLocation {
     public double lat;
     public double lon;
-    public double sog;
-    public float cog;
-    public double depth;
+    public double sog = 0;
+    public float cog = 0;
+    public double depth = 0;
     public Date lastUpdate;
 
     public AviLocation() {
@@ -22,6 +22,7 @@ public class AviLocation {
     public AviLocation(double latitude, double longitude) {
         lat = latitude;
         lon = longitude;
+        lastUpdate = new Date();
     }
     public AviLocation(double latitude, double longitude,  float cog, double sog, double depth, Date lastUpdate) {
         lat = latitude;
@@ -77,5 +78,36 @@ public class AviLocation {
             return GeoUtils.toLocation(this).bearingTo(GeoUtils.toLocation(dest));
         }
         return -1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AviLocation that = (AviLocation) o;
+
+        if (Double.compare(that.lat, lat) != 0) return false;
+        if (Double.compare(that.lon, lon) != 0) return false;
+        if (Double.compare(that.sog, sog) != 0) return false;
+        if (Float.compare(that.cog, cog) != 0) return false;
+        return Double.compare(that.depth, depth) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(lat);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(lon);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sog);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (cog != +0.0f ? Float.floatToIntBits(cog) : 0);
+        temp = Double.doubleToLongBits(depth);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
