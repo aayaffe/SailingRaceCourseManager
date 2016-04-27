@@ -8,8 +8,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
  */
 public class RaceCourseMark extends RaceCourseObject {
 
-    public RaceCourseMark(AviLocation loc) {
-        super(loc);
+    public RaceCourseMark(AviLocation loc, String name) {
+        super(loc,name);
         type = ObjectTypes.Buoy;
     }
 }

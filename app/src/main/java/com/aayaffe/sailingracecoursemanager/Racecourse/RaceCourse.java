@@ -6,9 +6,11 @@ import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -191,7 +193,20 @@ public class RaceCourse {
         //TODO check setting ID - enter as mandatory to AVIObject constructor?
         marks.marks.add(m);
     }
-
+    private RaceCourseDescriptor getWindwardLeewardDescriptor() {
+        List<ObjectTypes> os = new ArrayList<>();
+        os.add(ObjectTypes.StartFinishLine);
+        os.add(ObjectTypes.Buoy);
+        os.add(ObjectTypes.Buoy);
+        List<DirDist> dds = new ArrayList<>();
+        dds.add(new DirDist(0, 0.34f));
+        dds.add(new DirDist(180, 0.66f));
+        List<String> names = new ArrayList<>();
+        names.add("StartFinishline");
+        names.add("No1Mark");
+        names.add("No4Mark");
+        return new RaceCourseDescriptor(os, dds, names);
+    }
     public int calculateTargetSpeed(BoatType bt){
         //TODO Implement
         return 0;

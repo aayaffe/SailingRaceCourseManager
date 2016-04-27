@@ -7,8 +7,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
  * Created by aayaffe on 23/04/2016.
  */
 public class RaceCourseGate extends RaceCourseObjectLong {
-    public RaceCourseGate(AviLocation stbd, AviLocation port) {
-        super(stbd, port);
+    public RaceCourseGate(AviLocation stbd, AviLocation port, String name) {
+        super(stbd, port,name);
         type = ObjectTypes.Gate;
     }
 }
