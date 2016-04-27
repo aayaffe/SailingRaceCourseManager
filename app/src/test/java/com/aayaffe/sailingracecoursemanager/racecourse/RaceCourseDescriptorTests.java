@@ -35,6 +35,7 @@ public class RaceCourseDescriptorTests {
 
     @Test
     public void getFirst_CorrectInput_StartLineFirstAbsDistance_ReturnsCorrect() {
+
         RaceCourseDescriptor rcd = createNewAbs(new AviLocation(0,0),0,100,2000);
         for(RaceCourseObject rco: rcd){
             assertThat(rco, instanceOf(RaceCourseStartLine.class));
@@ -45,10 +46,12 @@ public class RaceCourseDescriptorTests {
             assertEquals(al.lon, new AviLocation(0,0).lon,0.000000001);
             break;
         }
+
     }
 
     @Test
     public void getNext_Second_CorrectInput_GateAbsDistance_ReturnsCorrect() {
+
         RaceCourseDescriptor rcd = createNewAbs(new AviLocation(0,0),0,100,2000);
         int c = 0;
         for(RaceCourseObject rco: rcd) {
@@ -151,6 +154,7 @@ public class RaceCourseDescriptorTests {
         names.add("Gate1");
         names.add("FinishLine");
         return new RaceCourseDescriptor(os,dds,names,startlineLoc,windDir,startLineLength,commonLength);
+
 
     }
 }
