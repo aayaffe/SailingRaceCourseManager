@@ -213,7 +213,7 @@ public class Firebase implements ICommManager {
     public HashMap<String, BoatTypes> getAllBoatTypes() {
         HashMap<String, BoatTypes> ret = new HashMap<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
-        for (DataSnapshot ps : ds.child("BoatTypes").getChildren()) {
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_boattypes)).getChildren()) {
             BoatTypes o = ps.getValue(BoatTypes.class);
             ret.put(o.getBoatClass(),o);
         }
