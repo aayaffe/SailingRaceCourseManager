@@ -14,6 +14,10 @@ public abstract class RaceCourseObject {
     AviLocation port;
     AviLocation center;
 
+
+
+    String name;
+
     ObjectTypes type;
     public AviLocation getLoc(){
         return center;
@@ -23,8 +27,12 @@ public abstract class RaceCourseObject {
         return type;
     }
 
-    public RaceCourseObject(AviLocation loc){
-        center = loc;
+    public RaceCourseObject(AviLocation loc, String name){
+        center = loc;this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

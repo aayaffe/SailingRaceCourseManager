@@ -37,8 +37,8 @@ public abstract class RaceCourseObjectLong extends RaceCourseObject {
         return (int)getStbLoc().bearingTo(getPrtLoc());
     }
 
-    public RaceCourseObjectLong(AviLocation stbd, AviLocation port){
-        super(null);
+    public RaceCourseObjectLong(AviLocation stbd, AviLocation port, String name){
+        super(null,name);
         this.stbd = stbd;
         this.port = port;
     }

@@ -6,36 +6,44 @@ import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by aayaffe on 22/04/2016.
  */
-public  class RaceCourseDescriptor {
+public  class RaceCourseDescriptor implements Iterable<RaceCourseObject>{
+    private final AviLocation startLineLoc;
+    private final int commonLength;
+    private final int windDir;
+    private final int startLineLength;
     public List<ObjectTypes> objects;
     List<DirDist> dirDist;
-    boolean startFinishSeparate;
+    List<String> names;
+    //boolean startFinishSeparate;
     int finishLineLength = 55;
     int iterator = 0;
     AviLocation lastLoc;
-    public RaceCourseDescriptor(List<ObjectTypes> objects, List<DirDist> dirDistList){
+    /***
+     *
+     * @param startlineLoc - The center location of the first element in the race course (StartLine)
+     * @param windDir - The direction from which the wind comes from
+     * @param commonLength - the length from which the legs' fractional length will be calculated
+     * @param startLineLength - the start line length //TODO remove for there should never be a start line as the next element
+     * @return the first object of the race (The start line)
+     */
+    public RaceCourseDescriptor(List<ObjectTypes> objects, List<DirDist> dirDistList, List<String> names, AviLocation startlineLoc, int windDir, int startLineLength, int commonLength){
         this.objects = objects;
         this.dirDist = dirDistList;
-    }
-    public RaceCourseObject getFirst(AviLocation loc, int windDir, int startLineLength){
-        iterator = 0;
-        lastLoc = loc;
-        return generateObject(objects.get(iterator++),loc,GeoUtils.relativeToTrueDirection(windDir,-90),startLineLength);
-    }
-
-    public RaceCourseObject getNext(int commonLength, int windDir, int startLineLength){
-        if (iterator>objects.size()-1)
-            return null;
-        AviLocation loc = GeoUtils.getLocationFromDirDist(lastLoc,dirDist.get(iterator-1).direction,getDistance(dirDist.get(iterator-1),commonLength));
-        lastLoc = loc;
-        return generateObject(objects.get(iterator++),loc,GeoUtils.relativeToTrueDirection(windDir,-90),startLineLength);
+        this.names = names;
+        this.startLineLoc = startlineLoc;
+        this.windDir = windDir;
+        this.startLineLength = startLineLength;
+        this.commonLength = commonLength;
     }
 
+
+    @org.jetbrains.annotations.Contract(pure = true)
     private int getDistance(DirDist dirDist, int commonLength) {
         if (dirDist.isDistAbsolute)
             return dirDist.distAbsolute;
@@ -43,18 +51,18 @@ public  class RaceCourseDescriptor {
     }
 
     @Nullable
-    private RaceCourseObject generateObject(ObjectTypes type, AviLocation loc, int objectDir, int objectLength){
+    private RaceCourseObject generateObject(ObjectTypes type, AviLocation loc, int objectDir, int objectLength, String name){
         switch (type){
             case StartLine:
-                return new RaceCourseStartLine(getStbd(loc,objectDir,objectLength),getPort(loc,objectDir,objectLength));
+                return new RaceCourseStartLine(getStbd(loc,objectDir,objectLength),getPort(loc,objectDir,objectLength),name);
             case Buoy:
-                return new RaceCourseMark(loc);
+                return new RaceCourseMark(loc,name);
             case Gate:
-                return new RaceCourseGate(getStbd(loc,objectDir,finishLineLength),getPort(loc,objectDir,finishLineLength));
+                return new RaceCourseGate(getStbd(loc,objectDir,finishLineLength),getPort(loc,objectDir,finishLineLength),name);
             case FinishLine:
-                return new RaceCourseFinishLine(getStbd(loc,objectDir,finishLineLength),getPort(loc,objectDir,finishLineLength));
+                return new RaceCourseFinishLine(getStbd(loc,objectDir,finishLineLength),getPort(loc,objectDir,finishLineLength),name);
             case StartFinishLine:
-                return new RaceCourseStartFinishLine(getStbd(loc,objectDir,objectLength),getPort(loc,objectDir,objectLength));
+                return new RaceCourseStartFinishLine(getStbd(loc,objectDir,objectLength),getPort(loc,objectDir,objectLength),name);
             default:
                 return null;
         }
@@ -69,4 +77,31 @@ public  class RaceCourseDescriptor {
     }
 
 
+    @Override
+    public Iterator<RaceCourseObject> iterator() {
+        Iterator<RaceCourseObject> it = new Iterator<RaceCourseObject>() {
+            private int currentIndex = 0;
+            @Override
+            public boolean hasNext() {
+                return currentIndex < objects.size() && objects.get(currentIndex) != null;
+            }
+
+            @Override
+            public RaceCourseObject next() {
+                if (lastLoc!=null) {
+                    lastLoc = GeoUtils.getLocationFromDirDist(lastLoc, GeoUtils.relativeToTrueDirection(windDir,dirDist.get(currentIndex - 1).direction), getDistance(dirDist.get(currentIndex - 1), commonLength));
+                }else{
+                    lastLoc = startLineLoc;
+                }
+
+                return generateObject(objects.get(currentIndex),lastLoc,GeoUtils.relativeToTrueDirection(windDir,-90),startLineLength,names.get(currentIndex++));
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        return it;
+    }
 }
