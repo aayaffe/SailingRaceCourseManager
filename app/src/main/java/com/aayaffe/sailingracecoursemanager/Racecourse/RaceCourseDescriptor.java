@@ -93,8 +93,11 @@ public  class RaceCourseDescriptor implements Iterable<RaceCourseObject>{
                 }else{
                     lastLoc = startLineLoc;
                 }
-
-                return generateObject(objects.get(currentIndex),lastLoc,GeoUtils.relativeToTrueDirection(windDir,-90),startLineLength,names.get(currentIndex++));
+                int objectDir = GeoUtils.relativeToTrueDirection(windDir,-90);
+                if (objects.get(currentIndex)==ObjectTypes.FinishLine){ //TODO assuming finish line does not come first - add checks for race course
+                    objectDir = GeoUtils.relativeToTrueDirection(windDir,-90+dirDist.get(currentIndex - 1).direction);
+                }
+                return generateObject(objects.get(currentIndex),lastLoc,objectDir,startLineLength,names.get(currentIndex++));
             }
 
             @Override

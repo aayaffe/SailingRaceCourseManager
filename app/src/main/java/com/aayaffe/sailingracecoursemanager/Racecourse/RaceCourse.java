@@ -43,33 +43,7 @@ public class RaceCourse {
         uuid = UUID.randomUUID();
         setRaceCourseTypes();
     }
-    public RaceCourseType getRaceCourseType(String rc){
-        return raceCourseTypes.get(rc);
-    }
 
-    public double getBoatVMGUpwind() {
-        return boatVMGUpwind;
-    }
-
-    public void setBoatVMGUpwind(double boatVMGUpwind) {
-        this.boatVMGUpwind = boatVMGUpwind;
-    }
-
-    public double getBoatVMGReach() {
-        return boatVMGReach;
-    }
-
-    public void setBoatVMGReach(double boatVMGReach) {
-        this.boatVMGReach = boatVMGReach;
-    }
-
-    public double getBoatVMGRun() {
-        return boatVMGRun;
-    }
-
-    public void setBoatVMGRun(double boatVMGRun) {
-        this.boatVMGRun = boatVMGRun;
-    }
 
 
     public enum RaceCourseType{
@@ -84,94 +58,39 @@ public class RaceCourse {
     public void calculateCourse(RaceCourseType rct){ //TODO calculate everything automatically always
         marks = new Marks();
         if (rct== RaceCourseType.WINDWARD_LEEWARD) {
-            //addPinEndMark(getBoatLength(), numOfBoats, 1.5, signalBoatLoc, windDir); //TODO obtain details from DB
             AviLocation rp = findReferencePoint(signalBoatLoc, calculateStartLineLength(boatLength, numOfBoats, 1.5));
             addWindwardLeewardMarks(rp, windDir, calculateStartLineLength(boatLength,numOfBoats, 1.5));
         }
         if (rct== RaceCourseType.TRAPEZOID) {
-            addPinEndMark(getBoatLength(), numOfBoats, 1.5, signalBoatLoc, windDir); //TODO obtain details from DB
             AviLocation rp = findReferencePoint(signalBoatLoc, calculateStartLineLength(boatLength, numOfBoats, 1.5));
-            addTrapezoidMarks(rp, windDir);
+            addTrapezoidMarks(rp, windDir, calculateStartLineLength(boatLength,numOfBoats, 1.5));
         }
     }
 //TODO add triangular
-    private void addTrapezoidMarks(AviLocation rp, int windDir) {//TODO take into account course type (I1,I2,I3...)
-        double nm = ((goalTime-0.1-0.05)/(getBoatVMGRun() + getBoatVMGUpwind()+ 0.5*getBoatVMGReach()));
+    private void addTrapezoidMarks(AviLocation rp, int windDir, int startLineLength) {//TODO take into account course type (I1,I2,I3...)
+        double nm = ((goalTime-0.1-0.05)/(getBoatVMGRun() + getBoatVMGUpwind()+ 0.5*getBoatVMGReach()));//TODO check race course length
         int length = (int)(nm*1852);
-        int dir = GeoUtils.relativeToTrueDirection(windDir, 0);
-        AviLocation l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(rp.toLocation(), (float) dir, (int)(0.05*1852)));
-        AviObject m = new AviObject();
-        m.type = ObjectTypes.TriangleBuoy;
-        m.name = "No4Mark"; //TODO: Add gate mark
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-        dir = GeoUtils.relativeToTrueDirection(windDir, 0);
-        l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(l.toLocation(), (float) dir, length));
-        m = new AviObject();
-        m.type = ObjectTypes.TriangleBuoy;
-        m.name = "No1Mark"; //TODO: Add gate mark
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-        dir = GeoUtils.relativeToTrueDirection(windDir, -120);
-        l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(l.toLocation(), (float) dir, (int)(0.5*length)));
-        m = new AviObject();
-        m.type = ObjectTypes.TriangleBuoy;
-        m.name = "No2Mark";
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-        dir = GeoUtils.relativeToTrueDirection(windDir, 180);
-        l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(l.toLocation(), (float) dir, (int)(length)));
-        m = new AviObject();
-        m.type = ObjectTypes.TriangleBuoy;
-        m.name = "No3Mark"; //TODO: Add gate mark
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-        dir = GeoUtils.relativeToTrueDirection(windDir, 120);
-        l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(l.toLocation(), (float) dir,(int)(1852*0.1)));
-        m = new AviObject();
-        m.type = ObjectTypes.FlagBuoy;
-        m.name = "FinishMark"; //TODO: Add finish boat an mark
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-
+        SetRaceCourse(getTrapezoidDescriptor(rp,windDir,startLineLength,length));
     }
-
     /***
      * Find the midposition of the start line
      * @param signalBoatLoc
      * @param startLineLength
      * @return
      */
-
     private AviLocation findReferencePoint(AviLocation signalBoatLoc, int startLineLength) {
         return GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(GeoUtils.toLocation(signalBoatLoc), (float) GeoUtils.relativeToTrueDirection(windDir, -90), ((int) startLineLength / 2)));
     }
-
     private void addWindwardLeewardMarks(AviLocation rp, int windDir, int startLineLength) {
 
         double nm = (goalTime/(getBoatVMGRun() + getBoatVMGUpwind()));
         int length = (int)(nm*1852);
         RaceCourseDescriptor rcd = getWindwardLeewardDescriptor(rp,windDir,startLineLength,length);
+        SetRaceCourse(rcd);
+
+    }
+
+    private void SetRaceCourse(RaceCourseDescriptor rcd) {
         for (RaceCourseObject rco: rcd){
             AviObject s = new AviObject();
             AviObject p = null;
@@ -202,14 +121,14 @@ public class RaceCourse {
                     break;
                 case FinishLine:
                     s.type = ObjectTypes.TriangleBuoy; //TODO check to set a diffrent icon to stbd side
-                    s.name = rco.getName();
+                    s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.type = ObjectTypes.FlagBuoy;
-                    p.name = rco.getName();
+                    p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";
                     p.lastUpdate = new Date();
@@ -217,14 +136,14 @@ public class RaceCourse {
                     break;
                 case Gate:
                     s.type = ObjectTypes.TomatoBuoy;
-                    s.name = rco.getName()+"stbd";;
+                    s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.type = ObjectTypes.TomatoBuoy;
-                    p.name = rco.getName()+"port";
+                    p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";
                     p.lastUpdate = new Date();
@@ -237,8 +156,8 @@ public class RaceCourse {
             }
 
         }
-
     }
+
     private RaceCourseDescriptor getWindwardLeewardDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
         List<ObjectTypes> os = new ArrayList<>();
         os.add(ObjectTypes.StartFinishLine);
@@ -253,25 +172,32 @@ public class RaceCourse {
         names.add("No4Mark");
         return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
     }
+    private RaceCourseDescriptor getTrapezoidDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
+        List<ObjectTypes> os = new ArrayList<>();
+        os.add(ObjectTypes.StartFinishLine);
+        os.add(ObjectTypes.Gate);
+        os.add(ObjectTypes.Buoy);
+        os.add(ObjectTypes.Buoy);
+        os.add(ObjectTypes.Gate);
+        os.add(ObjectTypes.FinishLine);
+        List<DirDist> dds = new ArrayList<>();
+        dds.add(new DirDist(0, 95));
+        dds.add(new DirDist(0, 0.33f));
+        dds.add(new DirDist(240, 0.1666f));
+        dds.add(new DirDist(180, 0.33f));
+        dds.add(new DirDist(120, 185));
+        List<String> names = new ArrayList<>();
+        names.add("StartLine");
+        names.add("No4Mark");
+        names.add("No1Gate");
+        names.add("No2Mark");
+        names.add("No3Mark");
+        names.add("FinishLine");
+        return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
+    }
     public int calculateTargetSpeed(BoatType bt){
         //TODO Implement
         return 0;
-    }
-
-    private void addPinEndMark(double boatLength, int numOfBoats, double multiplyingFactor, AviLocation signalBoatLoc, int windDir){
-        int length = calculateStartLineLength(boatLength,numOfBoats, multiplyingFactor);
-        int dir = GeoUtils.relativeToTrueDirection(windDir, -90);
-        AviLocation l = GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(signalBoatLoc.toLocation(), (float) dir, length));
-        AviObject m = new AviObject();
-        m.type = ObjectTypes.FlagBuoy;
-        m.name = "PinEnd";
-        m.setAviLocation(l);
-        m.color = "Orange";
-        m.lastUpdate = new Date();
-        m.setRaceCourseUUID(uuid);
-        //TODO check setting ID - enter as mandatory to AVIObject constructor?
-        marks.marks.add(m);
-
     }
 
     /**
@@ -281,13 +207,9 @@ public class RaceCourse {
      * @param multiplyingFactor
      * @return The start line length
      */
-
     public int calculateStartLineLength(double boatLength, int numOfBoats, double multiplyingFactor){
         return (int)(boatLength*numOfBoats*multiplyingFactor);
     }
-
-
-
 
     public int getWindDir() {
         return windDir;
@@ -337,7 +259,6 @@ public class RaceCourse {
     public void setBoatLength(double boatLength) {
         this.boatLength = boatLength;
     }
-
     public RaceCourseType getRaceCourseType() {
         return raceCourseType;
     }
@@ -346,6 +267,27 @@ public class RaceCourse {
     }
     public UUID getUuid() {
         return uuid;
+    }
+    public RaceCourseType getRaceCourseType(String rc){
+        return raceCourseTypes.get(rc);
+    }
+    public double getBoatVMGUpwind() {
+        return boatVMGUpwind;
+    }
+    public void setBoatVMGUpwind(double boatVMGUpwind) {
+        this.boatVMGUpwind = boatVMGUpwind;
+    }
+    public double getBoatVMGReach() {
+        return boatVMGReach;
+    }
+    public void setBoatVMGReach(double boatVMGReach) {
+        this.boatVMGReach = boatVMGReach;
+    }
+    public double getBoatVMGRun() {
+        return boatVMGRun;
+    }
+    public void setBoatVMGRun(double boatVMGRun) {
+        this.boatVMGRun = boatVMGRun;
     }
 
 }
