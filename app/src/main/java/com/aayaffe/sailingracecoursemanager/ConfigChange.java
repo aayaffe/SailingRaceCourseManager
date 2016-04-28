@@ -1,14 +1,9 @@
 package com.aayaffe.sailingracecoursemanager;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.map.GoogleMaps;
 import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
-
-import java.io.IOException;
-import java.util.HashSet;
 
 /**
  * Created by aayaffe on 29/09/2015.

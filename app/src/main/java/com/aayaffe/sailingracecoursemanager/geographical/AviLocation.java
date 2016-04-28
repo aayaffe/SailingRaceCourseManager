@@ -90,8 +90,7 @@ public class AviLocation {
         if (Double.compare(that.lat, lat) != 0) return false;
         if (Double.compare(that.lon, lon) != 0) return false;
         if (Double.compare(that.sog, sog) != 0) return false;
-        if (Float.compare(that.cog, cog) != 0) return false;
-        return Double.compare(that.depth, depth) == 0;
+        return Float.compare(that.cog, cog) == 0 && Double.compare(that.depth, depth) == 0;
 
     }
 

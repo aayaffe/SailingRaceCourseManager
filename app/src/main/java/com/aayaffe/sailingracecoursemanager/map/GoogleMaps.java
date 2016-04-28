@@ -27,17 +27,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import org.mapsforge.core.model.BoundingBox;
-import org.mapsforge.core.model.LatLong;
-import org.mapsforge.map.layer.download.TileDownloadLayer;
-
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by aayaffe on 04/10/2015.
@@ -136,9 +128,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         return m;
     }
     private boolean isValid(AviObject ao) {
-        if ((ao!=null)&&(ao.getAviLocation()!=null)&&(ao.name!=null)&&(ao.type!=null)&&(ao.lastUpdate!=null))
-            return true;
-        return false;
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.type != null) && (ao.lastUpdate != null);
     }
     public void removeMark(Marker m){
         m.remove();

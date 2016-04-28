@@ -23,16 +23,16 @@ public class Users {
     }
 
     public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+        Users.currentUser = currentUser;
     }
     public void setCurrentUser(String Uid, String displayName) {
         Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);//TODO: to sync with current user found in Firebase class
         User u = commManager.findUser(Uid);
         if (u!=null) {
-            this.currentUser = u;
+            currentUser = u;
             u.lastConnection = new Date();
-            commManager.addUser(u);;
-       }
+            commManager.addUser(u);
+        }
         else{
             u = new User();
             u.Uid = Uid;

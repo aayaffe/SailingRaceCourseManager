@@ -306,9 +306,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             return false;
         if (Uid == null||Uid.isEmpty())
             return false;
-        if (commManager.getEvent(currentEventName).getEventManager().Uid.equals(Uid))
-            return true;
-        return false;
+        return commManager.getEvent(currentEventName).getEventManager().Uid.equals(Uid);
     }
 
     public void redrawLayers() {
@@ -471,7 +469,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         super.onStop();
         handler.removeCallbacks(runnable);
         Log.d(TAG,"OnStop");
-        finish();
+//        finish();
     }
 
 }

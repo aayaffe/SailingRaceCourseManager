@@ -37,8 +37,8 @@ public class Firebase implements ICommManager {
     private DataSnapshot eventDs;
 
     public Firebase(Context c) {
-        if (this.c==null)
-            this.c = c;
+        if (Firebase.c ==null)
+            Firebase.c = c;
         users = new Users(this);
     }
 
@@ -229,7 +229,7 @@ public class Firebase implements ICommManager {
 
     public void setCurrentEventName(String currentEventName) {
         //loginToEvent(currentEventName); //TODO: To enable better and finer grained events
-        this.currentEventName = currentEventName;
+        Firebase.currentEventName = currentEventName;
     }
 
 

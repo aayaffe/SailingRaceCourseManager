@@ -5,7 +5,6 @@ import android.location.Location;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.firebase.client.*;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;

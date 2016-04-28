@@ -6,8 +6,7 @@ package com.aayaffe.sailingracecoursemanager;
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Canvas;
 import org.mapsforge.core.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+
 import org.mapsforge.core.model.BoundingBox;
 
 import org.mapsforge.core.model.LatLong;

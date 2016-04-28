@@ -28,7 +28,7 @@ public class Notification {
         int mNotificationId = 001;
 // Gets an instance of the NotificationManager service
         mNotifyMgr =
-                (NotificationManager) c.getSystemService(c.NOTIFICATION_SERVICE);
+                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
 // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }

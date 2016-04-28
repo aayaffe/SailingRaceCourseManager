@@ -1,8 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Events;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;

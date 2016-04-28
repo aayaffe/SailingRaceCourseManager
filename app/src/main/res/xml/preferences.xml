@@ -59,11 +59,11 @@
         android:key="category_program_settings"
         android:title="Program settings"
         android:shouldDisableView="true"
-        android:enabled="true">
+        android:enabled="false">
         <EditTextPreference android:title="Refresh Rate"
             android:key="refreshRate"
             android:inputType="number"
-            android:defaultValue="10"
+            android:defaultValue="1"
             android:summary="Input Desired refresh rate in seconds. Higher consumes more bandwidth, lower updates slower"/>
     </PreferenceCategory>
 

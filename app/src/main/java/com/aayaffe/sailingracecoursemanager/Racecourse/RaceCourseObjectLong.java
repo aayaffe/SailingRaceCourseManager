@@ -1,6 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Racecourse;
 
-import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
@@ -18,7 +17,7 @@ public abstract class RaceCourseObjectLong extends RaceCourseObject {
 
     @Override
     public AviLocation getLoc(){
-        return GeoUtils.getLocationFromDirDist(getStbLoc(), (int)getDirection(), (int)getLength() / 2);
+        return GeoUtils.getLocationFromDirDist(getStbLoc(), (int)getDirection(), getLength() / 2);
     }
 
     /***

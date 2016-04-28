@@ -7,7 +7,7 @@ import android.location.Location;
  */
 public interface IGeo {
 
-    public Location getLoc();
+    Location getLoc();
 
     void stopLocationUpdates();
 

@@ -5,7 +5,6 @@ package com.aayaffe.sailingracecoursemanager;
  */
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 
@@ -24,8 +23,8 @@ public class AppPreferences extends PreferenceActivity {
         }
         if(!manager) {
 
-            ((PreferenceGroup) findPreference("category_race_course")).setEnabled(false);
-            ((PreferenceGroup) findPreference("category_conditions")).setEnabled(false);
+            findPreference("category_race_course").setEnabled(false);
+            findPreference("category_conditions").setEnabled(false);
 
         }
     }

@@ -2,7 +2,6 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;

@@ -1,8 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Users;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.Date;
 
 /**

@@ -8,9 +8,9 @@ import java.util.Date;
 public interface CommManagerEventListener {
 
 
-    public void onConnect(Date time);
+    void onConnect(Date time);
 
-    public void onDisconnect(Date time);
+    void onDisconnect(Date time);
 
 }
 

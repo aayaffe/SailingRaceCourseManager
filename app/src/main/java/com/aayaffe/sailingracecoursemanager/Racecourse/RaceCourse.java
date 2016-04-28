@@ -79,7 +79,7 @@ public class RaceCourse {
      * @return
      */
     private AviLocation findReferencePoint(AviLocation signalBoatLoc, int startLineLength) {
-        return GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(GeoUtils.toLocation(signalBoatLoc), (float) GeoUtils.relativeToTrueDirection(windDir, -90), ((int) startLineLength / 2)));
+        return GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(GeoUtils.toLocation(signalBoatLoc), (float) GeoUtils.relativeToTrueDirection(windDir, -90), (startLineLength / 2)));
     }
     private void addWindwardLeewardMarks(AviLocation rp, int windDir, int startLineLength) {
 

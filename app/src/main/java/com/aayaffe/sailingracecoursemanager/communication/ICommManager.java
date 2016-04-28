@@ -1,7 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import android.location.Location;
-
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
@@ -11,19 +9,19 @@ import java.util.List;
  * Created by aayaffe on 22/09/2015.
  */
 public interface ICommManager {
-    public int login (String user, String password, String nickname);
+    int login(String user, String password, String nickname);
 
     void setCommManagerEventListener(CommManagerEventListener listener);
 
-    public int writeBoatObject(AviObject o);
-    public int writeBuoyObject(AviObject o);
+    int writeBoatObject(AviObject o);
+    int writeBuoyObject(AviObject o);
 
-    public List<AviObject> getAllBoats();
-    public List<AviObject> getAllBuoys();
+    List<AviObject> getAllBoats();
+    List<AviObject> getAllBuoys();
 
-    public int sendAction (RaceManagerAction a, AviObject o);
+    int sendAction(RaceManagerAction a, AviObject o);
 
-    public long getNewBuoyId();
+    long getNewBuoyId();
 
     void removeBueyObject(String title);
 
@@ -35,5 +33,5 @@ public interface ICommManager {
 
     Event getEvent(String eventName);
 
-    public long getSupportedVersion();
+    long getSupportedVersion();
 }
