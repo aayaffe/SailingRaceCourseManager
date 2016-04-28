@@ -50,24 +50,20 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
     @Override
     public Location getLoc() {
         return mLastLocation;
-        //return getLastBestLocation();
     }
-    private Location getLastBestLocation() {
-        if (checkForLocationPermission())
-        {
-            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            long GPSLocationTime = 0;
-            if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
-
-            long NetLocationTime = 0;
-
-
-            return locationGPS;
-        }
-
-       return null;
-
-    }
+//    private Location getLastBestLocation() {
+//        if (checkForLocationPermission())
+//        {
+//            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            long GPSLocationTime = 0;
+//            if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+//            long NetLocationTime = 0;
+//            return locationGPS;
+//        }
+//
+//       return null;
+//
+//    }
 
     /***
      *
@@ -124,24 +120,15 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
 //    }
     private void InitGPS(Context c){
         buildGoogleApiClient();
-
         mGoogleApiClient.connect();
         locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
         locationManager.addGpsStatusListener(new MyGPSListener());
-
-
-
     }
 
     @Override
     public void onLocationChanged(Location location) {
         if (location == null) return;
-
-        //Log.d(TAG, "GPS Location: " + location);
         mLastLocation = location;
-        //Log.d(TAG, "OwnLocation: " + mLastLocation);
-        //mLastLocation.getTime() = new Date();
-
         mLastLocationMillis = SystemClock.elapsedRealtime();
     }
     @Override
@@ -196,10 +183,9 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
             switch (event) {
                 case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
                     if (mLastLocation != null)
-                        isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+                        isGPSFix();
                     break;
                 case GpsStatus.GPS_EVENT_FIRST_FIX:
-                    // Do something.
                     isGPSFix = true;
                     break;
             }

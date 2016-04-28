@@ -32,9 +32,9 @@ import com.firebase.ui.auth.core.FirebaseLoginError;
 
 import java.util.Random;
 
-public class ChooseEvent extends FirebaseLoginBaseActivity implements EventInputDialog.EventInputDialogListener {
+public class ChooseEventActivity extends FirebaseLoginBaseActivity implements EventInputDialog.EventInputDialogListener {
 
-    private static final String TAG = "ChooseEvent";
+    private static final String TAG = "ChooseEventActivity";
     private com.aayaffe.sailingracecoursemanager.communication.Firebase commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;

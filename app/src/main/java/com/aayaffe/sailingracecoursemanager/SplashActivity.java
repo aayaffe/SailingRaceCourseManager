@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
                     d.show();
 
                 } else {
-                    Intent intent = new Intent(SplashActivity.this, ChooseEvent.class);
+                    Intent intent = new Intent(SplashActivity.this, ChooseEventActivity.class);
                     startActivity(intent);
                     finish();
                 }

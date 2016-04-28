@@ -50,8 +50,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     private Marker lastOpenned = null;
     public DialogFragment df;
 
-    public void Init(Activity a, Context c, SharedPreferences sp)
-    {
+    public void Init(Activity a, Context c, SharedPreferences sp) {
         this.c =c;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity)a).getSupportFragmentManager()
@@ -100,7 +99,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
 
     }
-
     public void setCenter(Location l){
         setCenter(GeoUtils.toLatLng(l));
     }
@@ -128,7 +126,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         }
         return null;
     }
-
     private Marker updateMark(AviObject ao, Marker m, int resourceID, String caption) {
         if (isValid(ao)){
             m.setPosition(ao.getLatLng());
@@ -143,36 +140,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
             return true;
         return false;
     }
-
-//    public Marker addMark(LatLng ll,float cog, String name,String caption, int ResourceID){
-//        if (ll==null) return null;
-//        try{
-//            if (markers.containsKey(name)){
-//                Marker m = markers.get(name);
-//                boolean infoWindows=m.isInfoWindowShown();
-//                m.setPosition(ll);
-//                m.setIcon(BitmapDescriptorFactory.fromResource(ResourceID));
-//                m.setSnippet(caption);
-//                m.setRotation(cog);
-//                if (infoWindows) {
-//                    m.showInfoWindow();
-//                }
-//                return m;
-//            }
-//            if (null != mapView) {
-//                Marker m = mapView.addMarker(new MarkerOptions().position(ll).title(name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(ResourceID)));
-//                markers.put(name,m);
-//                return m;
-//            } else {
-//                Log.d(TAG, "mapView is null");
-//                return null;
-//            }
-//        }catch(Exception e)
-//        {
-//            Log.d(TAG,"Failed to add mark",e);
-//        }
-//        return null;
-//    }
     public void removeMark(Marker m){
         m.remove();
         GoogleMapsActivity.commManager.removeBueyObject(m.getTitle());
@@ -212,7 +179,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
         }
     }
-
     @Override
     public void onInfoWindowClick(Marker marker) {
         try{
@@ -256,7 +222,4 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
     }
     private Boolean deleteMark = false;
-
-
-
 }

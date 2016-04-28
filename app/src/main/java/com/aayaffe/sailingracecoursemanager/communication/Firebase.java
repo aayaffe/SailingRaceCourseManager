@@ -26,6 +26,7 @@ public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
     private static Context c;
     private static com.firebase.client.Firebase fb;
+    private static com.firebase.client.Firebase currentEventFB;
     private static DataSnapshot ds;
     private static String currentEventName;
     private String Uid;
@@ -33,6 +34,7 @@ public class Firebase implements ICommManager {
     private int CompatibleVersion;
     private CommManagerEventListener listener;
     private boolean connected = false;
+    private DataSnapshot eventDs;
 
     public Firebase(Context c) {
         if (this.c==null)
@@ -40,6 +42,26 @@ public class Firebase implements ICommManager {
         users = new Users(this);
     }
 
+    public int loginToEvent(String eventName){
+        currentEventFB = new com.firebase.client.Firebase(c.getString(R.string.db_base_address)+"/"+c.getString(R.string.db_events)+"/"+eventName); //TODO check for errors
+        currentEventFB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                eventDs = dataSnapshot;
+                if(users.getCurrentUser()==null){
+                    users.setCurrentUser(findUser(Uid));
+                }
+                if ((listener != null)&&(!connected))
+                    listener.onConnect(new Date());
+                connected = true;
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+        return 0;
+    } //TODO to be used for finer grained events firing
     @Override
     public int login(String user, String password, String nickname) {
         if (fb == null) {
@@ -206,6 +228,7 @@ public class Firebase implements ICommManager {
     }
 
     public void setCurrentEventName(String currentEventName) {
+        //loginToEvent(currentEventName); //TODO: To enable better and finer grained events
         this.currentEventName = currentEventName;
     }
 

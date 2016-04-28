@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name=".ChooseEvent"
+            android:name=".ChooseEventActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop">

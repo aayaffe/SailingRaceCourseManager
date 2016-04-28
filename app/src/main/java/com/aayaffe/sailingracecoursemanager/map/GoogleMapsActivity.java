@@ -58,7 +58,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Users users;
     private String currentEventName;
     private Tracker mTracker;
-    private static AviObject myBoat;
+    private AviObject myBoat;
     private RaceCourse rc;
     private HashMap<String, BoatTypes> boatTypes;
     private boolean firstBoatLoad = true;
@@ -181,6 +181,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
             case R.id.action_add_race_course:
                 AddRaceCourse();
+                firstBoatLoad = true;
                 return true;
 
             default:
@@ -195,7 +196,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (rc==null){
             rc = new RaceCourse();
         }
-        if (rc.getMarks()!=null){
+        if (rc.getMarks()!=null){ //TODO : Check why being removed twice!
             for(AviObject ao:rc.getMarks().marks){
                 mapLayer.removeMark(ao.getUuid());
             }
@@ -215,14 +216,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         rc.setWindDir(Integer.parseInt(SP.getString("windDir", "0"))); //TODO putout to special function to get wind dir
         rc.setWindSpeed((int) Float.parseFloat(SP.getString("windSpd", "14")));
         rc.setBoatLength(getBoatLength(boatClass));
-
-        //rc.setBoatVMG(Float.parseFloat(SP.getString("boatVMG", "5.0")));
         rc.setGoalTime(Integer.parseInt(SP.getString("goalTime", "50")));
         rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward"))); //TODO redundant
         rc.setNumOfBoats(Integer.parseInt(SP.getString("numOfBoats", "25")));
         rc.calculateCourse(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward")));
         Marks marks = rc.getMarks();
-        removeAllRaceCourseMarks();
+        removeAllRaceCourseMarks();//TODO : Check why being removed twice!
         for (AviObject m: marks.marks) {
             addMark(m);
         }
@@ -280,11 +279,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     myBoat.name = users.getCurrentUser().DisplayName;
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.color = "Blue"; //TODO Set properly
+                    myBoat.lastUpdate = new Date();
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                         myBoat.type = ObjectTypes.RaceManager;
                     } else myBoat.type = ObjectTypes.WorkerBoat;
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
+                    myBoat.lastUpdate = new Date();
                 }
                 commManager.writeBoatObject(myBoat);
             }
@@ -331,7 +332,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             //TODO: Delete old buoys first
             if(o.type==ObjectTypes.FlagBuoy) {
                 mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
-                //mapLayer.addMark(GeoUtils.toLatLng(o.getLoc()), o.getLoc().getBearing(), o.name, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.flag_buoy);
             }
             else if(o.type==ObjectTypes.TomatoBuoy) {
                 mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy);
@@ -404,7 +404,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         wa.setDirection(rotation);
         Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
-
         runnable.run();
     }
 
@@ -466,6 +465,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             commManager.login(id, "Aa123456z", "1");
             Log.d(TAG, "login to " + id);
         }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        handler.removeCallbacks(runnable);
+        Log.d(TAG,"OnStop");
+        finish();
     }
 
 }
