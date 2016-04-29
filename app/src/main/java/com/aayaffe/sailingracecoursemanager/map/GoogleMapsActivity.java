@@ -55,8 +55,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public static ICommManager commManager;
     public static Marks marks = new Marks();
     private DialogFragment df;
-    private Users users;
-    private String currentEventName;
+    private static Users users;
+    private static String currentEventName;
     private Tracker mTracker;
     private AviObject myBoat;
     private RaceCourse rc;
@@ -123,8 +123,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         toolbar.setTitle("");
 
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -143,13 +141,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
-//    public void PopUpMenu(Context c, Activity a)
-//    {
-//        PopupMenu popupMenu = new PopupMenu(c, findViewById(R.id.addFAB));
-//        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener)a);
-//        popupMenu.inflate(R.menu.map_popup_menu);
-//        popupMenu.show();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,11 +149,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if((users.getCurrentUser()==null)||(!isCurrentEventManager(users.getCurrentUser().Uid))) {
             menu.getItem(2).setEnabled(false);
             menu.getItem(2).setVisible(false);
+            menu.getItem(1).setEnabled(false);
+            menu.getItem(1).setVisible(false);
         }
         else
         {
             menu.getItem(2).setEnabled(true);
             menu.getItem(2).setVisible(true);
+            menu.getItem(1).setEnabled(true);
+            menu.getItem(1).setVisible(true);
         }
 
         return true;
@@ -296,7 +291,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
             }
             redrawLayers();
-            handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "10")) * 1000));
+            handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "1")) * 1000));
         }
     };
 
@@ -306,6 +301,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (Uid == null||Uid.isEmpty())
             return false;
         return commManager.getEvent(currentEventName).getEventManager().Uid.equals(Uid);
+    }
+
+    public static boolean isCurrentEventManager(){
+        if (commManager.getEvent(currentEventName)==null)
+            return false;
+        if (users.getCurrentUser() == null|| users.getCurrentUser().Uid==null||users.getCurrentUser().Uid.isEmpty())
+            return false;
+        return commManager.getEvent(currentEventName).getEventManager().Uid.equals(users.getCurrentUser().Uid);
     }
 
     public void redrawLayers() {

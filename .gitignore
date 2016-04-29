@@ -13,6 +13,11 @@
 keystore.properties
 /app/src/release/res/values/google_maps_api.xml
 /app/src/main/res/values/google_maps_api.xml
+/app/src/staging/res/values/google_maps_api.xml
+/app/src/release/res/values/firebase_urls.xml
+/app/src/main/res/values/firebase_urls.xml
+/app/src/staging/res/values/firebase_urls.xml
+
 
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm

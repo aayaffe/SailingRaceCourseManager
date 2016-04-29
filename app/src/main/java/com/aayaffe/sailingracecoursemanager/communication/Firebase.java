@@ -43,7 +43,7 @@ public class Firebase implements ICommManager {
     }
 
     public int loginToEvent(String eventName){
-        currentEventFB = new com.firebase.client.Firebase(c.getString(R.string.db_base_address)+"/"+c.getString(R.string.db_events)+"/"+eventName); //TODO check for errors
+        currentEventFB = new com.firebase.client.Firebase(c.getString(R.string.firebase_base_url)+"/"+c.getString(R.string.db_events)+"/"+eventName); //TODO check for errors
         currentEventFB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,7 +66,7 @@ public class Firebase implements ICommManager {
     public int login(String user, String password, String nickname) {
         if (fb == null) {
             com.firebase.client.Firebase.setAndroidContext(c);
-            fb = new com.firebase.client.Firebase(c.getString(R.string.db_base_address));
+            fb = new com.firebase.client.Firebase(c.getString(R.string.firebase_base_url));
         }
         fb.addValueEventListener(new ValueEventListener() {
             @Override

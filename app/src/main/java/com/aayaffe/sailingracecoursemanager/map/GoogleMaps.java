@@ -64,6 +64,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         center.setLongitude(35.019216);
         ZoomToMarks();
         setCenter(GeoUtils.toLatLng(center));
+        mapView.getUiSettings().setRotateGesturesEnabled(false);
         mapView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             public boolean onMarkerClick(Marker marker) {
                 // Check if there is an open info window
@@ -190,7 +191,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                 }
             }
 
-            if (isBuoy){
+            if (isBuoy&&GoogleMapsActivity.isCurrentEventManager()){
                 if (deleteMark){
                     removeMark(marker);
                     deleteMark = false;

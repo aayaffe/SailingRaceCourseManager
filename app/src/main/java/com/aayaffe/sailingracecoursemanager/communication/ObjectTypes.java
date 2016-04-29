@@ -14,5 +14,6 @@ public enum ObjectTypes {
     FinishLine,
     StartFinishLine,
     Gate,
+    ReferencePoint,
     Other
 }

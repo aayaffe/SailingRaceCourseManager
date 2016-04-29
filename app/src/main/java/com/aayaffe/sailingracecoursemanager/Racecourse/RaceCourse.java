@@ -91,6 +91,8 @@ public class RaceCourse {
     }
 
     private void SetRaceCourse(RaceCourseDescriptor rcd) {
+        if (null == rcd)
+            return;
         for (RaceCourseObject rco: rcd){
             AviObject s = new AviObject();
             AviObject p = null;
@@ -149,8 +151,14 @@ public class RaceCourse {
                     p.lastUpdate = new Date();
                     p.setRaceCourseUUID(uuid);
                     break;
+                case ReferencePoint:
+                default:
+                    break;
+
             }
-            marks.marks.add(s);
+            if(s!=null) {
+                marks.marks.add(s);
+            }
             if(p!=null){
                 marks.marks.add(p);
             }
@@ -188,10 +196,10 @@ public class RaceCourse {
         dds.add(new DirDist(120, 185));
         List<String> names = new ArrayList<>();
         names.add("StartLine");
-        names.add("No4Mark");
-        names.add("No1Gate");
+        names.add("No4Gate");
+        names.add("No1Mark");
         names.add("No2Mark");
-        names.add("No3Mark");
+        names.add("No3Gate");
         names.add("FinishLine");
         return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
     }
