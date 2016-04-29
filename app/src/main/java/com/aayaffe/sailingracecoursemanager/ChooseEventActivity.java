@@ -107,7 +107,7 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
         switch (item.getItemId()) {
             case R.id.action_add_event:
                 Log.d(TAG, "Plus Fab Clicked");
-                addevent = EventInputDialog.newInstance(null);
+                addevent = EventInputDialog.newInstance(null,this);
                 addevent.show(getFragmentManager(), "Add_Event");
                 return true;
 

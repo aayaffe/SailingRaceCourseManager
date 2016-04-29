@@ -171,7 +171,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Log.d(TAG, "Plus Fab Clicked");
                 SettingsMenuItemOnClick();
                 return true;
 
@@ -420,7 +419,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-        df = BuoyInputDialog.newInstance(-1);
+        df = BuoyInputDialog.newInstance(-1,this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
 
