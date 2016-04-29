@@ -33,7 +33,8 @@ public class AviObject {
         boolean result = false;
         if (o instanceof AviObject) {
             AviObject that = (AviObject) o;
-            result = (that.canEqual(this) && Objects.equals(this.name,that.name));
+            if (that!=null && this.name!=null &&that.name!=null)
+                result = (that.canEqual(this) && this.name.equals(that.name));
         }
         return result;
     }

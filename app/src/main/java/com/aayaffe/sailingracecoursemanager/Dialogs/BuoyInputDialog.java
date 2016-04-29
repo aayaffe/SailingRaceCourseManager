@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.aayaffe.sailingracecoursemanager.R;
 
@@ -14,11 +17,13 @@ import com.aayaffe.sailingracecoursemanager.R;
  */
     public class BuoyInputDialog extends DialogFragment {
     public long buoy_id;
-    public static BuoyInputDialog newInstance(long id) {
+    private static Context c;
+    public static BuoyInputDialog newInstance(long id, Context c) {
         BuoyInputDialog frag = new BuoyInputDialog();
         Bundle args = new Bundle();
         args.putLong("buoy_id", id);
         frag.setArguments(args);
+        BuoyInputDialog.c = c;
         return frag;
     }
     /* The activity that creates an instance of this dialog fragment must
@@ -50,7 +55,10 @@ import com.aayaffe.sailingracecoursemanager.R;
 
         // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setView(R.layout.buoy_input_dialog)
+            LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
+            View v = inflater.inflate(R.layout.buoy_input_dialog, null);
+            builder.setView(v)
+            /*builder.setView(R.layout.buoy_input_dialog)*/
                     .setTitle(title)
                     // Add action buttons
                     .setPositiveButton("Add", new DialogInterface.OnClickListener() {

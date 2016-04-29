@@ -218,6 +218,10 @@
     <string name="action_add_race_course">Add Race Course</string>
     <string name="ask_perm_location">The application requires permission to use the GPS so that it can function properly</string>
     <string name="db_boattypes">BoatTypes</string>
+    <string name="wind_arrow">Wind arrow</string>
+    <string name="gps_indicator">GPS indicator</string>
+    <string name="center_on_my_location">Center on my location</string>
+    <string name="zoom_to_marks">Zoom to marks</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->
