@@ -136,7 +136,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
+        //mTracker = application.getDefaultTracker();
         boatTypes = ((Firebase)commManager).getAllBoatTypes();
 
     }
@@ -192,13 +192,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         if (rc.getMarks()!=null){ //TODO : Check why being removed twice!
             for(AviObject ao:rc.getMarks().marks){
-                mapLayer.removeMark(ao.getUuid());
+                mapLayer.removeMark(ao.getUUID());
             }
         }
         if ((commManager!=null)&&(commManager.getAllBuoys()!=null)) {
             for (AviObject ao : commManager.getAllBuoys()) {
                 if (ao.getRaceCourseUUID() != null) {
-                    mapLayer.removeMark(ao.getUuid());
+                    mapLayer.removeMark(ao.getUUID());
                 }
             }
         }
@@ -225,7 +225,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         marks.marks = commManager.getAllBuoys();
         for(AviObject m:marks.marks){
             if (m.getRaceCourseUUID()!=null){
-                mapLayer.removeMark(m.getUuid());
+                mapLayer.removeMark(m.getUUID());
             }
         }
     }
@@ -275,8 +275,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     myBoat.color = "Blue"; //TODO Set properly
                     myBoat.lastUpdate = new Date();
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.type = ObjectTypes.RaceManager;
-                    } else myBoat.type = ObjectTypes.WorkerBoat;
+                        myBoat.setEnumType(ObjectTypes.RaceManager);
+                    } else myBoat.setEnumType(ObjectTypes.WorkerBoat);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.lastUpdate = new Date();
@@ -330,13 +330,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         List<AviObject> markList = commManager.getAllBuoys();
         for (AviObject o : markList){
             //TODO: Delete old buoys first
-            if(o.type==ObjectTypes.FlagBuoy) {
+            if(o.getEnumType() ==ObjectTypes.FlagBuoy) {
                 mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
             }
-            else if(o.type==ObjectTypes.TomatoBuoy) {
+            else if(o.getEnumType() ==ObjectTypes.TomatoBuoy) {
                 mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy);
             }
-            else if(o.type==ObjectTypes.TriangleBuoy) {
+            else if(o.getEnumType() ==ObjectTypes.TriangleBuoy) {
                 mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy);
             }
             else
@@ -353,7 +353,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private int getIconId(String string, AviObject o) {
         int ret = R.drawable.boatred;
         if (o.name.equals(string)){
-            switch(o.type) {
+            switch(o.getEnumType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation())>300)
@@ -365,7 +365,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         else {
-            switch (o.type) {
+            switch (o.getEnumType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation())>300)
@@ -430,7 +430,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private void addMark(long id, Location loc, Float dir, int dist){
         if (loc == null) return;
         AviObject o =new AviObject();
-        o.type = ObjectTypes.Buoy;//// TODO: 11/02/2016 Add bouy types
+        o.setEnumType(ObjectTypes.Buoy);//// TODO: 11/02/2016 Add bouy types
         o.color = "Black";
         o.lastUpdate = new Date(System.currentTimeMillis());
         o.setLoc(GeoUtils.getLocationFromDirDist(loc,dir,dist));

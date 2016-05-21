@@ -1,5 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
+import java.io.Serializable;
+
 /**
  * Created by aayaffe on 30/09/2015.
  */

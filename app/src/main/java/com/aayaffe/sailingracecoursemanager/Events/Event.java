@@ -2,9 +2,10 @@ package com.aayaffe.sailingracecoursemanager.Events;
 
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.firebase.database.Exclude;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -12,16 +13,18 @@ import java.util.UUID;
  */
 public class Event {
     private String name;
-    private UUID uuid;
+    @Exclude
+    private UUID _uuid;
+    //private String uuid;
     private int lastBuoyId;
     private User eventManager;
-    @JsonIgnore
-    private Dictionary<String,AviObject> boats;
-    @JsonIgnore
-    private Dictionary<String,AviObject> buoys;
+    @Exclude
+    private HashMap<String,AviObject> boats;
+    @Exclude
+    private HashMap<String,AviObject> buoys;
 
     public Event(){
-        setUuid(UUID.randomUUID());
+        _uuid = UUID.randomUUID();
     }
 
     public String getName() {
@@ -49,27 +52,27 @@ public class Event {
     }
 
 
-    public Dictionary<String, AviObject> getBoats() {
+    public HashMap<String, AviObject> getBoats() {
         return boats;
     }
 
-    public void setBoats(Dictionary<String, AviObject> boats) {
+    public void setBoats(HashMap<String, AviObject> boats) {
         this.boats = boats;
     }
 
-    public Dictionary<String, AviObject> getBuoys() {
+    public HashMap<String, AviObject> getBuoys() {
         return buoys;
     }
 
-    public void setBuoys(Dictionary<String, AviObject> buoys) {
+    public void setBuoys(HashMap<String, AviObject> buoys) {
         this.buoys = buoys;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public String getUuid() {
+        return _uuid.toString();
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setUuid(String uuid) {
+        this._uuid = UUID.fromString(uuid);
     }
 }

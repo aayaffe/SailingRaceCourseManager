@@ -111,7 +111,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                 return m;
             } else if (mapView!=null) {
                 m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
-                marks.put(ao.getUuid(),m);
+                marks.put(ao.getUUID(),m);
                 return m;
             }
         } catch(Exception e){
@@ -129,7 +129,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         return m;
     }
     private boolean isValid(AviObject ao) {
-        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.type != null) && (ao.lastUpdate != null);
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.getType() != null) && (ao.lastUpdate != null);
     }
     public void removeMark(Marker m){
         m.remove();
@@ -184,7 +184,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
             UUID u = marks.inverse().get(marker);
             for (AviObject ao: GoogleMapsActivity.commManager.getAllBuoys()){
                 if (ao.getUuid().equals(u)){
-                    if ((ao.type != ObjectTypes.RaceManager)&&(ao.type!=ObjectTypes.WorkerBoat)){
+                    if ((ao.getEnumType() != ObjectTypes.RaceManager)&&(ao.getEnumType() !=ObjectTypes.WorkerBoat)){
                         isBuoy = true;
                     }
                     break;

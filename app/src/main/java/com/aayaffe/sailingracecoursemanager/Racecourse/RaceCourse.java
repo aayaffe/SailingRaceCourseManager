@@ -98,7 +98,7 @@ public class RaceCourse {
             AviObject p = null;
             switch(rco.getType()){
                 case Buoy:
-                    s.type = ObjectTypes.TriangleBuoy;
+                    s.setEnumType(ObjectTypes.TriangleBuoy);
                     s.name = rco.getName();
                     s.setAviLocation(rco.getLoc());
                     s.color = "Orange";
@@ -107,14 +107,14 @@ public class RaceCourse {
                     break;
                 case StartLine:
                 case StartFinishLine: //TODO check removal of stbd mark\change it to a boat icon;
-                    s.type = ObjectTypes.TriangleBuoy;
+                    s.setEnumType(ObjectTypes.TriangleBuoy);
                     s.name = rco.getName()+"stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
-                    p.type = ObjectTypes.FlagBuoy;
+                    p.setEnumType(ObjectTypes.FlagBuoy);
                     p.name = rco.getName()+"port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";
@@ -122,14 +122,14 @@ public class RaceCourse {
                     p.setRaceCourseUUID(uuid);
                     break;
                 case FinishLine:
-                    s.type = ObjectTypes.TriangleBuoy; //TODO check to set a diffrent icon to stbd side
+                    s.setEnumType(ObjectTypes.TriangleBuoy); //TODO check to set a diffrent icon to stbd side
                     s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
-                    p.type = ObjectTypes.FlagBuoy;
+                    p.setEnumType(ObjectTypes.FlagBuoy);
                     p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";
@@ -137,14 +137,14 @@ public class RaceCourse {
                     p.setRaceCourseUUID(uuid);
                     break;
                 case Gate:
-                    s.type = ObjectTypes.TomatoBuoy;
+                    s.setEnumType(ObjectTypes.TomatoBuoy);
                     s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
-                    p.type = ObjectTypes.TomatoBuoy;
+                    p.setEnumType(ObjectTypes.TomatoBuoy);
                     p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";

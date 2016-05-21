@@ -1,6 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
@@ -8,10 +9,13 @@ import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,8 +29,8 @@ import java.util.Random;
 public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
     private static Context c;
-    private static com.firebase.client.Firebase fb;
-    private static com.firebase.client.Firebase currentEventFB;
+    private static DatabaseReference fb;
+    private static DatabaseReference currentEventFB;
     private static DataSnapshot ds;
     private static String currentEventName;
     private String Uid;
@@ -43,7 +47,8 @@ public class Firebase implements ICommManager {
     }
 
     public int loginToEvent(String eventName){
-        currentEventFB = new com.firebase.client.Firebase(c.getString(R.string.firebase_base_url)+"/"+c.getString(R.string.db_events)+"/"+eventName); //TODO check for errors
+        currentEventFB = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl(c.getString(R.string.firebase_base_url)+"/"+c.getString(R.string.db_events)+"/"+eventName);
         currentEventFB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -57,16 +62,19 @@ public class Firebase implements ICommManager {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
+
             }
+
+
         });
         return 0;
     } //TODO to be used for finer grained events firing
     @Override
     public int login(String user, String password, String nickname) {
         if (fb == null) {
-            com.firebase.client.Firebase.setAndroidContext(c);
-            fb = new com.firebase.client.Firebase(c.getString(R.string.firebase_base_url));
+            fb = FirebaseDatabase.getInstance()
+                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
         }
         fb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -81,19 +89,23 @@ public class Firebase implements ICommManager {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
+
             }
+
         });
-        fb.addAuthStateListener(new com.firebase.client.Firebase.AuthStateListener() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(AuthData authData) {
-                if (authData != null) {
-                    Uid = authData.getUid();
+            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Uid = user.getUid();
                     Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
                     if (findUser(Uid) == null){
                         String displayName;
                         try {
-                            displayName = authData.getProviderData().get("displayName").toString();
+                            displayName = user.getDisplayName();
                         }catch(Exception e){
                             Random r = new Random();
                             displayName = "User" + r.nextInt(10000);
@@ -104,7 +116,7 @@ public class Firebase implements ICommManager {
 
                 } else {
                     Uid = null;
-                    users.logout();
+                    //users.logout();
                     Log.d(TAG,"User has logged out.");
                 }
             }
@@ -192,7 +204,7 @@ public class Firebase implements ICommManager {
 
     @Override
     public void logout() {
-        fb.unauth();
+        FirebaseAuth.getInstance().signOut();
         Uid = null;
 
     }
@@ -214,7 +226,7 @@ public class Firebase implements ICommManager {
        return id;
     }
 
-    public com.firebase.client.Firebase getFireBaseRef() {
+    public DatabaseReference getFireBaseRef() {
         return fb;
     }
 

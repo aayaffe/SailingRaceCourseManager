@@ -1,10 +1,13 @@
 package com.aayaffe.sailingracecoursemanager;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,18 +24,19 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
-import com.firebase.ui.FirebaseListAdapter;
-import com.firebase.ui.auth.core.AuthProviderType;
-import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
-import com.firebase.ui.auth.core.FirebaseLoginError;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+
+
+import java.util.ArrayList;
 import java.util.Random;
 
-public class ChooseEventActivity extends FirebaseLoginBaseActivity implements EventInputDialog.EventInputDialogListener {
+public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
     private com.aayaffe.sailingracecoursemanager.communication.Firebase commManager;
@@ -42,6 +46,8 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
     private DialogFragment addevent;
     private Notification notification = new Notification();
     private boolean loggedIn = false;
+    private static final int RC_SIGN_IN = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +87,26 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
     @Override
     protected void onStart() {
         super.onStart();
-
-        setEnabledAuthProvider(AuthProviderType.GOOGLE);
-        setEnabledAuthProvider(AuthProviderType.PASSWORD);
-        if ((commManager.getFireBaseRef().getAuth()==null)&&(!loggedIn)){
-            showFirebaseLoginPrompt();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if ((auth.getCurrentUser() ==null)&&(!loggedIn)){
+            startActivityForResult(
+                    AuthUI.getInstance().createSignInIntentBuilder()
+                            .setProviders(getSelectedProviders())
+                            .build(),
+                    RC_SIGN_IN);
         }
 
+    }
+    private String[] getSelectedProviders() {
+        ArrayList<String> selectedProviders = new ArrayList<>();
+
+        selectedProviders.add(AuthUI.EMAIL_PROVIDER);
+
+
+            selectedProviders.add(AuthUI.GOOGLE_PROVIDER);
+
+
+        return selectedProviders.toArray(new String[selectedProviders.size()]);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,7 +136,11 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
                     enableLogin(true);
                 }
                 else{
-                    showFirebaseLoginPrompt();
+                    startActivityForResult(
+                            AuthUI.getInstance().createSignInIntentBuilder()
+                                    .setProviders(getSelectedProviders())
+                                    .build(),
+                            RC_SIGN_IN);
                 }
 
 
@@ -130,41 +153,48 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
 
         }
     }
-    @Override
-    protected Firebase getFirebaseRef() {
-        return commManager.getFireBaseRef();
-    }
+//    @Override
+//    protected Firebase getFirebaseRef() {
+//        return commManager.getFireBaseRef();
+//    }
 
     @Override
-    protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
-        //TODO: Handle correctly
-        Log.d(TAG, "Login provider error: " + firebaseLoginError.message);
-        Toast.makeText(this, firebaseLoginError.message,
-                Toast.LENGTH_LONG).show();
-        resetFirebaseLoginPrompt();
-    }
-
-    @Override
-    protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
-        //TODO: Handle correctly
-        Log.d(TAG, "Login User error: " + firebaseLoginError.message);
-        Toast.makeText(this, firebaseLoginError.message,Toast.LENGTH_LONG).show();
-        resetFirebaseLoginPrompt();
-    }
-    @Override
-    public void onFirebaseLoggedIn(AuthData authData) {
-        Log.d(TAG, "Logged in: " +authData.getUid());
-        String displayName;
-        enableLogin(false);
-        try{
-            displayName = authData.getProviderData().get("displayName").toString();
-        }catch (Exception e){
-            Random r = new Random();
-            displayName = "User" + r.nextInt(10000);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            handleSignInResponse(resultCode, data);
+            return;
         }
-        //users.setCurrentUser(authData.getUid(), displayName);
 
+//        showSnackbar(R.string.unknown_response);
     }
+    private void handleSignInResponse(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Log.d(TAG, "Logged in: " +FirebaseAuth.getInstance().getCurrentUser().getUid());
+            String displayName;
+            enableLogin(false);
+            try{
+                displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            }catch (Exception e){
+                Random r = new Random();
+                displayName = "User" + r.nextInt(10000);
+            }
+            finish();
+            return;
+        }
+
+        if (resultCode == RESULT_CANCELED) {
+//            Log.d(TAG, "Login provider error: " + firebaseLoginError.message);
+            Toast.makeText(this, "Login canceled",
+                    Toast.LENGTH_LONG).show();
+//            resetFirebaseLoginPrompt();
+            return;
+        }
+        Toast.makeText(this, "Login Error",
+                Toast.LENGTH_LONG).show();
+//        showSnackbar(R.string.unknown_sign_in_response);
+    }
+
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
@@ -184,13 +214,13 @@ public class ChooseEventActivity extends FirebaseLoginBaseActivity implements Ev
         commManager.writeEvent(e);
     }
 
-    @Override
-    public void onFirebaseLoggedOut() {
-
-        Toast.makeText(this, "You have been logged out.",
-                Toast.LENGTH_SHORT).show();
-        enableLogin(true);
-    }
+//    @Override
+//    public void onFirebaseLoggedOut() {
+//
+//        Toast.makeText(this, "You have been logged out.",
+//                Toast.LENGTH_SHORT).show();
+//        enableLogin(true);
+//    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

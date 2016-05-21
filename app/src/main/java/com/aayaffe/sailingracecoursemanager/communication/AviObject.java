@@ -4,8 +4,8 @@ import android.location.Location;
 
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.Exclude;
 
 import java.util.Date;
 import java.util.Objects;
@@ -17,15 +17,15 @@ import java.util.UUID;
 public class AviObject {
     public String name;
     private AviLocation aviLocation;
-    public ObjectTypes type;
+    private ObjectTypes type;
     public String color;
     public Date lastUpdate;
     public long id;
-    private UUID uuid;
-    private UUID raceCourseUUID;
+    private UUID _uuid;
+    private UUID _raceCourseUUID;
 
     public AviObject(){
-        uuid = UUID.randomUUID();
+        _uuid = UUID.randomUUID();
     }
 
     @Override
@@ -54,27 +54,60 @@ public class AviObject {
         aviLocation = al;
     }
 
-    @JsonIgnore
+    @Exclude
     public Location getLoc() {
         return GeoUtils.toLocation(aviLocation);
     }
-    @JsonIgnore
+    @Exclude
     public LatLng getLatLng() {
         return GeoUtils.toLatLng(aviLocation);
     }
-    @JsonIgnore
+    @Exclude
     public void setLoc(Location Location) {
         this.aviLocation = GeoUtils.toAviLocation(Location);
     }
-
-    public UUID getUuid() {
-        return uuid;
+    @Exclude
+    public UUID getUUID() {
+        return _uuid;
     }
-
+@Exclude
     public UUID getRaceCourseUUID() {
-        return raceCourseUUID;
+        return _raceCourseUUID;
     }
+    @Exclude
     public void setRaceCourseUUID(UUID raceCourseUUID) {
-        this.raceCourseUUID = raceCourseUUID;
+        this._raceCourseUUID = raceCourseUUID;
+    }
+
+    public String getRaceCourseUuid() {
+        if (_raceCourseUUID==null)
+            return null;
+        return _raceCourseUUID.toString();
+    }
+    public void setRaceCourseUuid(String raceCourseUUID) {
+        this._raceCourseUUID = UUID.fromString(raceCourseUUID);
+    }
+
+    public String getType() {
+        return type.toString();
+    }
+
+    public void setType(String type) {
+        this.type = ObjectTypes.valueOf(type);
+    }
+    @Exclude
+    public ObjectTypes getEnumType(){
+        return type;
+    }
+    @Exclude
+    public void setEnumType(ObjectTypes type){
+       this.type = type;
+    }
+    public String getUuid() {
+        return _uuid.toString();
+    }
+
+    public void setUuid(String uuid) {
+        this._uuid = UUID.fromString(uuid);
     }
 }
