@@ -1,31 +1,21 @@
 {
   "project_info": {
-    "project_id": "fiery-bit-121312",
-    "project_number": "184836723027",
-    "name": "SailingRaceCourseManager"
+    "project_number": "949131539571",
+    "firebase_url": "https://avi-dev.firebaseio.com",
+    "project_id": "firebase-avi-dev",
+    "storage_bucket": "firebase-avi-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:184836723027:android:afec38b964a54f5b",
-        "client_id": "android:com.aayaffe.sailingracecoursemanager",
-        "client_type": 1,
+        "mobilesdk_app_id": "1:949131539571:android:afec38b964a54f5b",
         "android_client_info": {
-          "package_name": "com.aayaffe.sailingracecoursemanager",
-          "certificate_hash": []
+          "package_name": "com.aayaffe.sailingracecoursemanager"
         }
       },
       "oauth_client": [
         {
-          "client_id": "184836723027-ltm5h5btrh505a7cvgjguanenvup6nda.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aayaffe.sailingracecoursemanager",
-            "certificate_hash": "62961D74B05C3DF7F42F7A8F98AA30D9E23F5F16"
-          }
-        },
-        {
-          "client_id": "184836723027-68jipe6mg1fa30u1ahsae4jjus3qh2c5.apps.googleusercontent.com",
+          "client_id": "949131539571-sj68uqu0feag0ar03o4k6bv31tiec0fo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.aayaffe.sailingracecoursemanager",
@@ -33,39 +23,28 @@
           }
         },
         {
-          "client_id": "184836723027-08c5188kigv5ited31n23vfjol5fgfh8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aayaffe.sailingracecoursemanager",
-            "certificate_hash": "93DFD7D846CC19F34BB84A82360CE5EBF23B62A0"
-          }
+          "client_id": "949131539571-qq0bufnbmqr2nfa04qkefeompl3o3ttu.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTqb0Ip6OboHBbPIY7Eb8qL3Ge6fi31WQ"
+        }
+      ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-57410681-2"
-          }
-        },
-        "cloud_messaging_service": {
-          "status": 1,
-          "apns_config": []
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
-          "status": 2
-        },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

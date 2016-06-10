@@ -11,6 +11,7 @@
 .idea
 *.apk
 keystore.properties
+google-services.json
 /app/src/release/res/values/google_maps_api.xml
 /app/src/main/res/values/google_maps_api.xml
 /app/src/staging/res/values/google_maps_api.xml
@@ -107,3 +108,4 @@ captures/
 # Keystore files
 *.jks
 
+app/google-services-old.json
