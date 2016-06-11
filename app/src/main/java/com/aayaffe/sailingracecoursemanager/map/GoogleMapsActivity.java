@@ -102,7 +102,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     mapLayer.ZoomToMarks();
                 }catch (Exception e)
                 {
-                    Log.d(TAG,"Unable to zoom to marks",e);
+                    Log.d(TAG,"Unable to zoom to uuidToMarker",e);
                 }
             }
         });
@@ -187,6 +187,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void AddRaceCourse() {
+        mapLayer.removeAllMarks(); //TODO: Test
         if (rc==null){
             rc = new RaceCourse();
         }
@@ -254,10 +255,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
-    private Runnable runnable = new Runnable()
-    {
-        public void run()
-        {
+    private Runnable runnable = new Runnable() {
+        public void run() {
             if ((users.getCurrentUser()!=null)&&(commManager.getAllBoats()!=null)) {
                 if (myBoat == null) {
                     for(AviObject ao: commManager.getAllBoats()){
@@ -313,9 +312,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void redrawLayers() {
         Location myLocation = iGeo.getLoc();
-
         marks.marks = commManager.getAllBoats();
-
         for (AviObject o: marks.marks) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
@@ -331,13 +328,55 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         for (AviObject o : markList){
             //TODO: Delete old buoys first
             if(o.getEnumType() ==ObjectTypes.FlagBuoy) {
-                mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy);
+                switch(o.color){
+                    case "Red":
+                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_red);
+                        break;
+                    case "Blue":
+                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_blue);
+                        break;
+                    case "Yellow":
+                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_yellow);
+                        break;
+                    case "Orange":
+                    default:
+                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_orange);
+                        break;
+                }
             }
             else if(o.getEnumType() ==ObjectTypes.TomatoBuoy) {
-                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy);
+                switch(o.color) {
+                    case "Red":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_red);
+                        break;
+                    case "Blue":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_blue);
+                        break;
+                    case "Yellow":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_yellow);
+                        break;
+                    case "Orange":
+                    default:
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_orange);
+                        break;
+                }
             }
             else if(o.getEnumType() ==ObjectTypes.TriangleBuoy) {
-                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy);
+                switch(o.color) {
+                    case "Red":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_red);
+                        break;
+                    case "Blue":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_blue);
+                        break;
+                    case "Yellow":
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_yellow);
+                        break;
+                    case "Orange":
+                    default:
+                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_orange);
+                        break;
+                }
             }
             else
                 mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);

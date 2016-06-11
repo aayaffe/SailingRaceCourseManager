@@ -38,7 +38,9 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     private static final String TAG = "OpenSeaMap";
     public GoogleMap mapView;
     private Context c;
-    public BiMap<UUID,Marker> marks = HashBiMap.create();
+    public BiMap<UUID,Marker> uuidToMarker = HashBiMap.create();
+    public BiMap<UUID,String> uuidToId = HashBiMap.create();
+
     private Marker lastOpenned = null;
     public DialogFragment df;
 
@@ -101,8 +103,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public Marker addMark(AviObject ao,String caption, int resourceID){
         Marker m;
         try {
-            if (marks.containsKey(ao.getUuid())) {
-                m = marks.get(ao.getUuid());
+            if (uuidToMarker.containsKey(ao.getUuid())) {
+                m = uuidToMarker.get(ao.getUuid());
                 boolean infoWindows=m.isInfoWindowShown();
                 m = updateMark(ao, m, resourceID, caption);
                 if (infoWindows) {
@@ -111,7 +113,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                 return m;
             } else if (mapView!=null) {
                 m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
-                marks.put(ao.getUUID(),m);
+                uuidToMarker.put(ao.getUUID(),m);
+                uuidToId.put(ao.getUUID(),m.getId());
                 return m;
             }
         } catch(Exception e){
@@ -134,18 +137,20 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public void removeMark(Marker m){
         m.remove();
         GoogleMapsActivity.commManager.removeBueyObject(m.getTitle());
-        marks.inverse().remove(m);
+        uuidToMarker.inverse().remove(m); //TODO: Check if works... else use uuidToID to obtain Uuid and delete
+        uuidToId.inverse().remove(m.getId());
     }
     public void removeMark(UUID uuid){
-        Marker m = marks.get(uuid);
+        Marker m = uuidToMarker.get(uuid);
         if(m!=null) {
             m.remove();
             GoogleMapsActivity.commManager.removeBueyObject(m.getTitle()); //TODO Check if mapping correct using title
-            marks.remove(uuid);
+            uuidToMarker.remove(uuid);
+            uuidToId.remove(uuid);
         }
     }
     public void ZoomToMarks(){
-        ArrayList<Marker> ms = new ArrayList<>(marks.values());
+        ArrayList<Marker> ms = new ArrayList<>(uuidToMarker.values());
         if (ms.size()==1) {
             setCenter((ms.get(0).getPosition()));
             return;
@@ -170,18 +175,14 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
 
         }
     }
+    public void removeAllMarks(){
+        mapView.clear();
+    }
     @Override
     public void onInfoWindowClick(Marker marker) {
         try{
-//            String t = marker.getTitle();
-//            Pattern p = Pattern.compile("-?\\d+");
-//            Matcher m = p.matcher(t);
-//            m.find();
-//            long id = Integer.parseInt(m.group());
-//        df = BuoyEditDialog.newInstance(id);
-//        df.show(a.getFragmentManager(), "Edit_Buoy");
             boolean isBuoy = false;
-            UUID u = marks.inverse().get(marker);
+            UUID u = uuidToId.inverse().get(marker.getId());
             for (AviObject ao: GoogleMapsActivity.commManager.getAllBuoys()){
                 if (ao.getUuid().equals(u)){
                     if ((ao.getEnumType() != ObjectTypes.RaceManager)&&(ao.getEnumType() !=ObjectTypes.WorkerBoat)){
@@ -191,7 +192,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                 }
             }
 
-            if (isBuoy&&GoogleMapsActivity.isCurrentEventManager()){
+            if (isBuoy && GoogleMapsActivity.isCurrentEventManager()){
                 if (deleteMark){
                     removeMark(marker);
                     deleteMark = false;

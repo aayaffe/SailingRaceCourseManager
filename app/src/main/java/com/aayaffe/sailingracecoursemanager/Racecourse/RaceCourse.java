@@ -111,7 +111,7 @@ public class RaceCourse {
                     s.setEnumType(ObjectTypes.TriangleBuoy);
                     s.name = rco.getName();
                     s.setAviLocation(rco.getLoc());
-                    s.color = "Orange";
+                    s.color = "Yellow";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     break;
@@ -127,7 +127,7 @@ public class RaceCourse {
                     p.setEnumType(ObjectTypes.FlagBuoy);
                     p.name = rco.getName()+"port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
-                    p.color = "Orange";
+                    p.color = "Blue";
                     p.lastUpdate = new Date();
                     p.setRaceCourseUUID(uuid);
                     break;
@@ -150,14 +150,14 @@ public class RaceCourse {
                     s.setEnumType(ObjectTypes.TomatoBuoy);
                     s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
-                    s.color = "Orange";
+                    s.color = "Red";
                     s.lastUpdate = new Date();
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.setEnumType(ObjectTypes.TomatoBuoy);
                     p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
-                    p.color = "Orange";
+                    p.color = "Red";
                     p.lastUpdate = new Date();
                     p.setRaceCourseUUID(uuid);
                     break;
