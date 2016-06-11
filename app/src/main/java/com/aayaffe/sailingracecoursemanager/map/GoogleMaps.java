@@ -182,16 +182,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public void onInfoWindowClick(Marker marker) {
         try{
             boolean isBuoy = false;
-            UUID u = uuidToId.inverse().get(marker.getId());
-            for (AviObject ao: GoogleMapsActivity.commManager.getAllBuoys()){
-                if (ao.getUuid().equals(u)){
-                    if ((ao.getEnumType() != ObjectTypes.RaceManager)&&(ao.getEnumType() !=ObjectTypes.WorkerBoat)){
-                        isBuoy = true;
-                    }
-                    break;
-                }
-            }
-
+            if (marker.getTitle().contains("Buoy")) isBuoy=true;
             if (isBuoy && GoogleMapsActivity.isCurrentEventManager()){
                 if (deleteMark){
                     removeMark(marker);
