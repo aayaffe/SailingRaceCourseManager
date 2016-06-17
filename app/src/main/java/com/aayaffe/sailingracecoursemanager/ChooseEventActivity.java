@@ -5,6 +5,9 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.MainThread;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -92,6 +95,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             startActivityForResult(
                     AuthUI.getInstance().createSignInIntentBuilder()
                             .setProviders(getSelectedProviders())
+                            .setTheme(getSelectedTheme())
                             .build(),
                     RC_SIGN_IN);
         }
@@ -108,6 +112,23 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
         return selectedProviders.toArray(new String[selectedProviders.size()]);
     }
+
+    @MainThread
+    @StyleRes
+    private int getSelectedTheme() {
+            return AuthUI.getDefaultTheme();
+    }
+
+//    @MainThread
+//    @DrawableRes
+//    private int getSelectedLogo() {
+//        if (mFirebaseLogo.isChecked()) {
+//            return R.drawable.firebase_auth_120dp;
+//        } else if (mGoogleLogo.isChecked()) {
+//            return R.drawable.logo_googleg_color_144dp;
+//        }
+//        return AuthUI.NO_LOGO;
+//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -179,7 +200,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 Random r = new Random();
                 displayName = "User" + r.nextInt(10000);
             }
-            finish();
+            //finish();
             return;
         }
 
