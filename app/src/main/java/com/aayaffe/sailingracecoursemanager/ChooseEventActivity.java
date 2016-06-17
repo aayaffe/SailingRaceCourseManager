@@ -68,6 +68,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 if (manager==null) {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: unknown");
                 }
+                else if  (event.getEventManager().DisplayName==null){
+                    ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: unknown");
+                }
                 else {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: " + event.getEventManager().DisplayName);
                 }
