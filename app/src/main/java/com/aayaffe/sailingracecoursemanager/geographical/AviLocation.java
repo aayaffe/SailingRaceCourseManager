@@ -19,14 +19,50 @@ public class AviLocation {
     public AviLocation() {
 
     }
-    public AviLocation(double latitude, double longitude) {
-        lat = latitude;
-        lon = longitude;
+    public AviLocation(double Lat, double Lng) {
+        lat = Lat;
+        lon = Lng;
         lastUpdate = new Date();
     }
-    public AviLocation(double latitude, double longitude,  float cog, double sog, double depth, Date lastUpdate) {
-        lat = latitude;
-        lon = longitude;
+
+    /**
+     *
+     * @param initial
+     * @param dir
+     * @param disNM
+     */
+    public AviLocation(AviLocation initial, int dir, double disNM){
+        AviLocation al = GeoUtils.getLocationFromDirDist(initial,dir,disNM);
+        lastUpdate = new Date();
+        lat = al.getLat();
+        lon = al.getLng();
+    }
+
+    /**
+     * by 2 locations and 2 directions(radials)
+     * @param p1
+     * @param brng1
+     * @param p2
+     * @param brng2
+     */
+    public AviLocation(AviLocation p1, double brng1, AviLocation p2,  double brng2){
+        lastUpdate = new Date();
+        AviLocation al = GeoUtils.getLocationFromTriangulation(p1,brng1,p2,brng2);
+        lat= al.getLat();
+        lon= al.getLng();
+    }
+
+    public AviLocation(AviLocation p1, AviLocation p2){ //Middle point
+        lastUpdate = new Date();
+        AviLocation al = GeoUtils.getMidPointLocation(p1,p2);
+        lat=al.getLat();
+        lon=al.getLng();
+    }
+
+
+    public AviLocation(double Lat, double Lng,  float cog, double sog, double depth, Date lastUpdate) {
+        lat = Lat;
+        lon = Lng;
         this.sog = sog;
         this.cog = cog;
         this.depth = depth;
@@ -108,5 +144,19 @@ public class AviLocation {
         temp = Double.doubleToLongBits(depth);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+    public double getLng() {
+        return lon;
+    }
+
+    public void setLat(double Lat) {
+        this.lat=Lat;
+    }
+    public void setLng(double Lng) {
+        this.lon=Lng;
     }
 }
