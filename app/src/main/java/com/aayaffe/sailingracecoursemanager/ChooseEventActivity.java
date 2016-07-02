@@ -179,7 +179,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 Random r = new Random();
                 displayName = "User" + r.nextInt(10000);
             }
-            finish();
             return;
         }
 
