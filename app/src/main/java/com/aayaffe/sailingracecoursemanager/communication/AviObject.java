@@ -18,7 +18,7 @@ import java.util.UUID;
 /** Jonathan, notes, 23/6/16;
  * AviObject represents a mark.
  *
- * To get a gate instead of a mark: gateSpan and gateDir must be set, and then it is necessary to use addGate(List, AviObject) to add both gate's marks.
+ *
  */
 public class AviObject {
     public String name;
@@ -29,8 +29,7 @@ public class AviObject {
     public long id;
     private UUID _uuid;
     private UUID _raceCourseUUID;
-    private double gateSpan=0;
-    private int gateDir=0; //(non-clockwise), from Starboard mark to Port mark
+
 
     public AviObject(String name, AviLocation loc, ObjectTypes type, String color, UUID _raceCourseUUID){
         _uuid = UUID.randomUUID();
@@ -39,18 +38,9 @@ public class AviObject {
         this.type=type;
         this.color=color;
         this._raceCourseUUID=_raceCourseUUID;
+        this.lastUpdate = new Date();
     }
 
-    public AviObject(String name, AviLocation loc, ObjectTypes type, String color, UUID _raceCourseUUID, double gateSpan, int gateDir){
-        _uuid = UUID.randomUUID();
-        this.name=name;
-        this.aviLocation=loc;
-        this.type=type;
-        this.color=color;
-        this._raceCourseUUID=_raceCourseUUID;
-        this.gateDir=gateDir;
-        this.gateSpan=gateSpan;
-    }
 
     public AviObject(){
         _uuid = UUID.randomUUID();
@@ -142,13 +132,6 @@ public class AviObject {
         this.name=nname;
     }
 
-    public double getGateSpan(){
-        return gateSpan;
-    }
-
-    public int getGateDir(){
-        return gateDir;
-    }
 
     public void setUuid(String uuid) {
         this._uuid = UUID.fromString(uuid);
