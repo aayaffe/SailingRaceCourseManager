@@ -6,16 +6,18 @@ import java.io.Serializable;
  * Created by aayaffe on 30/09/2015.
  */
 public enum ObjectTypes {
-    RaceManager,
     WorkerBoat,
-    Buoy,
     FlagBuoy,
     TomatoBuoy,
     TriangleBuoy,
     StartLine,
     FinishLine,
     StartFinishLine,
+
+    RaceManager,  //from here, the relevant ObjectTypes:
+    Buoy,
     Gate,
+    Satellite,
     ReferencePoint,
     Other
 }
