@@ -39,7 +39,7 @@ public class RaceCourseObject {
 
     }
 
-    public List<AviObject> getMarks(int windDir, String color, UUID raceUUID){
+    public List<AviObject> getInternalObjects(int windDir, String color, UUID raceUUID){
     //this method returns the actual marks, AviObjects, as a list. this list can join many others to create one long list of all the marks.
         List<AviObject> MarksArray= new ArrayList<AviObject>();
         switch(type){
