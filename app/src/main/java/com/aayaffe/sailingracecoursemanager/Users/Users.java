@@ -30,15 +30,15 @@ public class Users {
         User u = commManager.findUser(Uid);
         if (u!=null) {
             currentUser = u;
-            u.lastConnection = new Date();
+            u.setLastConnection(new Date());
             commManager.addUser(u);
         }
         else{
             u = new User();
             u.Uid = Uid;
             u.DisplayName = displayName;
-            u.joined = new Date();
-            u.lastConnection = new Date();
+            u.setJoined(new Date());
+            u.setLastConnection(new Date());
             commManager.addUser(u);
         }
     }

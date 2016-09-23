@@ -25,6 +25,7 @@ import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
@@ -62,6 +63,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private RaceCourse rc;
     private HashMap<String, BoatTypes> boatTypes;
     private boolean firstBoatLoad = true;
+    private List<RaceCourseDescriptor> raceCourseDescriptors;
 
 
     @Override
@@ -77,7 +79,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, SP);
-        iGeo  = new OwnLocation(getBaseContext());
+        iGeo  = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Intent i = getIntent();
         //currentEvent =  i.getParcelableExtra("currentEvent");
@@ -139,6 +141,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         //mTracker = application.getDefaultTracker();
         boatTypes = ((Firebase)commManager).getAllBoatTypes();
 
+
     }
 
 
@@ -176,6 +179,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case R.id.action_add_race_course:
                 AddRaceCourse();
                 firstBoatLoad = true;
+                return true;
+            case R.id.action_exit:
+                System.exit(0);
+                finish();
+                System.exit(0);
                 return true;
 
             default:
@@ -272,13 +280,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     myBoat.name = users.getCurrentUser().DisplayName;
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.color = "Blue"; //TODO Set properly
-                    myBoat.lastUpdate = new Date();
+                    myBoat.setLastUpdate(new Date());
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                         myBoat.setEnumType(ObjectTypes.RaceManager);
                     } else myBoat.setEnumType(ObjectTypes.WorkerBoat);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
-                    myBoat.lastUpdate = new Date();
+                    myBoat.setLastUpdate(new Date());
                 }
                 commManager.writeBoatObject(myBoat);
             }
@@ -471,7 +479,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         AviObject o =new AviObject();
         o.setEnumType(ObjectTypes.Buoy);//// TODO: 11/02/2016 Add bouy types
         o.color = "Black";
-        o.lastUpdate = new Date(System.currentTimeMillis());
+        o.setLastUpdate(new Date(System.currentTimeMillis()));
         o.setLoc(GeoUtils.getLocationFromDirDist(loc,dir,dist));
         o.name = "Buoy"+id;
         o.id = id;

@@ -7,6 +7,8 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptorGeneral;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.google.firebase.auth.FirebaseAuth;
@@ -142,6 +144,24 @@ public class Firebase implements ICommManager {
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.name).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
         return 0;
+    }
+
+    @Override
+    public int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd) {
+        if (rcd == null) return -1;
+        fb.child(c.getString(R.string.db_courseDescriptors)).child(rcd.getType()).setValue(rcd);
+        return 0;
+    }
+
+    @Override
+    public List<RaceCourseDescriptorGeneral> getRaceCourseDescriptors() {
+        ArrayList<RaceCourseDescriptorGeneral> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null) return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_courseDescriptors)).getChildren()) {
+            RaceCourseDescriptorGeneral rcd = ps.getValue(RaceCourseDescriptorGeneral.class);
+            ret.add(rcd);
+        }
+        return ret;
     }
 
     @Override

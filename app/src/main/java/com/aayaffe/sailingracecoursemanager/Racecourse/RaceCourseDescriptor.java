@@ -13,9 +13,76 @@ import java.util.List;
  * Created by aayaffe on 22/04/2016.
  */
 public  class RaceCourseDescriptor implements Iterable<RaceCourseObject>{
+    private final String type;
     private final AviLocation startLineLoc;
+
+    public AviLocation getStartLineLoc() {
+        return startLineLoc;
+    }
+
+    public int getCommonLength() {
+        return commonLength;
+    }
+
+    public int getWindDir() {
+        return windDir;
+    }
+
+    public List<ObjectTypes> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<ObjectTypes> objects) {
+        this.objects = objects;
+    }
+
+    public List<DirDist> getDirDist() {
+        return dirDist;
+    }
+
+    public void setDirDist(List<DirDist> dirDist) {
+        this.dirDist = dirDist;
+    }
+
+    public List<String> getNames() {
+        return names;
+    }
+
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+
+    public int getFinishLineLength() {
+        return finishLineLength;
+    }
+
+    public void setFinishLineLength(int finishLineLength) {
+        this.finishLineLength = finishLineLength;
+    }
+
+    public int getIterator() {
+        return iterator;
+    }
+
+    public void setIterator(int iterator) {
+        this.iterator = iterator;
+    }
+
+    public AviLocation getLastLoc() {
+        return lastLoc;
+    }
+
+    public void setLastLoc(AviLocation lastLoc) {
+        this.lastLoc = lastLoc;
+    }
+
     private final int commonLength;
     private final int windDir;
+
+    public int getStartLineLength() {
+        return startLineLength;
+    }
+
     private final int startLineLength;
     public List<ObjectTypes> objects;
     List<DirDist> dirDist;
@@ -24,6 +91,11 @@ public  class RaceCourseDescriptor implements Iterable<RaceCourseObject>{
     int finishLineLength = 55;
     int iterator = 0;
     AviLocation lastLoc;
+
+    public String getType() {
+        return type;
+    }
+
     /***
      *
      * @param startlineLoc - The center location of the first element in the race course (StartLine)
@@ -32,7 +104,8 @@ public  class RaceCourseDescriptor implements Iterable<RaceCourseObject>{
      * @param startLineLength - the start line length //TODO remove for there should never be a start line as the next element
      * @return the first object of the race (The start line)
      */
-    public RaceCourseDescriptor(List<ObjectTypes> objects, List<DirDist> dirDistList, List<String> names, AviLocation startlineLoc, int windDir, int startLineLength, int commonLength){
+    public RaceCourseDescriptor(String type, List<ObjectTypes> objects, List<DirDist> dirDistList, List<String> names, AviLocation startlineLoc, int windDir, int startLineLength, int commonLength){
+        this.type = type;
         this.objects = objects;
         this.dirDist = dirDistList;
         this.names = names;

@@ -2,6 +2,8 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +16,7 @@ public class AviLocation {
     public double sog = 0;
     public float cog = 0;
     public double depth = 0;
-    public Date lastUpdate;
+    public Long lastUpdate;
 
     public AviLocation() {
 
@@ -22,7 +24,7 @@ public class AviLocation {
     public AviLocation(double Lat, double Lng) {
         lat = Lat;
         lon = Lng;
-        lastUpdate = new Date();
+        lastUpdate = new Date().getTime();
     }
 
     /**
@@ -33,7 +35,7 @@ public class AviLocation {
      */
     public AviLocation(AviLocation initial, int dir, double disNM){
         AviLocation al = GeoUtils.getLocationFromDirDist(initial,dir,disNM);
-        lastUpdate = new Date();
+        lastUpdate = new Date().getTime();
         lat = al.getLat();
         lon = al.getLng();
     }
@@ -46,14 +48,14 @@ public class AviLocation {
      * @param brng2
      */
     public AviLocation(AviLocation p1, double brng1, AviLocation p2,  double brng2){
-        lastUpdate = new Date();
+        lastUpdate = new Date().getTime();
         AviLocation al = GeoUtils.getLocationFromTriangulation(p1,brng1,p2,brng2);
         lat= al.getLat();
         lon= al.getLng();
     }
 
     public AviLocation(AviLocation p1, AviLocation p2){ //Middle point
-        lastUpdate = new Date();
+        lastUpdate = new Date().getTime();
         AviLocation al = GeoUtils.getMidPointLocation(p1,p2);
         lat=al.getLat();
         lon=al.getLng();
@@ -66,7 +68,7 @@ public class AviLocation {
         this.sog = sog;
         this.cog = cog;
         this.depth = depth;
-        this.lastUpdate = lastUpdate;
+        this.lastUpdate = lastUpdate.getTime();
 
     }
 
@@ -78,8 +80,8 @@ public class AviLocation {
 
     public static long Age(AviLocation aviLocation) {
         if (aviLocation==null) return -1;
-        if (aviLocation.lastUpdate==null) return -1;
-        long diffInMs = new Date().getTime() - aviLocation.lastUpdate.getTime();
+        if (aviLocation.getLastUpdate() ==null) return -1;
+        long diffInMs = new Date().getTime() - aviLocation.lastUpdate;
         return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
     }
 
@@ -158,5 +160,14 @@ public class AviLocation {
     }
     public void setLng(double Lng) {
         this.lon=Lng;
+    }
+
+    @Exclude
+    public Date getLastUpdate() {
+        return new Date(lastUpdate);
+    }
+    @Exclude
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate.getTime();
     }
 }

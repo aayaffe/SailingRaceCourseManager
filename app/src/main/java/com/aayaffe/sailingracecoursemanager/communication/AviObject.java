@@ -25,7 +25,7 @@ public class AviObject {
     private AviLocation aviLocation;
     private ObjectTypes type;
     public String color;
-    public Date lastUpdate;
+    public Long lastUpdate;
     public long id;
     private UUID _uuid;
     private UUID _raceCourseUUID;
@@ -98,7 +98,7 @@ public class AviObject {
     public UUID getUUID() {
         return _uuid;
     }
-@Exclude
+    @Exclude
     public UUID getRaceCourseUUID() {
         return _raceCourseUUID;
     }
@@ -155,5 +155,13 @@ public class AviObject {
     }
     public String getColor(){
         return color;
+    }
+    @Exclude
+    public Date getLastUpdate() {
+        return new Date(lastUpdate);
+    }
+    @Exclude
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate.getTime();
     }
 }

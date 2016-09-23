@@ -221,6 +221,8 @@
     <string name="gps_indicator">GPS indicator</string>
     <string name="center_on_my_location">Center on my location</string>
     <string name="zoom_to_marks">Zoom to marks</string>
+    <string name="db_courseDescriptors">RaceCourseDescriptors</string>
+    <string name="action_exit">Exit</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

@@ -23,7 +23,7 @@ import com.google.android.gms.location.LocationServices;
 /**
  * Created by aayaffe on 28/09/2015.
  */
-public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 12;
     private LocationManager locationManager;
@@ -37,9 +37,9 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
     private boolean isGPSFix;
 
 
-
-    public OwnLocation (Context c){
+    public OwnLocation(Context c, Activity a) {
         this.context = c;
+        this.activity = a;
         InitGPS(context);
 
     }
@@ -66,7 +66,7 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
      *
      * @return true if location permission were granted
      */
-    private boolean checkForLocationPermission(){
+    private boolean checkForLocationPermission() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -74,7 +74,7 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(context, R.string.ask_perm_location,Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.ask_perm_location, Toast.LENGTH_LONG).show();
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -91,7 +91,8 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
         }
         return true;
     }
-//    @Override //TODO check where is this derived from
+
+    //    @Override //TODO check where is this derived from
 //    public void onRequestPermissionsResult(int requestCode,
 //                                           String permissions[], int[] grantResults) {
 //        switch (requestCode) {
@@ -115,12 +116,25 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
 //            // permissions this app might request
 //        }
 //    }
-    private void InitGPS(Context c){
+    private void InitGPS(Context c) {
         buildGoogleApiClient();
         mGoogleApiClient.connect();
         locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.addGpsStatusListener(new MyGPSListener());
+        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        } else {
+            locationManager.addGpsStatusListener(new MyGPSListener());
+        }
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -128,24 +142,51 @@ public class OwnLocation implements IGeo,LocationListener,GoogleApiClient.Connec
         mLastLocation = location;
         mLastLocationMillis = SystemClock.elapsedRealtime();
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         createLocationRequest();
         //if (mRequestingLocationUpdates) {
         startLocationUpdates();
         //}
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        } else {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
     }
+
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(2000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
+
     public void startLocationUpdates() {
-        if (mGoogleApiClient.isConnected() ){
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
+        if (mGoogleApiClient.isConnected()) {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                return;
+            }else {
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mGoogleApiClient, mLocationRequest, this);
+            }
         }
     }
     @Override

@@ -5,6 +5,7 @@ import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,11 +93,11 @@ public class RaceCourse {
         return GeoUtils.toAviLocation(GeoUtils.getLocationFromDirDist(GeoUtils.toLocation(signalBoatLoc), (float) GeoUtils.relativeToTrueDirection(windDir, -90), (startLineLength / 2)));
     }
     private void addWindwardLeewardMarks(AviLocation rp, int windDir, int startLineLength) {
-
         double nm = (goalTime/(getBoatVMGRun() + getBoatVMGUpwind()));
         int length = (int)(nm*1852);
         RaceCourseDescriptor rcd = getWindwardLeewardDescriptor(rp,windDir,startLineLength,length);
         SetRaceCourse(rcd);
+
 
     }
 
@@ -112,7 +113,7 @@ public class RaceCourse {
                     s.name = rco.getName();
                     s.setAviLocation(rco.getLoc());
                     s.color = "Yellow";
-                    s.lastUpdate = new Date();
+                    s.setLastUpdate(new Date());
                     s.setRaceCourseUUID(uuid);
                     break;
                 case StartLine:
@@ -121,14 +122,14 @@ public class RaceCourse {
                     s.name = rco.getName()+"stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
-                    s.lastUpdate = new Date();
+                    s.setLastUpdate(new Date());
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.setEnumType(ObjectTypes.FlagBuoy);
                     p.name = rco.getName()+"port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Blue";
-                    p.lastUpdate = new Date();
+                    p.setLastUpdate(new Date());
                     p.setRaceCourseUUID(uuid);
                     break;
                 case FinishLine:
@@ -136,14 +137,14 @@ public class RaceCourse {
                     s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Orange";
-                    s.lastUpdate = new Date();
+                    s.setLastUpdate(new Date());
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.setEnumType(ObjectTypes.FlagBuoy);
                     p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Orange";
-                    p.lastUpdate = new Date();
+                    p.setLastUpdate(new Date());
                     p.setRaceCourseUUID(uuid);
                     break;
                 case Gate:
@@ -151,14 +152,14 @@ public class RaceCourse {
                     s.name = rco.getName()+"Stbd";
                     s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
                     s.color = "Red";
-                    s.lastUpdate = new Date();
+                    s.setLastUpdate(new Date());
                     s.setRaceCourseUUID(uuid);
                     p = new AviObject();
                     p.setEnumType(ObjectTypes.TomatoBuoy);
                     p.name = rco.getName()+"Port";
                     p.setAviLocation(((RaceCourseObjectLong)rco).getPrtLoc());
                     p.color = "Red";
-                    p.lastUpdate = new Date();
+                    p.setLastUpdate(new Date());
                     p.setRaceCourseUUID(uuid);
                     break;
                 case ReferencePoint:
@@ -188,7 +189,7 @@ public class RaceCourse {
         names.add("StartFinishline");
         names.add("No1Mark");
         names.add("No4Mark");
-        return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
+        return new RaceCourseDescriptor("WindwardLeeward", os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
     }
     private RaceCourseDescriptor getTrapezoidDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
         List<ObjectTypes> os = new ArrayList<>();
@@ -211,7 +212,11 @@ public class RaceCourse {
         names.add("No2Mark");
         names.add("No3Gate");
         names.add("FinishLine");
-        return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
+
+        RaceCourseDescriptorGeneral rcdg =new RaceCourseDescriptorGeneral("TestTrapezoid",os,dds,names);//TODO for testing
+        GoogleMapsActivity.commManager.writeRaceCourseDescriptor(rcdg); //TODO for testing
+
+        return new RaceCourseDescriptor("Trapezoid",os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
     }
     private RaceCourseDescriptor getTriangularDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
         List<ObjectTypes> os = new ArrayList<>();
@@ -229,7 +234,7 @@ public class RaceCourse {
         names.add("No3Mark");
         names.add("No1Mark");
         names.add("No2Mark");
-        return new RaceCourseDescriptor(os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
+        return new RaceCourseDescriptor("Triangle",os, dds, names,startlineLoc,windDir,startLineLength,commonLength);
     }
     public int calculateTargetSpeed(BoatType bt){
         //TODO Implement
