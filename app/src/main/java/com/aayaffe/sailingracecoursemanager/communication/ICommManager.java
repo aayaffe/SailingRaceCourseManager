@@ -1,6 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptorGeneral;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
 import java.util.List;
@@ -15,7 +17,9 @@ public interface ICommManager {
 
     int writeBoatObject(AviObject o);
     int writeBuoyObject(AviObject o);
+    int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd);
 
+    List<RaceCourseDescriptorGeneral> getRaceCourseDescriptors();
     List<AviObject> getAllBoats();
     List<AviObject> getAllBuoys();
 

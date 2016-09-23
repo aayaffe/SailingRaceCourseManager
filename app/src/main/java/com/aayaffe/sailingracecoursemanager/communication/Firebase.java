@@ -7,8 +7,11 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptorGeneral;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -106,6 +109,10 @@ public class Firebase implements ICommManager {
                         String displayName;
                         try {
                             displayName = user.getDisplayName();
+                            if (displayName==null)
+                            {
+                                displayName = convertToAcceptableDisplayName(user.getEmail());
+                            }
                         }catch(Exception e){
                             Random r = new Random();
                             displayName = "User" + r.nextInt(10000);
@@ -124,6 +131,24 @@ public class Firebase implements ICommManager {
 
         return 0;
     }
+
+
+    /***
+     * Firebase does not accept emails in the database path (i.e. '.' are not allowed)
+     * There for we will convert to a better display name
+     * @param email
+     * @return email's user name only without '.', '#', '$', '[', or ']'
+     */
+    private String convertToAcceptableDisplayName(String email) {
+        email = email.replace('.',' ');
+        email = email.replace('#',' ');
+        email = email.replace('$',' ');
+        email = email.replace('[',' ');
+        email = email.replace(']',' ');
+        int index = email.indexOf('@');
+        return email.substring(0,index);
+    }
+
     @Override
     public void setCommManagerEventListener(CommManagerEventListener listener){
         this.listener = listener;
@@ -142,6 +167,24 @@ public class Firebase implements ICommManager {
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.name).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
         return 0;
+    }
+
+    @Override
+    public int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd) {
+        if (rcd == null) return -1;
+        fb.child(c.getString(R.string.db_courseDescriptors)).child(rcd.getType()).setValue(rcd);
+        return 0;
+    }
+
+    @Override
+    public List<RaceCourseDescriptorGeneral> getRaceCourseDescriptors() {
+        ArrayList<RaceCourseDescriptorGeneral> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null) return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_courseDescriptors)).getChildren()) {
+            RaceCourseDescriptorGeneral rcd = ps.getValue(RaceCourseDescriptorGeneral.class);
+            ret.add(rcd);
+        }
+        return ret;
     }
 
     @Override

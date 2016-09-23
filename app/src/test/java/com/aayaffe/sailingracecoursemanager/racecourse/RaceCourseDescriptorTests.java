@@ -139,7 +139,7 @@ public class RaceCourseDescriptorTests {
         names.add("Startline");
         names.add("Gate1");
         names.add("FinishLine");
-        return new RaceCourseDescriptor(os,dds,names,startlineLoc,windDir,startLineLength,commonLength);
+        return new RaceCourseDescriptor("newAbs", os,dds,names,startlineLoc,windDir,startLineLength,commonLength);
     }
     private RaceCourseDescriptor createNewFrac(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength){
         List<ObjectTypes> os = new ArrayList<>();
@@ -153,7 +153,7 @@ public class RaceCourseDescriptorTests {
         names.add("Startline");
         names.add("Gate1");
         names.add("FinishLine");
-        return new RaceCourseDescriptor(os,dds,names,startlineLoc,windDir,startLineLength,commonLength);
+        return new RaceCourseDescriptor("newAbs", os,dds,names,startlineLoc,windDir,startLineLength,commonLength);
 
 
     }

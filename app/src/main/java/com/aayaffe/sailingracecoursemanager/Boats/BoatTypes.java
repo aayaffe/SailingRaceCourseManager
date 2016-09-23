@@ -1,5 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.Boats;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Date;
 
 /**
@@ -23,7 +25,7 @@ public class BoatTypes {
     private float run8_12;
     private float run12_15;
     private float run15_;
-    private Date updated;
+    private long updated;
 
 
     public float getLength() {
@@ -153,13 +155,14 @@ public class BoatTypes {
     public void setRun15_(float run15_) {
         this.run15_ = run15_;
     }
-
+    @Exclude
     public Date getUpdated() {
-        return updated;
+        return new Date(updated);
     }
-
+    @Exclude
     public void setUpdated(Date updated) {
-        this.updated = updated;
+
+        this.updated = updated.getTime();
     }
 
     public String getBoatClass() {

@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
-import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -132,7 +131,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         return m;
     }
     private boolean isValid(AviObject ao) {
-        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.getType() != null) && (ao.lastUpdate != null);
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.getType() != null) && (ao.getLastUpdate() != null);
     }
     public void removeMark(Marker m){
         m.remove();
