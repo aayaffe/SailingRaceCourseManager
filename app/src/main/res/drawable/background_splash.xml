@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/sailingracecoursemanager_white_ic"/>
+            android:src="@mipmap/banner"/>
     </item>
 
 </layer-list>
