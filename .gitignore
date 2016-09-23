@@ -12,12 +12,18 @@
 *.apk
 keystore.properties
 google-services.json
+google_maps_api.xml
+firebase_urls.xml
 /app/src/release/res/values/google_maps_api.xml
-/app/src/main/res/values/google_maps_api.xml
-/app/src/staging/res/values/google_maps_api.xml
 /app/src/release/res/values/firebase_urls.xml
+/app/src/main/res/values/google_maps_api.xml
 /app/src/main/res/values/firebase_urls.xml
+/app/src/staging/res/values/google_maps_api.xml
 /app/src/staging/res/values/firebase_urls.xml
+/app/src/debug/res/values/google_maps_api.xml
+/app/src/debug/res/values/firebase_urls.xml
+
+
 /app/google-services.json
 
 
