@@ -1,12 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.racecourse;
 
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.Racecourse.DirDist;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourse;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseGate;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseObject;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseStartLine;
 import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 

@@ -25,7 +25,6 @@ import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
@@ -35,7 +34,6 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.google.android.gms.analytics.Tracker;
 

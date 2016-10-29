@@ -1,8 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptorGeneral;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
 import java.util.List;

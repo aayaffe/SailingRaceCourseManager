@@ -7,8 +7,6 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.Racecourse.RaceCourseDescriptorGeneral;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.google.firebase.analytics.FirebaseAnalytics;
