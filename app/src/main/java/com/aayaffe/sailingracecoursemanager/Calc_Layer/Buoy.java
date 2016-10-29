@@ -1,4 +1,10 @@
-package radial_design.racecoursedialogui;
+package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+
+import android.location.Location;
+
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -46,9 +52,7 @@ public class Buoy {
     public AviLocation getAviLocation() {
         return aviLocation;
     }
-    public AviLocation getLoc() {
-        return aviLocation;
-    }
+
 
     public void setBuoyType(BuoyType buoyType) {
         this.buoyType = buoyType;
@@ -65,4 +69,24 @@ public class Buoy {
     public UUID getUUID() {
         return _uuid;
     }
+    public UUID getUuid() {
+        return _uuid;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLoc(Location loc) {
+        this.aviLocation = GeoUtils.toAviLocation(loc);
+    }
+    public Location getLoc() {
+        return GeoUtils.toLocation(aviLocation);
+    }
+    public LatLng getLatLng() {
+        return GeoUtils.toLatLng(aviLocation);
+    }
+
+
+
 }

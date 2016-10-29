@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,11 +7,13 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
+import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
 

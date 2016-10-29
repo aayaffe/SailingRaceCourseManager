@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp">
+    <TextView
+        android:id="@+id/np_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:text="NA"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:id="@+id/np_minus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:textStyle="bold"
+        android:text="—"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/np_number" />
+
+
+    <Button
+        android:id="@+id/np_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:background="@null"
+        android:text="+"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/np_number" />
+</RelativeLayout>

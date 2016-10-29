@@ -1,11 +1,9 @@
 package com.aayaffe.sailingracecoursemanager;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
@@ -24,9 +22,8 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
-import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;

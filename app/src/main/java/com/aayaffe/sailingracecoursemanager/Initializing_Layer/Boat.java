@@ -1,4 +1,5 @@
-package com.aayaffe.sailingracecoursemanager;
+
+package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
 /**
  * Created by Jonathan on 16/08/2016.
  */

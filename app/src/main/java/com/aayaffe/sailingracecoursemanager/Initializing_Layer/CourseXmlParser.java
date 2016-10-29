@@ -1,6 +1,8 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
 import android.content.Context;
 import android.util.Log;
+
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Mark;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;

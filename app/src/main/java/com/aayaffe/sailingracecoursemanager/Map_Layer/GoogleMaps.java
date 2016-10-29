@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.map;
+package com.aayaffe.sailingracecoursemanager.Map_Layer;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -99,11 +100,11 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public void setCenter(LatLng ll){
         mapView.animateCamera(CameraUpdateFactory.newLatLng(ll));
     }
-    public Marker addMark(AviObject ao,String caption, int resourceID){
+    public Marker addMark(Buoy ao,String caption, int resourceID){
         Marker m;
         try {
-            if (uuidToMarker.containsKey(ao.getUuid())) {
-                m = uuidToMarker.get(ao.getUuid());
+            if (uuidToMarker.containsKey(ao.getUUID())) {
+                m = uuidToMarker.get(ao.getUUID());
                 boolean infoWindows=m.isInfoWindowShown();
                 m = updateMark(ao, m, resourceID, caption);
                 if (infoWindows) {
@@ -111,7 +112,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
                 }
                 return m;
             } else if (mapView!=null) {
-                m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.name).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
+                m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.getName()).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
                 uuidToMarker.put(ao.getUUID(),m);
                 uuidToId.put(ao.getUUID(),m.getId());
                 return m;
@@ -121,7 +122,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         }
         return null;
     }
-    private Marker updateMark(AviObject ao, Marker m, int resourceID, String caption) {
+    private Marker updateMark(Buoy ao, Marker m, int resourceID, String caption) {
         if (isValid(ao)){
             m.setPosition(ao.getLatLng());
             m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
@@ -130,8 +131,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
         }
         return m;
     }
-    private boolean isValid(AviObject ao) {
-        return (ao != null) && (ao.getAviLocation() != null) && (ao.name != null) && (ao.getType() != null) && (ao.getLastUpdate() != null);
+    private boolean isValid(Buoy ao) {
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
     }
     public void removeMark(Marker m){
         m.remove();

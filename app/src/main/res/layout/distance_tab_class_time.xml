@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/distance_class_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Class"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <Spinner
+        android:id="@+id/distance_class_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center" />
+
+
+    <TextView
+        android:id="@+id/distance_wind_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wind Strength"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <com.aayaffe.sailingracecoursemanager.Input_UI_Layer.HorizontalNumberPicker
+        android:id="@+id/wind_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        app:buttonsTextColor="@color/cmark_blue_light"/>
+
+    <TextView
+        android:id="@+id/distance_time_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Target Time"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <com.aayaffe.sailingracecoursemanager.Input_UI_Layer.HorizontalNumberPicker
+        android:id="@+id/target_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        app:buttonsTextColor="@color/cmark_blue_light"/>
+
+</LinearLayout>
+
+<!--
+    <NumberPicker
+        android:id="@+id/distance_wind_np"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center" />
+
+
+    <NumberPicker
+        android:id="@+id/distance_time_np"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+-->

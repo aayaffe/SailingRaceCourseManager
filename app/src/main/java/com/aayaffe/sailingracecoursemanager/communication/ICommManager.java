@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
@@ -13,15 +14,13 @@ public interface ICommManager {
 
     void setCommManagerEventListener(CommManagerEventListener listener);
 
-    int writeBoatObject(AviObject o);
-    int writeBuoyObject(AviObject o);
-    int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd);
+    int writeBoatObject(Buoy o);
+    int writeBuoyObject(Buoy o);
 
-    List<RaceCourseDescriptorGeneral> getRaceCourseDescriptors();
-    List<AviObject> getAllBoats();
-    List<AviObject> getAllBuoys();
+    List<Buoy> getAllBoats();  //ships
+    List<Buoy> getAllBuoys();  //Just buoys, without ships
 
-    int sendAction(RaceManagerAction a, AviObject o);
+    int sendAction(RaceManagerAction a, Buoy o);
 
     long getNewBuoyId();
 

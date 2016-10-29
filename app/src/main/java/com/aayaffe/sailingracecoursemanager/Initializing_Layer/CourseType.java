@@ -1,7 +1,8 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
 import android.util.Log;
 
-import java.util.ArrayList;
+import com.aayaffe.sailingracecoursemanager.R;
+
 import java.util.List;
 
 /**

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,22 +154,22 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public int writeBoatObject(AviObject o) {
-        if (o == null || o.name == null || o.name.isEmpty() || currentEventName == null) return -1;
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.name).setValue(o);
+    public int writeBoatObject(Buoy o) {
+        if (o == null || o.getName() == null || o.getName().isEmpty() || currentEventName == null) return -1;
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.getName()).setValue(o);
         return 0;
     }
 
     @Override
-    public int writeBuoyObject(AviObject o) {
-        if (o == null || o.name == null || o.name.isEmpty()|| currentEventName == null) return -1;
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.name).setValue(o);
+    public int writeBuoyObject(Buoy o) {
+        if (o == null || o.getName() == null || o.getName().isEmpty()|| currentEventName == null) return -1;
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.getName()).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
         return 0;
     }
 
-    @Override
-    public int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd) {
+    /*@Override
+    public int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd) {  //becomes irrelevant...
         if (rcd == null) return -1;
         fb.child(c.getString(R.string.db_courseDescriptors)).child(rcd.getType()).setValue(rcd);
         return 0;
@@ -183,32 +184,32 @@ public class Firebase implements ICommManager {
             ret.add(rcd);
         }
         return ret;
-    }
+    }*/
 
     @Override
-    public List<AviObject> getAllBoats() {
-        ArrayList<AviObject> ret = new ArrayList<>();
+    public List<Buoy> getAllBoats() {
+        ArrayList<Buoy> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).getChildren()) {
-            AviObject o = ps.getValue(AviObject.class);
+            Buoy o = ps.getValue(Buoy.class);
             ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public List<AviObject> getAllBuoys() {
-        ArrayList<AviObject> ret = new ArrayList<>();
+    public List<Buoy> getAllBuoys() {
+        ArrayList<Buoy> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).getChildren()) {
-            AviObject o = ps.getValue(AviObject.class);
+            Buoy o = ps.getValue(Buoy.class);
             ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public int sendAction(RaceManagerAction a, AviObject o) {
+    public int sendAction(RaceManagerAction a, Buoy o) {
         //TODO Implement
         return 0;
     }
@@ -262,9 +263,9 @@ public class Firebase implements ICommManager {
 
     @Override
     public long getSupportedVersion() {
-       if (ds == null || ds.getValue() == null) return -1;
-       long id = (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
-       return id;
+        if (ds == null || ds.getValue() == null) return -1;
+        long id = (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
+        return id;
     }
 
     public DatabaseReference getFireBaseRef() {
@@ -286,7 +287,7 @@ public class Firebase implements ICommManager {
     }
 
 
-    public HashMap<String, BoatTypes> getAllBoatTypes() {
+    /*public HashMap<String, BoatTypes> getAllBoatTypes() {
         HashMap<String, BoatTypes> ret = new HashMap<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_boattypes)).getChildren()) {
@@ -294,7 +295,7 @@ public class Firebase implements ICommManager {
             ret.put(o.getBoatClass(),o);
         }
         return ret;
-    }
+    }*/
     /***
      *
      * @return the Uid of the currently logged in user.

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 /**
  * Created by aayaffe on 04/10/2015.

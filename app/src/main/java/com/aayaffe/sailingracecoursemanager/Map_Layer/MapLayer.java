@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.map;
+package com.aayaffe.sailingracecoursemanager.Map_Layer;
 
 import android.app.Activity;
 import android.content.Context;

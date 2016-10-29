@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 

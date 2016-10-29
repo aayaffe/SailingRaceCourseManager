@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.map;
+package com.aayaffe.sailingracecoursemanager.Map_Layer;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
 import com.aayaffe.sailingracecoursemanager.AppPreferences;
-import com.aayaffe.sailingracecoursemanager.Boats.BoatTypes;
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Marks;
@@ -43,8 +45,14 @@ import java.util.List;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener{
 
+    private RaceCourse raceCourse;  //imported from jonathan's new RaceCourse class //replaces private RaceCourse rc;
+    public static List<Buoy> buoys; //replaces public static Marks marks = new Marks();
+    //private HashMap<String, BoatTypes> boatTypes;  //unnecessary, now is a part ot the xml boat parser
+    private Buoy myBoat; //instead of AviObject class
+
     private static final String TAG = "GoogleMapsActivity";
     public static  int REFRESH_RATE = 1000;
+    private static Users users;
     private SharedPreferences SP;
     private GoogleMaps mapLayer;
     private ConfigChange unc = new ConfigChange();
@@ -52,16 +60,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Handler handler = new Handler();
     private WindArrow wa;
     public static ICommManager commManager;
-    public static Marks marks = new Marks();
     private DialogFragment df;
-    private static Users users;
     private static String currentEventName;
     private Tracker mTracker;
-    private AviObject myBoat;
-    private RaceCourse rc;
-    private HashMap<String, BoatTypes> boatTypes;
     private boolean firstBoatLoad = true;
-    private List<RaceCourseDescriptor> raceCourseDescriptors;
 
 
     @Override
@@ -137,7 +139,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         //mTracker = application.getDefaultTracker();
-        boatTypes = ((Firebase)commManager).getAllBoatTypes();
+
+        //boatTypes = ((Firebase)commManager).getAllBoatTypes();
 
 
     }
@@ -193,98 +196,74 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void AddRaceCourse() {
+        /**
+         * args:
+         * distance to mark 1
+         * wind direction
+         * signal boat location
+         * course options
+         * context
+         *
+         * all GoogleMapsActivity variables
+         */
         mapLayer.removeAllMarks(); //TODO: Test
-        if (rc==null){
-            rc = new RaceCourse();
+        /**raceCourse = new RaceCourse(this,  signalBoatLoc, windDirection, distance2mark1 , startLineDistance, selectedCourseOptions );
+        */
+         buoys.addAll(raceCourse.convertMarks2Bouys());
+
+        /*   //i don't get why is this part exist...
+        if (raceCourse==null){
+            raceCourse = new RaceCourse();
         }
-        if (rc.getMarks()!=null){ //TODO : Check why being removed twice!
-            for(AviObject ao:rc.getMarks().marks){
-                mapLayer.removeMark(ao.getUUID());
+        if (raceCourse.getMarks()!=null){ //TODO : Check why being removed twice!
+            for(Bouy buoy2remove: raceCourse.getBouyList()){
+                mapLayer.removeMark(buoy2remove.getUUID());
             }
         }
         if ((commManager!=null)&&(commManager.getAllBuoys()!=null)) {
-            for (AviObject ao : commManager.getAllBuoys()) {
-                if (ao.getRaceCourseUUID() != null) {
-                    mapLayer.removeMark(ao.getUUID());
+            for (Buoy buoy2remove : commManager.getAllBuoys()) {
+                if (buoy2remove.getRaceCourseUUID() != null) {
+                    mapLayer.removeMark(buoy2remove.getUUID());
                 }
             }
         }
-        String boatClass = SP.getString("boatClass", "470 Men");
-        rc.setBoatVMGUpwind(getVMGUpwind(boatClass,(int) Float.parseFloat(SP.getString("windSpd", "14"))));
-        rc.setBoatVMGRun(getVMGRun(boatClass, (int) Float.parseFloat(SP.getString("windSpd", "14"))));
-        rc.setBoatVMGReach(getVMGReach(boatClass, (int) Float.parseFloat(SP.getString("windSpd", "14"))));
-        rc.setSignalBoatLoc(GeoUtils.toAviLocation(iGeo.getLoc()));
-        rc.setWindDir(Integer.parseInt(SP.getString("windDir", "0"))); //TODO putout to special function to get wind dir
-        rc.setWindSpeed((int) Float.parseFloat(SP.getString("windSpd", "14")));
-        rc.setBoatLength(getBoatLength(boatClass));
-        rc.setGoalTime(Integer.parseInt(SP.getString("goalTime", "50")));
-        rc.setRaceCourseType(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward"))); //TODO redundant
-        rc.setNumOfBoats(Integer.parseInt(SP.getString("numOfBoats", "25")));
-        rc.calculateCourse(rc.getRaceCourseType(SP.getString("rcType","Windward-leeward")));
-        Marks marks = rc.getMarks();
+
+        raceCourse = new RaceCourse(context,  signalBoatLoc, windDirection, distance2mark1 , startLineDistance, selectedCourseOptions );
         removeAllRaceCourseMarks();//TODO : Check why being removed twice!
-        for (AviObject m: marks.marks) {
+        for (Buoy m: buoys) {
             addMark(m);
-        }
+        }*/
     }
 
-    private void removeAllRaceCourseMarks() {
-        marks.marks = commManager.getAllBuoys();
-        for(AviObject m:marks.marks){
+    private void removeAllRaceCourseMarks() {  //becomes unnecessary
+        buoys = commManager.getAllBuoys();
+        for(Buoy m: buoys){
             if (m.getRaceCourseUUID()!=null){
                 mapLayer.removeMark(m.getUUID());
             }
         }
     }
 
-
-    private double getVMGUpwind(String boatClass, int windSpeed){
-        if (windSpeed<=8) return boatTypes.get(boatClass).getUpwind5_8();
-        if (windSpeed<=12) return boatTypes.get(boatClass).getUpwind8_12();
-        if (windSpeed<=15) return boatTypes.get(boatClass).getUpwind12_15();
-        else return boatTypes.get(boatClass).getUpwind15_();
-    }
-    private double getVMGRun(String boatClass, int windSpeed){
-        if (windSpeed<=8) return boatTypes.get(boatClass).getRun5_8();
-        if (windSpeed<=12) return boatTypes.get(boatClass).getRun8_12();
-        if (windSpeed<=15) return boatTypes.get(boatClass).getRun12_15();
-        else return boatTypes.get(boatClass).getRun15_();
-    }
-    private double getVMGReach(String boatClass, int windSpeed){
-        if (windSpeed<=8) return boatTypes.get(boatClass).getReach5_8();
-        if (windSpeed<=12) return boatTypes.get(boatClass).getReach8_12();
-        if (windSpeed<=15) return boatTypes.get(boatClass).getReach12_15();
-        else return boatTypes.get(boatClass).getReach15_();
-    }
-    private double getBoatLength(String boatClass){
-        return boatTypes.get(boatClass).getLength();
-
-    }
-
     private Runnable runnable = new Runnable() {
         public void run() {
             if ((users.getCurrentUser()!=null)&&(commManager.getAllBoats()!=null)) {
                 if (myBoat == null) {
-                    for(AviObject ao: commManager.getAllBoats()){
-                        if (ao.name == users.getCurrentUser().DisplayName)
+                    for(Buoy ao: commManager.getAllBoats()){
+                        if (ao.getName() == users.getCurrentUser().DisplayName)
                         {
                             myBoat=ao;
                             break;
                         }
                     }
                     if(myBoat==null){
-                        myBoat = new AviObject();
+                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), "Blue");//TODO Set color properly
                     }
-                    myBoat.name = users.getCurrentUser().DisplayName;
-                    myBoat.setLoc(iGeo.getLoc());
-                    myBoat.color = "Blue"; //TODO Set properly
-                    myBoat.setLastUpdate(new Date());
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setEnumType(ObjectTypes.RaceManager);
-                    } else myBoat.setEnumType(ObjectTypes.WorkerBoat);
+                        myBoat.setBuoyType(BuoyType.RaceManager);
+                    } else myBoat.setBuoyType(BuoyType.WorkerBoat);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
-                    myBoat.setLastUpdate(new Date());
+                    myBoat.lastUpdate = new Date();
                 }
                 commManager.writeBoatObject(myBoat);
             }
@@ -318,22 +297,22 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void redrawLayers() {
         Location myLocation = iGeo.getLoc();
-        marks.marks = commManager.getAllBoats();
-        for (AviObject o: marks.marks) {
+        buoys = commManager.getAllBoats();
+        for (Buoy o: buoys) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
+            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
                 int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
                 mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
             }
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.name.equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
+            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
                 int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
                 mapLayer.addMark(o, null, id);
             }
         }
-        List<AviObject> markList = commManager.getAllBuoys();
-        for (AviObject o : markList){
+        List<Buoy> commBuoyList = commManager.getAllBuoys();
+        for (Buoy o : commBuoyList){
             //TODO: Delete old buoys first
-            if(o.getEnumType() ==ObjectTypes.FlagBuoy) {
+            if(o.getBuoyType() ==BuoyType.FlagBuoy) {
                 switch(o.color){
                     case "Red":
                         mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_red);
@@ -350,7 +329,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         break;
                 }
             }
-            else if(o.getEnumType() ==ObjectTypes.TomatoBuoy) {
+            else if(o.getBuoyType() ==BuoyType.TomatoBuoy) {
                 switch(o.color) {
                     case "Red":
                         mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_red);
@@ -367,7 +346,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         break;
                 }
             }
-            else if(o.getEnumType() ==ObjectTypes.TriangleBuoy) {
+            else if(o.getBuoyType() ==BuoyType.TriangleBuoy) {
                 switch(o.color) {
                     case "Red":
                         mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_red);
@@ -388,17 +367,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
 
         }
-        if ((marks.marks.size()>0)&&(firstBoatLoad)&&(mapLayer.mapView!=null))
+        if ((buoys.size()>0)&&(firstBoatLoad)&&(mapLayer.mapView!=null))
         {
             firstBoatLoad = false;
             mapLayer.ZoomToMarks();
         }
     }
 
-    private int getIconId(String string, AviObject o) {
+    private int getIconId(String string, Buoy o) {
         int ret = R.drawable.boatred;
-        if (o.name.equals(string)){
-            switch(o.getEnumType()) {
+        if (o.getName().equals(string)){
+            switch(o.getBuoyType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation())>300)
@@ -410,7 +389,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         else {
-            switch (o.getEnumType()) {
+            switch (o.getBuoyType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation())>300)
@@ -474,18 +453,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addMark(long id, Location loc, Float dir, int dist){
         if (loc == null) return;
-        AviObject o =new AviObject();
-        o.setEnumType(ObjectTypes.Buoy);//// TODO: 11/02/2016 Add bouy types
-        o.color = "Black";
-        o.setLastUpdate(new Date(System.currentTimeMillis()));
-        o.setLoc(GeoUtils.getLocationFromDirDist(loc,dir,dist));
-        o.name = "Buoy"+id;
+        Buoy o =new Buoy("Buoy"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), "Black", BuoyType.Buoy);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }
 
-    private void addMark(AviObject m){
+    private void addMark(Buoy m){
         commManager.writeBuoyObject(m);
+    }
+
+    public List<Buoy> getBuoys() {
+        return buoys;
     }
 
 

@@ -1,10 +1,7 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +13,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
+import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.Arrays;
 import java.util.HashMap;

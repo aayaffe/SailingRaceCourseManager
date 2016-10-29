@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="nonscense_done">#cd2e83eb</color>
+    <color name="nonscense_done_text">#cdffad6e</color>
+
+    <color name="cmark_orange_lighter">#f3b091</color>
+    <color name="cmark_orange_light">#f38f61</color>
+    <color name="cmark_orange">#f36523</color>
+    <color name="cmark_orange_darker">#f34d00</color>
+
+    <color name="cmark_blue_lighter">#719dbd</color>
+    <color name="cmark_blue_light">#428abd</color>
+    <color name="cmark_blue">#0f75bd</color>
+    <color name="cmark_blue_dark">#006ebd</color>
+    <color name="cmark_blue_darker">#005d9f</color>
+
+    <color name="cmark_gray_lighter">#c5c5c5</color>
+    <color name="cmark_gray_light">#919191</color>
+    <color name="cmark_gray">#777777</color>
+    <color name="cmark_gray_dark">#5e5e5e</color>
+    <color name="cmark_gray_darker">#303030</color>
+</resources>

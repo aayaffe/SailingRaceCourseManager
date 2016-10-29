@@ -1,5 +1,8 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Calc_Layer;
 import android.content.Context;
+
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
 import java.util.List;
 import java.util.Map;

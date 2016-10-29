@@ -1,13 +1,14 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
+
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
+import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
 import java.util.Map;

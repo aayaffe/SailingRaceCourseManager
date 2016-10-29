@@ -1,5 +1,7 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.Calc_Layer;
 import android.util.Log;
+
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
 import java.util.ArrayList;
 import java.util.List;
