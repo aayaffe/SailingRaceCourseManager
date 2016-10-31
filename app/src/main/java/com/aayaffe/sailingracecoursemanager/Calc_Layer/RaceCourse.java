@@ -13,7 +13,7 @@ import java.util.Map;
 public class RaceCourse {
     /**
      * RaceCourse represents the actual race course, and serves:
-     * -holding course input (windDir, Dist2m1, courseType, Marks array)
+     * -holding course input (windDir, Dist2m1, courseType, marks array)
      * turning input data into actual bouys
      *
      */

@@ -1,7 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.Events;
 
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Users.User;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.google.firebase.database.Exclude;
 
 import java.util.Dictionary;
@@ -19,9 +19,9 @@ public class Event {
     private int lastBuoyId;
     private User eventManager;
     @Exclude
-    private HashMap<String,AviObject> boats;
+    private HashMap<String,Buoy> boats;
     @Exclude
-    private HashMap<String,AviObject> buoys;
+    private HashMap<String,Buoy> buoys;
 
     public Event(){
         _uuid = UUID.randomUUID();
@@ -52,19 +52,19 @@ public class Event {
     }
 
 
-    public HashMap<String, AviObject> getBoats() {
+    public HashMap<String, Buoy> getBoats() {
         return boats;
     }
 
-    public void setBoats(HashMap<String, AviObject> boats) {
+    public void setBoats(HashMap<String, Buoy> boats) {
         this.boats = boats;
     }
 
-    public HashMap<String, AviObject> getBuoys() {
+    public HashMap<String, Buoy> getBuoys() {
         return buoys;
     }
 
-    public void setBuoys(HashMap<String, AviObject> buoys) {
+    public void setBuoys(HashMap<String, Buoy> buoys) {
         this.buoys = buoys;
     }
 

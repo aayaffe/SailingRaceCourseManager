@@ -255,7 +255,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
                 add_event_item.setEnabled(false);
             }catch (Exception e){
-
+                Log.w("caught something!", e.getLocalizedMessage());
             }
             loggedIn = false;
         }
@@ -268,7 +268,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 add_event_item.setEnabled(true);
 
             }catch (Exception e){
-
+                Log.w("caught something!", e.getLocalizedMessage());
             }
             loggedIn = true;
         }

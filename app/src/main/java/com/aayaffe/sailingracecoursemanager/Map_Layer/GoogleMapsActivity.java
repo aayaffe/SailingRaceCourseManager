@@ -25,13 +25,10 @@ import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
-import com.aayaffe.sailingracecoursemanager.Marks;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.communication.ObjectTypes;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
@@ -46,7 +43,7 @@ import java.util.List;
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener{
 
     private RaceCourse raceCourse;  //imported from jonathan's new RaceCourse class //replaces private RaceCourse rc;
-    public static List<Buoy> buoys; //replaces public static Marks marks = new Marks();
+    public static List<Buoy> buoys; //replaces public static marks marks = new marks();
     //private HashMap<String, BoatTypes> boatTypes;  //unnecessary, now is a part ot the xml boat parser
     private Buoy myBoat; //instead of AviObject class
 
@@ -206,30 +203,30 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
          *
          * all GoogleMapsActivity variables
          */
-        mapLayer.removeAllMarks(); //TODO: Test
-        /**raceCourse = new RaceCourse(this,  signalBoatLoc, windDirection, distance2mark1 , startLineDistance, selectedCourseOptions );
-        */
+        mapLayer.removeAllMarks();
+        raceCourse = new RaceCourse(this,  myBoat.getAviLocation() , Integer.parseInt(SP.getString("windDir", "0")), Float.parseFloat(SP.getString("Dist2m1", "0.5")) , Integer.parseInt(SP.getString("StartLineLength", "0.111")),(HashMap<String,String>)SP.getStringSet("CourseOptions", null));  //defultStartLine: 200m
+
          buoys.addAll(raceCourse.convertMarks2Bouys());
 
         /*   //i don't get why is this part exist...
         if (raceCourse==null){
             raceCourse = new RaceCourse();
         }
-        if (raceCourse.getMarks()!=null){ //TODO : Check why being removed twice!
+        if (raceCourse.getMarks()!=null){
             for(Bouy buoy2remove: raceCourse.getBouyList()){
-                mapLayer.removeMark(buoy2remove.getUUID());
+                mapLayer.removeMark(buoy2remove.getUuid());
             }
         }
         if ((commManager!=null)&&(commManager.getAllBuoys()!=null)) {
             for (Buoy buoy2remove : commManager.getAllBuoys()) {
                 if (buoy2remove.getRaceCourseUUID() != null) {
-                    mapLayer.removeMark(buoy2remove.getUUID());
+                    mapLayer.removeMark(buoy2remove.getUuid());
                 }
             }
         }
 
         raceCourse = new RaceCourse(context,  signalBoatLoc, windDirection, distance2mark1 , startLineDistance, selectedCourseOptions );
-        removeAllRaceCourseMarks();//TODO : Check why being removed twice!
+        removeAllRaceCourseMarks();
         for (Buoy m: buoys) {
             addMark(m);
         }*/
@@ -263,7 +260,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     } else myBoat.setBuoyType(BuoyType.WorkerBoat);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
-                    myBoat.lastUpdate = new Date();
+                    myBoat.lastUpdate = new Date().getTime();
                 }
                 commManager.writeBoatObject(myBoat);
             }

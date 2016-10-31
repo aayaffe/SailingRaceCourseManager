@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
