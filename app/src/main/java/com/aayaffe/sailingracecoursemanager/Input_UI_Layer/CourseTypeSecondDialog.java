@@ -32,6 +32,8 @@ public class CourseTypeSecondDialog extends Dialog {
     private OnMyDialogResult mDialogResult;
     private CourseType courseType;
     private Button finishB;
+    private Map<String, String> selectedOptions = new HashMap<String, String>();  //map of the selected settings
+
 
 
     public CourseTypeSecondDialog(Context context, CourseType courseType) {
@@ -63,7 +65,6 @@ public class CourseTypeSecondDialog extends Dialog {
         finishB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, String> selectedOptions = new HashMap<String, String>();  //map of the selected settings
                 selectedOptions.put("type", courseType.getName());
                 for (int i = 0; i < ownLayout.getChildCount() - 1; i = i + 2) {
                     TextView tv = (TextView) ownLayout.getChildAt(i);
@@ -82,6 +83,7 @@ public class CourseTypeSecondDialog extends Dialog {
                     }
                 }
                 Log.w("check", selectedOptions.values().toString());
+
                 mDialogResult.finish(selectedOptions);
                 dismiss();
             }
@@ -99,7 +101,7 @@ public class CourseTypeSecondDialog extends Dialog {
             textView.setGravity(Gravity.CENTER);
             layout.addView(textView);
 
-            Spinner dropdown = new Spinner(context);
+            final Spinner dropdown = new Spinner(context);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, courseType.getLegsNames());
             dropdown.setAdapter(adapter);
             dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -110,6 +112,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     redrawOptionsViews(position);
+                    selectedOptions.put("Legs", courseType.getLegsNames()[position]);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parentView) {

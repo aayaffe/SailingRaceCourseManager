@@ -13,26 +13,36 @@
                 <Gatable>
                     <isGatable>true</isGatable>
                     <GateType>Satellite</GateType>
-                    <GateDirection>70</GateDirection>
-                    <GateDistance>0.027</GateDistance>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
                 </Gatable>
             </Mark>
             <Mark name="2">
                 <Direction>-39</Direction>
-                <Distance factor="true">0.746593177</Distance>
+                <Distance factor="true">0.95</Distance>
                 <Gatable>
                     <isGatable>false</isGatable>
                 </Gatable>
             </Mark>
             <Mark name="3" isGatable="true">
                 <Direction>-70</Direction>
-                <Distance factor="true">0.666667</Distance>
+                <Distance factor="true">0.5</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
                     <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
+                <Mark name="Finish Line" isGatable="always">
+                    <Direction>110</Direction>
+                    <Distance>0.1</Distance>
+                    <Gatable>
+                        <isGatable>true</isGatable>
+                        <GateType>FinishLine</GateType>
+                        <GateDirection>-90</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
             </Mark>
             <Mark name="4" isGatable="true">
                 <Direction>0</Direction>
@@ -53,16 +63,6 @@
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
-                <Mark name="Finish Line" isGatable="always">
-                    <Direction>110</Direction>
-                    <Distance>0.1</Distance>
-                    <Gatable>
-                        <isGatable>true</isGatable>
-                        <GateType>FinishLine</GateType>
-                        <GateDirection>-90</GateDirection>
-                        <GateDistance>0.027</GateDistance>
-                    </Gatable>
-                </Mark>
             </Mark>
         </Legs>
         <Legs name="Reach is 1/2 Beat">
@@ -85,26 +85,36 @@
                 <Gatable>
                     <isGatable>true</isGatable>
                     <GateType>Satellite</GateType>
-                    <GateDirection>70</GateDirection>
-                    <GateDistance>0.027</GateDistance>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
                 </Gatable>
             </Mark>
             <Mark name="2">
                 <Direction>-39</Direction>
-                <Distance factor="true">1</Distance>
+                <Distance factor="true">0.99</Distance>
                 <Gatable>
                     <isGatable>false</isGatable>
                 </Gatable>
             </Mark>
             <Mark name="3" isGatable="true">
                 <Direction>-110</Direction>
-                <Distance factor="true">0.666667</Distance>
+                <Distance factor="true">0.67</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
                     <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
+                <Mark name="Finish Line" isGatable="always">
+                    <Direction>110</Direction>
+                    <Distance>0.3</Distance>
+                    <Gatable>
+                        <isGatable>true</isGatable>
+                        <GateType>FinishLine</GateType>
+                        <GateDirection>-160</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
             </Mark>
             <Mark name="4" isGatable="true">
                 <Direction>0</Direction>
@@ -125,16 +135,6 @@
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
-                <Mark name="Finish Line" isGatable="always">
-                    <Direction>110</Direction>
-                    <Distance>0.1</Distance>
-                    <Gatable>
-                        <isGatable>true</isGatable>
-                        <GateType>FinishLine</GateType>
-                        <GateDirection>-90</GateDirection>
-                        <GateDistance>0.027</GateDistance>
-                    </Gatable>
-                </Mark>
             </Mark>
         </Legs>
     </Course>

@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Buoy {
     private String name;
     private AviLocation aviLocation;
-    public String color;
+    public String color = "Black";
     public Long lastUpdate;
     public long id;
     private UUID _uuid;
@@ -41,6 +41,28 @@ public class Buoy {
         this.aviLocation=loc;
         this.color=color;
         this.lastUpdate = new Date().getTime();
+    }
+    public Buoy(String name, AviLocation loc, BuoyType buoyType){
+        _uuid = UUID.randomUUID();
+        this.name=name;
+        this.aviLocation=loc;
+        this.buoyType=buoyType;
+        this.lastUpdate = new Date().getTime();
+
+        switch (buoyType){
+            case FinishLine:
+                this.color="Blue";
+                break;
+            case StartLine:
+                this.color="Orange";
+                break;
+            case Gate:
+                this.color="Yellow";
+                break;
+            case Buoy:
+                this.color="Red";
+                break;
+        }
     }
     public Buoy(String name, AviLocation loc, String color, BuoyType buoyType){
         _uuid = UUID.randomUUID();
@@ -111,7 +133,7 @@ public class Buoy {
 
 
     public int getResourceId() {
-        if(this.getBuoyType() ==BuoyType.FlagBuoy) {
+        if(this.getBuoyType() ==BuoyType.FlagBuoy||this.getBuoyType() ==BuoyType.FinishLine||this.getBuoyType() ==BuoyType.StartLine) {
             switch(this.color){
                 case "Red":
                     return R.mipmap.flag_buoy_red;
@@ -124,7 +146,7 @@ public class Buoy {
                     return R.mipmap.flag_buoy_orange;
             }
         }
-        else if(this.getBuoyType() ==BuoyType.TomatoBuoy) {
+        else if(this.getBuoyType() ==BuoyType.TomatoBuoy||this.getBuoyType() ==BuoyType.Buoy||this.getBuoyType() ==BuoyType.Gate) {
             switch(this.color) {
                 case "Red":
                     return R.mipmap.tomato_buoy_red;
@@ -146,11 +168,13 @@ public class Buoy {
                 case "Yellow":
                     return R.mipmap.triangle_buoy_yellow;
                 case "Orange":
-                default:
                     return R.mipmap.triangle_buoy_orange;
+                default:
+                    return R.mipmap.triangle_buoy;
+
             }
         }
-        else
+            else
             return R.mipmap.tomato_buoy_black_empty;
     }
 }

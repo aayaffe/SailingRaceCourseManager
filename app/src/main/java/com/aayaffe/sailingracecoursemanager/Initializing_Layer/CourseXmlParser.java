@@ -71,6 +71,7 @@ public class CourseXmlParser {
         int event;
         String text = null;
         Mark referenceMark = new Mark("Reference Point"); //reference point is represented as a mark, who is the father of all marks.
+        referenceMark.setGateType("ReferencePoint");
         ArrayList<Mark> fathers = new ArrayList<Mark>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
         Mark currentMark = new Mark("nullMark/debug");  //if a mark named "nullMark" appears - it's a bug!
         boolean preReceiveMode = false;
@@ -83,19 +84,22 @@ public class CourseXmlParser {
             String attributeHolder = "";
             String name = "";
             while (event != XmlPullParser.END_DOCUMENT) {
-                if (xmlPullParser.getName() != null) name = xmlPullParser.getName();
+                if (xmlPullParser.getName() != null) name = xmlPullParser.getName();  //name is the xml tag name
                 switch (event) {
                     case XmlPullParser.START_DOCUMENT:
                         fathers.add(referenceMark);  //the reference point is the father of all marks, so is the first to be used here.
                         break;
                     case XmlPullParser.START_TAG:
                         if (name.equals("Course") && safeAttributeValue("type").equals(selectedOptions.get("type"))) {
+                            Log.i("course xml parser", "reached course type:"+safeAttributeValue("type"));
                             preReceiveMode = true;
                         } else if (name.equals("Legs") && preReceiveMode && safeAttributeValue("name").equals(selectedOptions.get("Legs"))) {
+                            Log.i("course xml parser", "reached leg type:"+safeAttributeValue("name"));
                             receiveMode=true;
                         } else if (name.equals("Mark")&&receiveMode) {
                             currentMark = new Mark(safeAttributeValue("name")); //new mark
                             fathers.add(currentMark);  //son of his father
+                            Log.i("course xml parser", "son no."+fathers.size()+" added, named "+currentMark.getName());
                         } else if(receiveMode&&name.equals("Distance")&&receiveMode){
                             currentMark.setDistaneFactor(safeAttributeValue("factor"));
                         }
@@ -120,20 +124,22 @@ public class CourseXmlParser {
                         else if (name.equals("GateDistance")) {
                             currentMark.setGateDistance(valueHolder);
                         }
-                        else if (name.equals("Mark")) {
-                            fathers.get(fathers.size() - 2).addReferedMark(currentMark);  //attach a son to his father
+                        else if (name.equals("Mark")&&receiveMode) {
+                            fathers.get(fathers.size() - 2).addReferedMark(fathers.get(fathers.size() - 1));  //attach a son to his father
+                            Log.i("course xml parser", "father:"+fathers.get(fathers.size() - 2).getName());
+                            Log.i("course xml parser", "last son before: "+currentMark.getName());
+                            Log.i("course xml parser", "last son before: "+fathers.get(fathers.size() - 1).getName());
                             fathers.remove(fathers.size() - 1);  //son have no more children, so no longer necessary here
+                            Log.i("course xml parser", "last son after:"+fathers.get(fathers.size() - 1).getName());
                         }
-                        else if(name.equals("Legs") && receiveMode) {
+                        else if(name.equals("Legs")&&receiveMode) {
+                            Log.w("course xml parser", "leg done");
                             preReceiveMode = false;
                             receiveMode = false;
                         }
                         break;
                 }
-                if(name.equals("Legs") && receiveMode) {
-                    preReceiveMode = false;
-                    receiveMode = false;
-                    return referenceMark;
+                if(name.equals("Legs")) {
                 }
                 event = xmlPullParser.next();
             }

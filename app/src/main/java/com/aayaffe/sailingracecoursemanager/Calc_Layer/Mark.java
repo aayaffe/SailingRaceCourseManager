@@ -139,28 +139,31 @@ public class Mark {
         AviLocation location =new AviLocation(referencePoint, getDirection()+windDir, getAbsDistance(multiplication));
         switch (gateType){
             case "Buoy":  //adds a single buoy
-                buoys.add(new Buoy(this.getName(), location));
+                buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
                 Log.i("Mark class parsing", "buoy added, gateType Buoy, name:"+this.getName());
                 break;
             case "Gate":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.Gate ));
+                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.Gate ));
                 Log.i("Mark class parsing", "buoys added, gateType Gate, name:"+this.getName());
                 break;
             case "FinishLine":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.FinishLine ));
+                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.FinishLine ));
                 Log.i("Mark class parsing", "buoys added, gateType FinishLine, name:"+this.getName());
                 break;
             case "StartLine":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.StartLine ));
+                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.StartLine ));
                 Log.i("Mark class parsing", "buoys added, gateType Buoy, name:"+this.getName());
                 break;
             case "Satellite":
-                buoys.add(new Buoy(this.getName(), location));
-                buoys.add(new Buoy(this.getName()+"a", new AviLocation(location, windDir+getGateDirection(), getGateDistance()) ));
+                buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
+                buoys.add(new Buoy(this.getName()+"a", new AviLocation(location, windDir+getGateDirection(), getGateDistance()), BuoyType.TriangleBuoy ));
                 Log.i("Mark class parsing", "buoys added, gateType StartLine, name:"+this.getName());
+                break;
+            case "ReferencePoint":
+                // buoys.add(new Buoy(this.getName(), location, BuoyType.ReferencePoint)); //TODO: add reference point icon
                 break;
             default:
                 buoys.add(new Buoy(this.getName(), location));
