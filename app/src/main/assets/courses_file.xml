@@ -12,7 +12,7 @@
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Satellite"</GateType>
+                    <GateType>Satellite</GateType>
                     <GateDirection>70</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -29,7 +29,7 @@
                 <Distance factor="true">0.666667</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Gate"</GateType>
+                    <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -39,7 +39,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Gate"</GateType>
+                    <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -49,7 +49,7 @@
                 <Distance>0.05</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"StartLine"</GateType>
+                    <GateType>StartLine</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
@@ -58,7 +58,7 @@
                     <Distance>0.1</Distance>
                     <Gatable>
                         <isGatable>true</isGatable>
-                        <GateType>"FinishLine"</GateType>
+                        <GateType>FinishLine</GateType>
                         <GateDirection>-90</GateDirection>
                         <GateDistance>0.027</GateDistance>
                     </Gatable>
@@ -84,14 +84,14 @@
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Satellite"</GateType>
+                    <GateType>Satellite</GateType>
                     <GateDirection>70</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
             </Mark>
             <Mark name="2">
                 <Direction>-39</Direction>
-                <Distance factor="true">0.746593177</Distance>
+                <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>false</isGatable>
                 </Gatable>
@@ -101,7 +101,7 @@
                 <Distance factor="true">0.666667</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Gate"</GateType>
+                    <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -111,7 +111,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"Gate"</GateType>
+                    <GateType>Gate</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -121,7 +121,7 @@
                 <Distance>0.05</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>"StartLine"</GateType>
+                    <GateType>StartLine</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
@@ -130,7 +130,7 @@
                     <Distance>0.1</Distance>
                     <Gatable>
                         <isGatable>true</isGatable>
-                        <GateType>"FinishLine"</GateType>
+                        <GateType>FinishLine</GateType>
                         <GateDirection>-90</GateDirection>
                         <GateDistance>0.027</GateDistance>
                     </Gatable>

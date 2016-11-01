@@ -99,6 +99,10 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener,OnMapRead
     public void setCenter(LatLng ll){
         mapView.animateCamera(CameraUpdateFactory.newLatLng(ll));
     }
+    public void addBuoy(Buoy buoy){
+        int resourceID = buoy.getResourceId();
+        mapView.addMarker(new MarkerOptions().position(buoy.getLatLng()).icon(BitmapDescriptorFactory.fromResource(resourceID)).snippet(buoy.getName()));
+    }
     public Marker addMark(Buoy ao,String caption, int resourceID){
         Marker m;
         try {

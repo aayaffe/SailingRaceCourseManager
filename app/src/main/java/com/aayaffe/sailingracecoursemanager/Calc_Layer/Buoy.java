@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.Calc_Layer;
 
 import android.location.Location;
 
+import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.model.LatLng;
@@ -109,5 +110,47 @@ public class Buoy {
     }
 
 
-
+    public int getResourceId() {
+        if(this.getBuoyType() ==BuoyType.FlagBuoy) {
+            switch(this.color){
+                case "Red":
+                    return R.mipmap.flag_buoy_red;
+                case "Blue":
+                    return R.mipmap.flag_buoy_blue;
+                case "Yellow":
+                    return R.mipmap.flag_buoy_yellow;
+                case "Orange":
+                default:
+                    return R.mipmap.flag_buoy_orange;
+            }
+        }
+        else if(this.getBuoyType() ==BuoyType.TomatoBuoy) {
+            switch(this.color) {
+                case "Red":
+                    return R.mipmap.tomato_buoy_red;
+                case "Blue":
+                    return R.mipmap.tomato_buoy_blue;
+                case "Yellow":
+                    return R.mipmap.tomato_buoy_yellow;
+                case "Orange":
+                default:
+                    return R.mipmap.tomato_buoy_orange;
+            }
+        }
+        else if(this.getBuoyType() ==BuoyType.TriangleBuoy) {
+            switch(this.color) {
+                case "Red":
+                    return R.mipmap.triangle_buoy_red;
+                case "Blue":
+                    return R.mipmap.triangle_buoy_blue;
+                case "Yellow":
+                    return R.mipmap.triangle_buoy_yellow;
+                case "Orange":
+                default:
+                    return R.mipmap.triangle_buoy_orange;
+            }
+        }
+        else
+            return R.mipmap.tomato_buoy_black_empty;
+    }
 }

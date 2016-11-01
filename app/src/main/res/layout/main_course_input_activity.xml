@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/distance_input_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Distance"/>
+            <Button
+                android:id="@+id/winddir_input_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Wind Direction"/>
+
+            <Button
+                android:id="@+id/coursetype_input_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course Type"/>
+            <Button
+                android:id="@+id/apply_race_course_input_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply"/>
+
+</LinearLayout>

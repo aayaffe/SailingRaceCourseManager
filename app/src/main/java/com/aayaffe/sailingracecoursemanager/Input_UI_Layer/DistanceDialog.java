@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -63,6 +64,7 @@ public class DistanceDialog extends Dialog {
         TextView titleV=(TextView) findViewById(R.id.distance_dialog_title);   //set dialog title
         titleV.setText("Choose Distance to Mark 1");
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        titleV.setGravity(Gravity.CENTER);
 
         tabHost =(TabHost)findViewById(R.id.tabhost);
         tabHost.setup();

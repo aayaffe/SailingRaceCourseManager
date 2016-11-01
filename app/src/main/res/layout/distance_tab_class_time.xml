@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose Class"
+        android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
 
@@ -18,6 +19,7 @@
         android:id="@+id/distance_class_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:textAlignment="center" />
 
 
@@ -26,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wind Strength"
+        android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
 
@@ -41,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Target Time"
+        android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
 

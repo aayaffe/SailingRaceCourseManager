@@ -19,12 +19,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
-import com.aayaffe.sailingracecoursemanager.AppPreferences;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
@@ -72,7 +72,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         SP.registerOnSharedPreferenceChangeListener(unc);
 
         commManager = new Firebase(this);
-        commManager.login(null, null,null/*SP.getString("username", "Manager1"), "Aa123456z", "1"*/);
+        commManager.login(/*null, null,null*/SP.getString("username", "Manager1"), "Aa123456z", "1");
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, SP);
@@ -175,7 +175,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return true;
 
             case R.id.action_add_race_course:
-                AddRaceCourse();
+                addRaceCourse();
                 firstBoatLoad = true;
                 return true;
             case R.id.action_exit:
@@ -192,7 +192,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private void AddRaceCourse() {
+    private void addRaceCourse() {
         /**
          * args:
          * distance to mark 1
@@ -203,33 +203,28 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
          *
          * all GoogleMapsActivity variables
          */
-        mapLayer.removeAllMarks();
-        raceCourse = new RaceCourse(this,  myBoat.getAviLocation() , Integer.parseInt(SP.getString("windDir", "0")), Float.parseFloat(SP.getString("Dist2m1", "0.5")) , Integer.parseInt(SP.getString("StartLineLength", "0.111")),(HashMap<String,String>)SP.getStringSet("CourseOptions", null));  //defultStartLine: 200m
-
-         buoys.addAll(raceCourse.convertMarks2Bouys());
-
-        /*   //i don't get why is this part exist...
-        if (raceCourse==null){
-            raceCourse = new RaceCourse();
-        }
-        if (raceCourse.getMarks()!=null){
-            for(Bouy buoy2remove: raceCourse.getBouyList()){
-                mapLayer.removeMark(buoy2remove.getUuid());
-            }
-        }
-        if ((commManager!=null)&&(commManager.getAllBuoys()!=null)) {
-            for (Buoy buoy2remove : commManager.getAllBuoys()) {
-                if (buoy2remove.getRaceCourseUUID() != null) {
-                    mapLayer.removeMark(buoy2remove.getUuid());
-                }
-            }
-        }
-
-        raceCourse = new RaceCourse(context,  signalBoatLoc, windDirection, distance2mark1 , startLineDistance, selectedCourseOptions );
         removeAllRaceCourseMarks();
-        for (Buoy m: buoys) {
+        if(mapLayer.mapView!=null)mapLayer.removeAllMarks();
+
+
+        raceCourse = new RaceCourse();
+        if(mapLayer.mapView!=null)buoys.addAll(raceCourse.getBuoyList());
+        else Log.w("GoogleMapsActivity","null map");
+
+        if(mapLayer.mapView!=null)
+            for (Buoy m: buoys) {
             addMark(m);
-        }*/
+        }
+        else Log.w("GoogleMapsActivity","null map");
+
+        addBuoys();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addRaceCourse();
+        Log.w("GoogleMapsActivity","onResume");
     }
 
     private void removeAllRaceCourseMarks() {  //becomes unnecessary
@@ -290,6 +285,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (users.getCurrentUser() == null|| users.getCurrentUser().Uid==null||users.getCurrentUser().Uid.isEmpty())
             return false;
         return commManager.getEvent(currentEventName).getEventManager().Uid.equals(users.getCurrentUser().Uid);
+    }
+
+    public void addBuoys(){
+        for(Buoy buoy: buoys){
+            mapLayer.addBuoy(buoy);
+        }
     }
 
     public void redrawLayers() {
@@ -430,14 +431,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void SettingsMenuItemOnClick() {
         Log.d(TAG, "FAB Setting Clicked");
-        Intent i = new Intent(getApplicationContext(), AppPreferences.class);
-        if (isCurrentEventManager(users.getCurrentUser().Uid)){
-            i.putExtra("MANAGER", true);
-        }
+        Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
+        //if (isCurrentEventManager(users.getCurrentUser().Uid)){  //TODO:Test: delete all // annotations
+        //    i.putExtra("MANAGER", true);
+        /*}
         else{
             i.putExtra("MANAGER", false);
         }
-
+        */
         startActivity(i);
     }
 
@@ -493,5 +494,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG,"OnStop");
 //        finish();
     }
+
+
 
 }

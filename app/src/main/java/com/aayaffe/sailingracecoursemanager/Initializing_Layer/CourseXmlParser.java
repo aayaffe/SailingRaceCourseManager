@@ -93,10 +93,10 @@ public class CourseXmlParser {
                             preReceiveMode = true;
                         } else if (name.equals("Legs") && preReceiveMode && safeAttributeValue("name").equals(selectedOptions.get("Legs"))) {
                             receiveMode=true;
-                        } else if (name.equals("Mark")) {
+                        } else if (name.equals("Mark")&&receiveMode) {
                             currentMark = new Mark(safeAttributeValue("name")); //new mark
                             fathers.add(currentMark);  //son of his father
-                        } else if(receiveMode&&name.equals("Distance")){
+                        } else if(receiveMode&&name.equals("Distance")&&receiveMode){
                             currentMark.setDistaneFactor(safeAttributeValue("factor"));
                         }
                         break;

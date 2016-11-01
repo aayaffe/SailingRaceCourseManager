@@ -137,28 +137,34 @@ public class Mark {
          */
         List<Buoy> buoys = new ArrayList<>();
         AviLocation location =new AviLocation(referencePoint, getDirection()+windDir, getAbsDistance(multiplication));
-        switch (this.gateType){
+        switch (gateType){
             case "Buoy":  //adds a single buoy
                 buoys.add(new Buoy(this.getName(), location));
+                Log.i("Mark class parsing", "buoy added, gateType Buoy, name:"+this.getName());
                 break;
             case "Gate":
                 buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
                 buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                Log.i("Mark class parsing", "buoys added, gateType Gate, name:"+this.getName());
                 break;
             case "FinishLine":
                 buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
                 buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                Log.i("Mark class parsing", "buoys added, gateType FinishLine, name:"+this.getName());
                 break;
             case "StartLine":
                 buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2) ));
                 buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2) ));
+                Log.i("Mark class parsing", "buoys added, gateType Buoy, name:"+this.getName());
                 break;
             case "Satellite":
                 buoys.add(new Buoy(this.getName(), location));
                 buoys.add(new Buoy(this.getName()+"a", new AviLocation(location, windDir+getGateDirection(), getGateDistance()) ));
+                Log.i("Mark class parsing", "buoys added, gateType StartLine, name:"+this.getName());
                 break;
             default:
-                Log.e("Mark class parsing", "gateType not recognized. no buoy added");
+                buoys.add(new Buoy(this.getName(), location));
+                Log.e("Mark class parsing", "gateType not recognized. default buoy added. failed at" + gateType);
         }
         //parseChildren
         for(int i=0; i<this.getReferedMarks().size(); i++ ){

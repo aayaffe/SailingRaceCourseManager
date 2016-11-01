@@ -3,6 +3,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -48,6 +49,8 @@ public class CourseTypeSecondDialog extends Dialog {
         TextView titleV=(TextView) findViewById(R.id.second_dialog_title);   //set dialog title
         titleV.setText(courseType.getName() + " Course Options");
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        titleV.setGravity(Gravity.CENTER);
+
 
         ownLayout = (LinearLayout) findViewById(R.id.course_type_second_dialog);    //choose the layout to add the views
         addLegsSpinner((LinearLayout) findViewById(R.id.course_type_second_spinner_holder));
@@ -93,12 +96,15 @@ public class CourseTypeSecondDialog extends Dialog {
             textView.setText("Legs");
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             textView.setTextSize(25);
+            textView.setGravity(Gravity.CENTER);
             layout.addView(textView);
 
             Spinner dropdown = new Spinner(context);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, courseType.getLegsNames());
             dropdown.setAdapter(adapter);
             dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textView.setGravity(Gravity.CENTER);
+
             layout.addView(dropdown);
             dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -122,6 +128,8 @@ public class CourseTypeSecondDialog extends Dialog {
                 textView.setText(options.get(c)[0]);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 textView.setTextSize(25);
+                textView.setGravity(Gravity.CENTER);
+
                 ownLayout.addView(textView);
                 View setterBox = null;
                 switch (options.get(c)[1]) {   //set an input view to get the value from the user
@@ -131,6 +139,8 @@ public class CourseTypeSecondDialog extends Dialog {
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, items);
                         dropdown.setAdapter(adapter);
                         dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        textView.setGravity(Gravity.CENTER);
+
                         setterBox=dropdown;
                         break;
                     case "toggle":
@@ -150,6 +160,8 @@ public class CourseTypeSecondDialog extends Dialog {
             textView.setText("No Special Options");
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             textView.setTextSize(25);
+            textView.setGravity(Gravity.CENTER);
+
             ownLayout.addView(textView);
         }
         ownLayout.addView(finishB);
