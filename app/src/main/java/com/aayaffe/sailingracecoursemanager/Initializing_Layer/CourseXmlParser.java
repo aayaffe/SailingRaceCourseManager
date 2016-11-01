@@ -3,6 +3,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Mark;
+import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -124,16 +125,15 @@ public class CourseXmlParser {
                         else if (name.equals("GateDistance")) {
                             currentMark.setGateDistance(valueHolder);
                         }
+                        else if (name.equals("isGatable")) {
+                            currentMark.setIsGatable(valueHolder.equals("always")||safeIsGatable(selectedOptions, currentMark.getName()));
+                        }
                         else if (name.equals("Mark")&&receiveMode) {
                             fathers.get(fathers.size() - 2).addReferedMark(fathers.get(fathers.size() - 1));  //attach a son to his father
-                            Log.i("course xml parser", "father:"+fathers.get(fathers.size() - 2).getName());
-                            Log.i("course xml parser", "last son before: "+currentMark.getName());
-                            Log.i("course xml parser", "last son before: "+fathers.get(fathers.size() - 1).getName());
                             fathers.remove(fathers.size() - 1);  //son have no more children, so no longer necessary here
-                            Log.i("course xml parser", "last son after:"+fathers.get(fathers.size() - 1).getName());
                         }
                         else if(name.equals("Legs")&&receiveMode) {
-                            Log.w("course xml parser", "leg done");
+                            Log.i("course xml parser", "leg done");
                             preReceiveMode = false;
                             receiveMode = false;
                         }
@@ -146,6 +146,7 @@ public class CourseXmlParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d("course xml parser", "returns reference point");
         return referenceMark;
     }
 
@@ -235,5 +236,12 @@ public class CourseXmlParser {
         if (value != null) return value;
         Log.w("course xml parser", "null text found");
         return "_";  // TODO: the '_' char is just for debug, remove before use.
+    }
+
+    private boolean safeIsGatable(Map<String , String> selectedOptions, String name){
+        boolean b1=false, b2=false;
+        if(selectedOptions.containsKey(name+" Gate")) b1=selectedOptions.get(name+" Gate").equals("true");
+        if(selectedOptions.containsKey(name+" satellite")) b2=selectedOptions.get(name+" satellite").equals("true");
+        return b1||b2;
     }
 }

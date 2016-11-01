@@ -37,7 +37,7 @@
                     <Direction>110</Direction>
                     <Distance>0.1</Distance>
                     <Gatable>
-                        <isGatable>true</isGatable>
+                        <isGatable>always</isGatable>
                         <GateType>FinishLine</GateType>
                         <GateDirection>-90</GateDirection>
                         <GateDistance>0.027</GateDistance>
@@ -58,7 +58,7 @@
                 <Direction>180</Direction>
                 <Distance>0.05</Distance>
                 <Gatable>
-                    <isGatable>true</isGatable>
+                    <isGatable>always</isGatable>
                     <GateType>StartLine</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
@@ -109,7 +109,7 @@
                     <Direction>110</Direction>
                     <Distance>0.3</Distance>
                     <Gatable>
-                        <isGatable>true</isGatable>
+                        <isGatable>always</isGatable>
                         <GateType>FinishLine</GateType>
                         <GateDirection>-160</GateDirection>
                         <GateDistance>0.027</GateDistance>
@@ -130,7 +130,7 @@
                 <Direction>180</Direction>
                 <Distance>0.05</Distance>
                 <Gatable>
-                    <isGatable>true</isGatable>
+                    <isGatable>always</isGatable>
                     <GateType>StartLine</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>

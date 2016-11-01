@@ -24,7 +24,7 @@ public interface ICommManager {
 
     long getNewBuoyId();
 
-    void removeBueyObject(String title);
+    void removeBuoyObject(String title);
 
     User findUser(String uid);
 

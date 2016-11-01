@@ -1,4 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -136,41 +137,47 @@ public class Mark {
          * Each Mark is a tree root to marks that uses it's location, so this function must act recursively
          */
         List<Buoy> buoys = new ArrayList<>();
-        AviLocation location =new AviLocation(referencePoint, getDirection()+windDir, getAbsDistance(multiplication));
-        switch (gateType){
-            case "Buoy":  //adds a single buoy
-                buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
-                Log.i("Mark class parsing", "buoy added, gateType Buoy, name:"+this.getName());
-                break;
-            case "Gate":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.Gate ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.Gate ));
-                Log.i("Mark class parsing", "buoys added, gateType Gate, name:"+this.getName());
-                break;
-            case "FinishLine":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.FinishLine ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.FinishLine ));
-                Log.i("Mark class parsing", "buoys added, gateType FinishLine, name:"+this.getName());
-                break;
-            case "StartLine":
-                buoys.add(new Buoy(this.getName()+"S", new AviLocation(location, windDir-getGateDirection(), getGateDistance()/2), BuoyType.StartLine ));
-                buoys.add(new Buoy(this.getName()+"P", new AviLocation(location, windDir+getGateDirection(), getGateDistance()/2), BuoyType.StartLine ));
-                Log.i("Mark class parsing", "buoys added, gateType Buoy, name:"+this.getName());
-                break;
-            case "Satellite":
-                buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
-                buoys.add(new Buoy(this.getName()+"a", new AviLocation(location, windDir+getGateDirection(), getGateDistance()), BuoyType.TriangleBuoy ));
-                Log.i("Mark class parsing", "buoys added, gateType StartLine, name:"+this.getName());
-                break;
-            case "ReferencePoint":
-                // buoys.add(new Buoy(this.getName(), location, BuoyType.ReferencePoint)); //TODO: add reference point icon
-                break;
-            default:
-                buoys.add(new Buoy(this.getName(), location));
-                Log.e("Mark class parsing", "gateType not recognized. default buoy added. failed at" + gateType);
+        AviLocation location = new AviLocation(referencePoint, getDirection() + windDir, getAbsDistance(multiplication));
+        if (isGatable || gateType.equals("ReferencePoint")) {
+            switch (gateType) {
+                case "Buoy":  //adds a single buoy
+                    buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
+                    Log.i("Mark class parsing", "buoy added, gateType Buoy, name:" + this.getName());
+                    break;
+                case "Gate":
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.Gate));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.Gate));
+                    Log.i("Mark class parsing", "buoys added, gateType Gate, name:" + this.getName());
+                    break;
+                case "FinishLine":
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.FinishLine));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.FinishLine));
+                    Log.i("Mark class parsing", "buoys added, gateType FinishLine, name:" + this.getName());
+                    break;
+                case "StartLine":
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.StartLine));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.StartLine));
+                    Log.i("Mark class parsing", "buoys added, gateType Buoy, name:" + this.getName());
+                    break;
+                case "Satellite":
+                    buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
+                    buoys.add(new Buoy(this.getName() + "a", new AviLocation(location, windDir + getGateDirection(), getGateDistance()), BuoyType.TriangleBuoy));
+                    Log.i("Mark class parsing", "buoys added, gateType StartLine, name:" + this.getName());
+                    break;
+                case "ReferencePoint":
+                    // buoys.add(new Buoy(this.getName(), location, BuoyType.ReferencePoint)); //TODO: add reference point icon
+                    break;
+                default:
+                    buoys.add(new Buoy(this.getName(), location));
+                    Log.e("Mark class parsing", "gateType not recognized. default buoy added. failed at" + gateType);
+            }
+        } else {
+            buoys.add(new Buoy(this.getName(), location, BuoyType.Buoy));
+            Log.i("Mark class parsing", "buoy added (non-gatable), gateType Buoy, name:" + this.getName());
         }
+
         //parseChildren
-        for(int i=0; i<this.getReferedMarks().size(); i++ ){
+        for (int i = 0; i < this.getReferedMarks().size(); i++) {
             Mark child = this.getReferedMarks().get(i);
             buoys.addAll(child.parseBuoys(location, multiplication, windDir));
         }

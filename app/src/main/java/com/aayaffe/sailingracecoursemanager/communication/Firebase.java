@@ -157,6 +157,7 @@ public class Firebase implements ICommManager {
     public int writeBoatObject(Buoy o) {
         if (o == null || o.getName() == null || o.getName().isEmpty() || currentEventName == null) return -1;
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.getName()).setValue(o);
+        Log.d("Firebase class","writeBoatObject has written boat:"+ o.toString());
         return 0;
     }
 
@@ -165,6 +166,7 @@ public class Firebase implements ICommManager {
         if (o == null || o.getName() == null || o.getName().isEmpty()|| currentEventName == null) return -1;
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.getName()).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
+        Log.d("Firebase class","writeBuoyObject has written buoy:"+ o.toString());
         return 0;
     }
 
@@ -224,7 +226,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public void removeBueyObject(String title) {
+    public void removeBuoyObject(String title) {
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(title).removeValue();
     }
 

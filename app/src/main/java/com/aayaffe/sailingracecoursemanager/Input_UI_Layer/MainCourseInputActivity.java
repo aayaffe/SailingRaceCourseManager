@@ -103,7 +103,6 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 raceCourse = new RaceCourse(context,  myBoat.getAviLocation() , 315 ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
-                raceCourse.convertMarks2Buoys();
                 finish();
             }
         });

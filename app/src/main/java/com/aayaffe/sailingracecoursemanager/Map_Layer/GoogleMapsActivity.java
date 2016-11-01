@@ -136,10 +136,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         //mTracker = application.getDefaultTracker();
-
-        //boatTypes = ((Firebase)commManager).getAllBoatTypes();
-
-
     }
 
 
@@ -211,12 +207,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if(mapLayer.mapView!=null)buoys.addAll(raceCourse.getBuoyList());
         else Log.w("GoogleMapsActivity","null map");
 
-        if(mapLayer.mapView!=null)
-            for (Buoy m: buoys) {
-            addMark(m);
-        }
-        else Log.w("GoogleMapsActivity","null map");
-
         addBuoys();
     }
 
@@ -266,7 +256,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             {
                 findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
             }
-            redrawLayers();
+            drawMapComponents();
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "1")) * 1000));
         }
     };
@@ -289,81 +279,31 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void addBuoys(){
         for(Buoy buoy: buoys){
-            mapLayer.addBuoy(buoy);
+            mapLayer.addBuoy(buoy,getDirDistTXT(iGeo.getLoc(),buoy.getLoc()));
+            commManager.writeBuoyObject(buoy);
         }
     }
 
-    public void redrawLayers() {
+    public void drawMapComponents(){
         Location myLocation = iGeo.getLoc();
         buoys = commManager.getAllBoats();
         for (Buoy o: buoys) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
-                int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
+            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
+                Log.d("GoogleMapsActivity", "drawMapComponents() first if is true");
+                int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
                 mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
             }
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/))) {
-                int id = getIconId(users.getCurrentUser().DisplayName/*SP.getString("username","Manager1")*/,o);
+            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
+                Log.d("GoogleMapsActivity", "drawMapComponents() second if is true");
+                int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
                 mapLayer.addMark(o, null, id);
             }
         }
         List<Buoy> commBuoyList = commManager.getAllBuoys();
+        Log.d("GoogleMapsActivity", "commBuoyList size: "+commBuoyList.size());
         for (Buoy o : commBuoyList){
-            //TODO: Delete old buoys first
-            if(o.getBuoyType() ==BuoyType.FlagBuoy) {
-                switch(o.color){
-                    case "Red":
-                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_red);
-                        break;
-                    case "Blue":
-                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_blue);
-                        break;
-                    case "Yellow":
-                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_yellow);
-                        break;
-                    case "Orange":
-                    default:
-                        mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.mipmap.flag_buoy_orange);
-                        break;
-                }
-            }
-            else if(o.getBuoyType() ==BuoyType.TomatoBuoy) {
-                switch(o.color) {
-                    case "Red":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_red);
-                        break;
-                    case "Blue":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_blue);
-                        break;
-                    case "Yellow":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_yellow);
-                        break;
-                    case "Orange":
-                    default:
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.tomato_buoy_orange);
-                        break;
-                }
-            }
-            else if(o.getBuoyType() ==BuoyType.TriangleBuoy) {
-                switch(o.color) {
-                    case "Red":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_red);
-                        break;
-                    case "Blue":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_blue);
-                        break;
-                    case "Yellow":
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_yellow);
-                        break;
-                    case "Orange":
-                    default:
-                        mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), R.mipmap.triangle_buoy_orange);
-                        break;
-                }
-            }
-            else
-                mapLayer.addMark(o,getDirDistTXT(myLocation, o.getLoc()),R.drawable.buoyblack);
-
+            mapLayer.addBuoy(o,getDirDistTXT(myLocation, o.getLoc()));
         }
         if ((buoys.size()>0)&&(firstBoatLoad)&&(mapLayer.mapView!=null))
         {
@@ -408,8 +348,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         int bearing;
         String units;
         try {
-            distance = src.distanceTo(dst) < 5000 ? (int) src.distanceTo(dst) : ((int) (src.distanceTo(dst) / 1609.34));
-            units = src.distanceTo(dst)<5000?"m":"NM";
+            distance = src.distanceTo(dst) < 500 ? (int) src.distanceTo(dst) : ((int) (src.distanceTo(dst) / 1609.34));
+            units = src.distanceTo(dst)<500?"m":"NM";
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst)+360;
         }catch (NullPointerException e)
         {
@@ -419,6 +359,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     @Override
     protected void onStart() {
+        Log.d(TAG,"OnStart");
         super.onStart();
         firstBoatLoad = true;
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));

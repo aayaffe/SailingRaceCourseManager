@@ -1,9 +1,11 @@
 package com.aayaffe.sailingracecoursemanager.Calc_Layer;
 import android.content.Context;
+import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class RaceCourse {
     private static AviLocation signalBoatLoc;
     private static float startLineDist;
     private static Map<String, String> selectedOptions;
-    private static List<Buoy> bouyList;
+    private static List<Buoy> bouyList = new ArrayList<Buoy>();
     public static CourseXmlParser xmlParserC;
     Context context;
 
@@ -40,6 +42,7 @@ public class RaceCourse {
         this.selectedOptions=selectedCourseOptions;
         xmlParserC = new CourseXmlParser(context, "courses_file.xml");
         convertMarks2Buoys();
+        Log.d("RaceCourse class note", "constructor done");
     }
 
 
