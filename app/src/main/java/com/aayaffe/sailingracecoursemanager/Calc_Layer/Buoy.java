@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
 
 import java.util.Date;
-import java.util.Scanner;
 import java.util.UUID;
 
 /**
@@ -34,14 +33,15 @@ public class Buoy {
         this.name=name;
         this.aviLocation=loc;
         this.lastUpdate = new Date().getTime();
+        this.buoyType = BuoyType.Other;
     }
-    public Buoy(String name, AviLocation loc, String color){
-        _uuid = UUID.randomUUID();
-        this.name=name;
-        this.aviLocation=loc;
-        this.color=color;
-        this.lastUpdate = new Date().getTime();
-    }
+//    public Buoy(String name, AviLocation loc, String color){
+//        _uuid = UUID.randomUUID();
+//        this.name=name;
+//        this.aviLocation=loc;
+//        this.color=color;
+//        this.lastUpdate = new Date().getTime();
+//    }
     public Buoy(String name, AviLocation loc, BuoyType buoyType){
         _uuid = UUID.randomUUID();
         this.name=name;
@@ -84,13 +84,20 @@ public class Buoy {
         return aviLocation;
     }
 
-
-    public void setBuoyType(BuoyType buoyType) {
+    @Exclude
+    public void setEnumBuoyType(BuoyType buoyType) {
         this.buoyType = buoyType;
     }
-
-    public BuoyType getBuoyType() {
+    @Exclude
+    public BuoyType getEnumBuoyType() {
         return buoyType;
+    }
+    public String getType() {
+        return buoyType.toString();
+    }
+
+    public void setType(String type) {
+        this.buoyType = BuoyType.valueOf(type);
     }
     @Exclude
     public UUID getRaceCourseUUID() {
@@ -121,9 +128,11 @@ public class Buoy {
         this.lastUpdate = lastUpdate.getTime();
     }
 
+    @Exclude
     public void setLoc(Location loc) {
         this.aviLocation = GeoUtils.toAviLocation(loc);
     }
+    @Exclude
     public Location getLoc() {
         return GeoUtils.toLocation(aviLocation);
     }
@@ -133,7 +142,7 @@ public class Buoy {
 
 
     public int getResourceId() {
-        if(this.getBuoyType() ==BuoyType.FlagBuoy||this.getBuoyType() ==BuoyType.FinishLine||this.getBuoyType() ==BuoyType.StartLine) {
+        if(this.getEnumBuoyType() ==BuoyType.FlagBuoy||this.getEnumBuoyType() ==BuoyType.FinishLine||this.getEnumBuoyType() ==BuoyType.StartLine) {
             switch(this.color){
                 case "Red":
                     return R.mipmap.flag_buoy_red;
@@ -146,7 +155,7 @@ public class Buoy {
                     return R.mipmap.flag_buoy_orange;
             }
         }
-        else if(this.getBuoyType() ==BuoyType.TomatoBuoy||this.getBuoyType() ==BuoyType.Buoy||this.getBuoyType() ==BuoyType.Gate) {
+        else if(this.getEnumBuoyType() ==BuoyType.TomatoBuoy||this.getEnumBuoyType() ==BuoyType.Buoy||this.getEnumBuoyType() ==BuoyType.Gate) {
             switch(this.color) {
                 case "Red":
                     return R.mipmap.tomato_buoy_red;
@@ -159,7 +168,7 @@ public class Buoy {
                     return R.mipmap.tomato_buoy_orange;
             }
         }
-        else if(this.getBuoyType() ==BuoyType.TriangleBuoy) {
+        else if(this.getEnumBuoyType() ==BuoyType.TriangleBuoy) {
             switch(this.color) {
                 case "Red":
                     return R.mipmap.triangle_buoy_red;

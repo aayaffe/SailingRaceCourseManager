@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.geographical;
 
-import android.location.Location;
+//import android.location.Location;
 
 import com.google.firebase.database.Exclude;
 
@@ -74,9 +74,9 @@ public class AviLocation {
 
 
 
-    public Location toLocation(){
-        return GeoUtils.createLocation(lat,lon);
-    }
+//    public Location toLocation(){
+//        return GeoUtils.createLocation(lat,lon);
+//    }
 
     public static long Age(AviLocation aviLocation) {
         if (aviLocation==null) return -1;

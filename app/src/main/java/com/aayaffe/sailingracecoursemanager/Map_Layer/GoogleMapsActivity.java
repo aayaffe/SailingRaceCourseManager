@@ -37,7 +37,6 @@ import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener{
@@ -238,11 +237,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         }
                     }
                     if(myBoat==null){
-                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), "Blue");//TODO Set color properly
+                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), "Blue",BuoyType.WorkerBoat);//TODO Set color properly
                     }
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setBuoyType(BuoyType.RaceManager);
-                    } else myBoat.setBuoyType(BuoyType.WorkerBoat);
+                        myBoat.setEnumBuoyType(BuoyType.RaceManager);
+                    } else myBoat.setEnumBuoyType(BuoyType.WorkerBoat);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.lastUpdate = new Date().getTime();
@@ -313,9 +312,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private int getIconId(String string, Buoy o) {
-        int ret = R.drawable.boatred;
+        int ret;
         if (o.getName().equals(string)){
-            switch(o.getBuoyType()) {
+            switch(o.getEnumBuoyType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation())>300)
@@ -327,7 +326,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         else {
-            switch (o.getBuoyType()) {
+            switch (o.getEnumBuoyType()) {
                 case WorkerBoat:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation())>300)

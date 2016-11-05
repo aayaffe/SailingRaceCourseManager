@@ -111,7 +111,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
             if (currentMarker.isInfoWindowShown()) {
                 currentMarker.showInfoWindow();
             }
-        } else {
+        } else if (mapView != null) {
             int resourceID = buoy.getResourceId();
             Marker marker = mapView.addMarker(new MarkerOptions().position(buoy.getLatLng()).icon(BitmapDescriptorFactory.fromResource(resourceID)).title(buoy.getName()).snippet(snippet));
             uuidToMarker.put(buoy.getUUID(), marker);
@@ -162,7 +162,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
     }
 
     private boolean isValid(Buoy ao) {
-        return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getEnumBuoyType() != null) && (ao.getLastUpdate() != null);
     }
 
     public void removeMark(Marker m) {
