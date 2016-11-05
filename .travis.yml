@@ -26,9 +26,9 @@ android:
     
 addons:
   sonarqube: true
-env:
-  global:
-    - secure: 606915382ca03ad58223b7e3746df2743d6c0ab3 # defines SONAR_TOKEN=abcdef0123456789
+#env:
+ # global:
+  #  - secure: 606915382ca03ad58223b7e3746df2743d6c0ab3 # defines SONAR_TOKEN=abcdef0123456789
 script:
   # other script steps might be done before running the actual SonarQube analysis
-  - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+  - sonar-scanner -Dsonar.login=606915382ca03ad58223b7e3746df2743d6c0ab3
