@@ -3,6 +3,7 @@ package com.aayaffe.sailingracecoursemanager.Map_Layer;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -174,9 +175,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 firstBoatLoad = true;
                 return true;
             case R.id.action_exit:
-                System.exit(0);
+                //System.exit(0);
                 finish();
-                System.exit(0);
+                //System.exit(0);
                 return true;
 
             default:
@@ -237,7 +238,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         }
                     }
                     if(myBoat==null){
-                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), "Blue",BuoyType.WorkerBoat);//TODO Set color properly
+                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE,BuoyType.WorkerBoat);//TODO Set color properly
                     }
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                         myBoat.setEnumBuoyType(BuoyType.RaceManager);
@@ -391,7 +392,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addMark(long id, Location loc, Float dir, int dist){
         if (loc == null) return;
-        Buoy o =new Buoy("Buoy"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), "Black", BuoyType.Buoy);// TODO: 11/02/2016 Add bouy types
+        Buoy o =new Buoy("Buoy"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), Color.BLACK, BuoyType.Buoy);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }

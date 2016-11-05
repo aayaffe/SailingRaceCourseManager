@@ -64,6 +64,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
         mDialogResult = dialogResult;
     }
 
+
     public interface OnMyDialogResult{
         void finish(Map<String, String> result);
     }

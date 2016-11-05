@@ -33,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.System.exit;
+
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
@@ -229,9 +231,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (exit) {
             //mBuilder.setOngoing(false);
             notification.cancelAll();
-            System.exit(0);
+            //System.exit(0);
             finish(); // finish activity
-            System.exit(0);
+            //System.exit(0);
         } else {
             Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();

@@ -19,7 +19,7 @@ public class AviLocation {
     public Long lastUpdate;
 
     public AviLocation() {
-
+        //Empty constructor for FireBase.
     }
     public AviLocation(double Lat, double Lng) {
         lat = Lat;

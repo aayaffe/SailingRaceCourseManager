@@ -21,6 +21,7 @@ import java.util.Map;
     the CourseParser is parsing the CourseTypes out of the xml file, sent by the server
  */
 public class CourseXmlParser {
+    private static final String TAG = "CourseXMLParser";
     private XmlPullParserFactory xmlFactory;
     private Context context;
     private String url;
@@ -92,15 +93,15 @@ public class CourseXmlParser {
                         break;
                     case XmlPullParser.START_TAG:
                         if (name.equals("Course") && safeAttributeValue("type").equals(selectedOptions.get("type"))) {
-                            Log.i("course xml parser", "reached course type:"+safeAttributeValue("type"));
+                            Log.i(TAG, "reached course type:"+safeAttributeValue("type"));
                             preReceiveMode = true;
                         } else if (name.equals("Legs") && preReceiveMode && safeAttributeValue("name").equals(selectedOptions.get("Legs"))) {
-                            Log.i("course xml parser", "reached leg type:"+safeAttributeValue("name"));
+                            Log.i(TAG, "reached leg type:"+safeAttributeValue("name"));
                             receiveMode=true;
                         } else if (name.equals("Mark")&&receiveMode) {
                             currentMark = new Mark(safeAttributeValue("name")); //new mark
                             fathers.add(currentMark);  //son of his father
-                            Log.i("course xml parser", "son no."+fathers.size()+" added, named "+currentMark.getName());
+                            Log.i(TAG, "son no."+fathers.size()+" added, named "+currentMark.getName());
                         } else if(receiveMode&&name.equals("Distance")&&receiveMode){
                             currentMark.setDistaneFactor(safeAttributeValue("factor"));
                         }
@@ -133,7 +134,7 @@ public class CourseXmlParser {
                             fathers.remove(fathers.size() - 1);  //son have no more children, so no longer necessary here
                         }
                         else if(name.equals("Legs")&&receiveMode) {
-                            Log.i("course xml parser", "leg done");
+                            Log.i(TAG, "leg done");
                             preReceiveMode = false;
                             receiveMode = false;
                         }
@@ -146,7 +147,7 @@ public class CourseXmlParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("course xml parser", "returns reference point");
+        Log.d(TAG, "returns reference point");
         return referenceMark;
     }
 
@@ -228,13 +229,13 @@ public class CourseXmlParser {
     private String safeAttributeValue(String keyName) {
         String value = parser.getAttributeValue(null, keyName);
         if (value != null) return value;
-        Log.w("course xml parser", "null attribute for keyName: " + keyName);
+        Log.w(TAG, "null attribute for keyName: " + keyName);
         return "_";  // TODO: the '_' char is just for debug, remove before use.
     }
     private String safeTextValue() {
         String value = parser.getText();
         if (value != null) return value;
-        Log.w("course xml parser", "null text found");
+        Log.w(TAG, "null text found");
         return "_";  // TODO: the '_' char is just for debug, remove before use.
     }
 

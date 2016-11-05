@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.Calc_Layer;
 
+import android.graphics.Color;
 import android.location.Location;
 
 import com.aayaffe.sailingracecoursemanager.R;
@@ -17,13 +18,14 @@ import java.util.UUID;
 public class Buoy {
     private String name;
     private AviLocation aviLocation;
-    public String color = "Black";
+    //public String color = "Black";
+    public int color = Color.BLACK;
     public Long lastUpdate;
     public long id;
     private UUID _uuid;
     private UUID _raceCourseUUID;
     private BuoyType buoyType; //replaces ObjectTypes
-
+    public static final int ORANGE = 0xf49842;
     public Buoy(){
         _uuid = UUID.randomUUID();
     }
@@ -51,20 +53,20 @@ public class Buoy {
 
         switch (buoyType){
             case FinishLine:
-                this.color="Blue";
+                this.color=Color.BLUE;
                 break;
             case StartLine:
-                this.color="Orange";
+                this.color=ORANGE;
                 break;
             case Gate:
-                this.color="Yellow";
+                this.color=Color.YELLOW;
                 break;
             case Buoy:
-                this.color="Red";
+                this.color=Color.RED;
                 break;
         }
     }
-    public Buoy(String name, AviLocation loc, String color, BuoyType buoyType){
+    public Buoy(String name, AviLocation loc, int color, BuoyType buoyType){
         _uuid = UUID.randomUUID();
         this.name=name;
         this.aviLocation=loc;
@@ -144,39 +146,40 @@ public class Buoy {
     public int getResourceId() {
         if(this.getEnumBuoyType() ==BuoyType.FlagBuoy||this.getEnumBuoyType() ==BuoyType.FinishLine||this.getEnumBuoyType() ==BuoyType.StartLine) {
             switch(this.color){
-                case "Red":
+                case Color.RED:
                     return R.mipmap.flag_buoy_red;
-                case "Blue":
+                case Color.BLUE:
                     return R.mipmap.flag_buoy_blue;
-                case "Yellow":
+                case Color.YELLOW:
                     return R.mipmap.flag_buoy_yellow;
-                case "Orange":
+                case ORANGE:
                 default:
                     return R.mipmap.flag_buoy_orange;
             }
         }
         else if(this.getEnumBuoyType() ==BuoyType.TomatoBuoy||this.getEnumBuoyType() ==BuoyType.Buoy||this.getEnumBuoyType() ==BuoyType.Gate) {
+
             switch(this.color) {
-                case "Red":
+                case Color.RED:
                     return R.mipmap.tomato_buoy_red;
-                case "Blue":
+                case Color.BLUE:
                     return R.mipmap.tomato_buoy_blue;
-                case "Yellow":
+                case Color.YELLOW:
                     return R.mipmap.tomato_buoy_yellow;
-                case "Orange":
+                case ORANGE:
                 default:
                     return R.mipmap.tomato_buoy_orange;
             }
         }
         else if(this.getEnumBuoyType() ==BuoyType.TriangleBuoy) {
             switch(this.color) {
-                case "Red":
+                case Color.RED:
                     return R.mipmap.triangle_buoy_red;
-                case "Blue":
+                case Color.BLUE:
                     return R.mipmap.triangle_buoy_blue;
-                case "Yellow":
+                case Color.YELLOW:
                     return R.mipmap.triangle_buoy_yellow;
-                case "Orange":
+                case ORANGE:
                     return R.mipmap.triangle_buoy_orange;
                 default:
                     return R.mipmap.triangle_buoy;

@@ -49,7 +49,7 @@ public class BoatXmlParser {
         return boats;
     }
     private List<Boat> getBoats(XmlPullParser xmlPullParser) {
-        List<Boat> boats = new ArrayList<Boat>();
+        List<Boat> boats = new ArrayList<>();
         double[][] vmg = new double[4][3]; //[upwind,downwind,reach][5+,8+,12+,15+]
         int event;
         try {

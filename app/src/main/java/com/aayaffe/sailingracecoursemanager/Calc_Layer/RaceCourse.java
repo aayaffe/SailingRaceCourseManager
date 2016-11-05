@@ -34,12 +34,12 @@ public class RaceCourse {
 
     public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, float distance2mark1 , float startLineDistance,Map<String, String> selectedCourseOptions ){
         this.context = context;
-        if(signalBoatLoc!=null)this.signalBoatLoc=signalBoatLoc;
-        else this.signalBoatLoc=new AviLocation(32.85,3499);
-        this.windDir=windDirection;
-        this.dist2m1=distance2mark1;
-        this.startLineDist=startLineDistance;
-        this.selectedOptions=selectedCourseOptions;
+        if(signalBoatLoc!=null) RaceCourse.signalBoatLoc =signalBoatLoc;
+        else RaceCourse.signalBoatLoc =new AviLocation(32.85,3499);
+        windDir=windDirection;
+        dist2m1=distance2mark1;
+        startLineDist=startLineDistance;
+        selectedOptions=selectedCourseOptions;
         xmlParserC = new CourseXmlParser(context, "courses_file.xml");
         convertMarks2Buoys();
         Log.d("RaceCourse class note", "constructor done");
