@@ -167,9 +167,7 @@ public class RaceCourse {
                     break;
 
             }
-            if(s!=null) {
-                marks.marks.add(s);
-            }
+            marks.marks.add(s);
             if(p!=null){
                 marks.marks.add(p);
             }

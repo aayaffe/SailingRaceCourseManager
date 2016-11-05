@@ -40,7 +40,8 @@ public class Event {
     }
 
     public void setLastBuoyId(int lastBuoyId) {
-        lastBuoyId = lastBuoyId;
+
+        this.lastBuoyId = lastBuoyId;
     }
 
     public User getEventManager() {
