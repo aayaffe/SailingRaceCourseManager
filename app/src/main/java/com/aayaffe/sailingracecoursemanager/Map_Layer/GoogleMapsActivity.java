@@ -257,7 +257,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
             }
             drawMapComponents();
-            handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "1")) * 1000));
+            handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "5")) * 1000));
         }
     };
 
