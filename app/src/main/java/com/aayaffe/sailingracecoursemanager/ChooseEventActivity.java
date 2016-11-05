@@ -195,7 +195,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
-        if ((eventNameText!=null)||(eventNameText.getText().toString()!="")){
+        if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(eventNameText.getText().toString()!="")){
             addEvent(eventNameText.getText().toString());
         }
         else
