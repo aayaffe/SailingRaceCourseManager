@@ -33,3 +33,9 @@ env:
 script:
   # other script steps might be done before running the actual SonarQube analysis
   - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+notifications:
+  email:
+    recipients:
+      - aayaffe@gmail.com
+    on_success: change # default: change
+    on_failure: always # default: always
