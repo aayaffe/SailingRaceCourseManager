@@ -132,7 +132,7 @@
 //                    p.setLastUpdate(new Date());
 //                    p.setRaceCourseUUID(uuid);
 //                    break;
-//                case FinishLine:
+//                case FINISH_LINE:
 //                    s.setEnumType(ObjectTypes.TriangleBuoy); //TODO check to set a diffrent icon to stbd side
 //                    s.name = rco.getName()+"Stbd";
 //                    s.setAviLocation(((RaceCourseObjectLong)rco).getStbLoc());
@@ -196,7 +196,7 @@
 //        os.add(ObjectTypes.Buoy);
 //        os.add(ObjectTypes.Buoy);
 //        os.add(ObjectTypes.Gate);
-//        os.add(ObjectTypes.FinishLine);
+//        os.add(ObjectTypes.FINISH_LINE);
 //        List<DirDist> dds = new ArrayList<>();
 //        dds.add(new DirDist(0, 95));
 //        dds.add(new DirDist(0, 0.33f));
@@ -209,7 +209,7 @@
 //        names.add("No1Mark");
 //        names.add("No2Mark");
 //        names.add("No3Gate");
-//        names.add("FinishLine");
+//        names.add("FINISH_LINE");
 //
 //        RaceCourseDescriptorGeneral rcdg =new RaceCourseDescriptorGeneral("TestTrapezoid",os,dds,names);//TODO for testing
 //        GoogleMapsActivity.commManager.writeRaceCourseDescriptor(rcdg); //TODO for testing

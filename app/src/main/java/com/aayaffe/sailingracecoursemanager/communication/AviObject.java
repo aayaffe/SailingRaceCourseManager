@@ -39,7 +39,7 @@
 //        this.type=type;
 //        this.color=color;
 //        this._raceCourseUUID=_raceCourseUUID;
-//        this.type = ObjectTypes.Other;
+//        this.type = ObjectTypes.OTHER;
 //    }
 //
 //    public AviObject(String name, AviLocation loc, ObjectTypes type, String color, UUID _raceCourseUUID, double gateSpan, int gateDir){
@@ -51,11 +51,11 @@
 //        this._raceCourseUUID=_raceCourseUUID;
 //        this.gateDir=gateDir;
 //        this.gateSpan=gateSpan;
-//        this.type = ObjectTypes.Other;
+//        this.type = ObjectTypes.OTHER;
 //    }
 //
 //    public AviObject(){
-//        _uuid = UUID.randomUUID();this.type = ObjectTypes.Other;
+//        _uuid = UUID.randomUUID();this.type = ObjectTypes.OTHER;
 //    }
 //
 //    @Override

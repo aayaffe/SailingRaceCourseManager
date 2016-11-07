@@ -73,7 +73,7 @@ public class CourseXmlParser {
         int event;
         String text = null;
         Mark referenceMark = new Mark("Reference Point"); //reference point is represented as a mark, who is the father of all marks.
-        referenceMark.setGateType("ReferencePoint");
+        referenceMark.setGateType("REFERENCE_POINT");
         ArrayList<Mark> fathers = new ArrayList<Mark>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
         Mark currentMark = new Mark("nullMark/debug");  //if a mark named "nullMark" appears - it's a bug!
         boolean preReceiveMode = false;
@@ -185,7 +185,7 @@ public class CourseXmlParser {
                                         if (attributeHolder != null)
                                             gatable[0] = xmlPullParser.getAttributeValue(null, "name") + " " + attributeHolder;
                                         else
-                                            gatable[0] = xmlPullParser.getAttributeValue(null, "name") + " Gate";
+                                            gatable[0] = xmlPullParser.getAttributeValue(null, "name") + " GATE";
                                         options.add(gatable);
                                     }
                                 break;
@@ -241,7 +241,7 @@ public class CourseXmlParser {
 
     private boolean safeIsGatable(Map<String , String> selectedOptions, String name){
         boolean b1=false, b2=false;
-        if(selectedOptions.containsKey(name+" Gate")) b1=selectedOptions.get(name+" Gate").equals("true");
+        if(selectedOptions.containsKey(name+" GATE")) b1=selectedOptions.get(name+" GATE").equals("true");
         if(selectedOptions.containsKey(name+" satellite")) b2=selectedOptions.get(name+" satellite").equals("true");
         return b1||b2;
     }

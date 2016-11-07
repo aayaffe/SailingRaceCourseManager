@@ -205,7 +205,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         raceCourse = new RaceCourse();
         if(mapLayer.mapView!=null)buoys.addAll(raceCourse.getBuoyList());
-        else Log.w("GoogleMapsActivity","null map");
+        else Log.w(TAG,"null map");
 
         addBuoys();
     }
@@ -214,7 +214,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     protected void onResume() {
         super.onResume();
         addRaceCourse();
-        Log.w("GoogleMapsActivity","onResume");
+        Log.w(TAG,"onResume");
     }
 
     private void removeAllRaceCourseMarks() {  //becomes unnecessary
@@ -238,11 +238,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         }
                     }
                     if(myBoat==null){
-                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE,BuoyType.WorkerBoat);//TODO Set color properly
+                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE,BuoyType.WORKER_BOAT);//TODO Set color properly
                     }
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setEnumBuoyType(BuoyType.RaceManager);
-                    } else myBoat.setEnumBuoyType(BuoyType.WorkerBoat);
+                        myBoat.setEnumBuoyType(BuoyType.RACE_MANAGER);
+                    } else myBoat.setEnumBuoyType(BuoyType.WORKER_BOAT);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.lastUpdate = new Date().getTime();
@@ -290,18 +290,18 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         for (Buoy o: buoys) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
-                Log.d("GoogleMapsActivity", "drawMapComponents() first if is true");
+                Log.d(TAG, "drawMapComponents() first if is true");
                 int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
                 mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
             }
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
-                Log.d("GoogleMapsActivity", "drawMapComponents() second if is true");
+                Log.d(TAG, "drawMapComponents() second if is true");
                 int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
                 mapLayer.addMark(o, null, id);
             }
         }
         List<Buoy> commBuoyList = commManager.getAllBuoys();
-        Log.d("GoogleMapsActivity", "commBuoyList size: "+commBuoyList.size());
+        Log.d(TAG, "commBuoyList size: "+commBuoyList.size());
         for (Buoy o : commBuoyList){
             mapLayer.addBuoy(o,getDirDistTXT(myLocation, o.getLoc()));
         }
@@ -316,24 +316,24 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         int ret;
         if (o.getName().equals(string)){
             switch(o.getEnumBuoyType()) {
-                case WorkerBoat:
+                case WORKER_BOAT:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation())>300)
                         ret = R.drawable.boatred;
                     break;
-                case RaceManager: ret = R.drawable.managergold;
+                case RACE_MANAGER: ret = R.drawable.managergold;
                     break;
                 default: ret = R.drawable.boatred;
             }
         }
         else {
             switch (o.getEnumBuoyType()) {
-                case WorkerBoat:
+                case WORKER_BOAT:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation())>300)
                         ret = R.drawable.boatred;
                     break;
-                case RaceManager:
+                case RACE_MANAGER:
                     ret = R.drawable.managerblue;
                     break;
                 default:
@@ -392,7 +392,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addMark(long id, Location loc, Float dir, int dist){
         if (loc == null) return;
-        Buoy o =new Buoy("Buoy"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), Color.BLACK, BuoyType.Buoy);// TODO: 11/02/2016 Add bouy types
+        Buoy o =new Buoy("BUOY"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }

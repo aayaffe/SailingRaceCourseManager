@@ -112,7 +112,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
                 currentMarker.showInfoWindow();
             }
         } else if (mapView != null) {
-            int resourceID = buoy.getResourceId();
+            int resourceID = buoy.getIconResourceId();
             Marker marker = mapView.addMarker(new MarkerOptions().position(buoy.getLatLng()).icon(BitmapDescriptorFactory.fromResource(resourceID)).title(buoy.getName()).snippet(snippet));
             uuidToMarker.put(buoy.getUUID(), marker);
             uuidToId.put(buoy.getUUID(), marker.getId());
@@ -218,7 +218,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
     public void onInfoWindowClick(Marker marker) {
         try {
             boolean isBuoy = false;
-            if (marker.getTitle().contains("Buoy")) isBuoy = true;
+            if (marker.getTitle().contains("BUOY")) isBuoy = true;
             if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
                 if (deleteMark) {
                     removeMark(marker);

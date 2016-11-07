@@ -51,7 +51,7 @@ import com.aayaffe.sailingracecoursemanager.R;
     @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
         buoy_id = getArguments().getLong("buoy_id",-1);
-        String title = (buoy_id==-1)?"Add Buoy":"Edit Buoy: "+ buoy_id;
+        String title = (buoy_id==-1)?"Add BUOY":"Edit BUOY: "+ buoy_id;
 
         // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

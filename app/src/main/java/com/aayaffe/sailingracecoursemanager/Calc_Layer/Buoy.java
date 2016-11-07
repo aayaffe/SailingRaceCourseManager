@@ -18,7 +18,6 @@ import java.util.UUID;
 public class Buoy {
     private String name;
     private AviLocation aviLocation;
-    //public String color = "Black";
     public int color = Color.BLACK;
     public Long lastUpdate;
     public long id;
@@ -35,9 +34,9 @@ public class Buoy {
         this.name=name;
         this.aviLocation=loc;
         this.lastUpdate = new Date().getTime();
-        this.buoyType = BuoyType.Other;
+        this.buoyType = BuoyType.OTHER;
     }
-//    public Buoy(String name, AviLocation loc, String color){
+//    public BUOY(String name, AviLocation loc, String color){
 //        _uuid = UUID.randomUUID();
 //        this.name=name;
 //        this.aviLocation=loc;
@@ -52,16 +51,16 @@ public class Buoy {
         this.lastUpdate = new Date().getTime();
 
         switch (buoyType){
-            case FinishLine:
+            case FINISH_LINE:
                 this.color=Color.BLUE;
                 break;
-            case StartLine:
+            case START_LINE:
                 this.color=ORANGE;
                 break;
-            case Gate:
+            case GATE:
                 this.color=Color.YELLOW;
                 break;
-            case Buoy:
+            case BUOY:
                 this.color=Color.RED;
                 break;
         }
@@ -143,8 +142,8 @@ public class Buoy {
     }
 
 
-    public int getResourceId() {
-        if(this.getEnumBuoyType() ==BuoyType.FlagBuoy||this.getEnumBuoyType() ==BuoyType.FinishLine||this.getEnumBuoyType() ==BuoyType.StartLine) {
+    public int getIconResourceId() {
+        if(this.getEnumBuoyType() ==BuoyType.FLAG_BUOY ||this.getEnumBuoyType() ==BuoyType.FINISH_LINE ||this.getEnumBuoyType() ==BuoyType.START_LINE) {
             switch(this.color){
                 case Color.RED:
                     return R.mipmap.flag_buoy_red;
@@ -157,7 +156,7 @@ public class Buoy {
                     return R.mipmap.flag_buoy_orange;
             }
         }
-        else if(this.getEnumBuoyType() ==BuoyType.TomatoBuoy||this.getEnumBuoyType() ==BuoyType.Buoy||this.getEnumBuoyType() ==BuoyType.Gate) {
+        else if(this.getEnumBuoyType() ==BuoyType.TOMATO_BUOY ||this.getEnumBuoyType() ==BuoyType.BUOY ||this.getEnumBuoyType() ==BuoyType.GATE) {
 
             switch(this.color) {
                 case Color.RED:
@@ -171,7 +170,7 @@ public class Buoy {
                     return R.mipmap.tomato_buoy_orange;
             }
         }
-        else if(this.getEnumBuoyType() ==BuoyType.TriangleBuoy) {
+        else if(this.getEnumBuoyType() ==BuoyType.TRIANGLE_BUOY) {
             switch(this.color) {
                 case Color.RED:
                     return R.mipmap.triangle_buoy_red;

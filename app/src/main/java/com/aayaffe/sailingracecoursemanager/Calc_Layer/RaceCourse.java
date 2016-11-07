@@ -30,6 +30,7 @@ public class RaceCourse {
     Context context;
 
     public RaceCourse(){
+        //Empty constructor for Serializing to firebase
     }
 
     public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, float distance2mark1 , float startLineDistance,Map<String, String> selectedCourseOptions ){
@@ -46,11 +47,11 @@ public class RaceCourse {
     }
 
 
-    private AviLocation referencePointLoc(){  //returns the RP location from signalBoatLoc
+    private static AviLocation referencePointLoc(){  //returns the RP location from signalBoatLoc
         AviLocation startLineCenter  = new AviLocation(signalBoatLoc,windDir-90,startLineDist/2);
         return new AviLocation(startLineCenter,windDir, 0.05);
     }
-    public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of Buoy class
+    static synchronized public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
         referenceMark = xmlParserC.parseMarks(selectedOptions);  //TODO: is selectedOptions null?
         bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir);
         return bouyList;
