@@ -160,7 +160,7 @@ public class Mark {
                     buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.START_LINE));
                     Log.i(TAG, "buoys added, gateType BUOY, name:" + this.getName());
                     break;
-                case "Satellite":
+                case "SATELLITE":
                     buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY));
                     buoys.add(new Buoy(this.getName() + "a", new AviLocation(location, windDir + getGateDirection(), getGateDistance()), BuoyType.TRIANGLE_BUOY));
                     Log.i(TAG, "buoys added, gateType START_LINE, name:" + this.getName());

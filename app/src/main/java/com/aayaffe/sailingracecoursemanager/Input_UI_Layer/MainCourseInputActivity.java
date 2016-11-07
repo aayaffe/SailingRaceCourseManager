@@ -42,7 +42,7 @@ public class MainCourseInputActivity extends Activity {
     private Button applyB;
 
     private RaceCourse raceCourse;
-    private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));
+    private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));//TODO:????
     private static Map<String,String> courseOptions;
     private float dist2m1;
 

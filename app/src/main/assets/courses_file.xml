@@ -7,12 +7,12 @@
                 <Downwind>1</Downwind>
                 <Reach>1</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-120</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -29,16 +29,16 @@
                 <Distance factor="true">0.5</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
-                <Mark name="Finish Line" isGatable="always">
+                <Mark name="FINISH_LINE" isGatable="always">
                     <Direction>110</Direction>
                     <Distance>0.1</Distance>
                     <Gatable>
                         <isGatable>always</isGatable>
-                        <GateType>FinishLine</GateType>
+                        <GateType>FINISH_LINE</GateType>
                         <GateDirection>-90</GateDirection>
                         <GateDistance>0.027</GateDistance>
                     </Gatable>
@@ -49,17 +49,17 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
             </Mark>
-            <Mark name="StartLine" isGatable="always">
+            <Mark name="START_LINE" isGatable="always">
                 <Direction>180</Direction>
                 <Distance>0.05</Distance>
                 <Gatable>
                     <isGatable>always</isGatable>
-                    <GateType>StartLine</GateType>
+                    <GateType>START_LINE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
@@ -79,12 +79,12 @@
                 <Downwind>2</Downwind>
                 <Reach>1.33333</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-120</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -101,16 +101,16 @@
                 <Distance factor="true">0.67</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
-                <Mark name="Finish Line" isGatable="always">
+                <Mark name="FINISH_LINE" isGatable="always">
                     <Direction>110</Direction>
                     <Distance>0.3</Distance>
                     <Gatable>
                         <isGatable>always</isGatable>
-                        <GateType>FinishLine</GateType>
+                        <GateType>FINISH_LINE</GateType>
                         <GateDirection>-160</GateDirection>
                         <GateDistance>0.027</GateDistance>
                     </Gatable>
@@ -121,17 +121,17 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
             </Mark>
-            <Mark name="StartLine" isGatable="always">
+            <Mark name="START_LINE" isGatable="always">
                 <Direction>180</Direction>
                 <Distance>0.05</Distance>
                 <Gatable>
                     <isGatable>always</isGatable>
-                    <GateType>StartLine</GateType>
+                    <GateType>START_LINE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.07</GateDistance>
                 </Gatable>
