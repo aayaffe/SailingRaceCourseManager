@@ -15,9 +15,8 @@ public class Event {
     private String name;
     @Exclude
     private UUID _uuid;
-    //private String uuid;
     private int lastBuoyId;
-    private User eventManager;
+    private String eventManager;
     @Exclude
     private HashMap<String,Buoy> boats;
     @Exclude
@@ -44,15 +43,6 @@ public class Event {
         this.lastBuoyId = lastBuoyId;
     }
 
-    public User getEventManager() {
-        return eventManager;
-    }
-
-    public void setEventManager(User eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
     public HashMap<String, Buoy> getBoats() {
         return boats;
     }
@@ -75,5 +65,12 @@ public class Event {
 
     public void setUuid(String uuid) {
         this._uuid = UUID.fromString(uuid);
+    }
+    public String getManagerUuid() {
+        return eventManager;
+    }
+
+    public void setManagerUuid(String uuid) {
+        this.eventManager = uuid;
     }
 }

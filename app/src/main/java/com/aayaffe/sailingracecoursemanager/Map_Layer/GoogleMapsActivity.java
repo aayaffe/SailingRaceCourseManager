@@ -25,6 +25,7 @@ import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -262,19 +263,23 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     };
 
     private boolean isCurrentEventManager(String Uid){
-        if (commManager.getEvent(currentEventName)==null)
+        Event e = commManager.getEvent(currentEventName);
+        if (e==null)
             return false;
         if (Uid == null||Uid.isEmpty())
             return false;
-        return commManager.getEvent(currentEventName).getEventManager().Uid.equals(Uid);
+        Log.d(TAG, "Checking for event "+currentEventName+" manager: " + commManager.getEvent(currentEventName).getManagerUuid());
+        if (e.getManagerUuid()==null) return false;
+        return e.getManagerUuid().equals(Uid);
     }
 
     public static boolean isCurrentEventManager(){
-        if (commManager.getEvent(currentEventName)==null)
+        Event e = commManager.getEvent(currentEventName);
+        if (e==null)
             return false;
         if (users.getCurrentUser() == null|| users.getCurrentUser().Uid==null||users.getCurrentUser().Uid.isEmpty())
             return false;
-        return commManager.getEvent(currentEventName).getEventManager().Uid.equals(users.getCurrentUser().Uid);
+        return e.getManagerUuid().equals(users.getCurrentUser().Uid);
     }
 
     public void addBuoys(){
@@ -291,7 +296,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
                 Log.d(TAG, "drawMapComponents() first if is true");
-                int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
+                int id = getIconId(users.getCurrentUser().DisplayName,o);
                 mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
             }
             if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {

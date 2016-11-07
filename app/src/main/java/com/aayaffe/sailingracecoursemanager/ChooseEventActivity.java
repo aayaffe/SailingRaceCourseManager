@@ -33,8 +33,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.lang.System.exit;
-
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
@@ -60,12 +58,13 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             @Override
             protected void populateView(View view, Event event, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
-                User manager = event.getEventManager();
+
+                User manager = commManager.findUser(event.getManagerUuid());
                 if (manager==null) {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: unknown");
                 }
                 else {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: " + event.getEventManager().DisplayName);
+                    ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: " + manager.DisplayName);
                 }
             }
         };
@@ -211,7 +210,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         //TODO: Check that user is logged in. deal with the possibilty he is not.
         Event e = new Event();
         e.setName(eventNameText);
-        e.setEventManager(users.getCurrentUser());
+        e.setManagerUuid(users.getCurrentUser().Uid);
         commManager.writeEvent(e);
     }
 

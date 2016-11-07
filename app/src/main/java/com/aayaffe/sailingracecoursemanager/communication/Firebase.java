@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by aayaffe on 21/11/2015.
@@ -32,15 +33,12 @@ public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
     private static Context c;
     private static DatabaseReference fb;
-    private static DatabaseReference currentEventFB;
     private static DataSnapshot ds;
     private static String currentEventName;
     private String Uid;
     private Users users;
-    private int CompatibleVersion;
     private CommManagerEventListener listener;
     private boolean connected = false;
-    private DataSnapshot eventDs;
 
     public Firebase(Context c) {
         if (Firebase.c ==null)
@@ -48,30 +46,6 @@ public class Firebase implements ICommManager {
         users = new Users(this);
     }
 
-    public int loginToEvent(String eventName){
-        currentEventFB = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl(c.getString(R.string.firebase_base_url)+"/"+c.getString(R.string.db_events)+"/"+eventName);
-        currentEventFB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                eventDs = dataSnapshot;
-                if(users.getCurrentUser()==null){
-                    users.setCurrentUser(findUser(Uid));
-                }
-                if ((listener != null)&&(!connected))
-                    listener.onConnect(new Date());
-                connected = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
-        });
-        return 0;
-    } //TODO to be used for finer grained events firing
     @Override
     public int login(String user, String password, String nickname) {
         if (fb == null) {
@@ -240,6 +214,9 @@ public class Firebase implements ICommManager {
             return null;
         }
     }
+    public User findUser(UUID uid) {
+        return findUser(uid.toString());
+    }
 
     @Override
     public void addUser(User u) {
@@ -258,7 +235,8 @@ public class Firebase implements ICommManager {
         try {
             Event e = ds.child(c.getString(R.string.db_events)).child(eventName).getValue(Event.class);
             return e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Log.e(TAG, "Failed to get Event: " + eventName,ex);
             return null;
         }
     }
@@ -283,7 +261,7 @@ public class Firebase implements ICommManager {
         return currentEventName;
     }
 
-    public void setCurrentEventName(String currentEventName) {
+    public static void setCurrentEventName(String currentEventName) {
         //loginToEvent(currentEventName); //TODO: To enable better and finer grained events
         Firebase.currentEventName = currentEventName;
     }
