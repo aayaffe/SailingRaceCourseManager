@@ -21,6 +21,16 @@ public class Event {
     private HashMap<String,Buoy> boats;
     @Exclude
     private HashMap<String,Buoy> buoys;
+    public int yearStart;
+    public int yearEnd;
+    public int monthStart;
+    public int monthEnd;
+    public int dayStart;
+    public int dayEnd;
+
+
+
+
 
     public Event(){
         _uuid = UUID.randomUUID();

@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
@@ -54,11 +55,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView messagesView = (ListView) findViewById(R.id.EventsList);
-        mAdapter = new FirebaseListAdapter<Event>(this, Event.class, android.R.layout.two_line_list_item, commManager.getFireBaseRef().child("Events")) {
+        mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child("Events")) {
             @Override
             protected void populateView(View view, Event event, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
-
+                String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
                 if (manager==null) {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: unknown");
@@ -66,6 +67,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 else {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: " + manager.DisplayName);
                 }
+                ((TextView) view.findViewById(R.id.text3)).setText(dates);
             }
         };
         messagesView.setAdapter(mAdapter);
@@ -82,6 +84,14 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         users = new Users(commManager);
         notification.InitNotification(this);
     }
+
+    @NonNull
+    private static String getDateRangeString(Event event) {
+        if (event.monthEnd==0||event.dayEnd==0||event.yearStart==0||event.monthStart==0||event.dayStart==0||event.yearEnd==0) return "";
+        if (event.dayStart== event.dayEnd&&event.monthStart==event.monthEnd&&event.yearStart==event.yearEnd) return String.valueOf(event.dayStart)+'/'+event.monthStart+'/'+event.yearStart;
+        return String.valueOf(event.dayStart) + '/'+event.monthStart+'/'+event.yearStart+" - "+event.dayEnd+'/'+event.monthEnd+'/'+event.yearEnd;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -197,7 +207,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
         if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().equals(""))){
-            addEvent(eventNameText.getText().toString());
+            addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
         }
         else
             Log.d(TAG, "Event not(!) created.");
@@ -206,11 +216,17 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
     }
 
-    private void addEvent(String eventNameText) {
+    private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
         //TODO: Check that user is logged in. deal with the possibilty he is not.
         Event e = new Event();
         e.setName(eventNameText);
         e.setManagerUuid(users.getCurrentUser().Uid);
+        e.yearStart = yearStart;
+        e.yearEnd = yearEnd;
+        e.monthStart = monthStart;
+        e.monthEnd = monthEnd;
+        e.dayStart = dayStart;
+        e.dayEnd = dayEnd;
         commManager.writeEvent(e);
     }
 

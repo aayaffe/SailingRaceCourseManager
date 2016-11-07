@@ -75,6 +75,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:9.0.2'
     compile 'com.google.guava:guava:19.0'
     compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.borax12.materialdaterangepicker:library:1.9'
 }
 apply plugin: 'com.google.gms.google-services'
 
