@@ -80,8 +80,8 @@ public class GeoUtils {
 
     public static AviLocation getLocationFromTriangulation(AviLocation p1, double brng1, AviLocation p2,  double brng2){
         AviLocation ret = new AviLocation();
-        double lat1 = Math.toRadians(p1.getLat()), lon1 = Math.toRadians(p1.getLng());
-        double lat2 = Math.toRadians(p2.getLat()), lon2 = Math.toRadians(p2.getLng());
+        double lat1 = Math.toRadians(p1.getLat()), lon1 = Math.toRadians(p1.getLon());
+        double lat2 = Math.toRadians(p2.getLat()), lon2 = Math.toRadians(p2.getLon());
         double brng13 = Math.toRadians(brng1), brng23 = Math.toRadians(brng2);
         double dLat = lat2 - lat1, dLon = lon2 - lon1;
         double dist12 = 2 * Math.asin(Math.sqrt(Math.sin(dLat / 2)
@@ -121,12 +121,12 @@ public class GeoUtils {
 
     public static AviLocation getMidPointLocation(AviLocation p1, AviLocation p2){ //Middle point
         AviLocation ret = new AviLocation();
-        double lon2 =p2.getLng();
-        double lon1 = p1.getLng();
+        double lon2 =p2.getLon();
+        double lon1 = p1.getLon();
         double dLon = Math.toRadians(lon2 - lon1);
         double lat1 = Math.toRadians(p1.getLat());
         double lat2 = Math.toRadians(p2.getLat());
-        lon1 = Math.toRadians(p1.getLng());
+        lon1 = Math.toRadians(p1.getLon());
         double Bx = Math.cos(lat2) * Math.cos(dLon);
         double By = Math.cos(lat2) * Math.sin(dLon);
         double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));

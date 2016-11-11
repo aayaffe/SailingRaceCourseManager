@@ -227,6 +227,17 @@ public class Firebase implements ICommManager {
         return (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
     }
 
+    @Override
+    public Buoy getObjectByUUID(UUID u) {
+        for(Buoy b: getAllBoats()){
+            if (b.getUUID().equals(u)) return b;
+        }
+        for(Buoy b: getAllBuoys()){
+            if (b.getUUID().equals(u)) return b;
+        }
+        return null;
+    }
+
     public DatabaseReference getFireBaseRef() {
         return fb;
     }

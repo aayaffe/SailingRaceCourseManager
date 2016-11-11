@@ -12,7 +12,7 @@ public class User{
     public String DisplayName;
     public Long joined;
     public Long lastConnection;
-@Exclude
+    @Exclude
     public Date getJoined() {
         return new Date(joined);
     }

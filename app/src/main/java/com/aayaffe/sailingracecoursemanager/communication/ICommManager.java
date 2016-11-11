@@ -5,6 +5,7 @@ import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by aayaffe on 22/09/2015.
@@ -35,4 +36,6 @@ public interface ICommManager {
     Event getEvent(String eventName);
 
     long getSupportedVersion();
+
+    Buoy getObjectByUUID(UUID u);
 }
