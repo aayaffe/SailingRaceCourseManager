@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
@@ -26,7 +27,6 @@ import com.google.android.gms.location.LocationServices;
 public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 12;
-    private LocationManager locationManager;
     private Location mLastLocation;// = new Location("New);
     private static String TAG = "OwnLocation";
     LocationRequest mLocationRequest;
@@ -119,7 +119,7 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
     private void InitGPS(Context c) {
         buildGoogleApiClient();
         mGoogleApiClient.connect();
-        locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -129,7 +129,6 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
         } else {
             locationManager.addGpsStatusListener(new MyGPSListener());
         }
@@ -158,7 +157,6 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
         } else {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
@@ -182,7 +180,6 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                return;
             }else {
                 LocationServices.FusedLocationApi.requestLocationUpdates(
                         mGoogleApiClient, mLocationRequest, this);
@@ -195,7 +192,7 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
     public void stopLocationUpdates() {

@@ -9,7 +9,6 @@ import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -144,23 +142,6 @@ public class Firebase implements ICommManager {
         return 0;
     }
 
-    /*@Override
-    public int writeRaceCourseDescriptor(RaceCourseDescriptorGeneral rcd) {  //becomes irrelevant...
-        if (rcd == null) return -1;
-        fb.child(c.getString(R.string.db_courseDescriptors)).child(rcd.getType()).setValue(rcd);
-        return 0;
-    }
-
-    @Override
-    public List<RaceCourseDescriptorGeneral> getRaceCourseDescriptors() {
-        ArrayList<RaceCourseDescriptorGeneral> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null) return ret;
-        for (DataSnapshot ps : ds.child(c.getString(R.string.db_courseDescriptors)).getChildren()) {
-            RaceCourseDescriptorGeneral rcd = ps.getValue(RaceCourseDescriptorGeneral.class);
-            ret.add(rcd);
-        }
-        return ret;
-    }*/
 
     @Override
     public List<Buoy> getAllBoats() {
@@ -233,8 +214,7 @@ public class Firebase implements ICommManager {
     @Override
     public Event getEvent(String eventName) {
         try {
-            Event e = ds.child(c.getString(R.string.db_events)).child(eventName).getValue(Event.class);
-            return e;
+            return ds.child(c.getString(R.string.db_events)).child(eventName).getValue(Event.class);
         } catch (Exception ex) {
             Log.e(TAG, "Failed to get Event: " + eventName,ex);
             return null;
@@ -244,8 +224,7 @@ public class Firebase implements ICommManager {
     @Override
     public long getSupportedVersion() {
         if (ds == null || ds.getValue() == null) return -1;
-        long id = (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
-        return id;
+        return (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
     }
 
     public DatabaseReference getFireBaseRef() {

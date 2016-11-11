@@ -6,7 +6,6 @@ package com.aayaffe.sailingracecoursemanager;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceGroup;
 
 public class AppPreferences extends PreferenceActivity {
     public static final String RENDERTHEME_MENU = "renderthememenu";

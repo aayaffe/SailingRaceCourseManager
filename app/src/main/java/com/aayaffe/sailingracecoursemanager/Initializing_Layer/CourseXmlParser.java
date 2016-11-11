@@ -3,7 +3,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Mark;
-import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;

@@ -19,7 +19,6 @@ import java.util.Date;
 public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
-    private ICommManager commManager;
     private boolean dbConnected;
     private Versioning versioning;
 
@@ -33,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
 //
 //        }
         versioning = new Versioning(this);
-        commManager = new Firebase(this);
+        ICommManager commManager = new Firebase(this);
         commManager.setCommManagerEventListener(new CommManagerEventListener() {
             @Override
             public void onConnect(Date time) {

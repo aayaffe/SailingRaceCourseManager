@@ -1,5 +1,4 @@
 package com.aayaffe.sailingracecoursemanager.Calc_Layer;
-import java.io.Serializable;
 /**
  * Created by Jonathan on 27/10/2016.
  */

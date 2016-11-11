@@ -25,58 +25,55 @@ public class Buoy {
     private UUID _raceCourseUUID;
     private BuoyType buoyType; //replaces ObjectTypes
     public static final int ORANGE = 0xf49842;
-    public Buoy(){
+
+    public Buoy() {
         _uuid = UUID.randomUUID();
     }
 
-    public Buoy(String name, AviLocation loc){
+    public Buoy(String name, AviLocation loc) {
         _uuid = UUID.randomUUID();
-        this.name=name;
-        this.aviLocation=loc;
+        this.name = name;
+        this.aviLocation = loc;
         this.lastUpdate = new Date().getTime();
         this.buoyType = BuoyType.OTHER;
     }
-//    public BUOY(String name, AviLocation loc, String color){
-//        _uuid = UUID.randomUUID();
-//        this.name=name;
-//        this.aviLocation=loc;
-//        this.color=color;
-//        this.lastUpdate = new Date().getTime();
-//    }
-    public Buoy(String name, AviLocation loc, BuoyType buoyType){
+
+    public Buoy(String name, AviLocation loc, BuoyType buoyType) {
         _uuid = UUID.randomUUID();
-        this.name=name;
-        this.aviLocation=loc;
-        this.buoyType=buoyType;
+        this.name = name;
+        this.aviLocation = loc;
+        this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
 
-        switch (buoyType){
+        switch (buoyType) {
             case FINISH_LINE:
-                this.color=Color.BLUE;
+                this.color = Color.BLUE;
                 break;
             case START_LINE:
-                this.color=ORANGE;
+                this.color = ORANGE;
                 break;
             case GATE:
-                this.color=Color.YELLOW;
+                this.color = Color.YELLOW;
                 break;
             case BUOY:
-                this.color=Color.RED;
+                this.color = Color.RED;
                 break;
         }
     }
-    public Buoy(String name, AviLocation loc, int color, BuoyType buoyType){
+
+    public Buoy(String name, AviLocation loc, int color, BuoyType buoyType) {
         _uuid = UUID.randomUUID();
-        this.name=name;
-        this.aviLocation=loc;
-        this.color=color;
-        this.buoyType=buoyType;
+        this.name = name;
+        this.aviLocation = loc;
+        this.color = color;
+        this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
     }
 
     public String getName() {
         return name;
     }
+
     public void setAviLocation(AviLocation aviLocation) {
         this.aviLocation = aviLocation;
     }
@@ -89,10 +86,12 @@ public class Buoy {
     public void setEnumBuoyType(BuoyType buoyType) {
         this.buoyType = buoyType;
     }
+
     @Exclude
     public BuoyType getEnumBuoyType() {
         return buoyType;
     }
+
     public String getType() {
         return buoyType.toString();
     }
@@ -100,30 +99,45 @@ public class Buoy {
     public void setType(String type) {
         this.buoyType = BuoyType.valueOf(type);
     }
+
     @Exclude
     public UUID getRaceCourseUUID() {
         return _raceCourseUUID;
     }
     @Exclude
+    public void setRaceCourseUUID(UUID _raceCourseUUID) {
+        this._raceCourseUUID = _raceCourseUUID;
+    }
+
+    @Exclude
     public UUID getUUID() {
         return _uuid;
     }
 
-    public void setUuid(String uuid) {
-        this._uuid = UUID.fromString(uuid);
+    public void setRCUuidString(String uuid) {
+        this._raceCourseUUID = UUID.fromString(uuid);
     }
-    public UUID get_raceCourseUUID() {
-        return _raceCourseUUID;
+    public String getRCUuidString() {
+        if (_raceCourseUUID!=null)
+            return this._raceCourseUUID.toString();
+        else return null;
     }
 
-    public void set_raceCourseUUID(UUID _raceCourseUUID) {
-        this._raceCourseUUID = _raceCourseUUID;
+    public void setUuidString(String uuid) {
+        this._uuid = UUID.fromString(uuid);
     }
+    public String getUuidString() {
+        return this._uuid.toString();
+    }
+
+
+
 
     @Exclude
     public Date getLastUpdate() {
         return new Date(lastUpdate);
     }
+
     @Exclude
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate.getTime();
@@ -133,18 +147,21 @@ public class Buoy {
     public void setLoc(Location loc) {
         this.aviLocation = GeoUtils.toAviLocation(loc);
     }
+
     @Exclude
     public Location getLoc() {
         return GeoUtils.toLocation(aviLocation);
     }
+
+    @Exclude
     public LatLng getLatLng() {
         return GeoUtils.toLatLng(aviLocation);
     }
 
-
+    @Exclude
     public int getIconResourceId() {
-        if(this.getEnumBuoyType() ==BuoyType.FLAG_BUOY ||this.getEnumBuoyType() ==BuoyType.FINISH_LINE ||this.getEnumBuoyType() ==BuoyType.START_LINE) {
-            switch(this.color){
+        if (this.getEnumBuoyType() == BuoyType.FLAG_BUOY || this.getEnumBuoyType() == BuoyType.FINISH_LINE || this.getEnumBuoyType() == BuoyType.START_LINE) {
+            switch (this.color) {
                 case Color.RED:
                     return R.mipmap.flag_buoy_red;
                 case Color.BLUE:
@@ -155,10 +172,9 @@ public class Buoy {
                 default:
                     return R.mipmap.flag_buoy_orange;
             }
-        }
-        else if(this.getEnumBuoyType() ==BuoyType.TOMATO_BUOY ||this.getEnumBuoyType() ==BuoyType.BUOY ||this.getEnumBuoyType() ==BuoyType.GATE) {
+        } else if (this.getEnumBuoyType() == BuoyType.TOMATO_BUOY || this.getEnumBuoyType() == BuoyType.BUOY || this.getEnumBuoyType() == BuoyType.GATE) {
 
-            switch(this.color) {
+            switch (this.color) {
                 case Color.RED:
                     return R.mipmap.tomato_buoy_red;
                 case Color.BLUE:
@@ -169,9 +185,8 @@ public class Buoy {
                 default:
                     return R.mipmap.tomato_buoy_orange;
             }
-        }
-        else if(this.getEnumBuoyType() ==BuoyType.TRIANGLE_BUOY) {
-            switch(this.color) {
+        } else if (this.getEnumBuoyType() == BuoyType.TRIANGLE_BUOY) {
+            switch (this.color) {
                 case Color.RED:
                     return R.mipmap.triangle_buoy_red;
                 case Color.BLUE:
@@ -184,8 +199,7 @@ public class Buoy {
                     return R.mipmap.triangle_buoy;
 
             }
-        }
-            else
+        } else
             return R.mipmap.tomato_buoy_black_empty;
     }
 }

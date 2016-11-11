@@ -40,16 +40,15 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener{
+public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
 
-    private RaceCourse raceCourse;  //imported from jonathan's new RaceCourse class //replaces private RaceCourse rc;
     public static List<Buoy> buoys; //replaces public static marks marks = new marks();
-    //private HashMap<String, BoatTypes> boatTypes;  //unnecessary, now is a part ot the xml boat parser
     private Buoy myBoat; //instead of AviObject class
 
     private static final String TAG = "GoogleMapsActivity";
-    public static  int REFRESH_RATE = 1000;
+    public static int REFRESH_RATE = 1000;
     private static Users users;
     private SharedPreferences SP;
     private GoogleMaps mapLayer;
@@ -77,50 +76,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, SP);
-        iGeo  = new OwnLocation(getBaseContext(), this);
+        iGeo = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Intent i = getIntent();
         //currentEvent =  i.getParcelableExtra("currentEvent");
         currentEventName = i.getStringExtra("eventName");
-        ImageView ownLocationButton = (ImageView) findViewById(R.id.own_location);
-        ownLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    mapLayer.setCenter(iGeo.getLoc());
-                }catch (Exception e)
-                {
-                    Log.d(TAG,"Unable to zoom to own location",e);
-                }
-            }
-        });
-        ImageView zoomToBoundsButton = (ImageView) findViewById(R.id.zoom_to_bounds);
-        zoomToBoundsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    mapLayer.ZoomToMarks();
-                }catch (Exception e)
-                {
-                    Log.d(TAG,"Unable to zoom to uuidToMarker",e);
-                }
-            }
-        });
-        ImageView noGPSIcon = (ImageView) findViewById(R.id.gps_indicator);
-        noGPSIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    Toast.makeText(GoogleMapsActivity.this, "No GPS signal Available",
-                            Toast.LENGTH_LONG).show();
-                }catch (Exception e)
-                {
-                    Log.d(TAG,"Error showing no GPS message",e);
-                }
-            }
-        });
+        SetIconsClickListeners();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        if (toolbar!=null)
+            toolbar.setTitle("");
+        else Log.e(TAG,"Unable to find toolbar view.");
 
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -134,9 +99,53 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         toolbar.setTitle(currentEventName);
 
         Log.d(TAG, "Selected Event name is: " + currentEventName);
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        //mTracker = application.getDefaultTracker();
+    }
+
+    private void SetIconsClickListeners() {
+        SetOnClickListenerToView(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mapLayer.setCenter(iGeo.getLoc());
+                } catch (Exception e) {
+                    Log.d(TAG, "Unable to zoom to own location", e);
+                }
+            }
+        }, R.id.own_location);
+        SetOnClickListenerToView(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mapLayer.ZoomToMarks();
+                } catch (Exception e) {
+                    Log.d(TAG, "Unable to zoom to uuidToMarker", e);
+                }
+            }
+        }, R.id.zoom_to_bounds);
+        SetOnClickListenerToView(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Toast.makeText(GoogleMapsActivity.this, "No GPS signal Available",
+                            Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Log.d(TAG, "Error showing no GPS message", e);
+                }
+            }
+        },R.id.gps_indicator);
+    }
+
+    /**
+     * Sets on click listeners to views.
+     * Logs an error when view is not found.
+     * @param onClickListener
+     * @param id
+     */
+    private void SetOnClickListenerToView(View.OnClickListener onClickListener, int id) {
+        View v = findViewById(id);
+        if(v!=null)
+            v.setOnClickListener(onClickListener);
+        else Log.e(TAG,"Unable to set onClickListener on view id: " + id);
     }
 
 
@@ -144,14 +153,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
-        if((users.getCurrentUser()==null)||(!isCurrentEventManager(users.getCurrentUser().Uid))) {
+        if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid))) {
             menu.getItem(2).setEnabled(false);
             menu.getItem(2).setVisible(false);
             menu.getItem(1).setEnabled(false);
             menu.getItem(1).setVisible(false);
-        }
-        else
-        {
+        } else {
             menu.getItem(2).setEnabled(true);
             menu.getItem(2).setVisible(true);
             menu.getItem(1).setEnabled(true);
@@ -160,6 +167,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -201,12 +209,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
          * all GoogleMapsActivity variables
          */
         removeAllRaceCourseMarks();
-        if(mapLayer.mapView!=null)mapLayer.removeAllMarks();
+        if (mapLayer.mapView != null) mapLayer.removeAllMarks();
 
 
-        raceCourse = new RaceCourse();
-        if(mapLayer.mapView!=null)buoys.addAll(raceCourse.getBuoyList());
-        else Log.w(TAG,"null map");
+        RaceCourse raceCourse = new RaceCourse();
+        if (mapLayer.mapView != null) buoys.addAll(raceCourse.getBuoyList());
+        else Log.w(TAG, "null map");
 
         addBuoys();
     }
@@ -215,13 +223,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     protected void onResume() {
         super.onResume();
         addRaceCourse();
-        Log.w(TAG,"onResume");
+        Log.w(TAG, "onResume");
     }
 
     private void removeAllRaceCourseMarks() {  //becomes unnecessary
         buoys = commManager.getAllBuoys();
-        for(Buoy m: buoys){
-            if (m.getRaceCourseUUID()!=null){
+        for (Buoy m : buoys) {
+            if (m.getRaceCourseUUID() != null) {
                 mapLayer.removeMark(m.getUUID());
             }
         }
@@ -229,17 +237,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private Runnable runnable = new Runnable() {
         public void run() {
-            if ((users.getCurrentUser()!=null)&&(commManager.getAllBoats()!=null)) {
+            if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
                 if (myBoat == null) {
-                    for(Buoy ao: commManager.getAllBoats()){
-                        if (ao.getName() == users.getCurrentUser().DisplayName)
-                        {
-                            myBoat=ao;
+                    for (Buoy ao : commManager.getAllBoats()) {
+                        if (ao.getName().equals(users.getCurrentUser().DisplayName)) {
+                            myBoat = ao;
                             break;
                         }
                     }
-                    if(myBoat==null){
-                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE,BuoyType.WORKER_BOAT);//TODO Set color properly
+                    if (myBoat == null) {
+                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
                     }
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                         myBoat.setEnumBuoyType(BuoyType.RACE_MANAGER);
@@ -250,11 +257,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
                 commManager.writeBoatObject(myBoat);
             }
-            if (((OwnLocation)iGeo).isGPSFix()){
+            if (((OwnLocation) iGeo).isGPSFix()) {
                 findViewById(R.id.gps_indicator).setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
                 findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
             }
             drawMapComponents();
@@ -262,56 +267,52 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     };
 
-    private boolean isCurrentEventManager(String Uid){
+    private boolean isCurrentEventManager(String Uid) {
         Event e = commManager.getEvent(currentEventName);
-        if (e==null)
+        if (e == null)
             return false;
-        if (Uid == null||Uid.isEmpty())
+        if (Uid == null || Uid.isEmpty())
             return false;
-        Log.d(TAG, "Checking for event "+currentEventName+" manager: " + commManager.getEvent(currentEventName).getManagerUuid());
-        if (e.getManagerUuid()==null) return false;
-        return e.getManagerUuid().equals(Uid);
+        Log.d(TAG, "Checking for event " + currentEventName + " manager: " + commManager.getEvent(currentEventName).getManagerUuid());
+        return e.getManagerUuid() != null && e.getManagerUuid().equals(Uid);
     }
 
-    public static boolean isCurrentEventManager(){
+    public static boolean isCurrentEventManager() {
         Event e = commManager.getEvent(currentEventName);
-        if (e==null)
+        if (e == null)
             return false;
-        if (users.getCurrentUser() == null|| users.getCurrentUser().Uid==null||users.getCurrentUser().Uid.isEmpty())
-            return false;
-        return e.getManagerUuid().equals(users.getCurrentUser().Uid);
+        return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty()) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
     }
 
-    public void addBuoys(){
-        for(Buoy buoy: buoys){
-            mapLayer.addBuoy(buoy,getDirDistTXT(iGeo.getLoc(),buoy.getLoc()));
+    public void addBuoys() {
+        for (Buoy buoy : buoys) {
+            mapLayer.addBuoy(buoy, getDirDistTXT(iGeo.getLoc(), buoy.getLoc()));
             commManager.writeBuoyObject(buoy);
         }
     }
 
-    public void drawMapComponents(){
+    public void drawMapComponents() {
         Location myLocation = iGeo.getLoc();
         buoys = commManager.getAllBoats();
-        for (Buoy o: buoys) {
+        for (Buoy o : buoys) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(!o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
+            if ((o != null) && (o.getLoc() != null) && (users.getCurrentUser() != null) && (!o.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() first if is true");
-                int id = getIconId(users.getCurrentUser().DisplayName,o);
-                mapLayer.addMark(o, getDirDistTXT(myLocation,o.getLoc()), id);
+                int id = getIconId(users.getCurrentUser().DisplayName, o);
+                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), id);
             }
-            if ((o != null)&&(o.getLoc()!=null)&&(users.getCurrentUser()!=null)&&(o.getName().equals(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1")))) {
+            if ((o != null) && (o.getLoc() != null) && (users.getCurrentUser() != null) && (o.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() second if is true");
-                int id = getIconId(/*users.getCurrentUser().DisplayName*/SP.getString("username","Manager1"),o);
+                int id = getIconId(users.getCurrentUser().DisplayName, o);
                 mapLayer.addMark(o, null, id);
             }
         }
         List<Buoy> commBuoyList = commManager.getAllBuoys();
-        Log.d(TAG, "commBuoyList size: "+commBuoyList.size());
-        for (Buoy o : commBuoyList){
-            mapLayer.addBuoy(o,getDirDistTXT(myLocation, o.getLoc()));
+        Log.d(TAG, "commBuoyList size: " + commBuoyList.size());
+        for (Buoy o : commBuoyList) {
+            mapLayer.addBuoy(o, getDirDistTXT(myLocation, o.getLoc()));
         }
-        if ((buoys.size()>0)&&(firstBoatLoad)&&(mapLayer.mapView!=null))
-        {
+        if ((buoys.size() > 0) && (firstBoatLoad) && (mapLayer.mapView != null)) {
             firstBoatLoad = false;
             mapLayer.ZoomToMarks();
         }
@@ -319,23 +320,24 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private int getIconId(String string, Buoy o) {
         int ret;
-        if (o.getName().equals(string)){
-            switch(o.getEnumBuoyType()) {
+        if (o.getName().equals(string)) {
+            switch (o.getEnumBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation())>300)
+                    if (AviLocation.Age(o.getAviLocation()) > 300)
                         ret = R.drawable.boatred;
                     break;
-                case RACE_MANAGER: ret = R.drawable.managergold;
+                case RACE_MANAGER:
+                    ret = R.drawable.managergold;
                     break;
-                default: ret = R.drawable.boatred;
+                default:
+                    ret = R.drawable.boatred;
             }
-        }
-        else {
+        } else {
             switch (o.getEnumBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation())>300)
+                    if (AviLocation.Age(o.getAviLocation()) > 300)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_MANAGER:
@@ -348,23 +350,23 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return ret;
     }
 
-    private String getDirDistTXT(Location src, Location dst){
+    private String getDirDistTXT(Location src, Location dst) {
         int distance;
         int bearing;
         String units;
         try {
             distance = src.distanceTo(dst) < 500 ? (int) src.distanceTo(dst) : ((int) (src.distanceTo(dst) / 1609.34));
-            units = src.distanceTo(dst)<500?"m":"NM";
-            bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst)+360;
-        }catch (NullPointerException e)
-        {
+            units = src.distanceTo(dst) < 500 ? "m" : "NM";
+            bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
+        } catch (NullPointerException e) {
             return "NoGPS";
         }
         return bearing + "\\" + distance + units;
     }
+
     @Override
     protected void onStart() {
-        Log.d(TAG,"OnStart");
+        Log.d(TAG, "OnStart");
         super.onStart();
         firstBoatLoad = true;
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
@@ -390,19 +392,19 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-        df = BuoyInputDialog.newInstance(-1,this);
+        df = BuoyInputDialog.newInstance(-1, this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
 
 
-    private void addMark(long id, Location loc, Float dir, int dist){
+    private void addMark(long id, Location loc, Float dir, int dist) {
         if (loc == null) return;
-        Buoy o =new Buoy("BUOY"+id, new AviLocation(GeoUtils.toAviLocation(loc),Integer.parseInt(dir+""),dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
+        Buoy o = new Buoy("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), Integer.parseInt(dir + ""), dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }
 
-    private void addMark(Buoy m){
+    private void addMark(Buoy m) {
         commManager.writeBuoyObject(m);
     }
 
@@ -415,32 +417,31 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText dirText = (EditText) dialog.getDialog().findViewById(R.id.dir);
         EditText distText = (EditText) dialog.getDialog().findViewById(R.id.dist);
-        long buoyId = ((BuoyInputDialog)df).buoy_id;
-        if (buoyId!=-1){
-            addMark(buoyId,iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
-        }
-        else
-            addMark(newBuoyId(),iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+        long buoyId = ((BuoyInputDialog) df).buoy_id;
+        if (buoyId != -1) {
+            addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+        } else
+            addMark(newBuoyId(), iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
     }
 
     private long newBuoyId() {
         return commManager.getNewBuoyId();
     }
 
-    public static void login(String id){
-        if (commManager !=null) {
+    public static void login(String id) {
+        if (commManager != null) {
             commManager.login(id, "Aa123456z", "1");
             Log.d(TAG, "login to " + id);
         }
     }
+
     @Override
     public void onStop() {
         super.onStop();
         handler.removeCallbacks(runnable);
-        Log.d(TAG,"OnStop");
+        Log.d(TAG, "OnStop");
 //        finish();
     }
-
 
 
 }

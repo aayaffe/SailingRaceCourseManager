@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
@@ -41,7 +42,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
     private static String selectedEventName;
-    private DialogFragment addevent;
     private Notification notification = new Notification();
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
@@ -76,7 +76,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
                 selectedEventName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                commManager.setCurrentEventName(selectedEventName);
+                Firebase.setCurrentEventName(selectedEventName);
                 intent.putExtra("eventName", selectedEventName);
                 startActivity(intent);
             }
@@ -134,7 +134,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         switch (item.getItemId()) {
             case R.id.action_add_event:
                 Log.d(TAG, "Plus Fab Clicked");
-                addevent = EventInputDialog.newInstance(null,this);
+                DialogFragment addevent = EventInputDialog.newInstance(null, this);
                 addevent.show(getFragmentManager(), "Add_Event");
                 return true;
 
@@ -171,7 +171,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode, data);
-            return;
         }
 
 //        showSnackbar(R.string.unknown_response);
@@ -179,19 +178,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private void handleSignInResponse(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Log.d(TAG, "Logged in: " +FirebaseAuth.getInstance().getCurrentUser().getUid());
-            String displayName;
             enableLogin(false);
-            try{
-                displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-            }catch (Exception e){
-                Random r = new Random();
-                displayName = "User" + r.nextInt(10000);
-            }
             return;
         }
 
         if (resultCode == RESULT_CANCELED) {
-//            Log.d(TAG, "Login provider error: " + firebaseLoginError.message);
+            Log.d(TAG, "Login provider error");
             Toast.makeText(this, "Login canceled",
                     Toast.LENGTH_LONG).show();
 //            resetFirebaseLoginPrompt();

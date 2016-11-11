@@ -26,7 +26,7 @@ public class Mark {
 
     public Mark(String name) {
         this.name = name;
-        referedMarks = new ArrayList<Mark>();
+        referedMarks = new ArrayList<>();
     }
 
 

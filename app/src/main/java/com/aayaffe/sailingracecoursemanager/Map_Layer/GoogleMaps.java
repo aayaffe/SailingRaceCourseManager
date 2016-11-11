@@ -206,7 +206,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
             //googleMap.moveCamera(cu);
             mapView.animateCamera(cu);
         } catch (Exception e) {
-
+            Log.e(TAG,"Error zomming to bounds",e);
         }
     }
 

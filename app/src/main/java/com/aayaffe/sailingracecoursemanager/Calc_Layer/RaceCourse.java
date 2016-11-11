@@ -21,7 +21,6 @@ public class RaceCourse {
      */
     private static double dist2m1;  //distance to mark 1
     private static int windDir;  //wind direction
-    private static Mark referenceMark;  //a mark that contains(like a tree) all marks
     private static AviLocation signalBoatLoc;
     private static float startLineDist;
     private static Map<String, String> selectedOptions;
@@ -52,7 +51,7 @@ public class RaceCourse {
         return new AviLocation(startLineCenter,windDir, 0.05);
     }
     static synchronized public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
-        referenceMark = xmlParserC.parseMarks(selectedOptions);  //TODO: is selectedOptions null?
+        Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
         bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir);
         return bouyList;
     }

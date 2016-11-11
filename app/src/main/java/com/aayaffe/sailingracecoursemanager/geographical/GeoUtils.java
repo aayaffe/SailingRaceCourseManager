@@ -38,14 +38,12 @@ public class GeoUtils {
     static public LatLng toLatLng(Location l){
         if (l==null)
             return null;
-        LatLng ret = new LatLng(l.getLatitude(), l.getLongitude());
-        return ret;
+        return new LatLng(l.getLatitude(), l.getLongitude());
     }
     static public LatLng toLatLng(AviLocation l){
         if (l==null)
             return null;
-        LatLng ret = new LatLng(l.lat, l.lon);
-        return ret;
+        return new LatLng(l.lat, l.lon);
     }
 
 
@@ -58,8 +56,7 @@ public class GeoUtils {
     static public AviLocation toAviLocation(Location l){
         if (l==null)
             return null;
-        AviLocation ret = new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
-        return ret;
+        return new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
     }
 
     public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, int distm) {
@@ -71,8 +68,7 @@ public class GeoUtils {
         double a = Math.atan2(Math.sin(brng)*Math.sin(dis)*Math.cos(lat1), Math.cos(dis)-Math.sin(lat1)*Math.sin(lat2));
         double lon2 = lon1 + a;
         lon2 = (lon2+ 3*Math.PI) % (2*Math.PI) - Math.PI;
-        AviLocation ret = new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
-        return ret;
+        return new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
     }
     public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, double distNM) {
         return getLocationFromDirDist(loc,dir,(int)(distNM*1852));
@@ -91,7 +87,7 @@ public class GeoUtils {
         double dist12 = 2 * Math.asin(Math.sqrt(Math.sin(dLat / 2)
                 * Math.sin(dLat / 2) + Math.cos(lat1) * Math.cos(lat2)
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2)));
-        if (dist12 == 0);
+        if (dist12 == 0); //TODO: Why is this here?
         Double brngA = Math.acos((Math.sin(lat2) - Math.sin(lat1) * Math.cos(dist12)) / (Math.sin(dist12) * Math.cos(lat1)));
         if (brngA.isNaN()) brngA = 0.0;
         Double brngB = Math.acos((Math.sin(lat1) - Math.sin(lat2) * Math.cos(dist12)) / (Math.sin(dist12) * Math.cos(lat2)));

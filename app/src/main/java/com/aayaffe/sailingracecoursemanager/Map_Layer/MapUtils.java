@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 
@@ -16,6 +17,8 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
  * Created by aayaffe on 02/10/2015.
  */
 public class MapUtils {
+
+    private static final String TAG = "MapUtils";
 
     public static Bitmap createBoatIcon(Bitmap boat, Bitmap mark, int number, String color, Resources r) {
         Bitmap bitmap = null;
@@ -35,6 +38,8 @@ public class MapUtils {
 
 
         } catch (Exception e) {
+            Log.e(TAG,"Error creating boat icons",e);
+
         }
         return bitmap;
     }
