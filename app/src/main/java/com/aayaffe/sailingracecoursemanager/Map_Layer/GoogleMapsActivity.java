@@ -17,9 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.AnalyticsApplication;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
@@ -40,7 +40,7 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
 
@@ -59,8 +59,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public static ICommManager commManager;
     private DialogFragment df;
     private static String currentEventName;
-    private Tracker mTracker;
     private boolean firstBoatLoad = true;
+    private Buoy assignedTo = null;
 
 
     @Override
@@ -75,7 +75,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         commManager.login(/*null, null,null*/SP.getString("username", "Manager1"), "Aa123456z", "1");
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
-        mapLayer.Init(this, this, SP);
+        mapLayer.Init(this, this, SP,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Intent i = getIntent();
@@ -88,7 +88,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         else Log.e(TAG,"Unable to find toolbar view.");
 
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +99,68 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         toolbar.setTitle(currentEventName);
 
         Log.d(TAG, "Selected Event name is: " + currentEventName);
+    }
+
+    private MapClickMethods getClickMethods() {
+        MapClickMethods ret = new MapClickMethods() {
+            @Override
+            public void infoWindowClick(UUID u) {
+                Buoy b = commManager.getObjectByUUID(u);
+                if (b==null) return;
+                //TODO: Implement something here...
+            }
+
+            @Override
+            public void infoWindowLongClick(UUID u) {
+                Buoy b = commManager.getObjectByUUID(u);
+                if (b==null) return;
+                if (b.equals(assignedTo))
+                {
+                    assignBuoy((Buoy) null);
+                }
+                else if (isBuoy(b)){
+                    assignBuoy(u);
+                }
+
+
+            }
+        };
+        return ret;
+    }
+
+    private void assignBuoy(UUID u) {
+        assignBuoy(commManager.getObjectByUUID(u));
+    }
+    private void assignBuoy(Buoy b){
+        if (b==null){
+            TextView tv = (TextView) findViewById(R.id.goto_text_view);
+            if(tv!=null) {
+                tv.setVisibility(View.INVISIBLE);
+            }
+            assignedTo = null;
+            mapLayer.addLine(null,null);
+            return;
+        }
+        mapLayer.addLine(b.getUUID(),myBoat.getUUID());
+        TextView tv = (TextView) findViewById(R.id.goto_text_view);
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(b.getName()+'\n'+getDirDistTXT(myBoat.getLoc(), b.getLoc()));
+        assignedTo = b;
+    }
+
+    private boolean isBuoy(Buoy b) {
+        switch (b.getBuoyType()){
+            case BUOY:
+            case FINISH_LINE:
+            case FLAG_BUOY:
+            case GATE:
+            case START_FINISH_LINE:
+            case START_LINE:
+            case TOMATO_BUOY:
+            case TRIANGLE_BUOY:
+                return true;
+        }
+        return false;
     }
 
     private void SetIconsClickListeners() {
@@ -249,8 +311,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
                     }
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setEnumBuoyType(BuoyType.RACE_MANAGER);
-                    } else myBoat.setEnumBuoyType(BuoyType.WORKER_BOAT);
+                        myBoat.setBuoyType(BuoyType.RACE_MANAGER);
+                    } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
                 } else {
                     myBoat.setLoc(iGeo.getLoc());
                     myBoat.lastUpdate = new Date().getTime();
@@ -264,6 +326,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
             drawMapComponents();
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "5")) * 1000));
+            assignBuoy(assignedTo);
+
         }
     };
 
@@ -321,7 +385,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private int getIconId(String string, Buoy o) {
         int ret;
         if (o.getName().equals(string)) {
-            switch (o.getEnumBuoyType()) {
+            switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation()) > 300)
@@ -334,7 +398,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     ret = R.drawable.boatred;
             }
         } else {
-            switch (o.getEnumBuoyType()) {
+            switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation()) > 300)
@@ -361,7 +425,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         } catch (NullPointerException e) {
             return "NoGPS";
         }
-        return bearing + "\\" + distance + units;
+        if (bearing==360) bearing = 0;
+        return String.format("%03d", bearing) + "\\" + distance + units;
     }
 
     @Override

@@ -83,12 +83,12 @@ public class Buoy {
     }
 
     @Exclude
-    public void setEnumBuoyType(BuoyType buoyType) {
+    public void setBuoyType(BuoyType buoyType) {
         this.buoyType = buoyType;
     }
 
     @Exclude
-    public BuoyType getEnumBuoyType() {
+    public BuoyType getBuoyType() {
         return buoyType;
     }
 
@@ -160,7 +160,7 @@ public class Buoy {
 
     @Exclude
     public int getIconResourceId() {
-        if (this.getEnumBuoyType() == BuoyType.FLAG_BUOY || this.getEnumBuoyType() == BuoyType.FINISH_LINE || this.getEnumBuoyType() == BuoyType.START_LINE) {
+        if (this.getBuoyType() == BuoyType.FLAG_BUOY || this.getBuoyType() == BuoyType.FINISH_LINE || this.getBuoyType() == BuoyType.START_LINE) {
             switch (this.color) {
                 case Color.RED:
                     return R.mipmap.flag_buoy_red;
@@ -172,7 +172,7 @@ public class Buoy {
                 default:
                     return R.mipmap.flag_buoy_orange;
             }
-        } else if (this.getEnumBuoyType() == BuoyType.TOMATO_BUOY || this.getEnumBuoyType() == BuoyType.BUOY || this.getEnumBuoyType() == BuoyType.GATE) {
+        } else if (this.getBuoyType() == BuoyType.TOMATO_BUOY || this.getBuoyType() == BuoyType.BUOY || this.getBuoyType() == BuoyType.GATE) {
 
             switch (this.color) {
                 case Color.RED:
@@ -185,7 +185,7 @@ public class Buoy {
                 default:
                     return R.mipmap.tomato_buoy_orange;
             }
-        } else if (this.getEnumBuoyType() == BuoyType.TRIANGLE_BUOY) {
+        } else if (this.getBuoyType() == BuoyType.TRIANGLE_BUOY) {
             switch (this.color) {
                 case Color.RED:
                     return R.mipmap.triangle_buoy_red;
@@ -201,5 +201,27 @@ public class Buoy {
             }
         } else
             return R.mipmap.tomato_buoy_black_empty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Buoy buoy = (Buoy) o;
+
+
+        return (_uuid != null ? _uuid.equals(buoy._uuid) : buoy._uuid == null);
+
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (_uuid != null ? _uuid.hashCode() : 0);
+        result = 31 * result + (_raceCourseUUID != null ? _raceCourseUUID.hashCode() : 0);
+        result = 31 * result + (buoyType != null ? buoyType.hashCode() : 0);
+        return result;
     }
 }

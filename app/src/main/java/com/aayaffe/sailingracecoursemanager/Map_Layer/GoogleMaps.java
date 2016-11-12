@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -33,17 +37,19 @@ import java.util.UUID;
 /**
  * Created by aayaffe on 04/10/2015.
  */
-public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback {
-    private static final String TAG = "OpenSeaMap";
+public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowLongClickListener, OnMapReadyCallback {
+    private static final String TAG = "GoogleMaps";
     public GoogleMap mapView;
     private Context c;
     public BiMap<UUID, Marker> uuidToMarker = HashBiMap.create();
     public BiMap<UUID, String> uuidToId = HashBiMap.create();
-
+    private MapClickMethods clickMethods;
     private Marker lastOpenned = null;
     public DialogFragment df;
+    private Polyline polyline;
 
-    public void Init(Activity a, Context c, SharedPreferences sp) {
+    public void Init(Activity a, Context c, SharedPreferences sp, MapClickMethods mcm) {
+        this.clickMethods = mcm;
         this.c = c;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity) a).getSupportFragmentManager()
@@ -162,7 +168,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
     }
 
     private boolean isValid(Buoy ao) {
-        return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getEnumBuoyType() != null) && (ao.getLastUpdate() != null);
+        return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
     }
 
     public void removeMark(Marker m) {
@@ -216,7 +222,12 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        clickMethods.infoWindowLongClick(uuidToMarker.inverse().get(marker));
+    }
+    @Override
+    public void onInfoWindowLongClick(Marker marker) {
         try {
+            clickMethods.infoWindowLongClick(uuidToMarker.inverse().get(marker));
             boolean isBuoy = false;
             if (marker.getTitle().contains("BUOY")) isBuoy = true;
             if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
@@ -233,13 +244,37 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, OnMapRea
                         }
                     }, 3 * 1000);
                 }
-
             }
         } catch (Exception e) {
             Log.d(TAG, "Failed on info click", e);
         }
-
     }
 
+    /**
+     * Adds a line between a and b
+     * Removes a previous line if one exists
+     * Removes the existing line if a or b are null.
+     * @param a
+     * @param b
+     */
+    public void addLine(UUID a, UUID b) {
+        if(a==null||b==null){
+            if (polyline!=null)
+                polyline.remove();
+            return;
+        }
+        LatLng a1 = uuidToMarker.get(a).getPosition();
+        LatLng b1 = uuidToMarker.get(b).getPosition();
+
+        PolylineOptions po = new PolylineOptions()
+                .add(a1)
+                .add(b1);  // North of the previous point, but at the same longitude
+
+        // Get back the mutable Polyline
+        if (polyline!=null)
+            polyline.remove();
+        polyline = mapView.addPolyline(po);
+
+    }
     private Boolean deleteMark = false;
 }
