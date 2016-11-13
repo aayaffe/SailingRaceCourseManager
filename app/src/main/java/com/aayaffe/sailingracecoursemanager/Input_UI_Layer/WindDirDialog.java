@@ -20,7 +20,7 @@ public class WindDirDialog extends Dialog {
 
     private Context context;
     private OnMyDialogResult myDialogResult;
-    private EditText windSelector;
+    private HorizontalNumberPicker windSelector;
 
     public WindDirDialog(Context context) {
         super(context);
@@ -39,13 +39,14 @@ public class WindDirDialog extends Dialog {
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleV.setGravity(Gravity.CENTER);
 
-        windSelector = (EditText) findViewById(R.id.wind_dialogs_picker);
+        windSelector = (HorizontalNumberPicker) findViewById(R.id.wind_dialogs_picker);
+        windSelector.configNumbers(0, 5 , -1, 360);
 
         Button applyB = (Button)findViewById(R.id.apply_wind_dialog_button);
         applyB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myDialogResult.finish(Double.parseDouble(windSelector.getText().toString()));
+                myDialogResult.finish(windSelector.getNumber());
                 dismiss();
             }
         });

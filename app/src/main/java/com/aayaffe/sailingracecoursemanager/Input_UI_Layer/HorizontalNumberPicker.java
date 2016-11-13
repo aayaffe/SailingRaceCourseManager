@@ -9,14 +9,17 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.text.DecimalFormat;
+import java.util.logging.Handler;
 
 public class HorizontalNumberPicker extends RelativeLayout {
     private double initialN=0;
@@ -26,6 +29,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
     private int buttonsBackgroundColor;
     private int buttonsTextColor;
 
+
     private double upperBoundary = 1000;  //if Activated, CAN NOT BE this number as well.
     private boolean upperBoundaryActivation = false;
     private double lowerBoundary = -1000; //if Activated, CAN NOT BE this number as well.
@@ -34,7 +38,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
 
     private DecimalFormat df = new DecimalFormat(".##");
 
-    private TextView numberTV;
+    private EditText numberTV;
     private Button plusB;
     private Button minusB;
 
@@ -71,7 +75,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
 
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
 
-        numberTV = (TextView) this.findViewById(R.id.np_number);
+        numberTV = (EditText) this.findViewById(R.id.np_number);
         numberTV.setText(number + "");
         numberTV.setTextSize(textSize);
 
@@ -82,7 +86,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
         plusB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                number = number + steps;
+                number = getNumber() + steps;
                 if(number >= upperBoundary&&upperBoundaryActivation){
                     number=lowerBoundary+1+(number-upperBoundary);
                 }
@@ -96,13 +100,14 @@ public class HorizontalNumberPicker extends RelativeLayout {
         minusB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                number = number - steps;
+                number = getNumber() - steps;
                 if(number<=lowerBoundary&&lowerBoundaryActivation){
                     number=upperBoundary-1-(lowerBoundary-number);
                 }
                 setNumber(number);
             }
         });
+
     }
     public void setTextSize(float textSize){
         this.textSize=textSize;
@@ -145,6 +150,8 @@ public class HorizontalNumberPicker extends RelativeLayout {
     }
 
     public double getNumber() {
+        String s = numberTV.getText().toString();
+        number = Double.parseDouble(s);
         return number;
     }
 

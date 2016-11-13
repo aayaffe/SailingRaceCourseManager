@@ -48,7 +48,7 @@ public class MainCourseInputActivity extends Activity {
     private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));
     private static double[] courseFactors;
     private static Map<String,String> courseOptions;
-    private float dist2m1;
+    private float dist2m1 = 1;
     private int windDirection;
 
     private static OnMyCourseInputResult mInputResult;
