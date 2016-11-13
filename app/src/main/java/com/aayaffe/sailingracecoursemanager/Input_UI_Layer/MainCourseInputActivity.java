@@ -44,12 +44,12 @@ public class MainCourseInputActivity extends Activity {
     private Button WindDirButton;
     private Button applyB;
 
-    private RaceCourse raceCourse;
+    private static RaceCourse raceCourse;
     private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));
     private static double[] courseFactors;
     private static Map<String,String> courseOptions;
-    private float dist2m1 = 1;
-    private int windDirection;
+    private static float dist2m1 = 1;
+    private static int windDirection;
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
@@ -62,7 +62,6 @@ public class MainCourseInputActivity extends Activity {
         Map<String,String> defaultCourseOptions  =new HashMap<String, String>();
         defaultCourseOptions.put("type","Windward-Leeward");
         defaultCourseOptions.put("Legs","L-Leeward");
-        //defaultCourseOptions.
         courseOptions=defaultCourseOptions;
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
