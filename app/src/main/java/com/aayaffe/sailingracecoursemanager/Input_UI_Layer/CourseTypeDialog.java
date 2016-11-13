@@ -53,8 +53,8 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
         CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context,courseType);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {
-            public void finish(Map<String, String> result) {
-                mDialogResult.finish(result);
+            public void finish(Map<String, String> result , double[] factorResult) {
+                mDialogResult.finish(result, factorResult);
             }
         });
         dismiss();
@@ -65,7 +65,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, String> result);
+        void finish(Map<String, String> result , double[] factorResult);
     }
 
 }
