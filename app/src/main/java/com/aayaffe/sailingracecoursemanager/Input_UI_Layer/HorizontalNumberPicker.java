@@ -26,6 +26,11 @@ public class HorizontalNumberPicker extends RelativeLayout {
     private int buttonsBackgroundColor;
     private int buttonsTextColor;
 
+    private double upperBoundary = 1000;  //if Activated, CAN NOT BE this number as well.
+    private boolean upperBoundaryActivation = false;
+    private double lowerBoundary = -1000; //if Activated, CAN NOT BE this number as well.
+    private boolean lowerBoundaryActivation = false;
+
 
     private DecimalFormat df = new DecimalFormat(".##");
 
@@ -78,6 +83,9 @@ public class HorizontalNumberPicker extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 number = number + steps;
+                if(number >= upperBoundary&&upperBoundaryActivation){
+                    number=lowerBoundary+1+(number-upperBoundary);
+                }
                 setNumber(number);
             }
         });
@@ -89,6 +97,9 @@ public class HorizontalNumberPicker extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 number = number - steps;
+                if(number<=lowerBoundary&&lowerBoundaryActivation){
+                    number=upperBoundary-1-(lowerBoundary-number);
+                }
                 setNumber(number);
             }
         });
@@ -152,5 +163,51 @@ public class HorizontalNumberPicker extends RelativeLayout {
         this.number=initialNum;
         this.steps=steps;
         setNumber(number);
+    }
+
+    public void configNumbers(double initialNum, double steps , double min, double max){
+        this.initialN=initialNum;
+        this.number=initialNum;
+        this.steps=steps;
+        setBoundarys(min, max);
+        setNumber(number);
+    }
+
+    public void setBoundarys(double min, double max){
+        upperBoundary=max;
+        lowerBoundary=min;
+        upperBoundaryActivation=true;
+        lowerBoundaryActivation=true;
+    }
+
+    public void setUpperBoundary(double upperBoundary) {
+        this.upperBoundary = upperBoundary;
+    }
+
+    public double getUpperBoundary() {
+        return upperBoundary;
+    }
+
+    public boolean getUpperBoundaryActivation(){
+        return upperBoundaryActivation;
+    }
+    public void setUpperBoundaryActivation(boolean b){
+        upperBoundaryActivation = b;
+    }
+
+    public void setLowerBoundary(double lowerBoundary) {
+        this.lowerBoundary = lowerBoundary;
+    }
+
+    public void setLowerBoundaryActivation(boolean lowerBounderyActivation) {
+        this.lowerBoundaryActivation = lowerBounderyActivation;
+    }
+
+
+    public double getLowerBoundary() {
+        return lowerBoundary;
+    }
+    public boolean getLowerBoundaryActivation() {
+        return lowerBoundaryActivation;
     }
 }

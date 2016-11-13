@@ -102,7 +102,7 @@ public class CourseXmlParser {
                             fathers.add(currentMark);  //son of his father
                             Log.i("course xml parser", "son no."+fathers.size()+" added, named "+currentMark.getName());
                         } else if(receiveMode&&name.equals("Distance")&&receiveMode){
-                            currentMark.setDistaneFactor(safeAttributeValue("factor"));
+                            attributeHolder=safeAttributeValue("factor");
                         }
                         break;
 

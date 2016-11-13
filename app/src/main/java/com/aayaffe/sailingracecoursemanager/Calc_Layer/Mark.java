@@ -69,13 +69,14 @@ public class Mark {
     }
 
     public double getAbsDistance(double multiplication) {
-        if (distanceFactor) return multiplication * getDistance();
+        if (distanceFactor) return (multiplication*distance);
         return getDistance();
     }
 
     public void setDistaneFactor(String distaneFactor) {
+        //Log.d("Mark class note", "distanefactor is "+distaneFactor);
         if (distaneFactor != null)
-            this.distanceFactor = distaneFactor.equals("true") || distaneFactor.equals("always");
+            this.distanceFactor = distaneFactor.equals("true")||distaneFactor.equals("always");
         else Log.w("Mark Class insertion", "null distanceFactor set - Mark named:" + this.name);
     }
 

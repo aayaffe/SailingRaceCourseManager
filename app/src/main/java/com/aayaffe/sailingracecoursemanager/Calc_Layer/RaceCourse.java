@@ -23,7 +23,7 @@ public class RaceCourse {
     private static int windDir;  //wind direction
     private static Mark referenceMark;  //a mark that contains(like a tree) all marks
     private static AviLocation signalBoatLoc;
-    private static float startLineDist;
+    private static double startLineDist;
     private static Map<String, String> selectedOptions;
     private static List<Buoy> bouyList = new ArrayList<Buoy>();
     public static CourseXmlParser xmlParserC;
@@ -32,7 +32,7 @@ public class RaceCourse {
     public RaceCourse(){
     }
 
-    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, float distance2mark1 , float startLineDistance,Map<String, String> selectedCourseOptions ){
+    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineDistance,Map<String, String> selectedCourseOptions ){
         this.context = context;
         if(signalBoatLoc!=null)this.signalBoatLoc=signalBoatLoc;
         else this.signalBoatLoc=new AviLocation(32.85,3499);
