@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/wind_dir_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:text="Set Wind Direction"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:background="@color/cmark_blue_light" />
+
+    <EditText
+        android:id="@+id/wind_dialogs_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="315"
+        android:textSize="25dp"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/apply_wind_dialog_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/cmark_blue_light"
+        android:gravity="center"
+        android:text="DONE"
+        android:textAlignment="center"
+        android:textColor="@color/cmark_orange_lighter"
+        android:textSize="25sp" />
+
+</LinearLayout>

@@ -74,6 +74,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         setCenter(GeoUtils.toLatLng(center));
         mapView.getUiSettings().setRotateGesturesEnabled(false);
         mapView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
             public boolean onMarkerClick(Marker marker) {
                 // Check if there is an open info window
                 if (lastOpenned != null) {

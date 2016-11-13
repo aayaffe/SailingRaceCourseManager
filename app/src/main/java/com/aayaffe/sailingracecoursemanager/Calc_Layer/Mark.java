@@ -70,7 +70,7 @@ public class Mark {
     }
 
     public double getAbsDistance(double multiplication) {
-        if (distanceFactor) return multiplication * getDistance();
+        if (distanceFactor) return (multiplication*distance);
         return getDistance();
     }
 

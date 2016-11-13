@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -45,6 +46,7 @@ public class MainCourseInputActivity extends Activity {
     private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));//TODO:????
     private static Map<String,String> courseOptions;
     private float dist2m1;
+    private int windDirection;
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
@@ -97,12 +99,28 @@ public class MainCourseInputActivity extends Activity {
             }
         });
 
+        WindDirButton = (Button)findViewById(R.id.winddir_input_button);
+        WindDirButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WindDirDialog dialog = new WindDirDialog(context);
+                dialog.show();
+                dialog.setDialogResult(new WindDirDialog.OnMyDialogResult() {
+                    @Override
+                    public void finish(double windDir) {
+                        windDirection=(int)windDir;
+                    }
+                });
+            }
+        });
+
 
         applyB = (Button)findViewById(R.id.apply_race_course_input_button);
         applyB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                raceCourse = new RaceCourse(context,  myBoat.getAviLocation() , 315 ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
+                Log.d("MainCourseInput","dist2m1 = "+dist2m1);
+                raceCourse = new RaceCourse(context,  myBoat.getAviLocation() , windDirection ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
                 finish();
             }
         });
