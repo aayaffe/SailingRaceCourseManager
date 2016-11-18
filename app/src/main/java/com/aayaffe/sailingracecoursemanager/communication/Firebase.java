@@ -274,4 +274,43 @@ public class Firebase implements ICommManager {
     public String getLoggedInUid() {
         return Uid;
     }
+
+    public DatabaseReference getEventBoatsReference() {
+        return getFireBaseRef().child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats));
+    }
+    public DatabaseReference getEventBuoysReference() {
+        return getFireBaseRef().child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys));
+    }
+
+    public ArrayList<Buoy> getAssignedBuoys(Buoy b) {
+        ArrayList<Buoy> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
+            Buoy o = ps.getValue(Buoy.class);
+            ret.add(o);
+        }
+        return ret;
+    }
+
+    public Buoy getAssignedBoat(Buoy b) {
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
+        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).getValue(Buoy.class);
+    }
+
+    public Buoy getBoat(String currentBoatName) {
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
+        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(currentBoatName).getValue(Buoy.class);
+    }
+
+    public void assignBuoy(Buoy boat, String selectedBuoyName) {
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return ;
+        Buoy b = getBuoy(selectedBuoyName);
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(b.getName()).setValue(b);
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).setValue(boat);
+    }
+
+    private Buoy getBuoy(String selectedBuoyName) {
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
+        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(selectedBuoyName).getValue(Buoy.class);
+    }
 }

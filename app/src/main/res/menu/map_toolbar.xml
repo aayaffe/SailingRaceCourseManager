@@ -17,6 +17,9 @@
         android:icon="@drawable/ic_add_black_48dp"
         android:title="@string/action_add"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_assign_buoys"
+        android:title="@string/action_assign"
+        app:showAsAction="never"/>
     <item android:id="@+id/action_exit"
         android:title="@string/action_exit"
         app:showAsAction="never"/>

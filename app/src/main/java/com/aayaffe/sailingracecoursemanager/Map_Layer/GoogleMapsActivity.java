@@ -36,6 +36,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.aayaffe.sailingracecoursemanager.manage.ChooseBoatActivity;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.Date;
@@ -45,6 +46,7 @@ import java.util.UUID;
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
 
     public static List<Buoy> buoys; //replaces public static marks marks = new marks();
+    public static List<Buoy> boats;
     private Buoy myBoat; //instead of AviObject class
 
     private static final String TAG = "GoogleMapsActivity";
@@ -79,9 +81,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         iGeo = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Intent i = getIntent();
-        //currentEvent =  i.getParcelableExtra("currentEvent");
         currentEventName = i.getStringExtra("eventName");
         SetIconsClickListeners();
+        SetupToolbar();
+
+        Log.d(TAG, "Selected Event name is: " + currentEventName);
+    }
+
+    private void SetupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar!=null)
             toolbar.setTitle("");
@@ -97,8 +104,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         });
         toolbar.setTitle(currentEventName);
-
-        Log.d(TAG, "Selected Event name is: " + currentEventName);
     }
 
     private MapClickMethods getClickMethods() {
@@ -216,11 +221,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
         if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid))) {
+            menu.getItem(3).setEnabled(false);
+            menu.getItem(3).setVisible(false);
             menu.getItem(2).setEnabled(false);
             menu.getItem(2).setVisible(false);
             menu.getItem(1).setEnabled(false);
             menu.getItem(1).setVisible(false);
         } else {
+            menu.getItem(3).setEnabled(true);
+            menu.getItem(3).setVisible(true);
             menu.getItem(2).setEnabled(true);
             menu.getItem(2).setVisible(true);
             menu.getItem(1).setEnabled(true);
@@ -245,6 +254,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 addRaceCourse();
                 firstBoatLoad = true;
                 return true;
+            case R.id.action_assign_buoys:
+                OpenAssignBuoyActvity();
+                return true;
             case R.id.action_exit:
                 //System.exit(0);
                 finish();
@@ -259,6 +271,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
+    private void OpenAssignBuoyActvity() {
+        Intent intent = new Intent(getApplicationContext(), ChooseBoatActivity.class);
+        startActivity(intent);
+    }
+
     private void addRaceCourse() {
         /**
          * args:
@@ -271,7 +288,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
          * all GoogleMapsActivity variables
          */
         removeAllRaceCourseMarks();
-        if (mapLayer.mapView != null) mapLayer.removeAllMarks();
+//        if (mapLayer.mapView != null) mapLayer.removeAllMarks();
 
 
         RaceCourse raceCourse = new RaceCourse();
@@ -357,28 +374,30 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public void drawMapComponents() {
         Location myLocation = iGeo.getLoc();
-        buoys = commManager.getAllBoats();
-        for (Buoy o : buoys) {
+        boats = commManager.getAllBoats();
+        for (Buoy boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((o != null) && (o.getLoc() != null) && (users.getCurrentUser() != null) && (!o.getName().equals(users.getCurrentUser().DisplayName))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!boat.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() first if is true");
-                int id = getIconId(users.getCurrentUser().DisplayName, o);
-                mapLayer.addMark(o, getDirDistTXT(myLocation, o.getLoc()), id);
+                int id = getIconId(users.getCurrentUser().DisplayName, boat);
+                mapLayer.addMark(boat, getDirDistTXT(myLocation, boat.getLoc()), id);
             }
-            if ((o != null) && (o.getLoc() != null) && (users.getCurrentUser() != null) && (o.getName().equals(users.getCurrentUser().DisplayName))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (boat.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() second if is true");
-                int id = getIconId(users.getCurrentUser().DisplayName, o);
-                mapLayer.addMark(o, null, id);
+                int id = getIconId(users.getCurrentUser().DisplayName, boat);
+                mapLayer.addMark(boat, null, id);
             }
         }
-        List<Buoy> commBuoyList = commManager.getAllBuoys();
-        Log.d(TAG, "commBuoyList size: " + commBuoyList.size());
-        for (Buoy o : commBuoyList) {
-            mapLayer.addBuoy(o, getDirDistTXT(myLocation, o.getLoc()));
+        buoys = commManager.getAllBuoys();
+        Log.d(TAG, "commBuoyList size: " + buoys.size());
+        for (Buoy buoy : buoys) {
+            mapLayer.addBuoy(buoy, getDirDistTXT(myLocation, buoy.getLoc()));
         }
         if ((buoys.size() > 0) && (firstBoatLoad) && (mapLayer.mapView != null)) {
             firstBoatLoad = false;
             mapLayer.ZoomToMarks();
+        } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
+            mapLayer.setZoom(10,myBoat.getLoc());
         }
     }
 
@@ -471,10 +490,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addMark(Buoy m) {
         commManager.writeBuoyObject(m);
-    }
-
-    public List<Buoy> getBuoys() {
-        return buoys;
     }
 
 

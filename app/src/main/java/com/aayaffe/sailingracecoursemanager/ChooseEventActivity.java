@@ -54,7 +54,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         commManager.login(null, null, null);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ListView messagesView = (ListView) findViewById(R.id.EventsList);
+        ListView eventsView = (ListView) findViewById(R.id.EventsList);
         mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child("Events")) {
             @Override
             protected void populateView(View view, Event event, int position) {
@@ -70,8 +70,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 ((TextView) view.findViewById(R.id.text3)).setText(dates);
             }
         };
-        messagesView.setAdapter(mAdapter);
-        messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        eventsView.setAdapter(mAdapter);
+        eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
@@ -87,9 +87,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
     @NonNull
     private static String getDateRangeString(Event event) {
-        if (event.monthEnd==0||event.dayEnd==0||event.yearStart==0||event.monthStart==0||event.dayStart==0||event.yearEnd==0) return "";
-        if (event.dayStart== event.dayEnd&&event.monthStart==event.monthEnd&&event.yearStart==event.yearEnd) return String.valueOf(event.dayStart)+'/'+event.monthStart+'/'+event.yearStart;
-        return String.valueOf(event.dayStart) + '/'+event.monthStart+'/'+event.yearStart+" - "+event.dayEnd+'/'+event.monthEnd+'/'+event.yearEnd;
+        if (event.monthEnd == 0 || event.dayEnd == 0 || event.yearStart == 0 || event.monthStart == 0 || event.dayStart == 0 || event.yearEnd == 0)
+            return "";
+        if (event.dayStart == event.dayEnd && event.monthStart == event.monthEnd && event.yearStart == event.yearEnd)
+            return String.valueOf(event.dayStart) + '/' + event.monthStart + '/' + event.yearStart;
+        return String.valueOf(event.dayStart) + '/' + event.monthStart + '/' + event.yearStart + " - " + event.dayEnd + '/' + event.monthEnd + '/' + event.yearEnd;
     }
 
     @Override
@@ -161,10 +163,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
         }
     }
-//    @Override
-//    protected Firebase getFirebaseRef() {
-//        return commManager.getFireBaseRef();
-//    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -173,7 +172,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             handleSignInResponse(resultCode, data);
         }
 
-//        showSnackbar(R.string.unknown_response);
     }
     private void handleSignInResponse(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -267,7 +265,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
                 add_event_item.setEnabled(false);
             }catch (Exception e){
-                Log.w("caught something!", e.getLocalizedMessage());
+                Log.e(TAG,"Error logging in", e);
             }
             loggedIn = false;
         }
@@ -280,7 +278,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 add_event_item.setEnabled(true);
 
             }catch (Exception e){
-                Log.w("caught something!", e.getLocalizedMessage());
+                Log.e(TAG,"Error logging out.", e);
             }
             loggedIn = true;
         }

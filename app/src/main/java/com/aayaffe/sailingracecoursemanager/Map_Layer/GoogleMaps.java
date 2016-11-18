@@ -152,7 +152,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
     private Marker updateMark(Buoy ao, Marker m, int resourceID, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
-            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
+//            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
             m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
@@ -210,7 +210,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             LatLngBounds bounds = builder.build();
             int padding = 100; // offset from edges of the map in pixels
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            //googleMap.moveCamera(cu);
             mapView.animateCamera(cu);
         } catch (Exception e) {
             Log.e(TAG,"Error zomming to bounds",e);
@@ -230,7 +229,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         try {
             clickMethods.infoWindowLongClick(uuidToMarker.inverse().get(marker));
             boolean isBuoy = false;
-            if (marker.getTitle().contains("BUOY")) isBuoy = true;
+            if (marker.getTitle().contains("BUOY"))
+                isBuoy = true;
             if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
                 if (deleteMark) {
                     removeMark(marker);
@@ -278,4 +278,19 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
 
     }
     private Boolean deleteMark = false;
+
+    public void setZoom(int i) {
+        CameraUpdate cu = CameraUpdateFactory.zoomTo(i);
+        mapView.animateCamera(cu);
+    }
+
+    /***
+     * Sets the zoom level and centers the map.
+     * @param i zoom level (0 - worldwide, 10 cite wide)
+     * @param l center location
+     */
+    public void setZoom(int i, Location l) {
+        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(GeoUtils.toLatLng(l),i);
+        mapView.animateCamera(cu);
+    }
 }
