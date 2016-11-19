@@ -32,6 +32,7 @@ public class CourseTypeSecondDialog extends Dialog {
     private OnMyDialogResult mDialogResult;
     private CourseType courseType;
     private Button finishB;
+    private double[] factorResult;
     private Map<String, String> selectedOptions = new HashMap<String, String>();  //map of the selected settings
 
 
@@ -84,7 +85,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 }
                 Log.w("check", selectedOptions.values().toString());
 
-                mDialogResult.finish(selectedOptions);
+                mDialogResult.finish(selectedOptions, factorResult);
                 dismiss();
             }
         });
@@ -112,6 +113,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     redrawOptionsViews(position);
+                    factorResult=courseType.getLegsTypes().get(position).getCourseFactors();
                     selectedOptions.put("Legs", courseType.getLegsNames()[position]);
                 }
                 @Override
@@ -175,7 +177,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, String> result);
+        void finish(Map<String, String> result, double[] factorResult);
     }
 
 }

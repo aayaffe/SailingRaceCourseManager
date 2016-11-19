@@ -40,7 +40,7 @@ public class DistanceDialog extends Dialog {
     public Button finishB;
 
     private List<Boat> boats;  //list of boats
-    private double[] courseFactors = {2,2,1};
+    private double[] courseFactors = {1,1,0};
 
     public DistanceDialog(Context context, List<Boat> boats) {
         super(context);
@@ -52,7 +52,7 @@ public class DistanceDialog extends Dialog {
         super(context);
         this.context=context;
         this.boats= boats;
-        this.courseFactors=courseFactors;
+        if(courseFactors!=null)this.courseFactors=courseFactors;
     }
 
     @Override

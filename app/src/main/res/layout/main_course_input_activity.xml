@@ -1,27 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerInParent="true">
-            <Button
-                android:id="@+id/distance_input_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Distance"/>
+    android:layout_centerInParent="true"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Set Race Course"
+    android:textColor="@color/cmark_gray"
+    android:textStyle="bold"
+    android:textSize="25dp"
+    android:layout_margin="15dp"
+    android:layout_gravity="center"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/coursetype_input_button"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@mipmap/ic_race_course"
+            android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="COURSE TYPE"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:gravity="bottom|center_horizontal"
+            android:textColor="@color/cmark_orange_darker"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <Button
                 android:id="@+id/winddir_input_button"
-                android:layout_width="match_parent"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/wind_indicaror_icon600"
+                android:layout_gravity="center_horizontal" />
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wind Direction"/>
+                android:text="WIND DIRECTION"
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:gravity="bottom|center_horizontal"
+                android:textColor="@color/cmark_orange_darker"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <Button
-                android:id="@+id/coursetype_input_button"
-                android:layout_width="match_parent"
+                android:id="@+id/distance_input_button"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/wind_indicaror_icon600"
+                android:layout_gravity="center_horizontal" />
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Course Type"/>
-            <Button
-                android:id="@+id/apply_race_course_input_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Apply"/>
+                android:text="DISTANCE"
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:gravity="bottom|center_horizontal"
+                android:textColor="@color/cmark_orange_darker"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/apply_race_course_input_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cmark_blue_light"
+        android:textColor="@color/cmark_orange_light"
+        android:textStyle="bold"
+        android:text="Apply" />
 </LinearLayout>

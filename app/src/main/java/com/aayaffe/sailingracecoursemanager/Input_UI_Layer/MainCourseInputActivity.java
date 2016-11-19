@@ -16,9 +16,11 @@ import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.BoatXmlParser;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.LegsType;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +44,17 @@ public class MainCourseInputActivity extends Activity {
     private Button WindDirButton;
     private Button applyB;
 
+<<<<<<< HEAD
     private RaceCourse raceCourse;
     private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));//TODO:????
+=======
+    private static RaceCourse raceCourse;
+    private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));
+    private static double[] courseFactors;
+>>>>>>> merge-thread
     private static Map<String,String> courseOptions;
-    private float dist2m1;
-    private int windDirection;
+    private static float dist2m1 = 1;
+    private static int windDirection;
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
@@ -56,6 +64,10 @@ public class MainCourseInputActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_course_input_activity);
 
+        Map<String,String> defaultCourseOptions  =new HashMap<String, String>();
+        defaultCourseOptions.put("type","Windward-Leeward");
+        defaultCourseOptions.put("Legs","L-Leeward");
+        courseOptions=defaultCourseOptions;
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(configChange);
@@ -74,10 +86,10 @@ public class MainCourseInputActivity extends Activity {
                 CourseTypeDialog dialog = new CourseTypeDialog(context, coursesInfo);
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
-                    public void finish(Map<String, String> result) {
-                        //something to do
-                        //use the map of the selected race curse options
+                    @Override
+                    public void finish(Map<String, String> result, double[] factorResult) {
                         courseOptions=result;
+                        courseFactors=factorResult;
                     }
                 });
             }
@@ -87,7 +99,7 @@ public class MainCourseInputActivity extends Activity {
         DistanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DistanceDialog dialog = new DistanceDialog(context , boats);
+                DistanceDialog dialog = new DistanceDialog(context , boats, courseFactors);
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
                     public void finish(double result) {
