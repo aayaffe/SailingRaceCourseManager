@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
+import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
@@ -33,7 +33,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
@@ -76,7 +75,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
                 selectedEventName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                Firebase.setCurrentEventName(selectedEventName);
+                commManager.setCurrentEventName(selectedEventName);
                 intent.putExtra("eventName", selectedEventName);
                 startActivity(intent);
             }

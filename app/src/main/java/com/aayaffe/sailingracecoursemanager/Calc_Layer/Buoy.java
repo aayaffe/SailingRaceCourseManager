@@ -9,7 +9,9 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -23,7 +25,9 @@ public class Buoy {
     public long id;
     private UUID _uuid;
     private UUID _raceCourseUUID;
-    private BuoyType buoyType; //replaces ObjectTypes
+    private BuoyType buoyType;
+    public HashMap<String,Buoy> assigned;
+
     public static final int ORANGE = 0xf49842;
 
     public Buoy() {

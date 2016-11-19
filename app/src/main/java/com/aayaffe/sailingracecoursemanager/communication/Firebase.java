@@ -142,7 +142,6 @@ public class Firebase implements ICommManager {
         return 0;
     }
 
-
     @Override
     public List<Buoy> getAllBoats() {
         ArrayList<Buoy> ret = new ArrayList<>();
@@ -242,30 +241,25 @@ public class Firebase implements ICommManager {
         return fb;
     }
 
+    @Override
     public void writeEvent(Event neu) {
         fb.child(c.getString(R.string.db_events)).child(neu.getName()).setValue(neu);
     }
 
 
+    @Override
     public String getCurrentEventName() {
         return currentEventName;
     }
 
-    public static void setCurrentEventName(String currentEventName) {
+    @Override
+    public void setCurrentEventName(String currentEventName) {
         //loginToEvent(currentEventName); //TODO: To enable better and finer grained events
         Firebase.currentEventName = currentEventName;
     }
 
 
-    /*public HashMap<String, BoatTypes> getAllBoatTypes() {
-        HashMap<String, BoatTypes> ret = new HashMap<>();
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
-        for (DataSnapshot ps : ds.child(c.getString(R.string.db_boattypes)).getChildren()) {
-            BoatTypes o = ps.getValue(BoatTypes.class);
-            ret.put(o.getBoatClass(),o);
-        }
-        return ret;
-    }*/
+
     /***
      *
      * @return the Uid of the currently logged in user.
@@ -282,6 +276,7 @@ public class Firebase implements ICommManager {
         return getFireBaseRef().child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys));
     }
 
+    @Override
     public ArrayList<Buoy> getAssignedBuoys(Buoy b) {
         ArrayList<Buoy> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
@@ -292,25 +287,40 @@ public class Firebase implements ICommManager {
         return ret;
     }
 
-    public Buoy getAssignedBoat(Buoy b) {
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
-        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).getValue(Buoy.class);
+    @Override
+    public ArrayList<Buoy> getAssignedBoats(Buoy b) {
+        ArrayList<Buoy> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
+            Buoy o = ps.getValue(Buoy.class);
+            ret.add(o);
+        }
+        return ret;
     }
 
+    @Override
     public Buoy getBoat(String currentBoatName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
         return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(currentBoatName).getValue(Buoy.class);
     }
 
+    @Override
     public void assignBuoy(Buoy boat, String selectedBuoyName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ;
-        Buoy b = getBuoy(selectedBuoyName);
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(b.getName()).setValue(b);
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).setValue(boat);
+        Buoy buoy = getBuoy(selectedBuoyName);
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).setValue(buoy);
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).child(boat.getName()).setValue(boat);
     }
 
     private Buoy getBuoy(String selectedBuoyName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
         return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(selectedBuoyName).getValue(Buoy.class);
     }
+
+    @Override
+    public void removeAssignment(Buoy buoy, Buoy boat) {
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).removeValue();
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).removeValue();
+    }
+
 }

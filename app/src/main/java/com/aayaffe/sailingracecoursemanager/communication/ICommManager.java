@@ -4,6 +4,7 @@ import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,4 +39,20 @@ public interface ICommManager {
     long getSupportedVersion();
 
     Buoy getObjectByUUID(UUID u);
+
+    void writeEvent(Event neu);
+
+    String getCurrentEventName();
+
+    void setCurrentEventName(String currentEventName);
+
+    ArrayList<Buoy> getAssignedBuoys(Buoy b);
+
+    ArrayList<Buoy> getAssignedBoats(Buoy b);
+
+    Buoy getBoat(String currentBoatName);
+
+    void assignBuoy(Buoy boat, String selectedBuoyName);
+
+    void removeAssignment(Buoy buoy, Buoy boat);
 }

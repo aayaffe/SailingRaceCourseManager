@@ -317,23 +317,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Runnable runnable = new Runnable() {
         public void run() {
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
+                myBoat = getMyBoat(users.getCurrentUser().DisplayName);
                 if (myBoat == null) {
-                    for (Buoy ao : commManager.getAllBoats()) {
-                        if (ao.getName().equals(users.getCurrentUser().DisplayName)) {
-                            myBoat = ao;
-                            break;
-                        }
-                    }
-                    if (myBoat == null) {
-                        myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
-                    }
-                    if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setBuoyType(BuoyType.RACE_MANAGER);
-                    } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
-                } else {
-                    myBoat.setLoc(iGeo.getLoc());
-                    myBoat.lastUpdate = new Date().getTime();
+                    myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
                 }
+                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                    myBoat.setBuoyType(BuoyType.RACE_MANAGER);
+                } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
+                myBoat.setLoc(iGeo.getLoc());
+                myBoat.lastUpdate = new Date().getTime();
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -347,6 +339,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         }
     };
+    private Buoy getMyBoat(String name){
+        for (Buoy ao : commManager.getAllBoats()) {
+            if (ao.getName().equals(name)) {
+                return ao;
+            }
+        }
+        return null;
+    }
+
 
     private boolean isCurrentEventManager(String Uid) {
         Event e = commManager.getEvent(currentEventName);

@@ -15,6 +15,8 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.firebase.ui.database.FirebaseListAdapter;
 
+import java.util.ArrayList;
+
 public class AssignBuoyActivity extends AppCompatActivity {
 
     private static final String TAG = "AssignBuoyActivity";
@@ -51,9 +53,10 @@ public class AssignBuoyActivity extends AppCompatActivity {
     }
 
     private String getAssignedBoatName(Buoy b) {
-        Buoy boat = commManager.getAssignedBoat(b);
-        if (boat==null) return "";
-        return boat.getName();
+        ArrayList<Buoy> boats = commManager.getAssignedBoats(b);
+        if (boats==null) return "";
+        if (boats.size()==0) return "";
+        return boats.get(0).getName();
     }
 
     private void SetupToolbar() {
