@@ -17,8 +17,12 @@ import com.aayaffe.sailingracecoursemanager.Initializing_Layer.BoatXmlParser;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.LegsType;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
+import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +41,7 @@ public class MainCourseInputActivity extends Activity {
     public BoatXmlParser boatXmlParser;
     private List<CourseType> coursesInfo;
     private List<Boat> boats;
+    private IGeo iGeo;
 
 
     private Button CourseButton;
@@ -45,7 +50,6 @@ public class MainCourseInputActivity extends Activity {
     private Button applyB;
 
     private static RaceCourse raceCourse;
-    private Buoy myBoat = new Buoy("testMyBoat", new AviLocation(32.85,34.99));
     private static double[] courseFactors;
     private static Map<String,String> courseOptions;
     private static float dist2m1 = 1;
@@ -68,7 +72,7 @@ public class MainCourseInputActivity extends Activity {
         sharedPreferences.registerOnSharedPreferenceChangeListener(configChange);
         configChange = new ConfigChange();
         editor = sharedPreferences.edit();
-
+        iGeo = new OwnLocation(getBaseContext(), this);
         xmlParserC = new CourseXmlParser(this, "courses_file.xml");
         boatXmlParser = new BoatXmlParser(this, "boats_file.xml");
         coursesInfo = xmlParserC.parseCourseTypes();
@@ -127,11 +131,10 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("MainCourseInput","dist2m1 = "+dist2m1);
-                raceCourse = new RaceCourse(context,  myBoat.getAviLocation() , windDirection ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
+                raceCourse = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , windDirection ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
                 finish();
             }
         });
-
 
     }
 

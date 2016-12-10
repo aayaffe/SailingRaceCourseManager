@@ -48,19 +48,6 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
     public Location getLoc() {
         return mLastLocation;
     }
-//    private Location getLastBestLocation() {
-//        if (checkForLocationPermission())
-//        {
-//            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//            long GPSLocationTime = 0;
-//            if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
-//            long NetLocationTime = 0;
-//            return locationGPS;
-//        }
-//
-//       return null;
-//
-//    }
 
     /***
      *
@@ -92,30 +79,7 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
         return true;
     }
 
-    //    @Override //TODO check where is this derived from
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                    // permission was granted, yay! Do the
-//                    // contacts-related task you need to do.
-//
-//                } else {
-//
-//                    // permission denied, boo! Disable the
-//                    // functionality that depends on this permission.
-//                }
-//                return;
-//            }
-//
-//            // other 'case' lines to check for other
-//            // permissions this app might request
-//        }
-//    }
+
     private void InitGPS(Context c) {
         buildGoogleApiClient();
         mGoogleApiClient.connect();
