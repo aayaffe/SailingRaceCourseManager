@@ -16,8 +16,9 @@
 'use strict';
 // Shortcuts to DOM Elements.
 var messageForm = document.getElementById('message-form');
-var messageInput = document.getElementById('new-post-message');
-var titleInput = document.getElementById('new-post-title');
+var latInput = document.getElementById('new-lat');
+var lonInput = document.getElementById('new-lon');
+var boatNameInput = document.getElementById('new-boat-name');
 var signInButton = document.getElementById('sign-in-button');
 var signOutButton = document.getElementById('sign-out-button');
 var splashPage = document.getElementById('page-splash');
@@ -30,29 +31,47 @@ var recentMenuButton = document.getElementById('menu-recent');
 var myPostsMenuButton = document.getElementById('menu-my-posts');
 var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
 var listeningFirebaseRefs = [];
-
+function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now(); //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
 /**
  * Saves a new post to the Firebase DB.
  */
 // [START write_fan_out]
-function writeNewPost(uid, username, picture, title, body) {
+function writeNewBoat(username, lat, lon) {
   // A post entry.
-  var postData = {
-    author: username,
-    uid: uid,
-    body: body,
-    title: title,
-    starCount: 0,
-    authorPic: picture
+  var postData = {   
+    aviLocation: {
+		cog: 0,
+		depth: 0,
+		lastUpdtae: 1481571920087,
+		lat: lat,
+		lon: lon,
+		sog: 0
+	},
+	color: -16776961,
+	id: 0,
+	lastUpdate : 1481571920087,
+	name: username,
+	type: "RACE_MANAGER",
+	uuidString: generateUUID()		
   };
 
   // Get a key for a new Post.
-  var newPostKey = firebase.database().ref().child('posts').push().key;
+  //var newPostKey = firebase.database().ref().child('posts').push().key;
 
   // Write the new post's data simultaneously in the posts list and the user's post list.
   var updates = {};
-  updates['/posts/' + newPostKey] = postData;
-  updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+  updates['/posts/' + username] = postData;
 
   return firebase.database().ref().update(updates);
 }
@@ -84,7 +103,7 @@ function toggleStar(postRef, uid) {
 /**
  * Creates a post element.
  */
-function createPostElement(postId, title, text, author, authorId, authorPic) {
+function createPostElement(postId, boatName, lat, lon, author, authorId, authorPic) {
   var uid = firebase.auth().currentUser.uid;
 
   var html =
@@ -105,7 +124,7 @@ function createPostElement(postId, title, text, author, authorId, authorPic) {
             '<div class="starred material-icons">star</div>' +
             '<div class="star-count">0</div>' +
           '</span>' +
-          '<div class="text"></div>' +
+          '<div class="lat"></div>' + '<div class="lon"></div>' +
           '<div class="comments-container"></div>' +
           '<form class="add-comment" action="#">' +
             '<div class="mdl-textfield mdl-js-textfield">' +
@@ -130,8 +149,9 @@ function createPostElement(postId, title, text, author, authorId, authorPic) {
   var unStar = postElement.getElementsByClassName('not-starred')[0];
 
   // Set values.
-  postElement.getElementsByClassName('text')[0].innerText = text;
-  postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = title;
+  postElement.getElementsByClassName('lat')[0].innerText = "Lat: " + lat;
+  postElement.getElementsByClassName('lon')[0].innerText = "Lon: " + lon;
+  postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = boatName;
   postElement.getElementsByClassName('username')[0].innerText = author || 'Anonymous';
   postElement.getElementsByClassName('avatar')[0].style.backgroundImage = 'url("' +
       (authorPic || './silhouette.jpg') + '")';
@@ -272,7 +292,7 @@ function startDatabaseQueries() {
       var author = data.val().author || 'Anonymous';
       var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
       containerElement.insertBefore(
-          createPostElement(data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic),
+          createPostElement(data.key, data.val().name, data.val().aviLocation.lat,data.val().aviLocation.lon, author, data.val().uid, data.val().authorPic),
           containerElement.firstChild);
     });
     postsRef.on('child_changed', function(data) {	
@@ -362,15 +382,13 @@ function onAuthStateChanged(user) {
 /**
  * Creates a new post for the current user.
  */
-function newPostForCurrentUser(title, text) {
+function newPostForCurrentUser(boatName, lat, lon) {
   // [START single_value_read]
   var userId = firebase.auth().currentUser.uid;
   return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
     var username = snapshot.val().username;
     // [START_EXCLUDE]
-    return writeNewPost(firebase.auth().currentUser.uid, username,
-        firebase.auth().currentUser.photoURL,
-        title, text);
+    return writeNewBoat(boatName, lat, lon);
     // [END_EXCLUDE]
   });
   // [END single_value_read]
@@ -415,14 +433,16 @@ window.addEventListener('load', function() {
   // Saves message on form submit.
   messageForm.onsubmit = function(e) {
     e.preventDefault();
-    var text = messageInput.value;
-    var title = titleInput.value;
-    if (text && title) {
-      newPostForCurrentUser(title, text).then(function() {
+    var lat = latInput.value;
+	var lon = lonInput.value;
+    var boatName = boatNameInput.value;
+    if (lat && lon && boatName) {
+      newPostForCurrentUser(boatName, lat, lon).then(function() {
         myPostsMenuButton.click();
       });
-      messageInput.value = '';
-      titleInput.value = '';
+      latInput.value = '';
+	  lonInput.value = '';
+      boatNameInput.value = '';
     }
   };
 
@@ -438,8 +458,9 @@ window.addEventListener('load', function() {
   };
   addButton.onclick = function() {
     showSection(addPost);
-    messageInput.value = '';
-    titleInput.value = '';
+    latInput.value = '';
+	lonInput.value = '';
+    boatNameInput.value = '';
   };
   recentMenuButton.onclick();
 }, false);
