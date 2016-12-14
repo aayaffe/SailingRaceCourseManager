@@ -110,7 +110,7 @@ h3 {
     border-radius: 32px;
     border: 2px white solid;
     margin-right: 10px;
-    background-image: url('./silhouette.jpg');
+    background-image: url('silhouette.jpg');
 }
 .username {
     display: inline-block;
