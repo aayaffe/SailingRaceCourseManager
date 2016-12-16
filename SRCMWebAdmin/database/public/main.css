@@ -316,3 +316,15 @@ h3 {
     color: white;
     flex-direction: column;
 }
+#map {
+    width: 800px;
+    /*500px;*/
+    height: 500px;
+    overflow: hidden;
+    max-width: none;
+    /*background-color: #CCC;*/
+}
+#map img {
+    max-width: none !important;
+    max-height: none !important;
+}

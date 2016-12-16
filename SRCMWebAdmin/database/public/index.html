@@ -65,7 +65,7 @@
   <header class="header mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
 
     <div class="mdl-layout__header-row titlebar">
-      <h3 class="logo">Database Web Quickstart</h3>
+      <h3 class="logo">Sailing Race Course Manager Web Admin</h3>
       <button id="sign-out-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i> Sign out</button>
     </div>
 
@@ -81,6 +81,9 @@
         <div id="menu-my-top-posts" class="mdl-layout__tab mdl-button mdl-js-button mdl-js-ripple-effect">
           <i class="material-icons">trending_up</i> Buoys
         </div>
+          <div id="menu-boats-map" class="mdl-layout__tab mdl-button mdl-js-button mdl-js-ripple-effect">
+              <i class="material-icons">map</i> Map
+          </div>
         <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--amber-400 mdl-shadow--4dp mdl-js-ripple-effect" id="add">
           <i class="material-icons">mode_edit</i>
         </button>
@@ -123,25 +126,30 @@
       </div>
     </section>
 
-    <!-- Show a list of recent posts -->
-    <section class="mdl-grid content" id="recent-posts-list" style="display:none">
+    <!-- Show a list of events -->
+    <section class="mdl-grid content" id="events-list" style="display:none">
       <div class="posts-container mdl-cell mdl-cell--12-col mdl-grid">
       </div>
     </section>
 
-    <!-- Show the list of user's posts -->
-    <section class="mdl-grid content" id="user-posts-list" style="display:none">
+    <!-- Show the list of boats -->
+    <section class="mdl-grid content" id="boats-list" style="display:none">
       <div class="posts-container mdl-cell mdl-cell--12-col mdl-grid">
       </div>
     </section>
 
-    <!-- Show the list of top user's posts -->
-    <section class="mdl-grid content" id="top-user-posts-list" style="display:none">
+    <!-- Show the list of buoys -->
+    <section class="mdl-grid content" id="buoys-list" style="display:none">
       <div class="posts-container mdl-cell mdl-cell--12-col mdl-grid">
       </div>
     </section>
+      <!-- Shows the events map-->
+      <section class="mdl-grid content" id="boats-map" >
+          <div class=" mdl-cell--12-col mdl-grid" id="map"></div>
+      </section>
   </main>
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
 <script>
   // Initialize Firebase
@@ -156,5 +164,8 @@
 </script>
 
 <script src="scripts/main.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAL1-W3nLcmgKVGAtrWNBHUTy1Vtip0FiY&libraries=visualization&callback=initMap">
+</script>
 </body>
 </html>

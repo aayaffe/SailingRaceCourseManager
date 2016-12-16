@@ -290,6 +290,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
      * @param l center location
      */
     public void setZoom(int i, Location l) {
+        if (l==null)
+            return;
         CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(GeoUtils.toLatLng(l),i);
         mapView.animateCamera(cu);
     }

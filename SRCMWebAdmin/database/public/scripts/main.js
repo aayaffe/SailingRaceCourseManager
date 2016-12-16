@@ -24,12 +24,15 @@ var signOutButton = document.getElementById('sign-out-button');
 var splashPage = document.getElementById('page-splash');
 var addPost = document.getElementById('add-post');
 var addButton = document.getElementById('add');
-var recentPostsSection = document.getElementById('recent-posts-list');
-var userPostsSection = document.getElementById('user-posts-list');
-var topUserPostsSection = document.getElementById('top-user-posts-list');
+var eventsSection = document.getElementById('events-list');
+var boatsSection = document.getElementById('boats-list');
+var buoysSection = document.getElementById('buoys-list');
+var mapSection = document.getElementById('boats-map');
 var recentMenuButton = document.getElementById('menu-recent');
 var myPostsMenuButton = document.getElementById('menu-my-posts');
 var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
+var boatsMapMenuButton = document.getElementById('menu-boats-map');
+
 var listeningFirebaseRefs = [];
 function generateUUID(){
     var d = new Date().getTime();
@@ -78,34 +81,10 @@ function writeNewBoat(username, lat, lon) {
 // [END write_fan_out]
 
 /**
- * Star/unstar post.
- */
-// [START post_stars_transaction]
-function toggleStar(postRef, uid) {
-  postRef.transaction(function(post) {
-    if (post) {
-      if (post.stars && post.stars[uid]) {
-        post.starCount--;
-        post.stars[uid] = null;
-      } else {
-        post.starCount++;
-        if (!post.stars) {
-          post.stars = {};
-        }
-        post.stars[uid] = true;
-      }
-    }
-    return post;
-  });
-}
-// [END post_stars_transaction]
-
-/**
  * Creates a post element.
  */
 function createPostElement(postId, boatName, lat, lon, author, authorId, authorPic) {
   var uid = firebase.auth().currentUser.uid;
-
   var html =
       '<div class="post post-' + postId + ' mdl-cell mdl-cell--12-col ' +
                   'mdl-cell--6-col-tablet mdl-cell--4-col-desktop mdl-grid mdl-grid--no-spacing">' +
@@ -160,36 +139,21 @@ function createPostElement(postId, boatName, lat, lon, author, authorId, authorP
   // [START child_event_listener_recycler]
   var commentsRef = firebase.database().ref('post-comments/' + postId);
   commentsRef.on('child_added', function(data) {
-    addCommentElement(postElement, data.key, data.val().text, data.val().author);
+    addBoatElement(postElement, data.key, data.val().text, data.val().author);
   });
 
   commentsRef.on('child_changed', function(data) {
-    setCommentValues(postElement, data.key, data.val().text, data.val().author);
+    setBoatValues(postElement, data.key, data.val().text, data.val().author);
   });
 
   commentsRef.on('child_removed', function(data) {
-    deleteComment(postElement, data.key);
+    deleteBoat(postElement, data.key);
   });
   // [END child_event_listener_recycler]
 
-  // Listen for likes counts.
-  // [START post_value_event_listener]
-  var starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
-  starCountRef.on('value', function(snapshot) {
-    updateStarCount(postElement, snapshot.val());
-  });
-  // [END post_value_event_listener]
-
-  // Listen for the starred status.
-  var starredStatusRef = firebase.database().ref('posts/' + postId + '/stars/' + uid)
-  starredStatusRef.on('value', function(snapshot) {
-    updateStarredByCurrentUser(postElement, snapshot.val());
-  });
-
-  // Keep track of all Firebase reference on which we are listening.
+   // Keep track of all Firebase reference on which we are listening.
   listeningFirebaseRefs.push(commentsRef);
-  listeningFirebaseRefs.push(starCountRef);
-  listeningFirebaseRefs.push(starredStatusRef);
+
 
   // Create new comment.
   addCommentForm.onsubmit = function(e) {
@@ -213,65 +177,179 @@ function createPostElement(postId, boatName, lat, lon, author, authorId, authorP
 }
 
 /**
- * Writes a new comment for the given post.
+ * Creates a event element.
  */
-function createNewComment(postId, username, uid, text) {
-  firebase.database().ref('post-comments/' + postId).push({
-    text: text,
-    author: username,
-    uid: uid
-  });
+function createEventElement(eventId, eventName, managerUuid, boats) {
+    var uid = firebase.auth().currentUser.uid;
+    var html =
+        '<div class="post post-' + eventId + ' mdl-cell mdl-cell--12-col ' +
+        'mdl-cell--6-col-tablet mdl-cell--4-col-desktop mdl-grid mdl-grid--no-spacing">' +
+        '<div class="mdl-card mdl-shadow--2dp">' +
+        '<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">' +
+        '<h4 class="mdl-card__title-text"></h4>' +
+        '</div>' +
+        '<div class="header">' +
+        '<div>' +
+        '<div class="avatar"></div>' +
+        '<div class="username mdl-color-text--black"></div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="comments-container"></div>' +
+        '<form class="add-comment" action="#">' +
+        '<div class="mdl-textfield mdl-js-textfield">' +
+        '<input class="mdl-textfield__input new-comment" type="text">' +
+        '<label class="mdl-textfield__label">Comment...</label>' +
+        '</div>' +
+        '</form>' +
+        '</div>' +
+        '</div>';
+
+    // Create the DOM element from the HTML.
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    var eventElement = div.firstChild;
+    if (componentHandler) {
+        componentHandler.upgradeElements(eventElement.getElementsByClassName('mdl-textfield')[0]);
+    }
+
+    var addCommentForm = eventElement.getElementsByClassName('add-comment')[0];
+    var commentInput = eventElement.getElementsByClassName('new-comment')[0];
+
+    // Set values.
+    eventElement.getElementsByClassName('mdl-card__title-text')[0].innerText = eventName;
+    eventElement.getElementsByClassName('username')[0].innerText = managerUuid || 'Anonymous';
+    eventElement.getElementsByClassName('avatar')[0].style.backgroundImage = 'url("' +
+        (boats || './silhouette.jpg') + '")';
+
+    // Listen for comments.
+    // [START child_event_listener_recycler]
+    var commentsRef = firebase.database().ref('events/' + eventName);
+    commentsRef.on('child_added', function(data) {
+        addBoatElement(eventElement, data.key, data.val().text, data.val().author);
+    });
+    commentsRef.on('child_changed', function(data) {
+        setBoatValues(eventElement, data.key, data.val().text, data.val().author);
+    });
+    commentsRef.on('child_removed', function(data) {
+        deleteBoat(eventElement, data.key);
+    });
+    // [END child_event_listener_recycler]
+
+
+    // Keep track of all Firebase reference on which we are listening.
+    listeningFirebaseRefs.push(commentsRef);
+
+    // Create new comment.
+    addCommentForm.onsubmit = function(e) {
+        e.preventDefault();
+        createNewComment(eventId, firebase.auth().currentUser.displayName, uid, commentInput.value);
+        commentInput.value = '';
+        commentInput.parentElement.MaterialTextfield.boundUpdateClassesHandler();
+    };
+    return eventElement;
+}
+/**
+ * Creates a event element.
+ */
+function createBoatElement(boatId, boatName, location) {
+    var uid = firebase.auth().currentUser.uid;
+    var html =
+        '<div class="post post-' + boatId + ' mdl-cell mdl-cell--12-col ' +
+        'mdl-cell--6-col-tablet mdl-cell--4-col-desktop mdl-grid mdl-grid--no-spacing">' +
+        '<div class="mdl-card mdl-shadow--2dp">' +
+        '<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">' +
+        '<h4 class="mdl-card__title-text"></h4>' +
+        '</div>' +
+        '<div class="header">' +
+        '<div>' +
+        '<div class="avatar"></div>' +
+        '<div class="username mdl-color-text--black"></div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="comments-container"></div>' +
+        '<form class="add-comment" action="#">' +
+        '<div class="mdl-textfield mdl-js-textfield">' +
+        '<input class="mdl-textfield__input new-comment" type="text">' +
+        '<label class="mdl-textfield__label">Comment...</label>' +
+        '</div>' +
+        '</form>' +
+        '</div>' +
+        '</div>';
+
+    // Create the DOM element from the HTML.
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    var boatElement = div.firstChild;
+    if (componentHandler) {
+        componentHandler.upgradeElements(boatElement.getElementsByClassName('mdl-textfield')[0]);
+    }
+
+    var addCommentForm = boatElement.getElementsByClassName('add-comment')[0];
+    var commentInput = boatElement.getElementsByClassName('new-comment')[0];
+
+    // Set values.
+    boatElement.getElementsByClassName('mdl-card__title-text')[0].innerText = boatName;
+    boatElement.getElementsByClassName('username')[0].innerText = location.lat + ", " + location.lon || 'Anonymous';
+    boatElement.getElementsByClassName('avatar')[0].style.backgroundImage = 'url("' +
+        ('./silhouette.jpg') + '")';
+
+    // Listen for comments.
+    // [START child_event_listener_recycler]
+    var commentsRef = firebase.database().ref('events/' + boatName);
+    commentsRef.on('child_added', function(data) {
+        addBoatElement(boatElement, data.key, data.val().text, data.val().author);
+    });
+    commentsRef.on('child_changed', function(data) {
+        setBoatValues(boatElement, data.key, data.val().text, data.val().author);
+    });
+    commentsRef.on('child_removed', function(data) {
+        deleteBoat(boatElement, data.key);
+    });
+    // [END child_event_listener_recycler]
+
+
+    // Keep track of all Firebase reference on which we are listening.
+    listeningFirebaseRefs.push(commentsRef);
+
+    // Create new comment.
+    addCommentForm.onsubmit = function(e) {
+        e.preventDefault();
+        createNewComment(boatId, firebase.auth().currentUser.displayName, uid, commentInput.value);
+        commentInput.value = '';
+        commentInput.parentElement.MaterialTextfield.boundUpdateClassesHandler();
+    };
+    return boatElement;
 }
 
 /**
- * Updates the starred status of the post.
+ * Creates a boat element and adds it to the given eventElement.
  */
-function updateStarredByCurrentUser(postElement, starred) {
-  if (starred) {
-    postElement.getElementsByClassName('starred')[0].style.display = 'inline-block';
-    postElement.getElementsByClassName('not-starred')[0].style.display = 'none';
-  } else {
-    postElement.getElementsByClassName('starred')[0].style.display = 'none';
-    postElement.getElementsByClassName('not-starred')[0].style.display = 'inline-block';
-  }
+function addBoatElement(eventElement, id, name, author) {
+    var comment = document.createElement('div');
+    comment.classList.add('comment-' + id);
+    comment.innerHTML = '<span class="username"></span><span class="name"></span>';
+    comment.getElementsByClassName('name')[0].innerText = name;
+    comment.getElementsByClassName('username')[0].innerText = author || 'Anonymous';
+
+    var commentsContainer = eventElement.getElementsByClassName('comments-container')[0];
+    commentsContainer.appendChild(comment);
 }
 
 /**
- * Updates the number of stars displayed for a post.
+ * Sets the boat's values in the given eventElement.
  */
-function updateStarCount(postElement, nbStart) {
-  postElement.getElementsByClassName('star-count')[0].innerText = nbStart;
+function setBoatValues(postElement, id, name, author) {
+    var comment = postElement.getElementsByClassName('comment-' + id)[0];
+    comment.getElementsByClassName('name')[0].innerText = name;
+    comment.getElementsByClassName('fp-username')[0].innerText = author;
 }
 
 /**
- * Creates a comment element and adds it to the given postElement.
+ * Deletes the boat of the given ID in the given eventElement.
  */
-function addCommentElement(postElement, id, text, author) {
-  var comment = document.createElement('div');
-  comment.classList.add('comment-' + id);
-  comment.innerHTML = '<span class="username"></span><span class="comment"></span>';
-  comment.getElementsByClassName('comment')[0].innerText = text;
-  comment.getElementsByClassName('username')[0].innerText = author || 'Anonymous';
-
-  var commentsContainer = postElement.getElementsByClassName('comments-container')[0];
-  commentsContainer.appendChild(comment);
-}
-
-/**
- * Sets the comment's values in the given postElement.
- */
-function setCommentValues(postElement, id, text, author) {
-  var comment = postElement.getElementsByClassName('comment-' + id)[0];
-  comment.getElementsByClassName('comment')[0].innerText = text;
-  comment.getElementsByClassName('fp-username')[0].innerText = author;
-}
-
-/**
- * Deletes the comment of the given ID in the given postElement.
- */
-function deleteComment(postElement, id) {
-  var comment = postElement.getElementsByClassName('comment-' + id)[0];
-  comment.parentElement.removeChild(comment);
+function deleteBoat(postElement, id) {
+    var comment = postElement.getElementsByClassName('comment-' + id)[0];
+    comment.parentElement.removeChild(comment);
 }
 
 /**
@@ -283,42 +361,62 @@ function startDatabaseQueries() {
   var topUserPostsRef = firebase.database().ref('user-posts/' + myUserId).orderByChild('starCount');
   // [END my_top_posts_query]
   // [START recent_posts_query]
-  var recentPostsRef = firebase.database().ref('posts').limitToLast(100);
+  var events = firebase.database().ref('Events');
   // [END recent_posts_query]
-  var userPostsRef = firebase.database().ref('user-posts/' + myUserId);
+  var boats = events.child('עיה/boats');
 
-  var fetchPosts = function(postsRef, sectionElement) {
-    postsRef.on('child_added', function(data) {
-      var author = data.val().author || 'Anonymous';
-      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
-      containerElement.insertBefore(
-          createPostElement(data.key, data.val().name, data.val().aviLocation.lat,data.val().aviLocation.lon, author, data.val().uid, data.val().authorPic),
-          containerElement.firstChild);
-    });
-    postsRef.on('child_changed', function(data) {	
-		var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
-		var postElement = containerElement.getElementsByClassName('post-' + data.key)[0];
-		postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = data.val().title;
-		postElement.getElementsByClassName('username')[0].innerText = data.val().author;
-		postElement.getElementsByClassName('text')[0].innerText = data.val().body;
-		postElement.getElementsByClassName('star-count')[0].innerText = data.val().starCount;
-    });
-    postsRef.on('child_removed', function(data) {
-		var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
-		var post = containerElement.getElementsByClassName('post-' + data.key)[0];
-	    post.parentElement.removeChild(post);
-    });
-  };
+  var fetchEvents = function(eventsRef, sectionElement) {
+        eventsRef.on('child_added', function(data) {
+            var author = data.val().managerUuid;
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            containerElement.insertBefore(
+                createEventElement(data.val().uuid,data.val().name,author,data.val().boats),
+                containerElement.firstChild);
+        });
+        eventsRef.on('child_changed', function(data) {
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            var eventElement = containerElement.getElementsByClassName('post-' + data.key)[0];
+            eventElement.getElementsByClassName('mdl-card__title-text')[0].innerText = data.val().name;
+            eventElement.getElementsByClassName('username')[0].innerText = data.val().managerUuid;
+        });
+        eventsRef.on('child_removed', function(data) {
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            var post = containerElement.getElementsByClassName('post-' + data.key)[0];
+            post.parentElement.removeChild(post);
+        });
+    };
+  var fetchBoats = function(boatsRef, sectionElement) {
+        boatsRef.on('child_added', function(data) {
+            var author = data.val().uuidString;
+            var location = data.val().aviLocation;
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            containerElement.insertBefore(
+                createEventElement(data.val().uuid,data.val().name,author,data.val().boats),
+                containerElement.firstChild);
+        });
+        boatsRef.on('child_changed', function(data) {
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            var eventElement = containerElement.getElementsByClassName('post-' + data.key)[0];
+            eventElement.getElementsByClassName('mdl-card__title-text')[0].innerText = data.val().name;
+            eventElement.getElementsByClassName('username')[0].innerText = data.val().managerUuid;
+        });
+        boatsRef.on('child_removed', function(data) {
+            var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+            var post = containerElement.getElementsByClassName('post-' + data.key)[0];
+            post.parentElement.removeChild(post);
+        });
+    };
 
   // Fetching and displaying all posts of each sections.
-  fetchPosts(topUserPostsRef, topUserPostsSection);
-  fetchPosts(recentPostsRef, recentPostsSection);
-  fetchPosts(userPostsRef, userPostsSection);
+  //fetchPosts(topUserPostsRef, buoysSection);
+  fetchEvents(events, eventsSection);
+  fetchBoats(boats, boatsSection);
+  //fetchPosts(topUserPostsRef, mapSection);
 
   // Keep track of all Firebase refs we are listening to.
   listeningFirebaseRefs.push(topUserPostsRef);
-  listeningFirebaseRefs.push(recentPostsRef);
-  listeningFirebaseRefs.push(userPostsRef);
+  listeningFirebaseRefs.push(events);
+  listeningFirebaseRefs.push(boats);
 }
 
 /**
@@ -339,11 +437,12 @@ function writeUserData(userId, name, email, imageUrl) {
  */
 function cleanupUi() {
   // Remove all previously displayed posts.
-  topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-  recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-  userPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  buoysSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  eventsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  boatsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
 
-  // Stop all currently listening Firebase listeners.
+
+    // Stop all currently listening Firebase listeners.
   listeningFirebaseRefs.forEach(function(ref) {
     ref.off();
   });
@@ -398,13 +497,15 @@ function newPostForCurrentUser(boatName, lat, lon) {
  * Displays the given section element and changes styling of the given button.
  */
 function showSection(sectionElement, buttonElement) {
-  recentPostsSection.style.display = 'none';
-  userPostsSection.style.display = 'none';
-  topUserPostsSection.style.display = 'none';
+  eventsSection.style.display = 'none';
+  boatsSection.style.display = 'none';
+  buoysSection.style.display = 'none';
+  mapSection.style.display=  'none';
   addPost.style.display = 'none';
   recentMenuButton.classList.remove('is-active');
   myPostsMenuButton.classList.remove('is-active');
   myTopPostsMenuButton.classList.remove('is-active');
+  boatsMapMenuButton.classList.remove('is-active');
 
   if (sectionElement) {
     sectionElement.style.display = 'block';
@@ -412,6 +513,81 @@ function showSection(sectionElement, buttonElement) {
   if (buttonElement) {
     buttonElement.classList.add('is-active');
   }
+}
+
+/**
+ * Creates a map object with a click listener and a heatmap.
+ */
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: new google.maps.LatLng(-34.397, 150.644),
+        zoom: 3
+    });
+
+    // Create the DIV to hold the control and call the makeInfoBox() constructor
+    // passing in this DIV.
+    var infoBoxDiv = document.createElement('div');
+    makeInfoBox(infoBoxDiv, map);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(infoBoxDiv);
+
+    // Listen for clicks and add the location of the click to firebase.
+    map.addListener('click', function(e) {
+        data.lat = e.latLng.lat();
+        data.lng = e.latLng.lng();
+        addToFirebase(data);
+    });
+}
+function makeInfoBox(controlDiv, map) {
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '2px';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.marginTop = '10px';
+    controlUI.style.textAlign = 'center';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '100%';
+    controlText.style.padding = '6px';
+    controlText.textContent = 'The map shows all clicks made in the last 10 minutes.';
+    controlUI.appendChild(controlText);
+}
+
+/**
+ * Used to get location data based on lat and long
+ * based on example https://developers.google.com/maps/documentation/javascript/geocoding
+ * @param geocoder
+ * @param map
+ * @param infowindow
+ */
+
+function geocodeLatLng(geocoder, map, infowindow) {
+    var input = document.getElementById('latlng').value;
+    var latlngStr = input.split(',', 2);
+    var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+    geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+            if (results[1]) {
+                map.setZoom(11);
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map
+                });
+                infowindow.setContent(results[1].formatted_address);
+                infowindow.open(map, marker);
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
 }
 
 // Bindings on load.
@@ -448,14 +624,17 @@ window.addEventListener('load', function() {
 
   // Bind menu buttons.
   recentMenuButton.onclick = function() {
-    showSection(recentPostsSection, recentMenuButton);
+    showSection(eventsSection, recentMenuButton);
   };
   myPostsMenuButton.onclick = function() {
-    showSection(userPostsSection, myPostsMenuButton);
+    showSection(boatsSection, myPostsMenuButton);
   };
   myTopPostsMenuButton.onclick = function() {
-    showSection(topUserPostsSection, myTopPostsMenuButton);
+    showSection(buoysSection, myTopPostsMenuButton);
   };
+    boatsMapMenuButton.onclick = function() {
+        showSection(mapSection, boatsMapMenuButton);
+    };
   addButton.onclick = function() {
     showSection(addPost);
     latInput.value = '';

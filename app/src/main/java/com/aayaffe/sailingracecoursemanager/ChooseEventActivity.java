@@ -256,7 +256,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
     private void enableLogin(boolean toLogin){
         if (toLogin) {
-
             try {
                 ActionMenuItemView log_item = (ActionMenuItemView) findViewById(R.id.action_logout);
                 log_item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
