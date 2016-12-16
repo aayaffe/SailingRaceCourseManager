@@ -7,25 +7,24 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 /**
  * Created by aayaffe on 04/10/2015.
  */
 public class Notification {
-    private NotificationCompat.Builder mBuilder;
     private NotificationManager mNotifyMgr;
 
 
     public void InitNotification(Context c){
-        mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
         Intent resultIntent = new Intent(c,GoogleMapsActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(c,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setOngoing(true);
         // Sets an ID for the notification
-        int mNotificationId = 001;
+        int mNotificationId = 1;
 // Gets an instance of the NotificationManager service
         mNotifyMgr =
                 (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);

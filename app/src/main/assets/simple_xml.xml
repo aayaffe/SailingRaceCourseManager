@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimpleObject>
+    <Name>Donut</Name>
+    <LuckyNumber>0</LuckyNumber>
+    <Unicorn>false</Unicorn>
+    <Unicorn>
+        <Name>
+            felix
+        </Name>
+    </Unicorn>
+</SimpleObject>

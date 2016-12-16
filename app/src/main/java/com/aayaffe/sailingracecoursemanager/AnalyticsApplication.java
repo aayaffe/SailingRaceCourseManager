@@ -17,7 +17,6 @@ package com.aayaffe.sailingracecoursemanager;/*
 
 import android.app.Application;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 /**

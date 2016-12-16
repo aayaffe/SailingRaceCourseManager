@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoursesFile>
+    <Course type="Trapezoid 70,110">
+        <Legs name="Shorted Outer">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>1</Downwind>
+                <Reach>1</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>SATELLITE</GateType>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-39</Direction>
+                <Distance factor="true">0.95</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-70</Direction>
+                <Distance factor="true">0.5</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>GATE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>110</Direction>
+                    <Distance>0.1</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-90</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>GATE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="Reach is 1/2 Beat">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0.5</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-30</Direction>
+                <Distance factor="true">0.95</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-110</Direction>
+                <Distance factor="true">0.5</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>110</Direction>
+                    <Distance>0.3</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-160</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="Reach is 2/3 Beat">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>1.33333</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>SATELLITE</GateType>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-39</Direction>
+                <Distance factor="true">0.99</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-110</Direction>
+                <Distance factor="true">0.67</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>GATE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>110</Direction>
+                    <Distance>0.3</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-160</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>GATE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+    </Course>
+
+    <Course type="Trapezoid 60,120">
+        <Legs name="Shorted Outer">
+            <LengthFactors>
+                <Upwind>1.833</Upwind>
+                <Downwind>1.66</Downwind>
+                <Reach>1</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>-125</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-30</Direction>
+                <Distance factor="true">0.87</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-60</Direction>
+                <Distance factor="true">0.5</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="Reach is 1/2 Beat">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0.7</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>-120</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-30</Direction>
+                <Distance factor="true">0.87</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-120</Direction>
+                <Distance factor="true">0.5</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>120</Direction>
+                    <Distance>0.3</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-160</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="Reach is 2/3 Beat">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>1.33333</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>-125</GateDirection>
+                    <GateDistance>0.08</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="2">
+                <Direction>-41</Direction>
+                <Distance factor="true">0.88</Distance>
+                <Gatable>
+                    <isGatable>false</isGatable>
+                </Gatable>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>-120</Direction>
+                <Distance factor="true">0.67</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>120</Direction>
+                    <Distance>0.3</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-160</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+    </Course>
+
+    <Course type="Windward-Leeward">
+        <Legs name="L-Leeward">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="W-Windward">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>0</Direction>
+                    <Distance>0.05</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-90</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="LR-Lee. port reach">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>120</Direction>
+                    <Distance>0.07</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>30</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="LG-Lee. star reach">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>-120</Direction>
+                    <Distance>0.07</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>150</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="WR-Wind. star reach">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="always">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>-80</Direction>
+                    <Distance>0.07</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-150</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="WG-Wind. port reach">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>2</Downwind>
+                <Reach>0</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="always">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>80</Direction>
+                    <Distance>0.07</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-30</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="4" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+    </Course>
+
+    <Course type="Triangular">
+        <Legs name="TL-Leeward finish">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>1</Downwind>
+                <Reach>1.41</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+                <Mark name="2" isGatable="false">
+                    <Direction>-135</Direction>
+                    <Distance factor="true">0.71</Distance>
+                    <Gatable>
+                        <isGatable>false</isGatable>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>0</Direction>
+                <Distance>0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance>0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+        <Legs name="TW-Windward finish">
+            <LengthFactors>
+                <Upwind>2</Upwind>
+                <Downwind>0</Downwind>
+                <Reach>1.41</Reach>
+            </LengthFactors>
+            <Mark name="1" gateType="satellite" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="true">1</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Satellite</GateType>
+                    <GateDirection>100</GateDirection>
+                    <GateDistance>0.02</GateDistance>
+                </Gatable>
+                <Mark name="FINISH_LINE" isGatable="always">
+                    <Direction>0</Direction>
+                    <Distance factor="false">0.05</Distance>
+                    <Gatable>
+                        <isGatable>always</isGatable>
+                        <GateType>FINISH_LINE</GateType>
+                        <GateDirection>-90</GateDirection>
+                        <GateDistance>0.027</GateDistance>
+                    </Gatable>
+                </Mark>
+                <Mark name="2" isGatable="false">
+                    <Direction>-135</Direction>
+                    <Distance factor="true">0.71</Distance>
+                    <Gatable>
+                        <isGatable>false</isGatable>
+                    </Gatable>
+                </Mark>
+            </Mark>
+            <Mark name="3" isGatable="true">
+                <Direction>0</Direction>
+                <Distance factor="false">0</Distance>
+                <Gatable>
+                    <isGatable>true</isGatable>
+                    <GateType>Gate</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.027</GateDistance>
+                </Gatable>
+            </Mark>
+            <Mark name="START_LINE" isGatable="always">
+                <Direction>180</Direction>
+                <Distance factor="false">0.05</Distance>
+                <Gatable>
+                    <isGatable>always</isGatable>
+                    <GateType>START_LINE</GateType>
+                    <GateDirection>-90</GateDirection>
+                    <GateDistance>0.07</GateDistance>
+                </Gatable>
+            </Mark>
+        </Legs>
+    </Course>
+</CoursesFile>

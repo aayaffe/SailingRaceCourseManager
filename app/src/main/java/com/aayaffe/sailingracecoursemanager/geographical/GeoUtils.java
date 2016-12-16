@@ -38,14 +38,12 @@ public class GeoUtils {
     static public LatLng toLatLng(Location l){
         if (l==null)
             return null;
-        LatLng ret = new LatLng(l.getLatitude(), l.getLongitude());
-        return ret;
+        return new LatLng(l.getLatitude(), l.getLongitude());
     }
     static public LatLng toLatLng(AviLocation l){
         if (l==null)
             return null;
-        LatLng ret = new LatLng(l.lat, l.lon);
-        return ret;
+        return new LatLng(l.lat, l.lon);
     }
 
 
@@ -58,8 +56,7 @@ public class GeoUtils {
     static public AviLocation toAviLocation(Location l){
         if (l==null)
             return null;
-        AviLocation ret = new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
-        return ret;
+        return new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
     }
 
     public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, int distm) {
@@ -71,8 +68,7 @@ public class GeoUtils {
         double a = Math.atan2(Math.sin(brng)*Math.sin(dis)*Math.cos(lat1), Math.cos(dis)-Math.sin(lat1)*Math.sin(lat2));
         double lon2 = lon1 + a;
         lon2 = (lon2+ 3*Math.PI) % (2*Math.PI) - Math.PI;
-        AviLocation ret = new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
-        return ret;
+        return new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
     }
     public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, double distNM) {
         return getLocationFromDirDist(loc,dir,(int)(distNM*1852));
@@ -84,14 +80,14 @@ public class GeoUtils {
 
     public static AviLocation getLocationFromTriangulation(AviLocation p1, double brng1, AviLocation p2,  double brng2){
         AviLocation ret = new AviLocation();
-        double lat1 = Math.toRadians(p1.getLat()), lon1 = Math.toRadians(p1.getLng());
-        double lat2 = Math.toRadians(p2.getLat()), lon2 = Math.toRadians(p2.getLng());
+        double lat1 = Math.toRadians(p1.getLat()), lon1 = Math.toRadians(p1.getLon());
+        double lat2 = Math.toRadians(p2.getLat()), lon2 = Math.toRadians(p2.getLon());
         double brng13 = Math.toRadians(brng1), brng23 = Math.toRadians(brng2);
         double dLat = lat2 - lat1, dLon = lon2 - lon1;
         double dist12 = 2 * Math.asin(Math.sqrt(Math.sin(dLat / 2)
                 * Math.sin(dLat / 2) + Math.cos(lat1) * Math.cos(lat2)
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2)));
-        if (dist12 == 0);
+        if (dist12 == 0); //TODO: Why is this here?
         Double brngA = Math.acos((Math.sin(lat2) - Math.sin(lat1) * Math.cos(dist12)) / (Math.sin(dist12) * Math.cos(lat1)));
         if (brngA.isNaN()) brngA = 0.0;
         Double brngB = Math.acos((Math.sin(lat1) - Math.sin(lat2) * Math.cos(dist12)) / (Math.sin(dist12) * Math.cos(lat2)));
@@ -125,12 +121,12 @@ public class GeoUtils {
 
     public static AviLocation getMidPointLocation(AviLocation p1, AviLocation p2){ //Middle point
         AviLocation ret = new AviLocation();
-        double lon2 =p2.getLng();
-        double lon1 = p1.getLng();
+        double lon2 =p2.getLon();
+        double lon1 = p1.getLon();
         double dLon = Math.toRadians(lon2 - lon1);
         double lat1 = Math.toRadians(p1.getLat());
         double lat2 = Math.toRadians(p2.getLat());
-        lon1 = Math.toRadians(p1.getLng());
+        lon1 = Math.toRadians(p1.getLon());
         double Bx = Math.cos(lat2) * Math.cos(dLon);
         double By = Math.cos(lat2) * Math.sin(dLon);
         double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));

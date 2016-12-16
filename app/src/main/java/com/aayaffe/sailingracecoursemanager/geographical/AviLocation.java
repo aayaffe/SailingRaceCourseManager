@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.geographical;
 
-import android.location.Location;
+//import android.location.Location;
 
 import com.google.firebase.database.Exclude;
 
@@ -19,7 +19,7 @@ public class AviLocation {
     public Long lastUpdate;
 
     public AviLocation() {
-
+        //Empty constructor for FireBase.
     }
     public AviLocation(double Lat, double Lng) {
         lat = Lat;
@@ -37,7 +37,7 @@ public class AviLocation {
         AviLocation al = GeoUtils.getLocationFromDirDist(initial,dir,disNM);
         lastUpdate = new Date().getTime();
         lat = al.getLat();
-        lon = al.getLng();
+        lon = al.getLon();
     }
 
     /**
@@ -51,14 +51,14 @@ public class AviLocation {
         lastUpdate = new Date().getTime();
         AviLocation al = GeoUtils.getLocationFromTriangulation(p1,brng1,p2,brng2);
         lat= al.getLat();
-        lon= al.getLng();
+        lon= al.getLon();
     }
 
     public AviLocation(AviLocation p1, AviLocation p2){ //Middle point
         lastUpdate = new Date().getTime();
         AviLocation al = GeoUtils.getMidPointLocation(p1,p2);
         lat=al.getLat();
-        lon=al.getLng();
+        lon=al.getLon();
     }
 
 
@@ -74,9 +74,9 @@ public class AviLocation {
 
 
 
-    public Location toLocation(){
-        return GeoUtils.createLocation(lat,lon);
-    }
+//    public Location toLocation(){
+//        return GeoUtils.createLocation(lat,lon);
+//    }
 
     public static long Age(AviLocation aviLocation) {
         if (aviLocation==null) return -1;
@@ -151,14 +151,14 @@ public class AviLocation {
     public double getLat() {
         return lat;
     }
-    public double getLng() {
+    public double getLon() {
         return lon;
     }
 
     public void setLat(double Lat) {
         this.lat=Lat;
     }
-    public void setLng(double Lng) {
+    public void setLon(double Lng) {
         this.lon=Lng;
     }
 

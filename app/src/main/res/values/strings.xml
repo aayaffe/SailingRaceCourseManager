@@ -223,6 +223,8 @@
     <string name="zoom_to_marks">Zoom to marks</string>
     <string name="db_courseDescriptors">RaceCourseDescriptors</string>
     <string name="action_exit">Exit</string>
+    <string name="action_assign">Assign buoys</string>
+    <string name="db_assinged">assigned</string>
 
 
     <!--<string name="facebook_app_id">[VALUE]</string>-->

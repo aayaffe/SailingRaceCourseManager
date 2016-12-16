@@ -1,10 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.Events;
 
-import com.aayaffe.sailingracecoursemanager.Users.User;
-import com.aayaffe.sailingracecoursemanager.communication.AviObject;
+import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.google.firebase.database.Exclude;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -15,13 +13,22 @@ public class Event {
     private String name;
     @Exclude
     private UUID _uuid;
-    //private String uuid;
     private int lastBuoyId;
-    private User eventManager;
+    private String eventManager;
     @Exclude
-    private HashMap<String,AviObject> boats;
+    private HashMap<String,Buoy> boats;
     @Exclude
-    private HashMap<String,AviObject> buoys;
+    private HashMap<String,Buoy> buoys;
+    public int yearStart;
+    public int yearEnd;
+    public int monthStart;
+    public int monthEnd;
+    public int dayStart;
+    public int dayEnd;
+
+
+
+
 
     public Event(){
         _uuid = UUID.randomUUID();
@@ -40,31 +47,23 @@ public class Event {
     }
 
     public void setLastBuoyId(int lastBuoyId) {
-        lastBuoyId = lastBuoyId;
+
+        this.lastBuoyId = lastBuoyId;
     }
 
-    public User getEventManager() {
-        return eventManager;
-    }
-
-    public void setEventManager(User eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    public HashMap<String, AviObject> getBoats() {
+    public HashMap<String, Buoy> getBoats() {
         return boats;
     }
 
-    public void setBoats(HashMap<String, AviObject> boats) {
+    public void setBoats(HashMap<String, Buoy> boats) {
         this.boats = boats;
     }
 
-    public HashMap<String, AviObject> getBuoys() {
+    public HashMap<String, Buoy> getBuoys() {
         return buoys;
     }
 
-    public void setBuoys(HashMap<String, AviObject> buoys) {
+    public void setBuoys(HashMap<String, Buoy> buoys) {
         this.buoys = buoys;
     }
 
@@ -74,5 +73,12 @@ public class Event {
 
     public void setUuid(String uuid) {
         this._uuid = UUID.fromString(uuid);
+    }
+    public String getManagerUuid() {
+        return eventManager;
+    }
+
+    public void setManagerUuid(String uuid) {
+        this.eventManager = uuid;
     }
 }

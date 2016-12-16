@@ -1,0 +1,5 @@
+projectKey=AVI:master
+serverUrl=http://localhost:9000
+dashboardUrl=http://localhost:9000/dashboard/index/AVI:master
+ceTaskId=AVdcyLK7OdVUQLFzzOjZ
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVdcyLK7OdVUQLFzzOjZ

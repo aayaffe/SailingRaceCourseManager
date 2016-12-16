@@ -9,12 +9,23 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+
+import java.util.Calendar;
 
 /**
  * Created by aayaffe on 09/02/2016.
  */
 public class EventInputDialog extends DialogFragment {
     public String eventName;
+    public int yearStart;
+    public int yearEnd;
+    public int monthStart;
+    public int monthEnd;
+    public int dayStart;
+    public int dayEnd;
     private static Context c;
     public static EventInputDialog newInstance(String eventName, Context c) {
         EventInputDialog frag = new EventInputDialog();
@@ -50,12 +61,36 @@ public class EventInputDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         eventName = getArguments().getString("eventName", "");
-        String title = "Add new Event";//(buoy_id==-1)?"Add Buoy":"Edit Buoy: "+ buoy_id;
+        String title = "Add new Event";//(buoy_id==-1)?"Add BUOY":"Edit BUOY: "+ buoy_id;
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.event_input_dialog, null);
+        Button b = (Button) v.findViewById(R.id.selectDateRange);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEndv, int monthOfYearEnd, int dayOfMonthEnd) {
+                                yearStart = year;
+                                yearEnd = yearEndv;
+                                monthStart=  monthOfYear;
+                                monthEnd = monthOfYearEnd;
+                                dayStart = dayOfMonth;
+                                dayEnd = dayOfMonthEnd;
+                            }
+                        },
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+            }
+        });
         builder.setView(v)
         /*builder.setView(R.layout.event_input_dialog)*/
                 .setTitle(title)

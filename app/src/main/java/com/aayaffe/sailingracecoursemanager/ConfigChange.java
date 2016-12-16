@@ -3,7 +3,7 @@ package com.aayaffe.sailingracecoursemanager;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.map.GoogleMapsActivity;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 /**
  * Created by aayaffe on 29/09/2015.
