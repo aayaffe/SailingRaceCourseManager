@@ -179,11 +179,16 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         uuidToId.inverse().remove(m.getId());
     }
 
-    public void removeMark(UUID uuid) {
+    public void removeMark(UUID uuid){
+        removeMark(uuid,true);
+    }
+    public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
-            GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle()); //TODO Check if mapping correct using title
+            if (removeFromDB) {
+                GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle()); //TODO Check if mapping correct using title - convert to usign UUID as title
+            }
             uuidToMarker.remove(uuid);
             uuidToId.remove(uuid);
         }
