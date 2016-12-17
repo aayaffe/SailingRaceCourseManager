@@ -481,12 +481,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "OnStart");
         super.onStart();
         firstBoatLoad = true;
+        updateWindArrow();
+        Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
+        runnable.run();
+    }
+
+    private void updateWindArrow() {
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
         Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         wa.setDirection(rotation);
-        Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
-        runnable.run();
     }
 
     public void SettingsMenuItemOnClick() {

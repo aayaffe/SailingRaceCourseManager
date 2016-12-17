@@ -21,10 +21,12 @@ public class WindDirDialog extends Dialog {
     private Context context;
     private OnMyDialogResult myDialogResult;
     private HorizontalNumberPicker windSelector;
+    private double dir = 0.0;
 
-    public WindDirDialog(Context context) {
+    public WindDirDialog(Context context, float windDir) {
         super(context);
         this.context = context;
+        this.dir = windDir;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class WindDirDialog extends Dialog {
         titleV.setGravity(Gravity.CENTER);
 
         windSelector = (HorizontalNumberPicker) findViewById(R.id.wind_dialogs_picker);
-        windSelector.configNumbers(0, 5 , -1, 360);
+        windSelector.configNumbers(dir, 5 , -1, 360);
 
         Button applyB = (Button)findViewById(R.id.apply_wind_dialog_button);
         applyB.setOnClickListener(new View.OnClickListener() {

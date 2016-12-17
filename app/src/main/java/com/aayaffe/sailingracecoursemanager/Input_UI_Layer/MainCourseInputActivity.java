@@ -114,12 +114,14 @@ public class MainCourseInputActivity extends Activity {
         WindDirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WindDirDialog dialog = new WindDirDialog(context);
+                WindDirDialog dialog = new WindDirDialog(context, Float.parseFloat(sharedPreferences.getString("windDir", "90")));
                 dialog.show();
                 dialog.setDialogResult(new WindDirDialog.OnMyDialogResult() {
                     @Override
                     public void finish(double windDir) {
                         windDirection=(int)windDir;
+                        editor.putString("windDir",String.valueOf(windDirection));
+                        editor.apply();
                     }
                 });
             }

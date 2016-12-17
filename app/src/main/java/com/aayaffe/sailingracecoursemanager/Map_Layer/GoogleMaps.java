@@ -269,7 +269,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
                 polyline.remove();
             return;
         }
-        LatLng a1 = uuidToMarker.get(a).getPosition();
+        Marker m1 = uuidToMarker.get(a);
+        if (m1==null) {
+            if (polyline!=null)
+                polyline.remove();
+            return;
+        }
+        LatLng a1 = m1.getPosition();
         LatLng b1 = uuidToMarker.get(b).getPosition();
 
         PolylineOptions po = new PolylineOptions()
