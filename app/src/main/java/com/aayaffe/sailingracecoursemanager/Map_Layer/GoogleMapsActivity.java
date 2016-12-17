@@ -509,9 +509,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
 
-    private void addMark(long id, Location loc, Float dir, int dist) {
+    private void addMark(long id, Location loc, Float dir, double dist) {
         if (loc == null) return;
-        Buoy o = new Buoy("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), Integer.parseInt(dir + ""), dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
+        Buoy o = new Buoy("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }
@@ -527,9 +527,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         EditText distText = (EditText) dialog.getDialog().findViewById(R.id.dist);
         long buoyId = ((BuoyInputDialog) df).buoy_id;
         if (buoyId != -1) {
-            addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+            addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()));
         } else
-            addMark(newBuoyId(), iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Integer.parseInt(distText.getText().toString()));
+            addMark(newBuoyId(), iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()));
     }
 
     private long newBuoyId() {
