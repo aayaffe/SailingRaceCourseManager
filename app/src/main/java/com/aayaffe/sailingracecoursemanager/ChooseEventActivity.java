@@ -101,6 +101,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             startActivityForResult(
                     AuthUI.getInstance().createSignInIntentBuilder()
                             .setProviders(getSelectedProviders())
+                            .setLogo(R.mipmap.banner)
                             .build(),
                     RC_SIGN_IN);
         }
@@ -148,6 +149,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                     startActivityForResult(
                             AuthUI.getInstance().createSignInIntentBuilder()
                                     .setProviders(getSelectedProviders())
+                                    .setLogo(R.mipmap.banner)
                                     .build(),
                             RC_SIGN_IN);
                 }
