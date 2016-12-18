@@ -19,6 +19,7 @@ import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.LegsType;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
@@ -57,12 +58,13 @@ public class MainCourseInputActivity extends Activity {
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
+    private ICommManager comm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_course_input_activity);
-
+        comm = GoogleMapsActivity.commManager;
         Map<String,String> defaultCourseOptions  =new HashMap<String, String>();
         defaultCourseOptions.put("type","Windward-Leeward");
         defaultCourseOptions.put("Legs","L-Leeward");
@@ -76,7 +78,8 @@ public class MainCourseInputActivity extends Activity {
         xmlParserC = new CourseXmlParser(this, "courses_file.xml");
         boatXmlParser = new BoatXmlParser(this, "boats_file.xml");
         coursesInfo = xmlParserC.parseCourseTypes();
-        boats=boatXmlParser.parseBoats();
+        //boats=boatXmlParser.parseBoats();
+        boats = comm.getBoatTypes();
 
         CourseButton =(Button)findViewById(R.id.coursetype_input_button);
         CourseButton.setOnClickListener(new View.OnClickListener() {

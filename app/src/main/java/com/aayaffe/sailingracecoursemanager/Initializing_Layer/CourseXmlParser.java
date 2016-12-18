@@ -73,7 +73,7 @@ public class CourseXmlParser {
         String text = null;
         Mark referenceMark = new Mark("Reference Point"); //reference point is represented as a mark, who is the father of all marks.
         referenceMark.setGateType("REFERENCE_POINT");
-        ArrayList<Mark> fathers = new ArrayList<Mark>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
+        ArrayList<Mark> fathers = new ArrayList<>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
         Mark currentMark = new Mark("nullMark/debug");  //if a mark named "nullMark" appears - it's a bug!
         boolean preReceiveMode = false;
         boolean receiveMode = false;
@@ -85,7 +85,9 @@ public class CourseXmlParser {
             String attributeHolder = "";
             String name = "";
             while (event != XmlPullParser.END_DOCUMENT) {
-                if (xmlPullParser.getName() != null) name = xmlPullParser.getName();  //name is the xml tag name
+                if (xmlPullParser.getName() != null){
+                    name = xmlPullParser.getName();  //name is the xml tag name
+                }
                 switch (event) {
                     case XmlPullParser.START_DOCUMENT:
                         fathers.add(referenceMark);  //the reference point is the father of all marks, so is the first to be used here.
@@ -240,8 +242,12 @@ public class CourseXmlParser {
 
     private boolean safeIsGatable(Map<String , String> selectedOptions, String name){
         boolean b1=false, b2=false;
-        if(selectedOptions.containsKey(name+" GATE")) b1=selectedOptions.get(name+" GATE").equals("true");
-        if(selectedOptions.containsKey(name+" satellite")) b2=selectedOptions.get(name+" satellite").equals("true");
+        if(selectedOptions.containsKey(name+" GATE")) {
+            b1=selectedOptions.get(name+" GATE").equals("true");
+        }
+        if(selectedOptions.containsKey(name+" SATELLITE")) {
+            b2=selectedOptions.get(name+" SATELLITE").equals("true");
+        }
         return b1||b2;
     }
 }

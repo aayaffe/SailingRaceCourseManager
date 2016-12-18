@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -61,7 +62,7 @@ public class CourseTypeSecondDialog extends Dialog {
         finishB = new Button(context);
         finishB.setText("Done");
         finishB.setTextSize(25);
-        finishB.setTextColor(context.getResources().getColor(R.color.cmark_orange_lighter));
+        finishB.setTextColor(ContextCompat.getColor(context,R.color.cmark_orange_lighter));
         finishB.setBackgroundResource(R.color.cmark_blue_light);
         finishB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +104,7 @@ public class CourseTypeSecondDialog extends Dialog {
             layout.addView(textView);
 
             final Spinner dropdown = new Spinner(context);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, courseType.getLegsNames());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, courseType.getLegsNames());
             dropdown.setAdapter(adapter);
             dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             textView.setGravity(Gravity.CENTER);
@@ -141,7 +142,7 @@ public class CourseTypeSecondDialog extends Dialog {
                     case "spinner":
                         Spinner dropdown = new Spinner(context);
                         String[] items = Arrays.copyOfRange(options.get(c), 2, options.get(c).length);
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, items);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, items);
                         dropdown.setAdapter(adapter);
                         dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         textView.setGravity(Gravity.CENTER);

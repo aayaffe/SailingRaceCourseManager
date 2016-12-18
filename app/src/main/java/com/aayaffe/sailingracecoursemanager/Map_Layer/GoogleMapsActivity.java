@@ -278,20 +278,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void addRaceCourse() {
-        /**
-         * args:
-         * distance to mark 1
-         * wind direction
-         * signal boat location
-         * course options
-         * context
-         *
-         * all GoogleMapsActivity variables
-         */
         removeAllRaceCourseMarks();
-//        if (mapLayer.mapView != null) mapLayer.removeAllMarks();
         RaceCourse raceCourse = new RaceCourse();
-        if (mapLayer.mapView != null) buoys.addAll(raceCourse.getBuoyList());
+        if (mapLayer.mapView != null) {
+            buoys.addAll(raceCourse.getBuoyList());
+        }
         else Log.w(TAG, "null map");
         addBuoys();
         drawMapComponents();
@@ -304,8 +295,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.w(TAG, "onResume");
     }
 
-    private void removeAllRaceCourseMarks() {  //becomes unnecessary
-        //buoys = commManager.getAllBuoys();
+    private void removeAllRaceCourseMarks() {
         List<Buoy> buoysToRemove = new ArrayList<>();
         for (Buoy buoy : buoys) {
             if (buoy.getRaceCourseUUID() != null) {
@@ -319,6 +309,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private Runnable runnable = new Runnable() {
+        private Buoy getMyBoat(String name){
+            for (Buoy ao : commManager.getAllBoats()) {
+                if (ao.getName().equals(name)) {
+                    return ao;
+                }
+            }
+            return null;
+        }
         public void run() {
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
@@ -343,14 +341,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         }
     };
-    private Buoy getMyBoat(String name){
-        for (Buoy ao : commManager.getAllBoats()) {
-            if (ao.getName().equals(name)) {
-                return ao;
-            }
-        }
-        return null;
-    }
+
 
 
     private boolean isCurrentEventManager(String Uid) {
@@ -378,7 +369,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     public void drawMapComponents() {
-        Location myLocation = iGeo.getLoc();
         boats = commManager.getAllBoats();
         buoys = commManager.getAllBuoys();
 
@@ -388,7 +378,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!boat.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() first if is true");
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, getDirDistTXT(myLocation, boat.getLoc()), id);
+                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id);
             }
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (boat.getName().equals(users.getCurrentUser().DisplayName))) {
                 Log.d(TAG, "drawMapComponents() second if is true");
@@ -399,9 +389,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         Log.d(TAG, "commBuoyList size: " + buoys.size());
         for (Buoy buoy : buoys) {
-            mapLayer.addBuoy(buoy, getDirDistTXT(myLocation, buoy.getLoc()));
+            mapLayer.addBuoy(buoy, getDirDistTXT(iGeo.getLoc(), buoy.getLoc()));
         }
-        if ((buoys.size() > 0) && (firstBoatLoad) && (mapLayer.mapView != null)) {
+        if ((!buoys.isEmpty()) && (firstBoatLoad) && (mapLayer.mapView != null)) {
             firstBoatLoad = false;
             mapLayer.ZoomToMarks();
         } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
@@ -462,18 +452,20 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private String getDirDistTXT(Location src, Location dst) {
-        int distance;
+        double distance;
         int bearing;
         String units;
         try {
-            distance = src.distanceTo(dst) < 500 ? (int) src.distanceTo(dst) : ((int) (src.distanceTo(dst) / 1609.34));
-            units = src.distanceTo(dst) < 500 ? "m" : "NM";
+            distance = src.distanceTo(dst) < 1700 ? src.distanceTo(dst) : (src.distanceTo(dst) / 1609.34);
+            units = src.distanceTo(dst) < 1700 ? "m" : "NM";
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
         } catch (NullPointerException e) {
             return "NoGPS";
         }
         if (bearing==360) bearing = 0;
-        return String.format("%03d", bearing) + "\\" + distance + units;
+        if (units.equals("NM"))
+            return String.format("%03d", bearing) + "\\" + String.format("%0$.1f", distance) + units;
+        return String.format("%03d", bearing) + "\\" + String.format("%0$.0f", distance) + units;
     }
 
     @Override

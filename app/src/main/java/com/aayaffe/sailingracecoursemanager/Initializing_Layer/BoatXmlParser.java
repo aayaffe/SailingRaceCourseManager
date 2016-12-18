@@ -90,7 +90,7 @@ public class BoatXmlParser {
                                 vmg[windIndex][2]=Double.parseDouble(valueHolder);
                                 break;
                             case "TargetTime":
-                                boats.get(boats.size()-1).setTargetTime(Integer.parseInt(valueHolder));
+                                boats.get(boats.size()-1).setTargettime(Integer.parseInt(valueHolder));
                                 break;
                             case "Boat":
                                 boats.get(boats.size()-1).setVmg(vmg);

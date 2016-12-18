@@ -71,12 +71,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0.5</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-120</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -93,7 +93,7 @@
                 <Distance factor="true">0.5</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -113,7 +113,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -202,12 +202,12 @@
                 <Downwind>1.66</Downwind>
                 <Reach>1</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-125</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -224,7 +224,7 @@
                 <Distance factor="true">0.5</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -234,7 +234,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -256,12 +256,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0.7</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-120</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -278,7 +278,7 @@
                 <Distance factor="true">0.5</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -298,7 +298,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -320,12 +320,12 @@
                 <Downwind>2</Downwind>
                 <Reach>1.33333</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>-125</GateDirection>
                     <GateDistance>0.08</GateDistance>
                 </Gatable>
@@ -342,7 +342,7 @@
                 <Distance factor="true">0.67</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -362,7 +362,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -387,12 +387,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -402,7 +402,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -424,12 +424,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -449,7 +449,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -471,12 +471,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -486,7 +486,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -518,12 +518,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -533,7 +533,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -565,12 +565,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="always">
+            <Mark name="1" gateType="SATELLITE" isGatable="always">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>always</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -590,7 +590,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -613,12 +613,12 @@
                 <Downwind>2</Downwind>
                 <Reach>0</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="always">
+            <Mark name="1" gateType="SATELLITE" isGatable="always">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>always</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -638,7 +638,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -663,12 +663,12 @@
                 <Downwind>1</Downwind>
                 <Reach>1.41</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -685,7 +685,7 @@
                 <Distance>0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>
@@ -707,12 +707,12 @@
                 <Downwind>0</Downwind>
                 <Reach>1.41</Reach>
             </LengthFactors>
-            <Mark name="1" gateType="satellite" isGatable="true">
+            <Mark name="1" gateType="SATELLITE" isGatable="true">
                 <Direction>0</Direction>
                 <Distance factor="true">1</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Satellite</GateType>
+                    <GateType>SATELLITE</GateType>
                     <GateDirection>100</GateDirection>
                     <GateDistance>0.02</GateDistance>
                 </Gatable>
@@ -739,7 +739,7 @@
                 <Distance factor="false">0</Distance>
                 <Gatable>
                     <isGatable>true</isGatable>
-                    <GateType>Gate</GateType>
+                    <GateType>GATE</GateType>
                     <GateDirection>-90</GateDirection>
                     <GateDistance>0.027</GateDistance>
                 </Gatable>

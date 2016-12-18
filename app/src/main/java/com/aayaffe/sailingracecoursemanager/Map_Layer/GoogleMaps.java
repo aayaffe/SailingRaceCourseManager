@@ -114,7 +114,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         if (uuidToMarker.containsKey(buoy.getUUID())) {
             Marker currentMarker;
             currentMarker = uuidToMarker.get(buoy.getUUID());
-            currentMarker = updateBuoy(buoy, currentMarker);
+            currentMarker = updateBuoy(buoy, currentMarker, snippet);
             if (currentMarker.isInfoWindowShown()) {
                 currentMarker.showInfoWindow();
             }
@@ -132,7 +132,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             if (uuidToMarker.containsKey(ao.getUUID())) {
                 m = uuidToMarker.get(ao.getUUID());
                 boolean infoWindows = m.isInfoWindowShown();
-                m = updateMark(ao, m, resourceID, caption);
+                m = updateMark(ao, m, caption);
                 if (infoWindows) {
                     m.showInfoWindow();
                 }
@@ -149,20 +149,19 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return null;
     }
 
-    private Marker updateMark(Buoy ao, Marker m, int resourceID, String caption) {
+    private Marker updateMark(Buoy ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
-//            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
             m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
         return m;
     }
 
-    private Marker updateBuoy(Buoy ao, Marker m) {
+    private Marker updateBuoy(Buoy ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
-            m.setSnippet(ao.getName());
+            m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
         return m;
