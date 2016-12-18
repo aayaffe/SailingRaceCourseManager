@@ -42,12 +42,13 @@ public class Buoy {
         this.buoyType = BuoyType.OTHER;
     }
 
-    public Buoy(String name, AviLocation loc, BuoyType buoyType) {
+    public Buoy(String name, AviLocation loc, BuoyType buoyType, UUID raceCourseUUID) {
         _uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
+        this._raceCourseUUID = raceCourseUUID;
 
         switch (buoyType) {
             case FINISH_LINE:

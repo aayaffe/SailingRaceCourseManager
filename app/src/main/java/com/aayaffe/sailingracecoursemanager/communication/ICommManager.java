@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 
 import java.util.ArrayList;
@@ -55,4 +56,7 @@ public interface ICommManager {
     void assignBuoy(Buoy boat, String selectedBuoyName);
 
     void removeAssignment(Buoy buoy, Buoy boat);
+
+    List<Boat> getBoatTypes();
+
 }

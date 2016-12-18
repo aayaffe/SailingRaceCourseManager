@@ -110,7 +110,7 @@
     <string name="menu_svgclear">Clear SVG icon cache</string>
     <string name="title_activity_google_maps">Map</string>
     <string name="dir">Direction</string>
-    <string name="dist">Distance(Meters)</string>
+    <string name="dist">Distance(nautical miles)</string>
     <string name="title_activity_choose_event">ChooseEvent</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -226,8 +226,7 @@
     <string name="action_assign">Assign buoys</string>
     <string name="db_assinged">assigned</string>
 
+    <string name="default_toolbar_title">Avi Sail Race</string>
+    <string name="title_sign_in_activity">Avi Sail Race</string>
 
-    <!--<string name="facebook_app_id">[VALUE]</string>-->
-    <!--<string name="twitter_app_key">[VALUE]</string>-->
-    <!--<string name="twitter_app_secret">[VALUE]</string>-->
 </resources>

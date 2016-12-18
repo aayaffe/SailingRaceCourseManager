@@ -114,7 +114,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         if (uuidToMarker.containsKey(buoy.getUUID())) {
             Marker currentMarker;
             currentMarker = uuidToMarker.get(buoy.getUUID());
-            currentMarker = updateBuoy(buoy, currentMarker);
+            currentMarker = updateBuoy(buoy, currentMarker, snippet);
             if (currentMarker.isInfoWindowShown()) {
                 currentMarker.showInfoWindow();
             }
@@ -132,7 +132,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             if (uuidToMarker.containsKey(ao.getUUID())) {
                 m = uuidToMarker.get(ao.getUUID());
                 boolean infoWindows = m.isInfoWindowShown();
-                m = updateMark(ao, m, resourceID, caption);
+                m = updateMark(ao, m, caption);
                 if (infoWindows) {
                     m.showInfoWindow();
                 }
@@ -149,20 +149,19 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return null;
     }
 
-    private Marker updateMark(Buoy ao, Marker m, int resourceID, String caption) {
+    private Marker updateMark(Buoy ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
-//            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
             m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
         return m;
     }
 
-    private Marker updateBuoy(Buoy ao, Marker m) {
+    private Marker updateBuoy(Buoy ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
-            m.setSnippet(ao.getName());
+            m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
         return m;
@@ -179,11 +178,16 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         uuidToId.inverse().remove(m.getId());
     }
 
-    public void removeMark(UUID uuid) {
+    public void removeMark(UUID uuid){
+        removeMark(uuid,true);
+    }
+    public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
-            GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle()); //TODO Check if mapping correct using title
+            if (removeFromDB) {
+                GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle()); //TODO Check if mapping correct using title - convert to usign UUID as title
+            }
             uuidToMarker.remove(uuid);
             uuidToId.remove(uuid);
         }
@@ -264,7 +268,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
                 polyline.remove();
             return;
         }
-        LatLng a1 = uuidToMarker.get(a).getPosition();
+        Marker m1 = uuidToMarker.get(a);
+        if (m1==null) {
+            if (polyline!=null)
+                polyline.remove();
+            return;
+        }
+        LatLng a1 = m1.getPosition();
         LatLng b1 = uuidToMarker.get(b).getPosition();
 
         PolylineOptions po = new PolylineOptions()

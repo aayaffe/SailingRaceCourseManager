@@ -33,7 +33,7 @@ public class AviLocation {
      * @param dir
      * @param disNM
      */
-    public AviLocation(AviLocation initial, int dir, double disNM){
+    public AviLocation(AviLocation initial, float dir, double disNM){
         AviLocation al = GeoUtils.getLocationFromDirDist(initial,dir,disNM);
         lastUpdate = new Date().getTime();
         lat = al.getLat();

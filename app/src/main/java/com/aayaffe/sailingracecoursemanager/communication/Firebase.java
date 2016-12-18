@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -323,4 +324,14 @@ public class Firebase implements ICommManager {
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).removeValue();
     }
 
+    @Override
+    public List<Boat> getBoatTypes() {
+        ArrayList<Boat> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null) return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_boattypes)).getChildren()) {
+            Boat b = ps.getValue(Boat.class);
+            ret.add(b);
+        }
+        return ret;
+    }
 }

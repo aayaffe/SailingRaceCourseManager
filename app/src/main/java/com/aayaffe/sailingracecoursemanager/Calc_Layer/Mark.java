@@ -6,6 +6,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Jonathan on 23/07/2016.
@@ -129,7 +130,7 @@ public class Mark {
         this.gateType = gateType;
     }
 
-    public List<Buoy> parseBuoys(AviLocation referencePoint, double multiplication, int windDir) {  //parses the mark and his sons into buoys
+    public List<Buoy> parseBuoys(AviLocation referencePoint, double multiplication, int windDir, UUID _raceCourseUUID) {  //parses the mark and his sons into buoys
         /**
          * referencePoint - the referencePoint location. NOT SIGNAL BOAT
          * multiplication - known also as dist2m1 (the distance toward the first mark)
@@ -142,45 +143,45 @@ public class Mark {
         if (isGatable || gateType.equals("REFERENCE_POINT")) {
             switch (gateType) {
                 case "BUOY":  //adds a single buoy
-                    buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY));
+                    buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY, _raceCourseUUID));
                     Log.i(TAG, "buoy added, gateType BUOY, name:" + this.getName());
                     break;
                 case "GATE":
-                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.GATE));
-                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.GATE));
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.GATE, _raceCourseUUID));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.GATE, _raceCourseUUID));
                     Log.i(TAG, "buoys added, gateType GATE, name:" + this.getName());
                     break;
                 case "FINISH_LINE":
-                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE));
-                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE));
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE, _raceCourseUUID));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE, _raceCourseUUID));
                     Log.i(TAG, "buoys added, gateType FINISH_LINE, name:" + this.getName());
                     break;
                 case "START_LINE":
-                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.START_LINE));
-                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.START_LINE));
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.START_LINE, _raceCourseUUID));
+                    buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.START_LINE, _raceCourseUUID));
                     Log.i(TAG, "buoys added, gateType BUOY, name:" + this.getName());
                     break;
                 case "SATELLITE":
-                    buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY));
-                    buoys.add(new Buoy(this.getName() + "a", new AviLocation(location, windDir + getGateDirection(), getGateDistance()), BuoyType.TRIANGLE_BUOY));
+                    buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY, _raceCourseUUID));
+                    buoys.add(new Buoy(this.getName() + "a", new AviLocation(location, windDir + getGateDirection(), getGateDistance()), BuoyType.TRIANGLE_BUOY, _raceCourseUUID));
                     Log.i(TAG, "buoys added, gateType START_LINE, name:" + this.getName());
                     break;
                 case "REFERENCE_POINT":
                     // buoys.add(new BUOY(this.getName(), location, BuoyType.REFERENCE_POINT)); //TODO: add reference point icon
                     break;
                 default:
-                    buoys.add(new Buoy(this.getName(), location));
+                    buoys.add(new Buoy(this.getName(), location,BuoyType.OTHER,_raceCourseUUID));
                     Log.e(TAG, "gateType not recognized. default buoy added. failed at" + gateType);
             }
         } else {
-            buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY));
+            buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY, _raceCourseUUID));
             Log.i(TAG, "buoy added (non-gatable), gateType BUOY, name:" + this.getName());
         }
 
         //parseChildren
         for (int i = 0; i < this.getReferedMarks().size(); i++) {
             Mark child = this.getReferedMarks().get(i);
-            buoys.addAll(child.parseBuoys(location, multiplication, windDir));
+            buoys.addAll(child.parseBuoys(location, multiplication, windDir, _raceCourseUUID));
         }
         return buoys;
     }

@@ -59,7 +59,7 @@ public class GeoUtils {
         return new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
     }
 
-    public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, int distm) {
+    public static AviLocation getLocationFromDirDist(AviLocation loc, float dir, int distm) {
         double dis = (distm/1000.0)/6371;
         double brng = Math.toRadians(dir);
         double lat1 = Math.toRadians(loc.lat);
@@ -70,7 +70,7 @@ public class GeoUtils {
         lon2 = (lon2+ 3*Math.PI) % (2*Math.PI) - Math.PI;
         return new AviLocation(Math.toDegrees(lat2),Math.toDegrees(lon2));
     }
-    public static AviLocation getLocationFromDirDist(AviLocation loc, int dir, double distNM) {
+    public static AviLocation getLocationFromDirDist(AviLocation loc, float dir, double distNM) {
         return getLocationFromDirDist(loc,dir,(int)(distNM*1852));
     }
 
