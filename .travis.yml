@@ -26,7 +26,7 @@ android:
     
 addons:
   sonarqube: true
-    branches :
+    branches:
       - develop
       - master
 env:
