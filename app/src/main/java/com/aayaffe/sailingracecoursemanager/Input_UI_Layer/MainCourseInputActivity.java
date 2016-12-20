@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,6 +29,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity.NEW_RACE_COURSE_REQUEST;
 
 /**
  * Created by Jonathan on 31/10/2016.
@@ -137,6 +140,9 @@ public class MainCourseInputActivity extends Activity {
             public void onClick(View v) {
                 Log.d("MainCourseInput","dist2m1 = "+dist2m1);
                 raceCourse = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , windDirection ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("RACE_COURSE", raceCourse);
+                setResult(-1, resultIntent);
                 finish();
             }
         });

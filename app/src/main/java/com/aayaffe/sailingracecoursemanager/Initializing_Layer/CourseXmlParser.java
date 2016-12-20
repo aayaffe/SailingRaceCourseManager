@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class CourseXmlParser {
     private static final String TAG = "CourseXMLParser";
+
     private XmlPullParserFactory xmlFactory;
     private Context context;
     private String url;

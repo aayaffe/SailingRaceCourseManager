@@ -4,13 +4,14 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by aayaffe on 09/01/2016.
  */
-public class AviLocation {
+public class AviLocation implements Serializable {
     public double lat;
     public double lon;
     public double sog = 0;
