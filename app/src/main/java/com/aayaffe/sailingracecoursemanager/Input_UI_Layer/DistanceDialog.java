@@ -135,15 +135,18 @@ public class DistanceDialog extends Dialog {
     public double calcDistByClassWind (Boat boat, double wind, double targetTime, double[] lengthFactors){  //finds the first leg length, since it equals 1 in the factor.
         double sigmaTime= 0;
         for(int i=0;i<3;i++){
-            sigmaTime = sigmaTime+(lengthFactors[i]*boat.getVmg()[wind2Index(wind)][i]);
+            sigmaTime += (lengthFactors[i]*boat.getVmg()[wind2Index(wind)][i]);
         }
-        return targetTime/sigmaTime;
+        return sigmaTime>0?targetTime/sigmaTime:0;
     }
 
     public int wind2Index(double wind){  //index the wind strength. knots to right index at the boat's vmg table.
-        if (wind<5) return 0;
-        else if (wind<=8) return 1;
-        else if (wind<=12) return 2;
+        if (wind<5)
+            return 0;
+        else if (wind<=8)
+            return 1;
+        else if (wind<=12)
+            return 2;
         return 3;
     }
 }

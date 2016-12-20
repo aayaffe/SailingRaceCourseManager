@@ -68,12 +68,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
-
         commManager = new Firebase(this);
         commManager.login(/*null, null,null*/SP.getString("username", "Manager1"), "Aa123456z", "1");
         users = new Users(commManager);
@@ -85,7 +83,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         currentEventName = i.getStringExtra("eventName");
         SetIconsClickListeners();
         SetupToolbar();
-
         Log.d(TAG, "Selected Event name is: " + currentEventName);
     }
 
@@ -108,14 +105,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private MapClickMethods getClickMethods() {
-        MapClickMethods ret = new MapClickMethods() {
+        return new MapClickMethods() {
             @Override
             public void infoWindowClick(UUID u) {
                 Buoy b = commManager.getObjectByUUID(u);
                 if (b==null) return;
                 //TODO: Implement something here...
             }
-
             @Override
             public void infoWindowLongClick(UUID u) {
                 Buoy b = commManager.getObjectByUUID(u);
@@ -127,11 +123,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 else if (isBuoy(b)){
                     assignBuoy(u);
                 }
-
-
             }
         };
-        return ret;
     }
 
     private void assignBuoy(UUID u) {
@@ -488,13 +481,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void SettingsMenuItemOnClick() {
         Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
-        //if (isCurrentEventManager(users.getCurrentUser().Uid)){  //TODO:Test: delete all // annotations
-        //    i.putExtra("MANAGER", true);
-        /*}
-        else{
-            i.putExtra("MANAGER", false);
-        }
-        */
         startActivity(i);
     }
 
