@@ -181,7 +181,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
     public void removeMark(UUID uuid){
         removeMark(uuid,true);
     }
-    public void removeMark(UUID uuid, boolean removeFromDB) {
+    void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
@@ -193,7 +193,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
     }
 
-    public void ZoomToMarks() {
+    void ZoomToMarks() {
         ArrayList<Marker> ms = new ArrayList<>(uuidToMarker.values());
         if (ms.size() == 1) {
             setCenter((ms.get(0).getPosition()));
@@ -275,8 +275,12 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             return;
         }
         LatLng a1 = m1.getPosition();
-        LatLng b1 = uuidToMarker.get(b).getPosition();
+        Marker m2 = uuidToMarker.get(b);
+        LatLng b1;
+        if (m2==null)
+            return;
 
+        b1 = m2.getPosition();
         PolylineOptions po = new PolylineOptions()
                 .add(a1)
                 .add(b1);  // North of the previous point, but at the same longitude

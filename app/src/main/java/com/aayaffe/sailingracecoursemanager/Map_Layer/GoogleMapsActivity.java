@@ -64,16 +64,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private static String currentEventName;
     private boolean firstBoatLoad = true;
     private Buoy assignedTo = null;
-
+    static public final int NEW_RACE_COURSE_REQUEST = 770;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
-
         commManager = new Firebase(this);
         commManager.login(/*null, null,null*/SP.getString("username", "Manager1"), "Aa123456z", "1");
         users = new Users(commManager);
@@ -85,7 +83,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         currentEventName = i.getStringExtra("eventName");
         SetIconsClickListeners();
         SetupToolbar();
-
         Log.d(TAG, "Selected Event name is: " + currentEventName);
     }
 
@@ -108,14 +105,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private MapClickMethods getClickMethods() {
-        MapClickMethods ret = new MapClickMethods() {
+        return new MapClickMethods() {
             @Override
             public void infoWindowClick(UUID u) {
                 Buoy b = commManager.getObjectByUUID(u);
                 if (b==null) return;
                 //TODO: Implement something here...
             }
-
             @Override
             public void infoWindowLongClick(UUID u) {
                 Buoy b = commManager.getObjectByUUID(u);
@@ -127,11 +123,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 else if (isBuoy(b)){
                     assignBuoy(u);
                 }
-
-
             }
         };
-        return ret;
     }
 
     private void assignBuoy(UUID u) {
@@ -252,7 +245,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return true;
 
             case R.id.action_add_race_course:
-                addRaceCourse();
+                AddRaceCourseItemClick();
                 firstBoatLoad = true;
                 return true;
             case R.id.action_assign_buoys:
@@ -272,16 +265,21 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
+    private void AddRaceCourseItemClick() {
+        Log.d(TAG, "FAB Setting Clicked");
+        Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
+        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
+    }
+
     private void OpenAssignBuoyActvity() {
         Intent intent = new Intent(getApplicationContext(), ChooseBoatActivity.class);
         startActivity(intent);
     }
 
-    private void addRaceCourse() {
+    private void addRaceCourse(RaceCourse rc) {
         removeAllRaceCourseMarks();
-        RaceCourse raceCourse = new RaceCourse();
         if (mapLayer.mapView != null) {
-            buoys.addAll(raceCourse.getBuoyList());
+            buoys.addAll(rc.getBuoyList());
         }
         else Log.w(TAG, "null map");
         addBuoys();
@@ -291,7 +289,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onResume() {
         super.onResume();
-        addRaceCourse();
+        //addRaceCourse();
         Log.w(TAG, "onResume");
     }
 
@@ -488,16 +486,19 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void SettingsMenuItemOnClick() {
         Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
-        //if (isCurrentEventManager(users.getCurrentUser().Uid)){  //TODO:Test: delete all // annotations
-        //    i.putExtra("MANAGER", true);
-        /*}
-        else{
-            i.putExtra("MANAGER", false);
-        }
-        */
-        startActivity(i);
+        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == NEW_RACE_COURSE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
+                addRaceCourse(rc);
+            }
+        }
+    }
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
         df = BuoyInputDialog.newInstance(-1, this);

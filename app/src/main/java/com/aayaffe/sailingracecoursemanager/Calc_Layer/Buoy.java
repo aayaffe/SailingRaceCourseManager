@@ -9,6 +9,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by Jonathan on 27/08/2016.
  */
-public class Buoy {
+public class Buoy implements Serializable {
     private String name;
     private AviLocation aviLocation;
     public int color = Color.BLACK;
