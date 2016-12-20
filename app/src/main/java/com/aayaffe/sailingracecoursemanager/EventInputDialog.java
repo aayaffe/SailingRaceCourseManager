@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import java.util.Calendar;
  * Created by aayaffe on 09/02/2016.
  */
 public class EventInputDialog extends DialogFragment {
+    private static final String TAG = "EventInputDialog";
     public String eventName;
     public int yearStart;
     public int yearEnd;
@@ -54,6 +56,7 @@ public class EventInputDialog extends DialogFragment {
             mListener = (EventInputDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
+            Log.e(TAG,"Exception",e);
             throw new ClassCastException(activity.toString()
                     + " must implement NoticeDialogListener");
         }

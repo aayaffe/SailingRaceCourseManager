@@ -54,7 +54,7 @@ public class Mark {
     }
 
     public void setDistance(double distance) {
-        this.distance = this.distance;
+        this.distance = distance;
     }
 
     public void setDistance(String distance) {

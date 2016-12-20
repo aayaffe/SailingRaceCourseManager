@@ -88,20 +88,22 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void SetupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar!=null)
+        if (toolbar!=null) {
             toolbar.setTitle("");
-        else Log.e(TAG,"Unable to find toolbar view.");
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+            toolbar.setTitle(currentEventName);
+        }
+        else
+            Log.e(TAG,"Unable to find toolbar view.");
 
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        toolbar.setTitle(currentEventName);
     }
 
     private MapClickMethods getClickMethods() {
@@ -458,9 +460,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             units = src.distanceTo(dst) < 1700 ? "m" : "NM";
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
         } catch (NullPointerException e) {
+            Log.e(TAG,"No gps found", e);
             return "NoGPS";
         }
-        if (bearing==360) bearing = 0;
+        if (bearing==360)
+            bearing = 0;
         if (units.equals("NM"))
             return String.format("%03d", bearing) + "\\" + String.format("%0$.1f", distance) + units;
         return String.format("%03d", bearing) + "\\" + String.format("%0$.0f", distance) + units;

@@ -113,9 +113,6 @@ public class DistanceDialog extends Dialog {
                         mDialogResult.finish(distancePicker.getNumber());
                         break;
                     case 1:
-                        Boat selectedB = boats.get(spinner.getSelectedItemPosition());
-//                        Toast.makeText(context, "Have you chosen "+selectedB.getName()+ "?", Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(context, "Have you chosen "+calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors), Toast.LENGTH_SHORT).show();
                         mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors));
                         break;
                 }

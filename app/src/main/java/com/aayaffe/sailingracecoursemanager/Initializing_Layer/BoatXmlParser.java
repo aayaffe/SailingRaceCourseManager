@@ -13,6 +13,7 @@ import java.util.List;
  * Created by Jonathan on 16/08/2016.
  */
 public class BoatXmlParser {
+    private static final String TAG = "BoatXmlParser";
     private XmlPullParserFactory xmlFactory;
     private Context context;
     private String url;
@@ -41,7 +42,7 @@ public class BoatXmlParser {
             boats = getBoats(parser);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "parse boats error",e);
         }/*
             }
         });
@@ -101,7 +102,7 @@ public class BoatXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"getBoats error",e);
         }
         return boats;
     }

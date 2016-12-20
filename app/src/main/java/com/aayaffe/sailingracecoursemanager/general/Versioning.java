@@ -25,6 +25,7 @@ public class Versioning {
         try {
             return commManager.getSupportedVersion();
         }catch (Exception e){
+            Log.e(TAG, "error getting supported version",e);
             return -1;
         }
     }

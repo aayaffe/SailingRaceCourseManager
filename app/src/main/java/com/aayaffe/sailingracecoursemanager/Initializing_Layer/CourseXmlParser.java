@@ -47,7 +47,7 @@ public class CourseXmlParser {
             result =  getMarks(parser, selectedOptions);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error parsing marks",e);
 
         }
         return result;
@@ -64,14 +64,13 @@ public class CourseXmlParser {
             courseTypes = getCourseTypes(parser);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error parsing course types",e);
         }
         return courseTypes;
     }
 
     private Mark getMarks(XmlPullParser xmlPullParser, Map<String, String> selectedOptions) {
         int event;
-        String text = null;
         Mark referenceMark = new Mark("Reference Point"); //reference point is represented as a mark, who is the father of all marks.
         referenceMark.setGateType("REFERENCE_POINT");
         ArrayList<Mark> fathers = new ArrayList<>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
@@ -104,7 +103,7 @@ public class CourseXmlParser {
                             currentMark = new Mark(safeAttributeValue("name")); //new mark
                             fathers.add(currentMark);  //son of his father
                             Log.i(TAG, "son no."+fathers.size()+" added, named "+currentMark.getName());
-                        } else if(receiveMode&&name.equals("Distance")&&receiveMode){
+                        } else if(receiveMode&&name.equals("Distance")){
                             attributeHolder=safeAttributeValue("factor");
                         }
                         break;
@@ -147,7 +146,7 @@ public class CourseXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error getting marks",e);
         }
         Log.d(TAG, "returns reference point");
         return referenceMark;
@@ -221,7 +220,7 @@ public class CourseXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error getCourseTypes",e);
         }
         return courseTypes;
     }

@@ -200,10 +200,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().equals(""))){
             addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
         }
-        else
+        else {
             Log.d(TAG, "Event not(!) created.");
-            Toast t = Toast.makeText(this, "Unable to use this name",Toast.LENGTH_LONG);
+            Toast t = Toast.makeText(this, "Unable to use this name", Toast.LENGTH_LONG);
             t.show();
+        }
 
     }
 
