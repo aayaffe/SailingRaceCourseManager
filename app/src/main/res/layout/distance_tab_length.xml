@@ -11,13 +11,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Set Distance in NM"
+        android:text="Distance to M1 in NM"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
 
     <com.aayaffe.sailingracecoursemanager.Input_UI_Layer.HorizontalNumberPicker
         android:id="@+id/distance_length_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:buttonsTextColor="@color/cmark_blue_light" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Start line length in NM"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <com.aayaffe.sailingracecoursemanager.Input_UI_Layer.HorizontalNumberPicker
+        android:id="@+id/startline_length_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

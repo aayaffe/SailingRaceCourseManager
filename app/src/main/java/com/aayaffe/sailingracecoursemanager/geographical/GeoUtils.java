@@ -143,4 +143,8 @@ public class GeoUtils {
     public static double toHours(int minutes){
         return ((double)minutes)/((double)60);
     }
+
+    public static double ToNauticalMiles(double meters){
+        return meters/1852;
+    }
 }

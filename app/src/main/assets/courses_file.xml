@@ -18,7 +18,7 @@
                 </Gatable>
             </Mark>
             <Mark name="2">
-                <Direction>-39</Direction>
+                <Direction>-20</Direction>
                 <Distance factor="true">0.95</Distance>
                 <Gatable>
                     <isGatable>false</isGatable>

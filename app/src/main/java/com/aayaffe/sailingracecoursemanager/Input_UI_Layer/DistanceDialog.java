@@ -14,8 +14,11 @@ import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
 import java.util.List;
+
+import static android.R.attr.factor;
 
 /**
  * Created by Jonathan on 14/07/2016.
@@ -36,7 +39,10 @@ public class DistanceDialog extends Dialog {
     private HorizontalNumberPicker windPicker;
     private HorizontalNumberPicker targetTimePicker;
     private HorizontalNumberPicker distancePicker;
+    private HorizontalNumberPicker startlinelengthPicker;
+    private HorizontalNumberPicker numberOfBoatsPicker;
     public Button finishB;
+    private float factor = 1.5f; //Start line multi factor
 
     private List<Boat> boats;  //list of boats
     private double[] courseFactors = {1,1,0};
@@ -84,6 +90,10 @@ public class DistanceDialog extends Dialog {
         targetTimePicker.configNumbers(boats.get(0).getTargettime(),5);
         distancePicker = (HorizontalNumberPicker)findViewById(R.id.distance_length_picker);
         distancePicker.configNumbers(1.0f,0.1f);
+        numberOfBoatsPicker = (HorizontalNumberPicker)findViewById(R.id.number_boats_picker);
+        numberOfBoatsPicker.configNumbers(20.0f,1.0f);
+        startlinelengthPicker = (HorizontalNumberPicker)findViewById(R.id.startline_length_picker);
+        startlinelengthPicker.configNumbers(0.11f,0.1f);
         spinner = (Spinner) findViewById(R.id.distance_class_spinner);  //NOTE: was Spinner with capital
         final String[] items = new String[boats.size()];
         for(int i=0; i<boats.size();i++){
@@ -109,10 +119,11 @@ public class DistanceDialog extends Dialog {
             public void onClick(View v) {
                 switch (tabHost.getCurrentTab()){
                     case 0:
-                        mDialogResult.finish(distancePicker.getNumber());
+                        mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber());
                         break;
                     case 1:
-                        mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors));
+                        mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors),
+                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()));
                         break;
                 }
                 dismiss();
@@ -120,12 +131,16 @@ public class DistanceDialog extends Dialog {
         });
     }
 
+    private double calcStartLine(double boatLength, float factor, int boatsNumber) {
+        return GeoUtils.ToNauticalMiles(boatLength)*factor*boatsNumber;
+    }
+
     public void setDialogResult(OnMyDialogResult dialogResult){
         mDialogResult = dialogResult;
     }
 
     public interface OnMyDialogResult{
-        void finish(double result);
+        void finish(double result, double startLineLength);
     }
 
     public double calcDistByClassWind (Boat boat, double wind, double targetTime, double[] lengthFactors){  //finds the first leg length, since it equals 1 in the factor.

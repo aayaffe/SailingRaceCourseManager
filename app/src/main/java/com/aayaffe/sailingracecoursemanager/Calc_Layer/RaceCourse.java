@@ -36,7 +36,7 @@ public class RaceCourse implements Serializable{
         //Empty constructor for Serializing to firebase
     }
     //TODO: Change all architecture - bad use of static variables!
-    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineDistance,Map<String, String> selectedCourseOptions ){
+    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineLength,Map<String, String> selectedCourseOptions ){
         this.context = context;
         if(signalBoatLoc!=null)
             this.signalBoatLoc = signalBoatLoc;
@@ -44,7 +44,7 @@ public class RaceCourse implements Serializable{
             this.signalBoatLoc = new AviLocation(32.85,3499);
         windDir=windDirection;
         dist2m1=distance2mark1;
-        startLineDist=startLineDistance;
+        startLineDist=startLineLength;
         selectedOptions=selectedCourseOptions;
         xmlParserC = new CourseXmlParser(context, "courses_file.xml");
         _raceCourseUUID = UUID.randomUUID();
@@ -59,7 +59,7 @@ public class RaceCourse implements Serializable{
     }
     synchronized public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
         Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
-        bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, _raceCourseUUID);
+        bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, (float)startLineDist, _raceCourseUUID);
         return bouyList;
     }
 

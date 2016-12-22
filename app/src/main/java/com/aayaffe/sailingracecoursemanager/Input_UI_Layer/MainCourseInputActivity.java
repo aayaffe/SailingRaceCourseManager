@@ -46,6 +46,8 @@ public class MainCourseInputActivity extends Activity {
     private static double[] courseFactors;
     private static Map<String,String> courseOptions;
     private static float dist2m1 = 1;
+    private static float startLineLength = 0.11f;
+
     private static float windDirection;
 
     private static OnMyCourseInputResult mInputResult;
@@ -94,9 +96,10 @@ public class MainCourseInputActivity extends Activity {
                 DistanceDialog dialog = new DistanceDialog(context , boats, courseFactors);
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
-                    public void finish(double result) {
+                    public void finish(double result,double startLine) {
                         //something to do
                         dist2m1 = (float) result;
+                        startLineLength = (float) startLine;
                     }
 
                 });
@@ -127,7 +130,7 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("MainCourseInput","dist2m1 = "+dist2m1);
-                RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, (float) 0.11 ,courseOptions);  //defultStartLine: 200m
+                RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength ,courseOptions);  //defultStartLine: 200m
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
                 setResult(-1, resultIntent);
