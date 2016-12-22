@@ -43,6 +43,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Notification notification = new Notification();
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
+    private Boolean exit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,12 +185,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Log.d(TAG, "Login provider error");
             Toast.makeText(this, "Login canceled",
                     Toast.LENGTH_LONG).show();
-//            resetFirebaseLoginPrompt();
             return;
         }
         Toast.makeText(this, "Login Error",
                 Toast.LENGTH_LONG).show();
-//        showSnackbar(R.string.unknown_sign_in_response);
     }
 
 
@@ -221,28 +220,18 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         commManager.writeEvent(e);
     }
 
-//    @Override
-//    public void onFirebaseLoggedOut() {
-//
-//        Toast.makeText(this, "You have been logged out.",
-//                Toast.LENGTH_SHORT).show();
-//        enableLogin(true);
-//    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mAdapter.cleanup();
     }
 
-    private Boolean exit = false;
+
     @Override
     public void onBackPressed() {
         if (exit) {
-            //mBuilder.setOngoing(false);
             notification.cancelAll();
-            //System.exit(0);
-            finish(); // finish activity
-            //System.exit(0);
+            finish();
         } else {
             Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
@@ -259,11 +248,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private void enableLogin(boolean toLogin){
         if (toLogin) {
             try {
-                ActionMenuItemView log_item = (ActionMenuItemView) findViewById(R.id.action_logout);
-                log_item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
-                log_item.setTitle("Login");
-                ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
-                add_event_item.setEnabled(false);
+                ActionMenuItemView logItem = (ActionMenuItemView) findViewById(R.id.action_logout);
+                logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
+                logItem.setTitle("Login");
+                ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                addEventItem.setEnabled(false);
             }catch (Exception e){
                 Log.e(TAG,"Error logging in", e);
             }
@@ -271,11 +260,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
         else{
             try {
-                ActionMenuItemView log_item = (ActionMenuItemView) findViewById(R.id.action_logout);
-                log_item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
-                log_item.setTitle("Logout");
-                ActionMenuItemView add_event_item = (ActionMenuItemView) findViewById(R.id.action_add_event);
-                add_event_item.setEnabled(true);
+                ActionMenuItemView logItem = (ActionMenuItemView) findViewById(R.id.action_logout);
+                logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
+                logItem.setTitle("Logout");
+                ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                addEventItem.setEnabled(true);
 
             }catch (Exception e){
                 Log.e(TAG,"Error logging out.", e);

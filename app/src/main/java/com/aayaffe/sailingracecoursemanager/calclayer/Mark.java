@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+package com.aayaffe.sailingracecoursemanager.calclayer;
 
 import android.util.Log;
 
@@ -18,11 +18,11 @@ public class Mark {
     private double distance = 0;
     private boolean distanceFactor = false;  //to multiply the distance with Dist2m1 or not?
 
-    public ArrayList<Mark> referedMarks;
+    public List<Mark> referedMarks;
 
     private boolean isGatable = false;
     private String gateType = "BUOY";  //TODO make it enum.
-    private int gateDirection = (-90); //satellite direction from Main buoy OR port side direction from starboard side
+    private int gateDirection = -90; //satellite direction from Main buoy OR port side direction from starboard side
     private double gateDistance = 0;  //distance between gate's buoys
 
     public Mark(String name) {
@@ -32,7 +32,8 @@ public class Mark {
 
 
     public void setName(String name) {
-        if (name != null) this.name = name;
+        if (name != null)
+            this.name = name;
         else Log.w(TAG, "null name set for Mark named:" + this.name);
     }
 
@@ -45,7 +46,8 @@ public class Mark {
     }
 
     public void setDirection(String direction) {
-        if (direction != null) this.direction = Integer.parseInt(direction);
+        if (direction != null)
+            this.direction = Integer.parseInt(direction);
         else Log.w(TAG, "null direction set - Mark named:" + this.name);
     }
 
@@ -58,7 +60,8 @@ public class Mark {
     }
 
     public void setDistance(String distance) {
-        if (distance != null) this.distance = Double.parseDouble(distance);
+        if (distance != null)
+            this.distance = Double.parseDouble(distance);
         else Log.w(TAG, "null distance set - Mark named:" + this.name);
     }
 
@@ -71,13 +74,14 @@ public class Mark {
     }
 
     public double getAbsDistance(double multiplication) {
-        if (distanceFactor) return (multiplication*distance);
+        if (distanceFactor)
+            return multiplication*distance;
         return getDistance();
     }
 
-    public void setDistaneFactor(String distaneFactor) {
-        if (distaneFactor != null)
-            this.distanceFactor = distaneFactor.equals("true") || distaneFactor.equals("always");
+    public void setDistaneFactor(String distanceFactor) {
+        if (distanceFactor != null)
+            this.distanceFactor = "true".equals(distanceFactor) || "always".equals(distanceFactor);
         else Log.w(TAG, "null distanceFactor set - Mark named:" + this.name);
     }
 
@@ -89,13 +93,13 @@ public class Mark {
         this.isGatable = isGatable;
     }
 
-    public ArrayList<Mark> getReferedMarks() {
+    public List<Mark> getReferedMarks() {
         return referedMarks;
     }
 
     public void setIsGatable(String isGatable) {
         if (isGatable != null)
-            this.isGatable = isGatable.equals("true") || isGatable.equals("always");
+            this.isGatable = "true".equals(isGatable) || "always".equals(isGatable);
         else Log.w(TAG, "null isGatable set - Mark named:" + this.name);
     }
 
@@ -104,7 +108,8 @@ public class Mark {
     }
 
     public void setGateDirection(String gateDirection) {
-        if (gateDirection != null) this.gateDirection = Integer.parseInt(gateDirection);
+        if (gateDirection != null)
+            this.gateDirection = Integer.parseInt(gateDirection);
         else Log.w(TAG, "null gateDirection set - Mark named:" + this.name);
 
     }
@@ -118,7 +123,8 @@ public class Mark {
     }
 
     public void setGateDistance(String gateDistance) {
-        if (gateDistance != null) this.gateDistance = Double.parseDouble(gateDistance);
+        if (gateDistance != null)
+            this.gateDistance = Double.parseDouble(gateDistance);
         else Log.w(TAG, "null gateDistance set - Mark named:" + this.name);
     }
 
@@ -140,7 +146,7 @@ public class Mark {
     public List<Buoy> parseBuoys(AviLocation referencePoint, double multiplication, int windDir, float startLineLength, UUID raceCourseUUID) {  //parses the mark and his sons into buoys
         List<Buoy> buoys = new ArrayList<>();
         AviLocation location = new AviLocation(referencePoint, getDirection() + windDir, getAbsDistance(multiplication));
-        if (isGatable || gateType.equals("REFERENCE_POINT")) {
+        if (isGatable || "REFERENCE_POINT".equals(gateType)) {
             switch (gateType) {
                 case "BUOY":  //adds a single buoy
                     buoys.add(new Buoy(this.getName(), location, BuoyType.BUOY, raceCourseUUID));
@@ -167,7 +173,6 @@ public class Mark {
                     Log.i(TAG, "buoys added, gateType START_LINE, name:" + this.getName());
                     break;
                 case "REFERENCE_POINT":
-                    // buoys.add(new BUOY(this.getName(), location, BuoyType.REFERENCE_POINT)); //TODO: add reference point icon
                     break;
                 default:
                     buoys.add(new Buoy(this.getName(), location,BuoyType.OTHER,raceCourseUUID));

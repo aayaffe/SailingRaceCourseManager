@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+package com.aayaffe.sailingracecoursemanager.calclayer;
 import android.content.Context;
 import android.util.Log;
 
@@ -28,7 +28,7 @@ public class RaceCourse implements Serializable{
     private Map<String, String> selectedOptions;
     private List<Buoy> bouyList = new ArrayList<>();
     public transient CourseXmlParser xmlParserC;
-    private UUID _raceCourseUUID;
+    private UUID raceCourseUUID;
     transient Context context;
 
 
@@ -47,7 +47,7 @@ public class RaceCourse implements Serializable{
         startLineDist=startLineLength;
         selectedOptions=selectedCourseOptions;
         xmlParserC = new CourseXmlParser(context, "courses_file.xml");
-        _raceCourseUUID = UUID.randomUUID();
+        raceCourseUUID = UUID.randomUUID();
         convertMarks2Buoys();
         Log.d("RaceCourse class note", "constructor done");
     }
@@ -59,7 +59,7 @@ public class RaceCourse implements Serializable{
     }
     synchronized public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
         Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
-        bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, (float)startLineDist, _raceCourseUUID);
+        bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, (float)startLineDist, raceCourseUUID);
         return bouyList;
     }
 

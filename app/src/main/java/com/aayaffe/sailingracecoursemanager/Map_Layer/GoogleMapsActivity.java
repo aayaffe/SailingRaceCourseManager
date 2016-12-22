@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
+import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
+import com.aayaffe.sailingracecoursemanager.inputuilayer.MainCourseInputActivity;
 import com.aayaffe.sailingracecoursemanager.Manage.ChooseBoatActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;

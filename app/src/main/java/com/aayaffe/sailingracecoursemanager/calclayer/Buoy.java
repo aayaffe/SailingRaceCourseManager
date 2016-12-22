@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+package com.aayaffe.sailingracecoursemanager.calclayer;
 
 import android.graphics.Color;
 import android.location.Location;
