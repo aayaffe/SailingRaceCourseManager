@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
@@ -88,20 +89,22 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void SetupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar!=null)
+        if (toolbar!=null) {
             toolbar.setTitle("");
-        else Log.e(TAG,"Unable to find toolbar view.");
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+            toolbar.setTitle(currentEventName);
+        }
+        else
+            Log.e(TAG,"Unable to find toolbar view.");
 
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        toolbar.setTitle(currentEventName);
     }
 
     private MapClickMethods getClickMethods() {
@@ -117,7 +120,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 Buoy b = commManager.getObjectByUUID(u);
                 if (b==null) return;
                 if (b.equals(assignedTo))
-                {
+                { //Turn off assignment
                     assignBuoy((Buoy) null);
                 }
                 else if (isBuoy(b)){
@@ -298,6 +301,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         for (Buoy buoy : buoys) {
             if (buoy.getRaceCourseUUID() != null) {
                 mapLayer.removeMark(buoy.getUUID(),true);
+                if (assignedTo.equals(buoy))
+                {
+                    assignBuoy((Buoy)null);
+                }
                 buoysToRemove.add(buoy);
             }
         }
@@ -413,6 +420,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         for (UUID u:markerToRemove) {
+
+            if (assignedTo!=null && assignedTo.getUUID().equals(u))
+            {
+                assignBuoy((Buoy)null);
+            }
             mapLayer.removeMark(u,false);
         }
     }
@@ -458,12 +470,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             units = src.distanceTo(dst) < 1700 ? "m" : "NM";
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
         } catch (NullPointerException e) {
+            Log.e(TAG,"No gps found", e);
             return "NoGPS";
         }
-        if (bearing==360) bearing = 0;
+        if (bearing==360)
+            bearing = 0;
         if (units.equals("NM"))
-            return String.format("%03d", bearing) + "\\" + String.format("%0$.1f", distance) + units;
-        return String.format("%03d", bearing) + "\\" + String.format("%0$.0f", distance) + units;
+            return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.1f", distance) + units;
+        return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.0f", distance) + units;
     }
 
     @Override
@@ -501,7 +515,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-        df = BuoyInputDialog.newInstance(-1, this);
+        df = new BuoyInputDialog().newInstance(-1, this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
 

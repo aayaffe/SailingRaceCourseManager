@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
@@ -61,10 +60,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
                 if (manager==null) {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: unknown");
+                    ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: unknown");
                 }
                 else {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText("Manager: " + manager.DisplayName);
+                    ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: " + manager.DisplayName);
                 }
                 ((TextView) view.findViewById(R.id.text3)).setText(dates);
             }
@@ -200,10 +199,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().equals(""))){
             addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
         }
-        else
+        else {
             Log.d(TAG, "Event not(!) created.");
-            Toast t = Toast.makeText(this, "Unable to use this name",Toast.LENGTH_LONG);
+            Toast t = Toast.makeText(this, "Unable to use this name", Toast.LENGTH_LONG);
             t.show();
+        }
 
     }
 

@@ -1,8 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
-import android.support.annotation.Nullable;
 import android.util.Log;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,7 @@ import java.util.List;
  */
 public class LegsType {
     private String name;
-    private List<String[]> options= new ArrayList<String[]>(); //{name, view to contain options, option1, option2, ...}
+    private List<String[]> options= new ArrayList<>(); //{name, view to contain options, option1, option2, ...}
     public double[] courseFactors = {1,1,0};
 
     public LegsType (String name){

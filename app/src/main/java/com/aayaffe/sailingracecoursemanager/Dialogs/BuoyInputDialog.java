@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -16,19 +17,18 @@ import com.aayaffe.sailingracecoursemanager.R;
  * Created by aayaffe on 09/02/2016.
  */
     public class BuoyInputDialog extends DialogFragment {
+    private static final String TAG = "BuoyInputDialog";
     public long buoy_id;
-    private static Context c;
+    private Context c;
     public static BuoyInputDialog newInstance(long id, Context c) {
         BuoyInputDialog frag = new BuoyInputDialog();
         Bundle args = new Bundle();
         args.putLong("buoy_id", id);
         frag.setArguments(args);
-        BuoyInputDialog.c = c;
+        frag.c = c;
         return frag;
     }
-    /* The activity that creates an instance of this dialog fragment must
-         * implement this interface in order to receive event callbacks.
-         * Each method passes the DialogFragment in case the host needs to query it. */
+
     public interface BuoyInputDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
     }
@@ -44,6 +44,7 @@ import com.aayaffe.sailingracecoursemanager.R;
             mListener = (BuoyInputDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
+            Log.e(TAG,"Exception",e);
             throw new ClassCastException(activity.toString()
                     + " must implement NoticeDialogListener");
         }

@@ -19,10 +19,6 @@ import java.util.Map;
 public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerItemClickListener{
 
 
-    private RecyclerView recyclerView;
-    private CourseTypeRV adapter;
-    private RecyclerView.LayoutManager layoutManager;
-
     private Context context;
     private OnMyDialogResult mDialogResult;
     private List<CourseType> coursesList;
@@ -40,11 +36,11 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
         super.setContentView(R.layout.course_type_dialog);
 
-        recyclerView=(RecyclerView)findViewById(R.id.course_type_rv);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.course_type_rv);
         recyclerView.setHasFixedSize(true);
-        layoutManager= new GridLayoutManager(context,2, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter= new CourseTypeRV(coursesList, this);
+        CourseTypeRV adapter = new CourseTypeRV(coursesList, this);
         recyclerView.setAdapter(adapter);
     }
 

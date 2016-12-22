@@ -22,7 +22,6 @@ public class AssignBuoyActivity extends AppCompatActivity {
     private static final String TAG = "AssignBuoyActivity";
     private Firebase commManager;
     private FirebaseListAdapter<Buoy> mAdapter;
-    private String currentBoatName;
     private Buoy currentBoat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +29,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assign_buoy);
         commManager = new Firebase(this);
         Intent i = getIntent();
-        currentBoatName = i.getStringExtra("boatName");
-        currentBoat = commManager.getBoat(currentBoatName);
+        currentBoat = commManager.getBoat(i.getStringExtra("boatName"));
         SetupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BuoysList);
         mAdapter = new FirebaseListAdapter<Buoy>(this, Buoy.class, android.R.layout.two_line_list_item, commManager.getEventBuoysReference()) {

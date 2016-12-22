@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Jonathan on 16/08/2016.
  */
 public class BoatXmlParser {
-    private XmlPullParserFactory xmlFactory;
+    private static final String TAG = "BoatXmlParser";
     private Context context;
     private String url;
     private XmlPullParser parser;
@@ -28,11 +28,11 @@ public class BoatXmlParser {
         /*Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {*/
-        List<Boat> boats = new ArrayList<Boat>();
+        List<Boat> boats = new ArrayList<>();
 
         try {
             InputStream stream = context.getApplicationContext().getAssets().open(url);
-            xmlFactory = XmlPullParserFactory.newInstance();
+            XmlPullParserFactory xmlFactory = XmlPullParserFactory.newInstance();
             parser = xmlFactory.newPullParser();
 
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -41,7 +41,7 @@ public class BoatXmlParser {
             boats = getBoats(parser);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "parse boats error",e);
         }/*
             }
         });
@@ -64,15 +64,25 @@ public class BoatXmlParser {
                     case XmlPullParser.START_DOCUMENT:
                         break;
                     case XmlPullParser.START_TAG:
-                        if (name.equals("Boat")) {
-                            attributeHolder = safeAttributeValue("name");
-                            boats.add(new Boat(attributeHolder));
-                            vmg = new double[4][3];
+                        switch (name) {
+                            case "Boat":
+                                attributeHolder = safeAttributeValue("name");
+                                boats.add(new Boat(attributeHolder));
+                                vmg = new double[4][3];
+                                break;
+                            case "Wind5":
+                                windIndex = 0;
+                                break;
+                            case "Wind8":
+                                windIndex = 1;
+                                break;
+                            case "Wind12":
+                                windIndex = 2;
+                                break;
+                            case "Wind15":
+                                windIndex = 3;
+                                break;
                         }
-                        else if(name.equals("Wind5")) windIndex=0;
-                        else if(name.equals("Wind8")) windIndex=1;
-                        else if(name.equals("Wind12")) windIndex=2;
-                        else if(name.equals("Wind15")) windIndex=3;
 
                         break;
                     case XmlPullParser.TEXT:
@@ -101,7 +111,7 @@ public class BoatXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"getBoats error",e);
         }
         return boats;
     }

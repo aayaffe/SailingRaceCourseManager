@@ -1,7 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.Map_Layer;
 
-import com.google.android.gms.maps.model.Marker;
-
 import java.util.UUID;
 
 /**

@@ -26,7 +26,6 @@ public class CourseXmlParser {
     private Context context;
     private String url;
     private List<CourseType> courseTypes;
-    private List<String[]> options;
     private XmlPullParser parser;
 
     public CourseXmlParser(Context context, String url) {
@@ -47,7 +46,7 @@ public class CourseXmlParser {
             result =  getMarks(parser, selectedOptions);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error parsing marks",e);
 
         }
         return result;
@@ -64,14 +63,13 @@ public class CourseXmlParser {
             courseTypes = getCourseTypes(parser);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error parsing course types",e);
         }
         return courseTypes;
     }
 
     private Mark getMarks(XmlPullParser xmlPullParser, Map<String, String> selectedOptions) {
         int event;
-        String text = null;
         Mark referenceMark = new Mark("Reference Point"); //reference point is represented as a mark, who is the father of all marks.
         referenceMark.setGateType("REFERENCE_POINT");
         ArrayList<Mark> fathers = new ArrayList<>(); //preforms as a stack //to be able to add children to their father and know your location on the family tree. {grandfather("Reference Point"), father, son, ...)
@@ -104,7 +102,7 @@ public class CourseXmlParser {
                             currentMark = new Mark(safeAttributeValue("name")); //new mark
                             fathers.add(currentMark);  //son of his father
                             Log.i(TAG, "son no."+fathers.size()+" added, named "+currentMark.getName());
-                        } else if(receiveMode&&name.equals("Distance")&&receiveMode){
+                        } else if(receiveMode&&name.equals("Distance")){
                             attributeHolder=safeAttributeValue("factor");
                         }
                         break;
@@ -147,7 +145,7 @@ public class CourseXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error getting marks",e);
         }
         Log.d(TAG, "returns reference point");
         return referenceMark;
@@ -157,7 +155,7 @@ public class CourseXmlParser {
         int event;
         List<CourseType> courseTypes = new ArrayList<>();
         List<LegsType> legsTypes = new ArrayList<>(); // this is not a Spaghetti! maybe Penne or other italian names.
-        options = new ArrayList<String[]>();
+        List<String[]> options = new ArrayList<>();
         try {
             event = xmlPullParser.getEventType();
             String attributeHolder;
@@ -171,14 +169,14 @@ public class CourseXmlParser {
                     case XmlPullParser.START_TAG:
                         switch (name){
                             case "Course":
-                                options= new ArrayList<String[]>();
-                                legsTypes = new ArrayList<LegsType>();
+                                options = new ArrayList<>();
+                                legsTypes = new ArrayList<>();
                                 attributeHolder = safeAttributeValue("type");
                                 courseTypes.add(new CourseType(attributeHolder));
                                 break;
                             case "Legs":
                                 legsTypes.add(new LegsType(xmlPullParser.getAttributeValue(null, "name")));
-                                options= new ArrayList<String[]>();
+                                options = new ArrayList<>();
                                 break;
                             case "Mark":  //check 'isGatable' deeply
                                 if (safeAttributeValue("isGatable").equals("true")){  //the is an optional gate
@@ -221,7 +219,7 @@ public class CourseXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Error getCourseTypes",e);
         }
         return courseTypes;
     }

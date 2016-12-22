@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
@@ -84,13 +83,13 @@ public class DistanceDialog extends Dialog {
         targetTimePicker = (HorizontalNumberPicker)findViewById(R.id.target_time_picker);
         targetTimePicker.configNumbers(boats.get(0).getTargettime(),5);
         distancePicker = (HorizontalNumberPicker)findViewById(R.id.distance_length_picker);
-        distancePicker.configNumbers(1.0,0.1);
+        distancePicker.configNumbers(1.0f,0.1f);
         spinner = (Spinner) findViewById(R.id.distance_class_spinner);  //NOTE: was Spinner with capital
         final String[] items = new String[boats.size()];
         for(int i=0; i<boats.size();i++){
             items[i]=boats.get(i).getBoatClass();
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, items);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -113,9 +112,6 @@ public class DistanceDialog extends Dialog {
                         mDialogResult.finish(distancePicker.getNumber());
                         break;
                     case 1:
-                        Boat selectedB = boats.get(spinner.getSelectedItemPosition());
-//                        Toast.makeText(context, "Have you chosen "+selectedB.getName()+ "?", Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(context, "Have you chosen "+calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors), Toast.LENGTH_SHORT).show();
                         mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors));
                         break;
                 }

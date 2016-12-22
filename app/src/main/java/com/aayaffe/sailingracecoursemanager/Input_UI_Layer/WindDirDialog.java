@@ -3,12 +3,10 @@ package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.R;
@@ -18,14 +16,12 @@ import com.aayaffe.sailingracecoursemanager.R;
  */
 public class WindDirDialog extends Dialog {
 
-    private Context context;
     private OnMyDialogResult myDialogResult;
     private HorizontalNumberPicker windSelector;
-    private double dir = 0.0;
+    private float dir = 0.0f;
 
     public WindDirDialog(Context context, float windDir) {
         super(context);
-        this.context = context;
         this.dir = windDir;
     }
 
@@ -60,6 +56,6 @@ public class WindDirDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(double windDir);
+        void finish(float windDir);
     }
 }

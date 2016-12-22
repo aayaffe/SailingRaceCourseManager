@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
-    private static Context c;
+    private Context c;
     private static DatabaseReference fb;
     private static DataSnapshot ds;
     private static String currentEventName;
@@ -40,8 +40,8 @@ public class Firebase implements ICommManager {
     private boolean connected = false;
 
     public Firebase(Context c) {
-        if (Firebase.c ==null)
-            Firebase.c = c;
+        if (this.c ==null)
+            this.c = c;
         users = new Users(this);
     }
 
@@ -86,6 +86,7 @@ public class Firebase implements ICommManager {
                                 displayName = convertToAcceptableDisplayName(user.getEmail());
                             }
                         }catch(Exception e){
+                            Log.e(TAG,"Error getting display name",e);
                             Random r = new Random();
                             displayName = "User" + r.nextInt(10000);
                         }
@@ -192,6 +193,7 @@ public class Firebase implements ICommManager {
             u = ds.child(c.getString(R.string.db_users)).child(uid).getValue(User.class);
             return u;
         } catch (Exception e) {
+            Log.e(TAG, "Error finding user",e);
             return null;
         }
     }
@@ -309,6 +311,10 @@ public class Firebase implements ICommManager {
     public void assignBuoy(Buoy boat, String selectedBuoyName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ;
         Buoy buoy = getBuoy(selectedBuoyName);
+        if(buoy==null){
+            Log.e(TAG,"Error finding buoy for assignment");
+            return;
+        }
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).setValue(buoy);
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).child(boat.getName()).setValue(boat);
     }

@@ -19,7 +19,8 @@
         android:layout_width="fill_parent"
         android:layout_height="5dp"
         android:gravity="center"
-        android:background="@color/cmark_blue_light"/>
+        android:background="@color/cmark_blue_light"
+        android:contentDescription="Choose course"/>
     <LinearLayout
         android:id="@+id/course_type_second_spinner_holder"
         android:layout_width="match_parent"
