@@ -301,7 +301,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         for (Buoy buoy : buoys) {
             if (buoy.getRaceCourseUUID() != null) {
                 mapLayer.removeMark(buoy.getUUID(),true);
-                if (assignedTo.equals(buoy))
+                if (assignedTo!=null && assignedTo.equals(buoy))
                 {
                     assignBuoy((Buoy)null);
                 }
