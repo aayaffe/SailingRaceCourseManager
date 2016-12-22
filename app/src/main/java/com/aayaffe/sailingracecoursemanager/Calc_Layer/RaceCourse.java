@@ -26,7 +26,7 @@ public class RaceCourse implements Serializable{
     private AviLocation signalBoatLoc;
     private double startLineDist;
     private Map<String, String> selectedOptions;
-    private List<Buoy> bouyList = new ArrayList<Buoy>();
+    private List<Buoy> bouyList = new ArrayList<>();
     public transient CourseXmlParser xmlParserC;
     private UUID _raceCourseUUID;
     transient Context context;

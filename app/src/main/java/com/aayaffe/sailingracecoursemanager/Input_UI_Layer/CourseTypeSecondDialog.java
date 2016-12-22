@@ -34,7 +34,7 @@ public class CourseTypeSecondDialog extends Dialog {
     private CourseType courseType;
     private Button finishB;
     private double[] factorResult;
-    private Map<String, String> selectedOptions = new HashMap<String, String>();  //map of the selected settings
+    private Map<String, String> selectedOptions = new HashMap<>();  //map of the selected settings
 
 
 

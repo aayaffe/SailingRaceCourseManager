@@ -28,13 +28,13 @@ public class EventInputDialog extends DialogFragment {
     public int monthEnd;
     public int dayStart;
     public int dayEnd;
-    private static Context c;
+    private Context c;
     public static EventInputDialog newInstance(String eventName, Context c) {
         EventInputDialog frag = new EventInputDialog();
         Bundle args = new Bundle();
         args.putString("eventName", eventName);
         frag.setArguments(args);
-        EventInputDialog.c = c;
+        frag.c = c;
         return frag;
 
     }

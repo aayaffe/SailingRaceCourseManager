@@ -9,30 +9,27 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.text.DecimalFormat;
-import java.util.logging.Handler;
 
 public class HorizontalNumberPicker extends RelativeLayout {
-    private double initialN=0;
-    private double steps=1;
-    private double number = 0;
+    private float initialN=0;
+    private float steps=1;
+    private float number = 0;
     private float textSize = 30;
     private int buttonsBackgroundColor;
     private int buttonsTextColor;
 
 
-    private double upperBoundary = 1000;  //if Activated, CAN NOT BE this number as well.
+    private float upperBoundary = 1000;  //if Activated, CAN NOT BE this number as well.
     private boolean upperBoundaryActivation = false;
-    private double lowerBoundary = -1000; //if Activated, CAN NOT BE this number as well.
+    private float lowerBoundary = -1000; //if Activated, CAN NOT BE this number as well.
     private boolean lowerBoundaryActivation = false;
 
 
@@ -48,7 +45,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
     }
 
-    public HorizontalNumberPicker(Context context, double initialNumber, double steps) {
+    public HorizontalNumberPicker(Context context, float initialNumber, float steps) {
         super(context);
         this.initialN=initialNumber;
         this.number=initialNumber;
@@ -121,7 +118,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
     }
 
     public void setNumber(double text) {
-        this.number = Double.valueOf(df.format(text));
+        this.number = Float.valueOf(df.format(text));
         if(numberTV!=null){
             numberTV.setText(number+"");
         }
@@ -149,30 +146,30 @@ public class HorizontalNumberPicker extends RelativeLayout {
         minusB.setBackgroundColor(buttonsBackgroundColor);
     }
 
-    public double getNumber() {
+    public float getNumber() {
         String s = numberTV.getText().toString();
-        number = Double.parseDouble(s);
+        number = Float.parseFloat(s);
         return number;
     }
 
-    public void setSteps(double steps) {
+    public void setSteps(float steps) {
         this.steps = steps;
     }
     public double getSteps() {
         return steps;
     }
-    public void setInitialN(double initialN) {
+    public void setInitialN(float initialN) {
         this.initialN = initialN;
     }
 
-    public void configNumbers(double initialNum, double steps){
+    public void configNumbers(float initialNum, float steps){
         this.initialN=initialNum;
         this.number=initialNum;
         this.steps=steps;
         setNumber(number);
     }
 
-    public void configNumbers(double initialNum, double steps , double min, double max){
+    public void configNumbers(float initialNum, float steps , float min, float max){
         this.initialN=initialNum;
         this.number=initialNum;
         this.steps=steps;
@@ -180,14 +177,14 @@ public class HorizontalNumberPicker extends RelativeLayout {
         setNumber(number);
     }
 
-    public void setBoundarys(double min, double max){
+    public void setBoundarys(float min, float max){
         upperBoundary=max;
         lowerBoundary=min;
         upperBoundaryActivation=true;
         lowerBoundaryActivation=true;
     }
 
-    public void setUpperBoundary(double upperBoundary) {
+    public void setUpperBoundary(float upperBoundary) {
         this.upperBoundary = upperBoundary;
     }
 
@@ -202,7 +199,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
         upperBoundaryActivation = b;
     }
 
-    public void setLowerBoundary(double lowerBoundary) {
+    public void setLowerBoundary(float lowerBoundary) {
         this.lowerBoundary = lowerBoundary;
     }
 

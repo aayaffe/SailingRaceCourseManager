@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
-    private static Context c;
+    private Context c;
     private static DatabaseReference fb;
     private static DataSnapshot ds;
     private static String currentEventName;
@@ -40,8 +40,8 @@ public class Firebase implements ICommManager {
     private boolean connected = false;
 
     public Firebase(Context c) {
-        if (Firebase.c ==null)
-            Firebase.c = c;
+        if (this.c ==null)
+            this.c = c;
         users = new Users(this);
     }
 

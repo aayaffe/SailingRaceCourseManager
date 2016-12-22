@@ -57,8 +57,7 @@ public class CourseTypeRV extends RecyclerView.Adapter<CourseTypeRV.AdapterViewH
     @Override
     public AdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.course_type_card, viewGroup, false);
-        AdapterViewHolder vh = new AdapterViewHolder(v, onRecyclerItemClickListener);
-        return vh;
+        return new AdapterViewHolder(v, onRecyclerItemClickListener);
     }
 
     @Override

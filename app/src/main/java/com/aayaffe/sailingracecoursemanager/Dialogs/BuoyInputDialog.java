@@ -19,18 +19,16 @@ import com.aayaffe.sailingracecoursemanager.R;
     public class BuoyInputDialog extends DialogFragment {
     private static final String TAG = "BuoyInputDialog";
     public long buoy_id;
-    private static Context c;
+    private Context c;
     public static BuoyInputDialog newInstance(long id, Context c) {
         BuoyInputDialog frag = new BuoyInputDialog();
         Bundle args = new Bundle();
         args.putLong("buoy_id", id);
         frag.setArguments(args);
-        BuoyInputDialog.c = c;
+        frag.c = c;
         return frag;
     }
-    /* The activity that creates an instance of this dialog fragment must
-         * implement this interface in order to receive event callbacks.
-         * Each method passes the DialogFragment in case the host needs to query it. */
+
     public interface BuoyInputDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
     }
