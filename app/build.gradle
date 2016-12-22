@@ -21,8 +21,8 @@ android {
         applicationId "com.aayaffe.sailingracecoursemanager"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 18
-        versionName "1.42"
+        versionCode 19
+        versionName "1.43"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -47,6 +47,7 @@ android {
         exclude 'META-INF/NOTICE'
     }
 }
+
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
     //    compile 'org.twitter4j:twitter4j-core:4.0.2'
@@ -80,6 +81,7 @@ dependencies {
     compile 'com.borax12.materialdaterangepicker:library:1.9'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
 //    compile 'com.android.support:multidex:1.0.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
