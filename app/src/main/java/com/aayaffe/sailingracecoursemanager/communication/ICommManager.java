@@ -59,4 +59,5 @@ public interface ICommManager {
 
     List<Boat> getBoatTypes();
 
+    void removeBoat(UUID u);
 }

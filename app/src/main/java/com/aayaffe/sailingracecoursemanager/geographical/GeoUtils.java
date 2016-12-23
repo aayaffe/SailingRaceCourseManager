@@ -5,6 +5,7 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by aayaffe on 30/09/2015.
@@ -144,7 +145,13 @@ public class GeoUtils {
         return ((double)minutes)/((double)60);
     }
 
-    public static double ToNauticalMiles(double meters){
+    public static double toNauticalMiles(double meters){
         return meters/1852;
+    }
+
+    public static long ageInSeconds(Date d){
+        if (d==null) return -1;
+        long diffInMs = new Date().getTime() - d.getTime();
+        return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
     }
 }

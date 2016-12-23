@@ -376,7 +376,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void drawMapComponents() {
         boats = commManager.getAllBoats();
         buoys = commManager.getAllBuoys();
-
+        if (isCurrentEventManager()){
+            removeOldBoats(boats);
+        }
         removeOldMarkers(boats, buoys);
         for (Buoy boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
@@ -406,6 +408,19 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (isOwnObject(users.getCurrentUser().DisplayName,boat))
             return 10;
         return 0;
+    }
+
+    private void removeOldBoats(List<Buoy> boats){
+        List<UUID> boatsToRemove = new LinkedList<>();
+        for(Buoy b:boats){
+            //900 == 15 minutes
+            if (GeoUtils.ageInSeconds(b.getLastUpdate())>900){
+                boatsToRemove.add(b.getUUID());
+            }
+        }
+        for(UUID u: boatsToRemove){
+            commManager.removeBoat(u);
+        }
     }
 
     private void removeOldMarkers(List<Buoy> boats, List<Buoy> buoys) {

@@ -130,7 +130,7 @@ public class DistanceDialog extends Dialog {
     }
 
     private double calcStartLine(double boatLength, float factor, int boatsNumber) {
-        return GeoUtils.ToNauticalMiles(boatLength)*factor*boatsNumber;
+        return GeoUtils.toNauticalMiles(boatLength)*factor*boatsNumber;
     }
 
     public void setDialogResult(OnMyDialogResult dialogResult){
