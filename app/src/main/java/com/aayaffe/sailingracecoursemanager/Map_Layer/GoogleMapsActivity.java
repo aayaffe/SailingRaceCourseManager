@@ -316,7 +316,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Runnable runnable = new Runnable() {
         private Buoy getMyBoat(String name){
             for (Buoy ao : commManager.getAllBoats()) {
-                if (ao.getName().equals(name)) {
+                if (isOwnObject(name, ao)) {
                     return ao;
                 }
             }
@@ -380,13 +380,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         removeOldMarkers(boats, buoys);
         for (Buoy boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!boat.getName().equals(users.getCurrentUser().DisplayName))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id);
+                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
             }
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (boat.getName().equals(users.getCurrentUser().DisplayName))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, null, id);
+                mapLayer.addMark(boat, null, id,getZIndex(boat));
             }
         }
 
@@ -400,6 +400,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
             mapLayer.setZoom(10,myBoat.getLoc());
         }
+    }
+
+    private int getZIndex(Buoy boat) {
+        if (isOwnObject(users.getCurrentUser().DisplayName,boat))
+            return 10;
+        return 0;
     }
 
     private void removeOldMarkers(List<Buoy> boats, List<Buoy> buoys) {
@@ -430,7 +436,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private int getIconId(String string, Buoy o) {
         //TODO change to test race officer with UUID
         int ret;
-        if (o.getName().equals(string)) {
+        if (isOwnObject(string, o)) {
             switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatgold;
@@ -458,6 +464,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         return ret;
+    }
+
+    private boolean isOwnObject(String string, Buoy o) {
+        return o.getName().equals(string);
     }
 
     private String getDirDistTXT(Location src, Location dst) {
