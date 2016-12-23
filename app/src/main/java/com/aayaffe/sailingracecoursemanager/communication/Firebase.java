@@ -12,6 +12,7 @@ import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -80,7 +81,7 @@ public class Firebase implements ICommManager {
                     if (findUser(Uid) == null){
                         String displayName;
                         try {
-                            displayName = user.getDisplayName();
+                            displayName = getDisplayName(user);
                             if (displayName==null)
                             {
                                 displayName = convertToAcceptableDisplayName(user.getEmail());
@@ -105,6 +106,25 @@ public class Firebase implements ICommManager {
         return 0;
     }
 
+
+    private String getDisplayName(FirebaseUser user)
+    {
+        String displayName = user.getDisplayName();
+        String email = user.getEmail();
+        // If the above were null, iterate the provider data
+        // and set with the first non null data
+        for (UserInfo userInfo : user.getProviderData()) {
+            if (displayName == null && userInfo.getDisplayName() != null) {
+                displayName = userInfo.getDisplayName();
+            }
+            if (email == null && userInfo.getEmail() != null) {
+                email = userInfo.getEmail();
+            }
+        }
+        if (displayName==null)
+            return convertToAcceptableDisplayName(email);
+        return displayName;
+    }
 
     /***
      * Firebase does not accept emails in the database path (i.e. '.' are not allowed)

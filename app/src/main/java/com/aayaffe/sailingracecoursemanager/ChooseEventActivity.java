@@ -28,11 +28,13 @@ import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
@@ -108,16 +110,20 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
 
     }
-    private String[] getSelectedProviders() {
-        ArrayList<String> selectedProviders = new ArrayList<>();
-
-        selectedProviders.add(AuthUI.EMAIL_PROVIDER);
-
-
-            selectedProviders.add(AuthUI.GOOGLE_PROVIDER);
-
-
-        return selectedProviders.toArray(new String[selectedProviders.size()]);
+    private List<String> getGooglePermissions() {
+        List<String> result = new ArrayList<>();
+        result.add(Scopes.EMAIL);
+        result.add(Scopes.PROFILE);
+        return result;
+    }
+    private List<AuthUI.IdpConfig> getSelectedProviders() {
+        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+        selectedProviders.add(
+                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+                            .setPermissions(getGooglePermissions())
+                            .build());
+        return selectedProviders;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,7 +146,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 DialogFragment addevent = EventInputDialog.newInstance(null, this);
                 addevent.show(getFragmentManager(), "Add_Event");
                 return true;
-
             case R.id.action_logout:
                 if (loggedIn) {
                     users.logout();
@@ -154,15 +159,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                                     .build(),
                             RC_SIGN_IN);
                 }
-
-
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
