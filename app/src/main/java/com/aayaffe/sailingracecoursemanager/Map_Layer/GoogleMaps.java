@@ -131,7 +131,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             if (uuidToMarker.containsKey(ao.getUUID())) {
                 m = uuidToMarker.get(ao.getUUID());
                 boolean infoWindows = m.isInfoWindowShown();
-                m = updateMark(ao, m, caption);
+                m = updateMark(ao, m, caption,resourceID);
                 if (infoWindows) {
                     m.showInfoWindow();
                 }
@@ -148,8 +148,9 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return null;
     }
 
-    private Marker updateMark(Buoy ao, Marker m, String caption) {
+    private Marker updateMark(Buoy ao, Marker m, String caption, int resourceID) {
         if (isValid(ao)) {
+            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
             m.setPosition(ao.getLatLng());
             m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);

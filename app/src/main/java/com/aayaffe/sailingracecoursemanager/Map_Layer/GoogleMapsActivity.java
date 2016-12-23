@@ -381,12 +381,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         for (Buoy boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!boat.getName().equals(users.getCurrentUser().DisplayName))) {
-                Log.d(TAG, "drawMapComponents() first if is true");
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
                 mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id);
             }
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (boat.getName().equals(users.getCurrentUser().DisplayName))) {
-                Log.d(TAG, "drawMapComponents() second if is true");
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
                 mapLayer.addMark(boat, null, id);
             }
@@ -430,12 +428,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private int getIconId(String string, Buoy o) {
+        //TODO change to test race officer with UUID
         int ret;
         if (o.getName().equals(string)) {
             switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation()) > 300)
+                    if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_MANAGER:
@@ -448,7 +447,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation()) > 300)
+                    if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_MANAGER:
