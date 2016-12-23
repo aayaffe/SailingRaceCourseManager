@@ -29,6 +29,7 @@ import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.util.ArrayList;
@@ -249,8 +250,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (toLogin) {
             try {
                 ActionMenuItemView logItem = (ActionMenuItemView) findViewById(R.id.action_logout);
-                logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
-                logItem.setTitle("Login");
+                if (logItem!=null) {
+                    logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
+                    logItem.setTitle("Login");
+                }
                 ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
                 addEventItem.setEnabled(false);
             }catch (Exception e){

@@ -491,6 +491,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private String getDirDistTXT(Location src, Location dst) {
+        if (src==null){
+            return "NoGPS";
+        }
         double distance;
         int bearing;
         String units;

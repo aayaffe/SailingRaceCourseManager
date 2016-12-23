@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -46,10 +50,12 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
     private Marker lastOpenned = null;
     public DialogFragment df;
     private Polyline polyline;
+    private Activity activity;
 
     public void Init(Activity a, Context c, SharedPreferences sp, MapClickMethods mcm) {
         this.clickMethods = mcm;
         this.c = c;
+        this.activity = a;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity) a).getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -214,16 +220,17 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         try {
             LatLngBounds bounds = builder.build();
             int padding = 100; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            float width = GeneralUtils.getDeviceWidth(activity);
+            float height = GeneralUtils.getDeviceHeight(activity)-GeneralUtils.convertDpToPixel(150,c);
+
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, (int)width, (int)height, 0);
             mapView.animateCamera(cu);
         } catch (Exception e) {
             Log.e(TAG,"Error zomming to bounds",e);
         }
     }
 
-    public void removeAllMarks() {
-        mapView.clear();
-    }
+
 
     @Override
     public void onInfoWindowClick(Marker marker) {

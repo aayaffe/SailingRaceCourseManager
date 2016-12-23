@@ -158,7 +158,7 @@ public class Mark {
                     Log.i(TAG, "buoys added, gateType GATE, name:" + this.getName());
                     break;
                 case "FINISH_LINE":
-                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir - getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE, raceCourseUUID));
+                    buoys.add(new Buoy(this.getName() + " S", new AviLocation(location, windDir + getGateDirection()-180, getGateDistance() / 2), BuoyType.FINISH_LINE, raceCourseUUID));
                     buoys.add(new Buoy(this.getName() + " P", new AviLocation(location, windDir + getGateDirection(), getGateDistance() / 2), BuoyType.FINISH_LINE, raceCourseUUID));
                     Log.i(TAG, "buoys added, gateType FINISH_LINE, name:" + this.getName());
                     break;
