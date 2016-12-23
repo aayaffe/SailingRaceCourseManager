@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.BuoyType;
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
+import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.Input_UI_Layer.MainCourseInputActivity;
+import com.aayaffe.sailingracecoursemanager.inputuilayer.MainCourseInputActivity;
 import com.aayaffe.sailingracecoursemanager.Manage.ChooseBoatActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -316,7 +316,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Runnable runnable = new Runnable() {
         private Buoy getMyBoat(String name){
             for (Buoy ao : commManager.getAllBoats()) {
-                if (ao.getName().equals(name)) {
+                if (isOwnObject(name, ao)) {
                     return ao;
                 }
             }
@@ -376,19 +376,19 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void drawMapComponents() {
         boats = commManager.getAllBoats();
         buoys = commManager.getAllBuoys();
-
+        if (isCurrentEventManager()){
+            removeOldBoats(boats);
+        }
         removeOldMarkers(boats, buoys);
         for (Buoy boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!boat.getName().equals(users.getCurrentUser().DisplayName))) {
-                Log.d(TAG, "drawMapComponents() first if is true");
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id);
+                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
             }
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (boat.getName().equals(users.getCurrentUser().DisplayName))) {
-                Log.d(TAG, "drawMapComponents() second if is true");
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, null, id);
+                mapLayer.addMark(boat, null, id,getZIndex(boat));
             }
         }
 
@@ -401,6 +401,25 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             mapLayer.ZoomToMarks();
         } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
             mapLayer.setZoom(10,myBoat.getLoc());
+        }
+    }
+
+    private int getZIndex(Buoy boat) {
+        if (isOwnObject(users.getCurrentUser().DisplayName,boat))
+            return 10;
+        return 0;
+    }
+
+    private void removeOldBoats(List<Buoy> boats){
+        List<UUID> boatsToRemove = new LinkedList<>();
+        for(Buoy b:boats){
+            //900 == 15 minutes
+            if (GeoUtils.ageInSeconds(b.getLastUpdate())>900){
+                boatsToRemove.add(b.getUUID());
+            }
+        }
+        for(UUID u: boatsToRemove){
+            commManager.removeBoat(u);
         }
     }
 
@@ -430,12 +449,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private int getIconId(String string, Buoy o) {
+        //TODO change to test race officer with UUID
         int ret;
-        if (o.getName().equals(string)) {
+        if (isOwnObject(string, o)) {
             switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation()) > 300)
+                    if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_MANAGER:
@@ -448,7 +468,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case WORKER_BOAT:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation()) > 300)
+                    if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_MANAGER:
@@ -459,6 +479,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         return ret;
+    }
+
+    private boolean isOwnObject(String string, Buoy o) {
+        return o.getName().equals(string);
     }
 
     private String getDirDistTXT(Location src, Location dst) {

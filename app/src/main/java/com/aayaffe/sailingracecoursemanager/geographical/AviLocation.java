@@ -6,7 +6,6 @@ import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by aayaffe on 09/01/2016.
@@ -81,9 +80,7 @@ public class AviLocation implements Serializable {
 
     public static long Age(AviLocation aviLocation) {
         if (aviLocation==null) return -1;
-        if (aviLocation.getLastUpdate() ==null) return -1;
-        long diffInMs = new Date().getTime() - aviLocation.lastUpdate;
-        return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+        return GeoUtils.ageInSeconds(aviLocation.getLastUpdate());
     }
 
     /**

@@ -17,7 +17,7 @@
             android:name=".AppPreferences"
             android:label="@string/app_name" />
         <activity
-            android:name=".Input_UI_Layer.MainCourseInputActivity"
+            android:name=".inputuilayer.MainCourseInputActivity"
             android:label="@string/app_name" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

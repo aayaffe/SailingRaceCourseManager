@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
+package com.aayaffe.sailingracecoursemanager.inputuilayer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.BoatXmlParser;

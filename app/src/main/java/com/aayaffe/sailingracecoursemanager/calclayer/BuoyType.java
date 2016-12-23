@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Calc_Layer;
+package com.aayaffe.sailingracecoursemanager.calclayer;
 /**
  * Created by Jonathan on 27/10/2016.
  */

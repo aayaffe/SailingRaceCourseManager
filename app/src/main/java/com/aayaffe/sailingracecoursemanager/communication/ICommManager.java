@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -59,4 +59,5 @@ public interface ICommManager {
 
     List<Boat> getBoatTypes();
 
+    void removeBoat(UUID u);
 }

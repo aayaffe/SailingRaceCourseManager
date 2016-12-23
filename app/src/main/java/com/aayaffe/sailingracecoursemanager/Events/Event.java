@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.Events;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;

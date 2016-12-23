@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
+package com.aayaffe.sailingracecoursemanager.inputuilayer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;

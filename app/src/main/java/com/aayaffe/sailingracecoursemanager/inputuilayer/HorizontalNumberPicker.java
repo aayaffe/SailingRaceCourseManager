@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
+package com.aayaffe.sailingracecoursemanager.inputuilayer;
 
 /**
  * Created by Jonathan on 18/07/2016.
@@ -73,7 +73,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
 
         numberTV = (EditText) this.findViewById(R.id.np_number);
-        numberTV.setText(number + "");
+        numberTV.setText(Float.toString(number));
         numberTV.setTextSize(textSize);
 
         plusB = (Button) this.findViewById(R.id.np_plus);
@@ -120,7 +120,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
     public void setNumber(double text) {
         this.number = Float.valueOf(df.format(text));
         if(numberTV!=null){
-            numberTV.setText(number+"");
+            numberTV.setText(Float.toString(number));
         }
     }
 

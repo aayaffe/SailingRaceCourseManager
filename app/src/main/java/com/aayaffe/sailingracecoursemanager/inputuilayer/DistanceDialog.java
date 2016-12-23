@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Input_UI_Layer;
+package com.aayaffe.sailingracecoursemanager.inputuilayer;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +17,6 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
 import java.util.List;
-
-import static android.R.attr.factor;
 
 /**
  * Created by Jonathan on 14/07/2016.
@@ -132,7 +130,7 @@ public class DistanceDialog extends Dialog {
     }
 
     private double calcStartLine(double boatLength, float factor, int boatsNumber) {
-        return GeoUtils.ToNauticalMiles(boatLength)*factor*boatsNumber;
+        return GeoUtils.toNauticalMiles(boatLength)*factor*boatsNumber;
     }
 
     public void setDialogResult(OnMyDialogResult dialogResult){

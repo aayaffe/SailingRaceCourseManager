@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
@@ -339,5 +339,10 @@ public class Firebase implements ICommManager {
             ret.add(b);
         }
         return ret;
+    }
+
+    @Override
+    public void removeBoat(UUID u) {
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(getObjectByUUID(u).getName()).removeValue();
     }
 }

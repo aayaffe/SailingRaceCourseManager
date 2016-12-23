@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.Calc_Layer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
@@ -125,13 +125,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
     }
 
-    public Marker addMark(Buoy ao, String caption, int resourceID) {
+    public Marker addMark(Buoy ao, String caption, int resourceID,int zIndex) {
         Marker m;
         try {
             if (uuidToMarker.containsKey(ao.getUUID())) {
                 m = uuidToMarker.get(ao.getUUID());
                 boolean infoWindows = m.isInfoWindowShown();
-                m = updateMark(ao, m, caption);
+                m = updateMark(ao, m, caption,resourceID,zIndex);
                 if (infoWindows) {
                     m.showInfoWindow();
                 }
@@ -148,15 +148,17 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return null;
     }
 
-    private Marker updateMark(Buoy ao, Marker m, String caption) {
+    private Marker updateMark(Buoy ao, Marker m, String caption, int resourceID, int zIndex) {
         if (isValid(ao)) {
+            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
+            m.setZIndex(zIndex);
             m.setPosition(ao.getLatLng());
             m.setSnippet(caption);
             m.setRotation(ao.getAviLocation().cog);
         }
         return m;
     }
-
+    //TODO: merge different marker adding functions!
     private Marker updateBuoy(Buoy ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
