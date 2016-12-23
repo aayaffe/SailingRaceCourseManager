@@ -534,6 +534,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             if (resultCode == RESULT_OK) {
                 RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
                 addRaceCourse(rc);
+                firstBoatLoad = true;
             }
         }
     }
