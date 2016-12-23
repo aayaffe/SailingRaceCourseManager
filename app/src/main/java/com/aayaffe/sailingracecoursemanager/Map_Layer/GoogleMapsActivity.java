@@ -66,11 +66,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private boolean firstBoatLoad = true;
     private Buoy assignedTo = null;
     static public final int NEW_RACE_COURSE_REQUEST = 770;
+    private ImageView noGps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
+        noGps = (ImageView)findViewById(R.id.gps_indicator);
+        noGps.setColorFilter(Color.RED);
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
         commManager = new Firebase(this);
@@ -80,6 +83,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         mapLayer.Init(this, this, SP,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
+
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
         SetIconsClickListeners();
@@ -336,9 +340,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
-                findViewById(R.id.gps_indicator).setVisibility(View.INVISIBLE);
+                noGps.setVisibility(View.INVISIBLE);
             } else {
-                findViewById(R.id.gps_indicator).setVisibility(View.VISIBLE);
+                noGps.setVisibility(View.VISIBLE);
+
             }
             drawMapComponents();
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "5")) * 1000));

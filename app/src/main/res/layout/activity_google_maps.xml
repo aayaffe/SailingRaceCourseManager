@@ -56,13 +56,14 @@
         android:contentDescription="@string/wind_arrow" />
     <!--android:layout_alignStart="@+id/configFAB"-->
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:id="@+id/gps_indicator"
         android:layout_below="@id/toolbar_linear_layout"
         android:layout_alignParentStart="true"
         android:layout_gravity="top|end"
         android:src="@drawable/ic_gps_off_black_24dp"
+
 
         android:layout_marginTop="0dp"
         android:layout_marginStart="15dp"

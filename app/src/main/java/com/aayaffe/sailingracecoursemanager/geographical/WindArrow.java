@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.geographical;
 
+import android.graphics.Color;
 import android.widget.ImageView;
 
 /**
