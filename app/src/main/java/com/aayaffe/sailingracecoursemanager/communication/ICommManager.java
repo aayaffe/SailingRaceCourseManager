@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -17,13 +17,13 @@ public interface ICommManager {
 
     void setCommManagerEventListener(CommManagerEventListener listener);
 
-    int writeBoatObject(Buoy o);
-    int writeBuoyObject(Buoy o);
+    int writeBoatObject(DBObject o);
+    int writeBuoyObject(DBObject o);
 
-    List<Buoy> getAllBoats();  //ships
-    List<Buoy> getAllBuoys();  //Just buoys, without ships
+    List<DBObject> getAllBoats();  //ships
+    List<DBObject> getAllBuoys();  //Just buoys, without ships
 
-    int sendAction(RaceManagerAction a, Buoy o);
+    int sendAction(RaceManagerAction a, DBObject o);
 
     long getNewBuoyId();
 
@@ -39,7 +39,7 @@ public interface ICommManager {
 
     long getSupportedVersion();
 
-    Buoy getObjectByUUID(UUID u);
+    DBObject getObjectByUUID(UUID u);
 
     void writeEvent(Event neu);
 
@@ -47,15 +47,17 @@ public interface ICommManager {
 
     void setCurrentEventName(String currentEventName);
 
-    ArrayList<Buoy> getAssignedBuoys(Buoy b);
+    ArrayList<DBObject> getAssignedBuoys(DBObject b);
 
-    ArrayList<Buoy> getAssignedBoats(Buoy b);
+    ArrayList<DBObject> getAssignedBoats(DBObject b);
 
-    Buoy getBoat(String currentBoatName);
+    DBObject getBoat(String currentBoatName);
 
-    void assignBuoy(Buoy boat, String selectedBuoyName);
+    void assignBuoy(DBObject boat, String selectedBuoyName);
 
-    void removeAssignment(Buoy buoy, Buoy boat);
+    void removeAssignment(DBObject buoy, DBObject boat);
+
+    void removeAssignments(DBObject b);
 
     List<Boat> getBoatTypes();
 

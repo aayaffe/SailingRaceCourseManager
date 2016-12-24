@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
@@ -47,9 +47,9 @@ import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
 
-    public static List<Buoy> buoys; //replaces public static marks marks = new marks();
-    public static List<Buoy> boats;
-    private Buoy myBoat; //instead of AviObject class
+    public static List<DBObject> buoys; //replaces public static marks marks = new marks();
+    public static List<DBObject> boats;
+    private DBObject myBoat; //instead of AviObject class
 
     private static final String TAG = "GoogleMapsActivity";
     public static int REFRESH_RATE = 1000;
@@ -64,7 +64,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private DialogFragment df;
     private static String currentEventName;
     private boolean firstBoatLoad = true;
-    private Buoy assignedTo = null;
+    private DBObject assignedTo = null;
     static public final int NEW_RACE_COURSE_REQUEST = 770;
     private ImageView noGps;
 
@@ -115,17 +115,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return new MapClickMethods() {
             @Override
             public void infoWindowClick(UUID u) {
-                Buoy b = commManager.getObjectByUUID(u);
+                DBObject b = commManager.getObjectByUUID(u);
                 if (b==null) return;
                 //TODO: Implement something here...
             }
             @Override
             public void infoWindowLongClick(UUID u) {
-                Buoy b = commManager.getObjectByUUID(u);
+                DBObject b = commManager.getObjectByUUID(u);
                 if (b==null) return;
                 if (b.equals(assignedTo))
                 { //Turn off assignment
-                    assignBuoy((Buoy) null);
+                    assignBuoy((DBObject) null);
                 }
                 else if (isBuoy(b)){
                     assignBuoy(u);
@@ -137,7 +137,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private void assignBuoy(UUID u) {
         assignBuoy(commManager.getObjectByUUID(u));
     }
-    private void assignBuoy(Buoy b){
+    private void assignBuoy(DBObject b){
         if (b==null){
             TextView tv = (TextView) findViewById(R.id.goto_text_view);
             if(tv!=null) {
@@ -152,9 +152,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         tv.setVisibility(View.VISIBLE);
         tv.setText(b.getName()+'\n'+getDirDistTXT(myBoat.getLoc(), b.getLoc()));
         assignedTo = b;
+        firstBoatLoad = true;
     }
 
-    private boolean isBuoy(Buoy b) {
+    private boolean isBuoy(DBObject b) {
         switch (b.getBuoyType()){
             case BUOY:
             case FINISH_LINE:
@@ -301,25 +302,26 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void removeAllRaceCourseMarks() {
-        List<Buoy> buoysToRemove = new ArrayList<>();
-        for (Buoy buoy : buoys) {
+        List<DBObject> buoysToRemove = new ArrayList<>();
+        for (DBObject buoy : buoys) {
             if (buoy.getRaceCourseUUID() != null) {
                 mapLayer.removeMark(buoy.getUUID(),true);
                 if (assignedTo!=null && assignedTo.equals(buoy))
                 {
-                    assignBuoy((Buoy)null);
+                    assignBuoy((DBObject)null);
                 }
                 buoysToRemove.add(buoy);
             }
         }
-        for (Buoy buoy:buoysToRemove){
+        for (DBObject buoy:buoysToRemove){
             buoys.remove(buoy);
         }
     }
 
+    private DBObject assignedBuoy;
     private Runnable runnable = new Runnable() {
-        private Buoy getMyBoat(String name){
-            for (Buoy ao : commManager.getAllBoats()) {
+        private DBObject getMyBoat(String name){
+            for (DBObject ao : commManager.getAllBoats()) {
                 if (isOwnObject(name, ao)) {
                     return ao;
                 }
@@ -330,13 +332,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
                 if (myBoat == null) {
-                    myBoat = new Buoy(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
+                    myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
                 }
                 if (isCurrentEventManager(users.getCurrentUser().Uid)) {
                     myBoat.setBuoyType(BuoyType.RACE_MANAGER);
                 } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
+                myBoat.userUid = users.getCurrentUser().Uid;
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -345,9 +348,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 noGps.setVisibility(View.VISIBLE);
 
             }
+
+            ArrayList<DBObject> assignedBuoys = commManager.getAssignedBuoys(myBoat);
+            if (assignedBuoys==null||assignedBuoys.size()==0)
+                assignedBuoy = null;
+            else
+                assignedBuoy = assignedBuoys.get(0);
             drawMapComponents();
             handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "5")) * 1000));
-            assignBuoy(assignedTo);
+            //assignBuoy(assignedTo);
+            assignBuoy(assignedBuoy);
 
         }
     };
@@ -372,7 +382,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     public void addBuoys() {
-        for (Buoy buoy : buoys) {
+        for (DBObject buoy : buoys) {
             mapLayer.addBuoy(buoy, getDirDistTXT(iGeo.getLoc(), buoy.getLoc()));
             commManager.writeBuoyObject(buoy);
         }
@@ -385,7 +395,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             removeOldBoats(boats);
         }
         removeOldMarkers(boats, buoys);
-        for (Buoy boat : boats) {
+        for (DBObject boat : boats) {
             //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
@@ -398,7 +408,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
 
         Log.d(TAG, "commBuoyList size: " + buoys.size());
-        for (Buoy buoy : buoys) {
+        for (DBObject buoy : buoys) {
             mapLayer.addBuoy(buoy, getDirDistTXT(iGeo.getLoc(), buoy.getLoc()));
         }
         if ((!buoys.isEmpty()) && (firstBoatLoad) && (mapLayer.mapView != null)) {
@@ -409,15 +419,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private int getZIndex(Buoy boat) {
+    private int getZIndex(DBObject boat) {
         if (isOwnObject(users.getCurrentUser().DisplayName,boat))
             return 10;
         return 0;
     }
 
-    private void removeOldBoats(List<Buoy> boats){
+    private void removeOldBoats(List<DBObject> boats){
         List<UUID> boatsToRemove = new LinkedList<>();
-        for(Buoy b:boats){
+        for(DBObject b:boats){
             //900 == 15 minutes
             if (GeoUtils.ageInSeconds(b.getLastUpdate())>900){
                 boatsToRemove.add(b.getUUID());
@@ -428,12 +438,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private void removeOldMarkers(List<Buoy> boats, List<Buoy> buoys) {
+    private void removeOldMarkers(List<DBObject> boats, List<DBObject> buoys) {
         List<UUID> uuids = new LinkedList<>();
-        for (Buoy b : boats) {
+        for (DBObject b : boats) {
             uuids.add(b.getUUID());
         }
-        for (Buoy b : buoys) {
+        for (DBObject b : buoys) {
             uuids.add(b.getUUID());
         }
         List<UUID> markerToRemove = new LinkedList<>();
@@ -447,13 +457,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
             if (assignedTo!=null && assignedTo.getUUID().equals(u))
             {
-                assignBuoy((Buoy)null);
+                assignBuoy((DBObject)null);
             }
             mapLayer.removeMark(u,false);
         }
     }
 
-    private int getIconId(String string, Buoy o) {
+    private int getIconId(String string, DBObject o) {
         //TODO change to test race officer with UUID
         int ret;
         if (isOwnObject(string, o)) {
@@ -486,7 +496,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return ret;
     }
 
-    private boolean isOwnObject(String string, Buoy o) {
+    private boolean isOwnObject(String string, DBObject o) {
         return o.getName().equals(string);
     }
 
@@ -555,12 +565,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addMark(long id, Location loc, Float dir, double dist) {
         if (loc == null) return;
-        Buoy o = new Buoy("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
+        DBObject o = new DBObject("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
     }
 
-    private void addMark(Buoy m) {
+    private void addMark(DBObject m) {
         commManager.writeBuoyObject(m);
     }
 

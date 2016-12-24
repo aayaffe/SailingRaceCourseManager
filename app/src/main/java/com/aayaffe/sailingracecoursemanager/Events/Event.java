@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.Events;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
@@ -16,9 +16,9 @@ public class Event {
     private int lastBuoyId;
     private String eventManager;
     @Exclude
-    private HashMap<String,Buoy> boats;
+    private HashMap<String,DBObject> boats;
     @Exclude
-    private HashMap<String,Buoy> buoys;
+    private HashMap<String,DBObject> buoys;
     public int yearStart;
     public int yearEnd;
     public int monthStart;
@@ -51,19 +51,19 @@ public class Event {
         this.lastBuoyId = lastBuoyId;
     }
 
-    public HashMap<String, Buoy> getBoats() {
+    public HashMap<String, DBObject> getBoats() {
         return boats;
     }
 
-    public void setBoats(HashMap<String, Buoy> boats) {
+    public void setBoats(HashMap<String, DBObject> boats) {
         this.boats = boats;
     }
 
-    public HashMap<String, Buoy> getBuoys() {
+    public HashMap<String, DBObject> getBuoys() {
         return buoys;
     }
 
-    public void setBuoys(HashMap<String, Buoy> buoys) {
+    public void setBuoys(HashMap<String, DBObject> buoys) {
         this.buoys = buoys;
     }
 

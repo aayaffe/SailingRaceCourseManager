@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
@@ -35,7 +35,7 @@ public class Firebase implements ICommManager {
     private static DatabaseReference fb;
     private static DataSnapshot ds;
     private static String currentEventName;
-    private String Uid;
+    private String uid;
     private Users users;
     private CommManagerEventListener listener;
     private boolean connected = false;
@@ -57,7 +57,7 @@ public class Firebase implements ICommManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ds = dataSnapshot;
                 if(users.getCurrentUser()==null){
-                    users.setCurrentUser(findUser(Uid));
+                    users.setCurrentUser(findUser(uid));
                 }
                 if ((listener != null)&&(!connected))
                     listener.onConnect(new Date());
@@ -66,7 +66,7 @@ public class Firebase implements ICommManager {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                //Is this really necessary?
             }
 
         });
@@ -76,33 +76,26 @@ public class Firebase implements ICommManager {
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Uid = user.getUid();
+                    uid = user.getUid();
                     Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
-                    if (findUser(Uid) == null){
+                    if (findUser(uid) == null){
                         String displayName;
                         try {
                             displayName = getDisplayName(user);
-                            if (displayName==null)
-                            {
-                                displayName = convertToAcceptableDisplayName(user.getEmail());
-                            }
                         }catch(Exception e){
                             Log.e(TAG,"Error getting display name",e);
-                            Random r = new Random();
-                            displayName = "User" + r.nextInt(10000);
+                            displayName = "User" + new Random().nextInt(10000);
                         }
-                        users.setCurrentUser(Uid, displayName);
+                        users.setCurrentUser(uid, displayName);
                     }
-                    users.setCurrentUser(findUser(Uid));
+                    users.setCurrentUser(findUser(uid));
 
                 } else {
-                    Uid = null;
-                    //users.logout();
+                    uid = null;
                     Log.d(TAG,"User has logged out.");
                 }
             }
         });
-
         return 0;
     }
 
@@ -148,7 +141,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public int writeBoatObject(Buoy o) {
+    public int writeBoatObject(DBObject o) {
         if (o == null || o.getName() == null || o.getName().isEmpty() || currentEventName == null) return -1;
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(o.getName()).setValue(o);
         Log.d("Firebase class","writeBoatObject has written boat:"+ o.toString());
@@ -156,7 +149,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public int writeBuoyObject(Buoy o) {
+    public int writeBuoyObject(DBObject o) {
         if (o == null || o.getName() == null || o.getName().isEmpty()|| currentEventName == null) return -1;
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.getName()).setValue(o);
         fb.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
@@ -165,29 +158,29 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public List<Buoy> getAllBoats() {
-        ArrayList<Buoy> ret = new ArrayList<>();
+    public List<DBObject> getAllBoats() {
+        ArrayList<DBObject> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).getChildren()) {
-            Buoy o = ps.getValue(Buoy.class);
+            DBObject o = ps.getValue(DBObject.class);
             ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public List<Buoy> getAllBuoys() {
-        ArrayList<Buoy> ret = new ArrayList<>();
+    public List<DBObject> getAllBuoys() {
+        ArrayList<DBObject> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).getChildren()) {
-            Buoy o = ps.getValue(Buoy.class);
+            DBObject o = ps.getValue(DBObject.class);
             ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public int sendAction(RaceManagerAction a, Buoy o) {
+    public int sendAction(RaceManagerAction a, DBObject o) {
         //TODO Implement
         return 0;
     }
@@ -229,7 +222,7 @@ public class Firebase implements ICommManager {
     @Override
     public void logout() {
         FirebaseAuth.getInstance().signOut();
-        Uid = null;
+        uid = null;
 
     }
 
@@ -250,11 +243,11 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public Buoy getObjectByUUID(UUID u) {
-        for(Buoy b: getAllBoats()){
+    public DBObject getObjectByUUID(UUID u) {
+        for(DBObject b: getAllBoats()){
             if (b.getUUID().equals(u)) return b;
         }
-        for(Buoy b: getAllBuoys()){
+        for(DBObject b: getAllBuoys()){
             if (b.getUUID().equals(u)) return b;
         }
         return null;
@@ -289,7 +282,7 @@ public class Firebase implements ICommManager {
      * Null if not logged in
      */
     public String getLoggedInUid() {
-        return Uid;
+        return uid;
     }
 
     public DatabaseReference getEventBoatsReference() {
@@ -300,54 +293,74 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public ArrayList<Buoy> getAssignedBuoys(Buoy b) {
-        ArrayList<Buoy> ret = new ArrayList<>();
+    public ArrayList<DBObject> getAssignedBuoys(DBObject b) {
+        ArrayList<DBObject> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
-            Buoy o = ps.getValue(Buoy.class);
-            ret.add(o);
+            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
+            if (o!=null)
+                ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public ArrayList<Buoy> getAssignedBoats(Buoy b) {
-        ArrayList<Buoy> ret = new ArrayList<>();
+    public ArrayList<DBObject> getAssignedBoats(DBObject b) {
+        ArrayList<DBObject> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
-            Buoy o = ps.getValue(Buoy.class);
-            ret.add(o);
+            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
+            if (o!=null)
+                ret.add(o);
         }
         return ret;
     }
 
     @Override
-    public Buoy getBoat(String currentBoatName) {
+    public DBObject getBoat(String boatName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
-        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(currentBoatName).getValue(Buoy.class);
+        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boatName).getValue(DBObject.class);
     }
 
     @Override
-    public void assignBuoy(Buoy boat, String selectedBuoyName) {
+    public void assignBuoy(DBObject boat, String selectedBuoyName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return ;
-        Buoy buoy = getBuoy(selectedBuoyName);
+        DBObject buoy = getBuoy(selectedBuoyName);
         if(buoy==null){
             Log.e(TAG,"Error finding buoy for assignment");
             return;
         }
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).setValue(buoy);
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).child(boat.getName()).setValue(boat);
+
+        removeAssignments(boat);
+        removeAssignments(buoy);
+        for (DBObject b: getAssignedBoats(buoy)){
+            removeAssignment(buoy,b);
+            removeAssignments(b);
+        }
+        for (DBObject b: getAssignedBuoys(boat)){
+            removeAssignment(b,boat);
+            removeAssignments(b);
+        }
+
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
     }
 
-    private Buoy getBuoy(String selectedBuoyName) {
+    private DBObject getBuoy(String selectedBuoyName) {
         if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
-        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(selectedBuoyName).getValue(Buoy.class);
+        return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(selectedBuoyName).getValue(DBObject.class);
     }
 
     @Override
-    public void removeAssignment(Buoy buoy, Buoy boat) {
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).removeValue();
-        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getName()).removeValue();
+    public void removeAssignment(DBObject buoy, DBObject boat) {
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(buoy.getName()).child(c.getString(R.string.db_assinged)).child(boat.userUid).removeValue();
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boat.getName()).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).removeValue();
+    }
+
+    @Override
+    public void removeAssignments(DBObject b){
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).removeValue();
+        fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(b.getName()).child(c.getString(R.string.db_assinged)).removeValue();
     }
 
     @Override

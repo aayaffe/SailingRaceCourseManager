@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -21,8 +21,8 @@ public class AssignBuoyActivity extends AppCompatActivity {
 
     private static final String TAG = "AssignBuoyActivity";
     private Firebase commManager;
-    private FirebaseListAdapter<Buoy> mAdapter;
-    private Buoy currentBoat;
+    private FirebaseListAdapter<DBObject> mAdapter;
+    private DBObject currentBoat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +30,11 @@ public class AssignBuoyActivity extends AppCompatActivity {
         commManager = new Firebase(this);
         Intent i = getIntent();
         currentBoat = commManager.getBoat(i.getStringExtra("boatName"));
-        SetupToolbar();
+        setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BuoysList);
-        mAdapter = new FirebaseListAdapter<Buoy>(this, Buoy.class, android.R.layout.two_line_list_item, commManager.getEventBuoysReference()) {
+        mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, android.R.layout.two_line_list_item, commManager.getEventBuoysReference()) {
             @Override
-            protected void populateView(View view, Buoy b, int position) {
+            protected void populateView(View view, DBObject b, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(b.getName());
                 ((TextView)view.findViewById(android.R.id.text2)).setText(getAssignedBoatName(b));
             }
@@ -44,20 +44,25 @@ public class AssignBuoyActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedBuoyName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
+                
                 commManager.assignBuoy(currentBoat,selectedBuoyName);
                 onBackPressed();
             }
         });
     }
 
-    private String getAssignedBoatName(Buoy b) {
-        ArrayList<Buoy> boats = commManager.getAssignedBoats(b);
-        if (boats==null) return "";
-        if (boats.size()==0) return "";
-        return boats.get(0).getName();
+    private String getAssignedBoatName(DBObject b) {
+        ArrayList<DBObject> boats = commManager.getAssignedBoats(b);
+        if (boats==null)
+            return "";
+        if (boats.size()==0)
+            return "";
+        if (boats.get(0)!=null)
+            return boats.get(0).getName();
+        return null;
     }
 
-    private void SetupToolbar() {
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar==null) {
             Log.e(TAG,"Unable to find toolbar view.");
@@ -71,7 +76,8 @@ public class AssignBuoyActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle("Choose buoy");    }
+        getSupportActionBar().setTitle("Choose buoy");
+    }
 
     @Override
     protected void onDestroy() {

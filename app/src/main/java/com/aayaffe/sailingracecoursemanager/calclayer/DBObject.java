@@ -17,24 +17,25 @@ import java.util.UUID;
 /**
  * Created by Jonathan on 27/08/2016.
  */
-public class Buoy implements Serializable {
+public class DBObject implements Serializable {
     private String name;
     private AviLocation aviLocation;
     public int color = Color.BLACK;
     public Long lastUpdate;
     public long id;
+    public String userUid;
     private UUID _uuid;
     private UUID _raceCourseUUID;
     private BuoyType buoyType;
-    public HashMap<String,Buoy> assigned;
+    public HashMap<String,String> assigned;
 
     public static final int ORANGE = 0xf49842;
 
-    public Buoy() {
+    public DBObject() {
         _uuid = UUID.randomUUID();
     }
 
-    public Buoy(String name, AviLocation loc) {
+    public DBObject(String name, AviLocation loc) {
         _uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
@@ -42,7 +43,7 @@ public class Buoy implements Serializable {
         this.buoyType = BuoyType.OTHER;
     }
 
-    public Buoy(String name, AviLocation loc, BuoyType buoyType, UUID raceCourseUUID) {
+    public DBObject(String name, AviLocation loc, BuoyType buoyType, UUID raceCourseUUID) {
         _uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
@@ -66,13 +67,22 @@ public class Buoy implements Serializable {
         }
     }
 
-    public Buoy(String name, AviLocation loc, int color, BuoyType buoyType) {
+    public DBObject(String name, AviLocation loc, int color, BuoyType buoyType) {
         _uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.color = color;
         this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
+    }
+    public DBObject(String name, AviLocation loc, int color, BuoyType buoyType, String userUid) {
+        _uuid = UUID.randomUUID();
+        this.name = name;
+        this.aviLocation = loc;
+        this.color = color;
+        this.buoyType = buoyType;
+        this.lastUpdate = new Date().getTime();
+        this.userUid = userUid;
     }
 
     public String getName() {
@@ -213,7 +223,7 @@ public class Buoy implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Buoy buoy = (Buoy) o;
+        DBObject buoy = (DBObject) o;
 
 
         return (_uuid != null ? _uuid.equals(buoy._uuid) : buoy._uuid == null);

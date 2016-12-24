@@ -108,7 +108,7 @@
 //            AviObject s = new AviObject();
 //            AviObject p = null;
 //            switch(rco.getType()){
-//                case Buoy:
+//                case DBObject:
 //                    s.setEnumType(ObjectTypes.TriangleBuoy);
 //                    s.name = rco.getName();
 //                    s.setAviLocation(rco.getLoc());
@@ -178,8 +178,8 @@
 //    private RaceCourseDescriptor getWindwardLeewardDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
 //        List<ObjectTypes> os = new ArrayList<>();
 //        os.add(ObjectTypes.StartFinishLine);
-//        os.add(ObjectTypes.Buoy);
-//        os.add(ObjectTypes.Buoy);
+//        os.add(ObjectTypes.DBObject);
+//        os.add(ObjectTypes.DBObject);
 //        List<DirDist> dds = new ArrayList<>();
 //        dds.add(new DirDist(0, 0.34f));
 //        dds.add(new DirDist(180, 0.66f));
@@ -193,8 +193,8 @@
 //        List<ObjectTypes> os = new ArrayList<>();
 //        os.add(ObjectTypes.StartFinishLine);
 //        os.add(ObjectTypes.Gate);
-//        os.add(ObjectTypes.Buoy);
-//        os.add(ObjectTypes.Buoy);
+//        os.add(ObjectTypes.DBObject);
+//        os.add(ObjectTypes.DBObject);
 //        os.add(ObjectTypes.Gate);
 //        os.add(ObjectTypes.FINISH_LINE);
 //        List<DirDist> dds = new ArrayList<>();
@@ -219,9 +219,9 @@
 //    private RaceCourseDescriptor getTriangularDescriptor(AviLocation startlineLoc, int windDir, int startLineLength, int commonLength) {
 //        List<ObjectTypes> os = new ArrayList<>();
 //        os.add(ObjectTypes.StartFinishLine);
-//        os.add(ObjectTypes.Buoy);
-//        os.add(ObjectTypes.Buoy);
-//        os.add(ObjectTypes.Buoy);
+//        os.add(ObjectTypes.DBObject);
+//        os.add(ObjectTypes.DBObject);
+//        os.add(ObjectTypes.DBObject);
 //        List<DirDist> dds = new ArrayList<>();
 //        dds.add(new DirDist(0, 95));
 //        dds.add(new DirDist(0, 0.414213562f));

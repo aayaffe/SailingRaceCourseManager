@@ -62,7 +62,6 @@ public class GeneralUtils {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int screenWidth = displaymetrics.widthPixels;
-        int screenHeight = displaymetrics.heightPixels;
         return screenWidth;
     }
     public static int getDeviceHeight(Activity activity) {

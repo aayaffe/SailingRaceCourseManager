@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Buoy;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -115,7 +112,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         mapView.animateCamera(CameraUpdateFactory.newLatLng(ll));
     }
 
-    public void addBuoy(Buoy buoy, String snippet) {
+    public void addBuoy(DBObject buoy, String snippet) {
         if (uuidToMarker.containsKey(buoy.getUUID())) {
             Marker currentMarker;
             currentMarker = uuidToMarker.get(buoy.getUUID());
@@ -131,7 +128,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
     }
 
-    public Marker addMark(Buoy ao, String caption, int resourceID,int zIndex) {
+    public Marker addMark(DBObject ao, String caption, int resourceID, int zIndex) {
         Marker m;
         try {
             if (uuidToMarker.containsKey(ao.getUUID())) {
@@ -154,7 +151,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return null;
     }
 
-    private Marker updateMark(Buoy ao, Marker m, String caption, int resourceID, int zIndex) {
+    private Marker updateMark(DBObject ao, Marker m, String caption, int resourceID, int zIndex) {
         if (isValid(ao)) {
             m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
             m.setZIndex(zIndex);
@@ -165,7 +162,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return m;
     }
     //TODO: merge different marker adding functions!
-    private Marker updateBuoy(Buoy ao, Marker m, String caption) {
+    private Marker updateBuoy(DBObject ao, Marker m, String caption) {
         if (isValid(ao)) {
             m.setPosition(ao.getLatLng());
             m.setSnippet(caption);
@@ -174,7 +171,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return m;
     }
 
-    private boolean isValid(Buoy ao) {
+    private boolean isValid(DBObject ao) {
         return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
     }
 
@@ -219,8 +216,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
         try {
             LatLngBounds bounds = builder.build();
-            int padding = 100; // offset from edges of the map in pixels
-            float width = GeneralUtils.getDeviceWidth(activity);
+            float width = GeneralUtils.getDeviceWidth(activity)-40;
             float height = GeneralUtils.getDeviceHeight(activity)-GeneralUtils.convertDpToPixel(150,c);
 
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, (int)width, (int)height, 0);

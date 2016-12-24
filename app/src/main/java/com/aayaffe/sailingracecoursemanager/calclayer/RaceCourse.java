@@ -26,7 +26,7 @@ public class RaceCourse implements Serializable{
     private AviLocation signalBoatLoc;
     private double startLineDist;
     private Map<String, String> selectedOptions;
-    private List<Buoy> bouyList = new ArrayList<>();
+    private List<DBObject> bouyList = new ArrayList<>();
     public transient CourseXmlParser xmlParserC;
     private UUID raceCourseUUID;
     transient Context context;
@@ -57,13 +57,13 @@ public class RaceCourse implements Serializable{
         AviLocation startLineCenter  = new AviLocation(signalBoatLoc,windDir-90,startLineDist/2);
         return new AviLocation(startLineCenter,windDir, 0.05);
     }
-    synchronized public List<Buoy> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
+    synchronized public List<DBObject> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
         Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
         bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, (float)startLineDist, raceCourseUUID);
         return bouyList;
     }
 
-    public List<Buoy> getBuoyList() {
+    public List<DBObject> getBuoyList() {
         return bouyList;
     }
 }
