@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.firebase.ui.database.FirebaseListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseBoatActivity extends AppCompatActivity {
 
@@ -30,11 +32,24 @@ public class ChooseBoatActivity extends AppCompatActivity {
         commManager = new Firebase(this);
         SetupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BoatsList);
-        mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, android.R.layout.two_line_list_item, commManager.getEventBoatsReference()) {
+        mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {
             @Override
-            protected void populateView(View view, DBObject b, int position) {
+            protected void populateView(View view, final DBObject b, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(b.getName());
                 ((TextView)view.findViewById(android.R.id.text2)).setText(getAssignedBuoysNames(b));
+                final ImageButton remove =((ImageButton)view.findViewById(R.id.remove_assignment_button));
+                List<DBObject> assigned = commManager.getAssignedBuoys(b);
+                if (assigned!=null&& assigned.size()>0)
+                {
+                    remove.setVisibility(View.VISIBLE);
+                    remove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            removeAssignment(b);
+                            remove.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
             }
         };
         boatsView.setAdapter(mAdapter);
@@ -47,6 +62,9 @@ public class ChooseBoatActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private void removeAssignment(DBObject b) {
+        commManager.removeAssignments(b);
     }
 
     private String getAssignedBuoysNames(DBObject b) {

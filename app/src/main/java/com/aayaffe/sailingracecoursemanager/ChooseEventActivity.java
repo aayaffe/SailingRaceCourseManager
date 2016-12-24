@@ -60,24 +60,28 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
+        eventsView.setItemsCanFocus(false);
         mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child("Events")) {
             @Override
             protected void populateView(View view, final Event event, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
                 String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
-                final ImageButton delete =((ImageButton)view.findViewById(R.id.delete_event_button));
+                final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
                 if (manager.equals(users.getCurrentUser())){
                     delete.setVisibility(View.VISIBLE);
+                    delete.setEnabled(true);
                     delete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             deleteEvent(event);
+
                         }
                     });
                 }
                 else {
                     delete.setVisibility(View.INVISIBLE);
+                    delete.setEnabled(false);
                 }
                 if (manager==null) {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: unknown");

@@ -359,6 +359,12 @@ public class Firebase implements ICommManager {
 
     @Override
     public void removeAssignments(DBObject b){
+        for(DBObject o: getAssignedBuoys(b)){
+            removeAssignment(o,b);
+        }
+        for(DBObject o: getAssignedBoats(b)){
+            removeAssignment(b,o);
+        }
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).removeValue();
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(b.getName()).child(c.getString(R.string.db_assinged)).removeValue();
     }
