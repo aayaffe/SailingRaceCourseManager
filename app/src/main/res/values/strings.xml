@@ -228,5 +228,6 @@
 
     <string name="default_toolbar_title">Avi Sail Race</string>
     <string name="title_sign_in_activity">Avi Sail Race</string>
+    <string name="delete_content_description">Delete</string>
 
 </resources>

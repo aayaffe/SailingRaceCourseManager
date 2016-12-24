@@ -28,4 +28,20 @@ public class User{
     public void setLastConnection(Date lastConnection) {
         this.lastConnection = lastConnection.getTime();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        User user = (User) o;
+        return Uid != null ? Uid.equals(user.Uid) : user.Uid == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Uid != null ? Uid.hashCode() : 0;
+    }
 }

@@ -378,4 +378,8 @@ public class Firebase implements ICommManager {
     public void removeBoat(UUID u) {
         fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(getObjectByUUID(u).getName()).removeValue();
     }
+    @Override
+    public void deleteEvent(Event event) {
+        fb.child(c.getString(R.string.db_events)).child(event.getName()).removeValue();
+    }
 }

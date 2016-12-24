@@ -1,11 +1,13 @@
 package com.aayaffe.sailingracecoursemanager;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,10 +62,23 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
         mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child("Events")) {
             @Override
-            protected void populateView(View view, Event event, int position) {
+            protected void populateView(View view, final Event event, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
                 String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
+                final ImageButton delete =((ImageButton)view.findViewById(R.id.delete_event_button));
+                if (manager.equals(users.getCurrentUser())){
+                    delete.setVisibility(View.VISIBLE);
+                    delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            deleteEvent(event);
+                        }
+                    });
+                }
+                else {
+                    delete.setVisibility(View.INVISIBLE);
+                }
                 if (manager==null) {
                     ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: unknown");
                 }
@@ -86,6 +102,31 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         users = new Users(commManager);
         notification.InitNotification(this);
     }
+
+    private void deleteEvent(Event event) {
+        final Event e = event;
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        commManager.deleteEvent(e);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+    }
+
+
 
     @NonNull
     private static String getDateRangeString(Event event) {
