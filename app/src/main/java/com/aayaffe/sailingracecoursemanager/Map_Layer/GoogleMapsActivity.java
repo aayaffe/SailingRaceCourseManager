@@ -415,6 +415,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             firstBoatLoad = false;
             mapLayer.ZoomToMarks();
         } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
+            firstBoatLoad = false;
             mapLayer.setZoom(10,myBoat.getLoc());
         }
     }
