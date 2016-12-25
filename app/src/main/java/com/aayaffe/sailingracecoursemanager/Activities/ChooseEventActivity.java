@@ -255,6 +255,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
     private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
         //TODO: Check that user is logged in. deal with the possibilty he is not.
+        if  (commManager.getEvent(eventNameText)!=null){
+            Log.d(TAG, "Event not(!) created. Event name exists in DB");
+            Toast t = Toast.makeText(this, "Event with that name already exist.", Toast.LENGTH_LONG);
+            t.show();
+            return;
+        }
         Event e = new Event();
         e.setName(eventNameText);
         e.setManagerUuid(users.getCurrentUser().Uid);
