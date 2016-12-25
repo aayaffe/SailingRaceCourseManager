@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Dialogs;
+package com.aayaffe.sailingracecoursemanager.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

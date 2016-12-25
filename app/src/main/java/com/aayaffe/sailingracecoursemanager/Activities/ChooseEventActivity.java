@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -23,17 +23,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
-import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
         commManager = new com.aayaffe.sailingracecoursemanager.communication.Firebase(this);
-        commManager.login(null, null, null);
+        commManager.login();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView eventsView = (ListView) findViewById(R.id.EventsList);

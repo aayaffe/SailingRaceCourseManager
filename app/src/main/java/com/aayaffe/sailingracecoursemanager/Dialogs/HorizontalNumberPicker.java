@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.inputuilayer;
+package com.aayaffe.sailingracecoursemanager.dialogs;
 
 /**
  * Created by Jonathan on 18/07/2016.
@@ -7,6 +7,8 @@ package com.aayaffe.sailingracecoursemanager.inputuilayer;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,11 +175,11 @@ public class HorizontalNumberPicker extends RelativeLayout {
         this.initialN=initialNum;
         this.number=initialNum;
         this.steps=steps;
-        setBoundarys(min, max);
+        setBoundaries(min, max);
         setNumber(number);
     }
 
-    public void setBoundarys(float min, float max){
+    public void setBoundaries(float min, float max){
         upperBoundary=max;
         lowerBoundary=min;
         upperBoundaryActivation=true;
@@ -214,4 +216,6 @@ public class HorizontalNumberPicker extends RelativeLayout {
     public boolean getLowerBoundaryActivation() {
         return lowerBoundaryActivation;
     }
+
+
 }

@@ -5,11 +5,13 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -99,7 +102,15 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             }
         });
         mapView.setOnInfoWindowClickListener(this);
+        mapView.setOnInfoWindowLongClickListener(this);
         mapView.setPadding(0, 170, 0, 0);
+        //mapView.setPadding(GeneralUtils.convertDpToPixel(10,c), GeneralUtils.convertDpToPixel(70,c), GeneralUtils.convertDpToPixel(10,c), GeneralUtils.convertDpToPixel(80,c));
+
+        boolean success = mapView.setMapStyle(MapStyleOptions.loadRawResourceStyle(c,R.raw.mapstyle_avi));
+
+        if (!success) {
+            Log.e(TAG, "Style parsing failed.");
+        }
 
 
     }
@@ -185,7 +196,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
     public void removeMark(UUID uuid){
         removeMark(uuid,true);
     }
-    void removeMark(UUID uuid, boolean removeFromDB) {
+    public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
@@ -197,7 +208,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
     }
 
-    void ZoomToMarks() {
+    public void ZoomToMarks() {
         ArrayList<Marker> ms = new ArrayList<>(uuidToMarker.values());
         if (ms.size() == 1) {
             setCenter((ms.get(0).getPosition()));
@@ -230,30 +241,14 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        clickMethods.infoWindowLongClick(uuidToMarker.inverse().get(marker));
+        clickMethods.infoWindowClick(uuidToMarker.inverse().get(marker));
     }
     @Override
     public void onInfoWindowLongClick(Marker marker) {
         try {
+            Log.d(TAG,"onInfoWindowLongClick");
             clickMethods.infoWindowLongClick(uuidToMarker.inverse().get(marker));
-            boolean isBuoy = false;
-            if (marker.getTitle().contains("BUOY"))
-                isBuoy = true;
-            if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
-                if (deleteMark) {
-                    removeMark(marker);
-                    deleteMark = false;
-                } else {
-                    Toast.makeText(c, "Press the buoys info window again to delete.", Toast.LENGTH_SHORT).show();
-                    deleteMark = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            deleteMark = false;
-                        }
-                    }, 3 * 1000);
-                }
-            }
+
         } catch (Exception e) {
             Log.d(TAG, "Failed on info click", e);
         }

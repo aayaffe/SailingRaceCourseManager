@@ -225,9 +225,24 @@
     <string name="action_exit">Exit</string>
     <string name="action_assign">Assign buoys</string>
     <string name="db_assinged">assigned</string>
-
     <string name="default_toolbar_title">Avi Sail Race</string>
     <string name="title_sign_in_activity">Avi Sail Race</string>
     <string name="delete_content_description">Delete</string>
+    <string name="googlemaps_style_json">
+        [
+  {
+    "featureType": "all",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#242f3e"
+      }
+    ]
+  }
+]
+  </string>
+    <string name="db_uuid">uuid</string>
+    <string name="apply_button_text">Apply</string>
+    <string name="cancel_button_text">Cancel</string>
 
 </resources>

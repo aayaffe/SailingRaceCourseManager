@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.inputuilayer;
+package com.aayaffe.sailingracecoursemanager.dialogs;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -23,4 +23,5 @@
     <color name="cmark_gray">#777777</color>
     <color name="cmark_gray_dark">#5e5e5e</color>
     <color name="cmark_gray_darker">#303030</color>
+    <color name="red">#FFFF4444</color>
 </resources>

@@ -48,7 +48,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public int login(String user, String password, String nickname) {
+    public int login() {
         if (fb == null) {
             fb = FirebaseDatabase.getInstance()
                     .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
@@ -420,9 +420,9 @@ public class Firebase implements ICommManager {
             }
         };
         if (subscribe) {
-            fb.child(c.getString(R.string.db_events)).child(event.getName()).addChildEventListener(eventListener);
+            fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).addChildEventListener(eventListener);
         }else{
-            fb.child(c.getString(R.string.db_events)).child(event.getName()).removeEventListener(eventListener);
+            fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).removeEventListener(eventListener);
         }
     }
 

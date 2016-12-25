@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,7 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.Dialogs.DialogUtils;
+import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.communication.CommManagerEventListener;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
@@ -25,12 +26,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        try {
-//            Thread.sleep(1500);
-//        }catch (InterruptedException e)
-//        {
-//
-//        }
         versioning = new Versioning(this);
         ICommManager commManager = new Firebase(this);
         commManager.setCommManagerEventListener(new CommManagerEventListener() {
@@ -72,9 +67,6 @@ public class SplashActivity extends AppCompatActivity {
                 dbConnected = false;
             }
         });
-        commManager.login(null, null, null);
-
-
-
+        commManager.login();
     }
 }

@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.inputuilayer;
+package com.aayaffe.sailingracecoursemanager.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;

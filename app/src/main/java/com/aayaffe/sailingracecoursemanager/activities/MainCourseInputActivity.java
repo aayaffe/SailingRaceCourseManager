@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.inputuilayer;
+package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,15 +13,16 @@ import android.widget.Button;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.BoatXmlParser;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
-import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
+import com.aayaffe.sailingracecoursemanager.dialogs.CourseTypeDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.DistanceDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.WindDirDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +33,12 @@ import java.util.Map;
  */
 public class MainCourseInputActivity extends Activity {
 
+    private static final String TAG = "MainCourseInputActivity";
     private SharedPreferences sharedPreferences;
     private ConfigChange configChange;
     SharedPreferences.Editor editor;
 
-    public CourseXmlParser xmlParserC;
-    public BoatXmlParser boatXmlParser;
+    private CourseXmlParser xmlParserC;
     private List<CourseType> coursesInfo;
     private List<Boat> boats;
     private IGeo iGeo;
@@ -56,7 +57,7 @@ public class MainCourseInputActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_course_input_activity);
+        setContentView(R.layout.activity_main_course_input);
         ICommManager comm = GoogleMapsActivity.commManager;
         Map<String,String> defaultCourseOptions  = new HashMap<>();
         defaultCourseOptions.put("type","Windward-Leeward");
@@ -69,7 +70,6 @@ public class MainCourseInputActivity extends Activity {
         windDirection = Float.parseFloat(sharedPreferences.getString("windDir", "90"));
         iGeo = new OwnLocation(getBaseContext(), this);
         xmlParserC = new CourseXmlParser(this, "courses_file.xml");
-        boatXmlParser = new BoatXmlParser(this, "boats_file.xml");
         coursesInfo = xmlParserC.parseCourseTypes();
         boats = comm.getBoatTypes();
 
@@ -116,9 +116,7 @@ public class MainCourseInputActivity extends Activity {
                     @Override
                     public void finish(float windDir) {
                         windDirection= windDir;
-                        editor = sharedPreferences.edit();
-                        editor.putString("windDir",String.valueOf(windDirection));
-                        editor.apply();
+
                     }
                 });
             }
@@ -130,10 +128,24 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("MainCourseInput","dist2m1 = "+dist2m1);
+                editor = sharedPreferences.edit();
+                editor.putString("windDir",String.valueOf(windDirection));
+                editor.apply();
                 RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength ,courseOptions);  //defultStartLine: 200m
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
                 setResult(-1, resultIntent);
+                finish();
+            }
+        });
+        Button cancelB = (Button) findViewById(R.id.cancel_race_course_input_button);
+        cancelB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"dist2m1 = "+dist2m1);
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("RACE_COURSE", rc);
+//                setResult(-1, resultIntent);
                 finish();
             }
         });

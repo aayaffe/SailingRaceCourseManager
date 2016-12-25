@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Map_Layer;
+package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -20,14 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMaps;
+import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
-import com.aayaffe.sailingracecoursemanager.Dialogs.BuoyInputDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.inputuilayer.MainCourseInputActivity;
-import com.aayaffe.sailingracecoursemanager.Manage.ChooseBoatActivity;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
@@ -73,11 +73,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
         noGps = (ImageView)findViewById(R.id.gps_indicator);
-        noGps.setColorFilter(Color.RED);
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(unc);
         commManager = new Firebase(this);
-        commManager.login(/*null, null,null*/SP.getString("username", "Manager1"), "Aa123456z", "1");
+        commManager.login();
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, SP,getClickMethods());
@@ -87,7 +86,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
         SetIconsClickListeners();
-        SetupToolbar();
+        setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),true);
         ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
@@ -100,7 +99,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         };
     }
 
-    private void SetupToolbar() {
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar!=null) {
             toolbar.setTitle("");
@@ -126,18 +125,20 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             public void infoWindowClick(UUID u) {
                 DBObject b = commManager.getObjectByUUID(u);
                 if (b==null) return;
-                //TODO: Implement something here...
-            }
-            @Override
-            public void infoWindowLongClick(UUID u) {
-                DBObject b = commManager.getObjectByUUID(u);
-                if (b==null) return;
                 if (b.equals(assignedTo))
                 { //Turn off assignment
                     assignBuoy((DBObject) null);
                 }
                 else if (isBuoy(b)){
                     assignBuoy(u);
+                }
+            }
+            @Override
+            public void infoWindowLongClick(UUID u) {
+                Log.d(TAG, "OninfowindowLongClick: "+ u.toString());
+                boolean isBuoy = isBuoy(commManager.getObjectByUUID(u));
+                if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
+                    mapLayer.removeMark(u,true);
                 }
             }
         };
@@ -165,6 +166,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private boolean isBuoy(DBObject b) {
+        if (b==null){
+            return false;
+        }
         switch (b.getBuoyType()){
             case BUOY:
             case FINISH_LINE:
@@ -596,12 +600,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return commManager.getNewBuoyId();
     }
 
-    public static void login(String id) {
-        if (commManager != null) {
-            commManager.login(id, "Aa123456z", "1");
-            Log.d(TAG, "login to " + id);
-        }
-    }
+//    public static void login(String id) {
+//        if (commManager != null) {
+//            commManager.login();
+//            Log.d(TAG, "login to " + id);
+//        }
+//    }
 
     @Override
     public void onStop() {

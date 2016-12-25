@@ -13,7 +13,7 @@ import java.util.UUID;
  * Created by aayaffe on 22/09/2015.
  */
 public interface ICommManager {
-    int login(String user, String password, String nickname);
+    int login();
 
     void setCommManagerEventListener(CommManagerEventListener listener);
 
