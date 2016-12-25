@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
@@ -567,15 +569,18 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-        df = new BuoyInputDialog().newInstance(-1, this);
+
+        df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
 
 
-    private void addMark(long id, Location loc, Float dir, double dist) {
+    private void addMark(long id, Location loc, Float dir, Float dist, BuoyType buoyType) {
         if (loc == null)
             return;
-        DBObject o = new DBObject("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
+        if (dir==null||dist==null)
+            return;
+        DBObject o = new DBObject("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, buoyType);
         o.id = id;
         addMark(o);
     }
@@ -585,27 +590,32 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
 
+    /**
+     * Add buoy dialog click
+     * @param dialog
+     */
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
+        Spinner s = (Spinner) dialog.getDialog().findViewById(R.id.select_buoy_type);
         EditText dirText = (EditText) dialog.getDialog().findViewById(R.id.dir);
         EditText distText = (EditText) dialog.getDialog().findViewById(R.id.dist);
-        long buoyId = ((BuoyInputDialog) df).buoy_id;
-        if (buoyId != -1) {
-            addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()));
-        } else
-            addMark(newBuoyId(), iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()));
+        if (dirText==null||distText==null)
+            return;
+        if (dirText.getText()==null||distText.getText()==null)
+            return;
+        if (GeneralUtils.isValid(dirText.getText().toString(),Float.class,0f,360f)&&GeneralUtils.isValid(dirText.getText().toString(),Float.class,0f,null)) {
+            long buoyId = ((BuoyInputDialog) df).buoy_id;
+            if (buoyId != -1) {
+                addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()), BuoyType.valueOf((String) s.getSelectedItem()));
+            } else
+                addMark(newBuoyId(), iGeo.getLoc(), GeneralUtils.tryParseFloat(dirText.getText().toString()), GeneralUtils.tryParseFloat(distText.getText().toString()), BuoyType.valueOf((String) s.getSelectedItem()));
+        }
     }
 
     private long newBuoyId() {
         return commManager.getNewBuoyId();
     }
 
-//    public static void login(String id) {
-//        if (commManager != null) {
-//            commManager.login();
-//            Log.d(TAG, "login to " + id);
-//        }
-//    }
 
     @Override
     public void onStop() {

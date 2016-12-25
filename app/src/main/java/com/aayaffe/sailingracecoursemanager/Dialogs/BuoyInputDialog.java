@@ -10,21 +10,29 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.aayaffe.sailingracecoursemanager.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by aayaffe on 09/02/2016.
  */
-    public class BuoyInputDialog extends DialogFragment {
+public class BuoyInputDialog extends DialogFragment {
     private static final String TAG = "BuoyInputDialog";
     public long buoy_id;
+    private List<String> buoyTypes;
     private Context c;
-    public static BuoyInputDialog newInstance(long id, Context c) {
+    public static BuoyInputDialog newInstance(long id, List<String> buoyTypes, Context c) {
         BuoyInputDialog frag = new BuoyInputDialog();
         Bundle args = new Bundle();
         args.putLong("buoy_id", id);
         frag.setArguments(args);
+        frag.buoyTypes = buoyTypes;
         frag.c = c;
         return frag;
     }
@@ -50,31 +58,31 @@ import com.aayaffe.sailingracecoursemanager.R;
         }
     }
     @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         buoy_id = getArguments().getLong("buoy_id",-1);
         String title = (buoy_id==-1)?"Add BUOY":"Edit BUOY: "+ buoy_id;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.buoy_input_dialog, null);
+        builder.setView(v)
+                .setTitle(title)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mListener.onDialogPositiveClick(BuoyInputDialog.this);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        BuoyInputDialog.this.getDialog().cancel();
+                    }
+                });
+        Spinner s = (Spinner)v.findViewById(R.id.select_buoy_type);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, buoyTypes);
 
-        // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-            View v = inflater.inflate(R.layout.buoy_input_dialog, null);
-            builder.setView(v)
-            /*builder.setView(R.layout.buoy_input_dialog)*/
-                    .setTitle(title)
-                    // Add action buttons
-                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Send the positive button event back to the host activity
-                            mListener.onDialogPositiveClick(BuoyInputDialog.this);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            BuoyInputDialog.this.getDialog().cancel();
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        s.setAdapter(adapter);
+        return builder.create();
     }
+}
 

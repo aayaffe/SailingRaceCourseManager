@@ -3,19 +3,14 @@ package com.aayaffe.sailingracecoursemanager.general;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by aayaffe on 02/10/2015.
@@ -71,4 +66,62 @@ public class GeneralUtils {
         return screenHeight;
     }
 
+    public static boolean isValid(String text, Class type, Float min, Float max) {
+        if (text==null||text.isEmpty()){
+            return false;
+        }
+        CLAZZ z = CLAZZ.valueOf(type.getSimpleName());
+        if (z==null)
+            return false;
+        switch (z) {
+            case Float:
+                Float f = tryParseFloat(text);
+                return f != null && isInBounds(f, min, max);
+            case Double:
+                Double d = tryParseDouble(text);
+                return d != null && isInBounds(d, min, max);
+            case Integer:
+                Integer i = tryParseInt(text);
+                return i != null && isInBounds(i, min, max);
+            default:
+                return false;
+        }
+    }
+    public static boolean isInBounds(Number n, Float min, Float max){
+        if (n==null)
+            return false;
+        if ((min!=null) && (n.floatValue()<min))
+                return false;
+        if ((max!=null)&&(n.floatValue()>max))
+                return false;
+        return true;
+    }
+
+    enum CLAZZ {
+        Integer,Double,Float;
+
+    }
+
+
+    public static Float tryParseFloat(String val){
+        try{
+            return Float.parseFloat(val);
+        }catch (Exception e){
+            return null;
+        }
+    }
+    public static Integer tryParseInt(String val){
+        try{
+            return Integer.parseInt(val);
+        }catch (Exception e){
+            return null;
+        }
+    }
+    public static Double tryParseDouble(String val){
+        try{
+            return Double.parseDouble(val);
+        }catch (Exception e){
+            return null;
+        }
+    }
 }
