@@ -89,6 +89,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         SetIconsClickListeners();
         SetupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
+        ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),true);
+        ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
+            @Override
+            public void onEventDeleted(Event e) {
+                ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),false);
+                Log.i(TAG,"Closing activity due to event deletion");
+                finish();
+            }
+        };
     }
 
     private void SetupToolbar() {
@@ -96,7 +105,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (toolbar!=null) {
             toolbar.setTitle("");
             setSupportActionBar(toolbar);
-            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -216,8 +225,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             v.setOnClickListener(onClickListener);
         else Log.e(TAG,"Unable to set onClickListener on view id: " + id);
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -240,7 +247,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -362,8 +368,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     };
 
-
-
     private boolean isCurrentEventManager(String Uid) {
         Event e = commManager.getEvent(currentEventName);
         if (e == null)
@@ -378,7 +382,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Event e = commManager.getEvent(currentEventName);
         if (e == null)
             return false;
-        return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty()) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
+        return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid()==null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
     }
 
     public void addBuoys() {
@@ -565,7 +569,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
 
     private void addMark(long id, Location loc, Float dir, double dist) {
-        if (loc == null) return;
+        if (loc == null)
+            return;
         DBObject o = new DBObject("BUOY" + id, new AviLocation(GeoUtils.toAviLocation(loc), dir, dist), Color.BLACK, BuoyType.BUOY);// TODO: 11/02/2016 Add bouy types
         o.id = id;
         addMark(o);
@@ -603,7 +608,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         super.onStop();
         handler.removeCallbacks(runnable);
         Log.d(TAG, "OnStop");
-//        finish();
     }
 
 

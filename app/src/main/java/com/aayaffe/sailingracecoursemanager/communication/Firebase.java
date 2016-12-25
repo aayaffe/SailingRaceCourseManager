@@ -13,6 +13,7 @@ import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -387,5 +388,46 @@ public class Firebase implements ICommManager {
     @Override
     public void deleteEvent(Event event) {
         fb.child(c.getString(R.string.db_events)).child(event.getName()).removeValue();
+    }
+
+    public void subscribeToEventDeletion(final Event event, boolean subscribe){
+        ChildEventListener eventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if (eventDeleted!=null){
+                    eventDeleted.onEventDeleted(event);
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "EventDeleted:onCancelled", databaseError.toException());
+            }
+        };
+        if (subscribe) {
+            fb.child(c.getString(R.string.db_events)).child(event.getName()).addChildEventListener(eventListener);
+        }else{
+            fb.child(c.getString(R.string.db_events)).child(event.getName()).removeEventListener(eventListener);
+        }
+    }
+
+    public EventDeleted eventDeleted;
+    public interface EventDeleted{
+        void onEventDeleted(Event e);
     }
 }

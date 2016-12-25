@@ -68,7 +68,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
                 final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
-                if (manager.equals(users.getCurrentUser())){
+                if (manager!=null && manager.equals(users.getCurrentUser())){
                     delete.setVisibility(View.VISIBLE);
                     delete.setEnabled(true);
                     delete.setOnClickListener(new View.OnClickListener() {
