@@ -170,7 +170,7 @@ public class Mark {
                 case "SATELLITE":
                     buoys.add(new DBObject(this.getName(), location, BuoyType.BUOY, raceCourseUUID));
                     buoys.add(new DBObject(this.getName() + "a", new AviLocation(location, windDir + getGateDirection(), getGateDistance()), BuoyType.TRIANGLE_BUOY, raceCourseUUID));
-                    Log.i(TAG, "buoys added, gateType START_LINE, name:" + this.getName());
+                    Log.i(TAG, "buoys added, gateType SATELLITE, name:" + this.getName());
                     break;
                 case "REFERENCE_POINT":
                     break;

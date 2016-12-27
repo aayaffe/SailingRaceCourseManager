@@ -21,8 +21,8 @@ android {
         applicationId "com.aayaffe.sailingracecoursemanager"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 22
-        versionName "1.46"
+        versionCode 23
+        versionName "1.47"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

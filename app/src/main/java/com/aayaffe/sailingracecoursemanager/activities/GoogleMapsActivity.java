@@ -39,6 +39,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,6 +92,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         SetIconsClickListeners();
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
+        FirebaseCrash.log("Current event name = " + currentEventName);
         ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),true);
         ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
             @Override
@@ -150,6 +153,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         assignBuoy(commManager.getObjectByUUID(u));
     }
     private void assignBuoy(DBObject b){
+        if (myBoat==null){
+            return;
+        }
         if (b==null){
             TextView tv = (TextView) findViewById(R.id.goto_text_view);
             if(tv!=null) {
@@ -361,7 +367,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
             }
 
-            ArrayList<DBObject> assignedBuoys = commManager.getAssignedBuoys(myBoat);
+            List<DBObject> assignedBuoys = commManager.getAssignedBuoys(myBoat);
             if (assignedBuoys==null||assignedBuoys.size()==0)
                 assignedBuoy = null;
             else

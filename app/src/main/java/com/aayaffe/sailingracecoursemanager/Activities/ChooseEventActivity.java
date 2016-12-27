@@ -308,6 +308,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 }
                 ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
                 addEventItem.setEnabled(false);
+                addEventItem.setVisibility(View.INVISIBLE);
             }catch (Exception e){
                 Log.e(TAG,"Error logging in", e);
             }
@@ -320,6 +321,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 logItem.setTitle("Logout");
                 ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
                 addEventItem.setEnabled(true);
+                addEventItem.setVisibility(View.VISIBLE);
 
             }catch (Exception e){
                 Log.e(TAG,"Error logging out.", e);

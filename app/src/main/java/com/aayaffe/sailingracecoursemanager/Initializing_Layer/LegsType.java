@@ -50,7 +50,8 @@ public class LegsType {
     }
 
     public void setCourseFactor(int index, double factor){
-        if(index<courseFactors.length)courseFactors[index]=factor;
+        if(index<courseFactors.length)
+            courseFactors[index]=factor;
         else Log.w("CourseType class", "setCourseFactor: out of factors");
 
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
@@ -13,6 +14,7 @@ import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -294,9 +296,12 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public ArrayList<DBObject> getAssignedBuoys(DBObject b) {
+    public List<DBObject> getAssignedBuoys(DBObject b) {
         ArrayList<DBObject> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        if (b==null)
+            return ret;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
             DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
             if (o!=null)
@@ -391,34 +396,36 @@ public class Firebase implements ICommManager {
     }
 
     public void subscribeToEventDeletion(final Event event, boolean subscribe){
+        if (event==null) {
+
+            FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName: " + GoogleMapsActivity.commManager.getCurrentEventName()));
+            return;
+        }
         ChildEventListener eventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 if (eventDeleted!=null){
                     eventDeleted.onEventDeleted(event);
                 }
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "EventDeleted:onCancelled", databaseError.toException());
             }
         };
+
         if (subscribe) {
             fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).addChildEventListener(eventListener);
         }else{

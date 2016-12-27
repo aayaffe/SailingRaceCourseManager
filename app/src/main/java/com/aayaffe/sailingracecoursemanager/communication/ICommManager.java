@@ -47,7 +47,7 @@ public interface ICommManager {
 
     void setCurrentEventName(String currentEventName);
 
-    ArrayList<DBObject> getAssignedBuoys(DBObject b);
+    List<DBObject> getAssignedBuoys(DBObject b);
 
     ArrayList<DBObject> getAssignedBoats(DBObject b);
 

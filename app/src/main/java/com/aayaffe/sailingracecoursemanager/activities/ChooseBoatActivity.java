@@ -68,7 +68,7 @@ public class ChooseBoatActivity extends AppCompatActivity {
     }
 
     private String getAssignedBuoysNames(DBObject b) {
-        ArrayList<DBObject> buoys = commManager.getAssignedBuoys(b);
+        List<DBObject> buoys = commManager.getAssignedBuoys(b);
         String ret = "";
         StringBuilder sb = new StringBuilder();
         for(DBObject buoy:buoys){
