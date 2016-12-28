@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -50,6 +49,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
     private Boolean exit = false;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +145,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     protected void onStart() {
         super.onStart();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if ((auth.getCurrentUser() ==null)&&(!loggedIn)){
+        if (auth.getCurrentUser()!=null)
+            loggedIn = true;
+        if ((auth.getCurrentUser() == null)&&(!loggedIn)){
             startActivityForResult(
                     AuthUI.getInstance().createSignInIntentBuilder()
                             .setProviders(getSelectedProviders())
@@ -153,7 +155,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                             .build(),
                     RC_SIGN_IN);
         }
-
     }
     private List<String> getGooglePermissions() {
         List<String> result = new ArrayList<>();
@@ -170,16 +171,18 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                             .build());
         return selectedProviders;
     }
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(Menu menu){
+        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_event_toolbar, menu);
         if (loggedIn)
         {
-            enableLogin(false);
+            enableLogin(menu,false);
         }
         else{
-            enableLogin(true);
+            enableLogin(menu, true);
         }
         return true;
     }
@@ -194,7 +197,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             case R.id.action_logout:
                 if (loggedIn) {
                     users.logout();
-                    enableLogin(true);
+                    enableLogin(menu, true);
                 }
                 else{
                     startActivityForResult(
@@ -224,7 +227,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private void handleSignInResponse(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Log.d(TAG, "Logged in: " +FirebaseAuth.getInstance().getCurrentUser().getUid());
-            enableLogin(false);
+            enableLogin(menu, false);
             return;
         }
 
@@ -298,17 +301,17 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
     }
 
-    private void enableLogin(boolean toLogin){
+    private void enableLogin(Menu menu, boolean toLogin){
         if (toLogin) {
             try {
-                ActionMenuItemView logItem = (ActionMenuItemView) findViewById(R.id.action_logout);
+                MenuItem logItem = menu.findItem(R.id.action_logout);//(ActionMenuItemView) findViewById(R.id.action_logout);
                 if (logItem!=null) {
                     logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
                     logItem.setTitle("Login");
                 }
-                ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
                 addEventItem.setEnabled(false);
-                addEventItem.setVisibility(View.INVISIBLE);
+                addEventItem.setVisible(false);
             }catch (Exception e){
                 Log.e(TAG,"Error logging in", e);
             }
@@ -316,12 +319,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
         else{
             try {
-                ActionMenuItemView logItem = (ActionMenuItemView) findViewById(R.id.action_logout);
+                MenuItem logItem = menu.findItem(R.id.action_logout);
                 logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
                 logItem.setTitle("Logout");
-                ActionMenuItemView addEventItem = (ActionMenuItemView) findViewById(R.id.action_add_event);
+                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
                 addEventItem.setEnabled(true);
-                addEventItem.setVisibility(View.VISIBLE);
+                addEventItem.setVisible(true);
 
             }catch (Exception e){
                 Log.e(TAG,"Error logging out.", e);

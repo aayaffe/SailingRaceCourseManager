@@ -1,7 +1,9 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.content.Context;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
@@ -215,7 +217,10 @@ public class Firebase implements ICommManager {
     }
 
     @Override
+    @Nullable
     public User findUser(String uid) {
+        if (uid==null || ds ==null)
+            return null;
         try {
             User u;
             u = ds.child(c.getString(R.string.db_users)).child(uid).getValue(User.class);
@@ -426,28 +431,16 @@ public class Firebase implements ICommManager {
             FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName: " + GoogleMapsActivity.commManager.getCurrentEventName()));
             return;
         }
-        ChildEventListener eventListener = new ChildEventListener() {
+        ValueEventListener valeventListener = new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(c.getString(R.string.db_uuid)) && eventDeleted!=null)
-                {
-                    if (eventDeleted!=null){
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null) {
+                    if (eventDeleted != null) {
                         eventDeleted.onEventDeleted(event);
                     }
                 }
             }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "EventDeleted:onCancelled", databaseError.toException());
@@ -455,9 +448,9 @@ public class Firebase implements ICommManager {
         };
         if (event.getName()!=null) {
             if (subscribe) {
-                fb.child(c.getString(R.string.db_events)).child(event.getName()).addChildEventListener(eventListener);
+                fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).addValueEventListener(valeventListener);
             } else {
-                fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).removeEventListener(eventListener);
+                fb.child(c.getString(R.string.db_events)).child(event.getName()).child(c.getString(R.string.db_uuid)).removeEventListener(valeventListener);
             }
         }
     }

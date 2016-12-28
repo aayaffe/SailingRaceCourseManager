@@ -15,9 +15,7 @@ public class Event {
     private UUID _uuid;
     private int lastBuoyId;
     private String eventManager;
-    @Exclude
     private HashMap<String,DBObject> boats;
-    @Exclude
     private HashMap<String,DBObject> buoys;
     public int yearStart;
     public int yearEnd;
