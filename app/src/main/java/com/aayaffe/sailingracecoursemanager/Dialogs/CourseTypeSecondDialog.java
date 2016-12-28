@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.Arrays;
@@ -95,7 +95,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public void addLegsSpinner(LinearLayout layout){
-        if(courseType.getLegsTypes().size()>1){  //if there is only one legsType, there is no selection...
+        if(courseType.getRaceCourseLegs().size()>1){  //if there is only one legsType, there is no selection...
             TextView textView = new TextView(context);  //set value name on a TextView
             textView.setText("Legs");
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -114,7 +114,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     redrawOptionsViews(position);
-                    factorResult=courseType.getLegsTypes().get(position).getCourseFactors();
+                    factorResult=courseType.getRaceCourseLegs().get(position).getCourseFactors();
                     selectedOptions.put("Legs", courseType.getLegsNames()[position]);
                 }
                 @Override
@@ -127,8 +127,8 @@ public class CourseTypeSecondDialog extends Dialog {
 
     public void redrawOptionsViews(int legsIndex){
         ownLayout.removeAllViews();
-        if(courseType.getLegsTypes().size()>0 && courseType.getLegsTypes().get(legsIndex).getOptions().size()>0){
-            List<String[]> options = courseType.getLegsTypes().get(legsIndex).getOptions();
+        if(courseType.getRaceCourseLegs().size()>0 && courseType.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
+            List<String[]> options = courseType.getRaceCourseLegs().get(legsIndex).getOptions();
             for (int c = 0; c < options.size(); c++) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
                 TextView textView = new TextView(context);  //set value name on a TextView
                 textView.setText(options.get(c)[0]);

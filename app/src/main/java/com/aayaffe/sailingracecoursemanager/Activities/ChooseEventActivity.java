@@ -61,14 +61,14 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         setSupportActionBar(toolbar);
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
         eventsView.setItemsCanFocus(false);
-        mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child("Events")) {
+        mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child(getString(R.string.db_events))) {
             @Override
             protected void populateView(View view, final Event event, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
                 String dates = getDateRangeString(event);
                 User manager = commManager.findUser(event.getManagerUuid());
                 final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
-                if (manager!=null && manager.equals(users.getCurrentUser())){
+                if ((manager!=null && manager.equals(users.getCurrentUser()))||users.isAdmin(users.getCurrentUser())){
                     delete.setVisibility(View.VISIBLE);
                     delete.setEnabled(true);
                     delete.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +84,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                     delete.setEnabled(false);
                 }
                 if (manager==null) {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: unknown");
+                    ((TextView) view.findViewById(android.R.id.text2)).setText(getString(R.string.race_officer) + ": " +getString(R.string.unknown));
                 }
                 else {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText("Race Officer: " + manager.DisplayName);
+                    ((TextView) view.findViewById(android.R.id.text2)).setText(getString(R.string.race_officer) + ": " + manager.DisplayName);
                 }
                 ((TextView) view.findViewById(R.id.text3)).setText(dates);
             }

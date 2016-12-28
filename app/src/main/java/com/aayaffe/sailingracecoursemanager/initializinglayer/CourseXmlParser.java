@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
+package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import android.content.Context;
 import android.util.Log;
 
@@ -154,7 +154,7 @@ public class CourseXmlParser {
     private List<CourseType> getCourseTypes(XmlPullParser xmlPullParser) {
         int event;
         List<CourseType> courseTypes = new ArrayList<>();
-        List<LegsType> legsTypes = new ArrayList<>(); // this is not a Spaghetti! maybe Penne or other italian names.
+        List<RaceCourseLeg> raceCourseLegs = new ArrayList<>(); // this is not a Spaghetti! maybe Penne or other italian names.
         List<String[]> options = new ArrayList<>();
         try {
             event = xmlPullParser.getEventType();
@@ -170,12 +170,12 @@ public class CourseXmlParser {
                         switch (name){
                             case "Course":
                                 options = new ArrayList<>();
-                                legsTypes = new ArrayList<>();
+                                raceCourseLegs = new ArrayList<>();
                                 attributeHolder = safeAttributeValue("type");
                                 courseTypes.add(new CourseType(attributeHolder));
                                 break;
                             case "Legs":
-                                legsTypes.add(new LegsType(xmlPullParser.getAttributeValue(null, "name")));
+                                raceCourseLegs.add(new RaceCourseLeg(xmlPullParser.getAttributeValue(null, "name")));
                                 options = new ArrayList<>();
                                 break;
                             case "Mark":  //check 'isGatable' deeply
@@ -198,19 +198,19 @@ public class CourseXmlParser {
                     case XmlPullParser.END_TAG:
                         switch (name) {
                             case "Upwind":
-                                legsTypes.get(legsTypes.size()-1).setCourseFactor(0, Double.parseDouble(valueHolder));
+                                raceCourseLegs.get(raceCourseLegs.size()-1).setCourseFactor(0, Double.parseDouble(valueHolder));
                                 break;
                             case "Downwind":
-                                legsTypes.get(legsTypes.size()-1).setCourseFactor(1, Double.parseDouble(valueHolder));
+                                raceCourseLegs.get(raceCourseLegs.size()-1).setCourseFactor(1, Double.parseDouble(valueHolder));
                                 break;
                             case "Reach":
-                                legsTypes.get(legsTypes.size()-1).setCourseFactor(2, Double.parseDouble(valueHolder));
+                                raceCourseLegs.get(raceCourseLegs.size()-1).setCourseFactor(2, Double.parseDouble(valueHolder));
                                 break;
                             case "Legs":
-                                legsTypes.get(legsTypes.size()-1).setOptions(options);
+                                raceCourseLegs.get(raceCourseLegs.size()-1).setOptions(options);
                                 break;
                             case "Course":
-                                courseTypes.get(courseTypes.size()-1).setLegsTypes(legsTypes);
+                                courseTypes.get(courseTypes.size()-1).setRaceCourseLegs(raceCourseLegs);
                                 break;
                         }
                         break;
@@ -228,13 +228,15 @@ public class CourseXmlParser {
     //Both methods don't let nulls to be parsed out of the .xml files
     private String safeAttributeValue(String keyName) {
         String value = parser.getAttributeValue(null, keyName);
-        if (value != null) return value;
+        if (value != null)
+            return value;
         Log.w(TAG, "null attribute for keyName: " + keyName);
         return "_";  // TODO: the '_' char is just for debug, remove before use.
     }
     private String safeTextValue() {
         String value = parser.getText();
-        if (value != null) return value;
+        if (value != null)
+            return value;
         Log.w(TAG, "null text found");
         return "_";  // TODO: the '_' char is just for debug, remove before use.
     }

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;

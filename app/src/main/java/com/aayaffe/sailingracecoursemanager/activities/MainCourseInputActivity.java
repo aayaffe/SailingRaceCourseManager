@@ -12,9 +12,9 @@ import android.widget.Button;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseXmlParser;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;

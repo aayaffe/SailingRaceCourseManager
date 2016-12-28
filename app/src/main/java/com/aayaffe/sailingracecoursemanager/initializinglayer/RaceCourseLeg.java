@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Initializing_Layer;
+package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,17 +11,16 @@ import java.util.List;
 /*
     legType represent a sub-type of a race course. for example, the trapezoid-"reach is half beat".
     the legTypes class is designed to contain special options for every legType
-
-    String name - a name to represent the legType
-    List<String[]> options - the list of possible options (gates...)
-    double[] courseFactors - array of the relations between the sum of every leg(upwind, downwind, reach). 1 is equal to the 1st leg length
  */
-public class LegsType {
+public class RaceCourseLeg {
     private String name;
     private List<String[]> options= new ArrayList<>(); //{name, view to contain options, option1, option2, ...}
+    /**
+     * double[] courseFactors - array of the relations between the sum of every leg(upwind, downwind, reach). 1 is equal to the 1st leg length
+     */
     public double[] courseFactors = {1,1,0};
 
-    public LegsType (String name){
+    public RaceCourseLeg(String name){
         this.name=name;
     }
 
@@ -29,10 +28,18 @@ public class LegsType {
         this.name = name;
     }
 
+    /**
+     *
+     * @return a name to represent the legType
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return the list of possible options (gates...)
+     */
     public List<String[]> getOptions() {
         return options;
     }

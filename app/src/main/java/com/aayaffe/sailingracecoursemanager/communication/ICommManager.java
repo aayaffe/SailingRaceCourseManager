@@ -2,8 +2,9 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,4 +65,8 @@ public interface ICommManager {
     void removeBoat(UUID u);
 
     void deleteEvent(Event event);
+
+    void addRaceCourseDescriptor(CourseType ct);
+
+    boolean isAdmin(User u);
 }

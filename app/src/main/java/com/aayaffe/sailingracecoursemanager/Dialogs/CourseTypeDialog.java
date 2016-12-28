@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;

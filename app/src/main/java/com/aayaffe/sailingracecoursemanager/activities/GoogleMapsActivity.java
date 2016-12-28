@@ -364,7 +364,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 noGps.setVisibility(View.INVISIBLE);
             } else {
                 noGps.setVisibility(View.VISIBLE);
-
             }
 
             List<DBObject> assignedBuoys = commManager.getAssignedBuoys(myBoat);
@@ -432,7 +431,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             mapLayer.ZoomToMarks();
         } else if ((firstBoatLoad) && (mapLayer.mapView != null)){
             firstBoatLoad = false;
-            mapLayer.setZoom(10,myBoat.getLoc());
+            if (myBoat!=null) {
+                mapLayer.setZoom(10, myBoat.getLoc());
+            }
         }
     }
 

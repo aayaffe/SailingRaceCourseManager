@@ -244,5 +244,9 @@
     <string name="db_uuid">uuid</string>
     <string name="apply_button_text">Apply</string>
     <string name="cancel_button_text">Cancel</string>
+    <string name="db_race_course_descriptors">RaceCourseDescriptors</string>
+    <string name="race_officer">"Race Officer"</string>
+    <string name="unknown">unknown</string>
+    <string name="db_admins">Admins</string>
 
 </resources>

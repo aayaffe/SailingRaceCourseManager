@@ -47,4 +47,9 @@ public class Users {
         currentUser = null;
         commManager.logout();
     }
+
+
+    public boolean isAdmin(User u){
+        return commManager.isAdmin(u);
+    }
 }

@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.Initializing_Layer.Boat;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
