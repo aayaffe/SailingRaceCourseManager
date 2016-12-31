@@ -5,9 +5,9 @@ package com.aayaffe.sailingracecoursemanager.communication;
  * This enum describes all the actions that can be sent from a worker boat
  */
 public enum RaceManagerAction {
-    DropMark,
-    CollectMark,
-    Leave,
-    Connect,
-    Disconnect
+    DROP_MARK,
+    COLLECT_MARK,
+    LEAVE,
+    CONNECT,
+    DISCONNECT
 }

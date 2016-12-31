@@ -2,13 +2,16 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import android.content.Context;
 import android.util.Log;
 
+import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
+import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +28,7 @@ public class CourseXmlParser {
     private XmlPullParserFactory xmlFactory;
     private Context context;
     private String url;
-    private List<CourseType> courseTypes;
+    private List<RaceCourseDescriptor> raceCourseDescriptors;
     private XmlPullParser parser;
 
     public CourseXmlParser(Context context, String url) {
@@ -52,7 +55,7 @@ public class CourseXmlParser {
         return result;
     }
 
-    public List<CourseType> parseCourseTypes(){
+    public List<RaceCourseDescriptor> parseCourseTypes(){
         try {
             InputStream stream = context.getApplicationContext().getAssets().open(url);
             xmlFactory = XmlPullParserFactory.newInstance();
@@ -60,12 +63,15 @@ public class CourseXmlParser {
 
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(stream, null);
-            courseTypes = getCourseTypes(parser);
+            raceCourseDescriptors = getCourseTypes(parser);
+            for (RaceCourseDescriptor rcd: raceCourseDescriptors){
+                GoogleMapsActivity.commManager.addRaceCourseDescriptor(rcd);
+            }
             stream.close();
         } catch (Exception e) {
             Log.e(TAG,"Error parsing course types",e);
         }
-        return courseTypes;
+        return raceCourseDescriptors;
     }
 
     private Mark getMarks(XmlPullParser xmlPullParser, Map<String, String> selectedOptions) {
@@ -151,11 +157,11 @@ public class CourseXmlParser {
         return referenceMark;
     }
 
-    private List<CourseType> getCourseTypes(XmlPullParser xmlPullParser) {
+    private List<RaceCourseDescriptor> getCourseTypes(XmlPullParser xmlPullParser) {
         int event;
-        List<CourseType> courseTypes = new ArrayList<>();
+        List<RaceCourseDescriptor> raceCourseDescriptors = new ArrayList<>();
         List<RaceCourseLeg> raceCourseLegs = new ArrayList<>(); // this is not a Spaghetti! maybe Penne or other italian names.
-        List<String[]> options = new ArrayList<>();
+        List<List<String>> options = new ArrayList<>();
         try {
             event = xmlPullParser.getEventType();
             String attributeHolder;
@@ -172,7 +178,7 @@ public class CourseXmlParser {
                                 options = new ArrayList<>();
                                 raceCourseLegs = new ArrayList<>();
                                 attributeHolder = safeAttributeValue("type");
-                                courseTypes.add(new CourseType(attributeHolder));
+                                raceCourseDescriptors.add(new RaceCourseDescriptor(attributeHolder));
                                 break;
                             case "Legs":
                                 raceCourseLegs.add(new RaceCourseLeg(xmlPullParser.getAttributeValue(null, "name")));
@@ -181,11 +187,11 @@ public class CourseXmlParser {
                             case "Mark":  //check 'isGatable' deeply
                                 if (safeAttributeValue("isGatable").equals("true")){  //the is an optional gate
                                         attributeHolder = xmlPullParser.getAttributeValue(null, "gateType");  //attributeHolder restarts
-                                        String[] gatable = {"", "toggle"};
+                                        List<String> gatable = new ArrayList<>(Arrays.asList("", "toggle"));
                                         if (attributeHolder != null)
-                                            gatable[0] = xmlPullParser.getAttributeValue(null, "name") + " " + attributeHolder;
+                                            gatable.set(0, xmlPullParser.getAttributeValue(null, "name") + " " + attributeHolder);
                                         else
-                                            gatable[0] = xmlPullParser.getAttributeValue(null, "name") + " GATE";
+                                            gatable.set(0, xmlPullParser.getAttributeValue(null, "name") + " GATE");
                                         options.add(gatable);
                                     }
                                 break;
@@ -210,7 +216,7 @@ public class CourseXmlParser {
                                 raceCourseLegs.get(raceCourseLegs.size()-1).setOptions(options);
                                 break;
                             case "Course":
-                                courseTypes.get(courseTypes.size()-1).setRaceCourseLegs(raceCourseLegs);
+                                raceCourseDescriptors.get(raceCourseDescriptors.size()-1).setRaceCourseLegs(raceCourseLegs);
                                 break;
                         }
                         break;
@@ -221,7 +227,7 @@ public class CourseXmlParser {
         } catch (Exception e) {
             Log.e(TAG,"Error getCourseTypes",e);
         }
-        return courseTypes;
+        return raceCourseDescriptors;
     }
 
 

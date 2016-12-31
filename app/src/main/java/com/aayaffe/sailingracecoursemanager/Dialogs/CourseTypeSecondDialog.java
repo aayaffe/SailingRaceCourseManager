@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.Arrays;
@@ -31,17 +31,17 @@ public class CourseTypeSecondDialog extends Dialog {
     private Context context;
     private LinearLayout ownLayout;
     private OnMyDialogResult mDialogResult;
-    private CourseType courseType;
+    private RaceCourseDescriptor raceCourseDescriptor;
     private Button finishB;
-    private double[] factorResult;
+    private List<Double> factorResult;
     private Map<String, String> selectedOptions = new HashMap<>();  //map of the selected settings
 
 
 
-    public CourseTypeSecondDialog(Context context, CourseType courseType) {
+    public CourseTypeSecondDialog(Context context, RaceCourseDescriptor raceCourseDescriptor) {
         super(context);
         this.context = context;
-        this.courseType=courseType;
+        this.raceCourseDescriptor = raceCourseDescriptor;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CourseTypeSecondDialog extends Dialog {
         super.setContentView(R.layout.course_type_second_dialog);
 
         TextView titleV=(TextView) findViewById(R.id.second_dialog_title);   //set dialog title
-        titleV.setText(courseType.getName() + " Course Options");
+        titleV.setText(raceCourseDescriptor.getName() + " Course Options");
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleV.setGravity(Gravity.CENTER);
 
@@ -67,7 +67,7 @@ public class CourseTypeSecondDialog extends Dialog {
         finishB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedOptions.put("type", courseType.getName());
+                selectedOptions.put("type", raceCourseDescriptor.getName());
                 for (int i = 0; i < ownLayout.getChildCount() - 1; i = i + 2) {
                     TextView tv = (TextView) ownLayout.getChildAt(i);
                     switch (ownLayout.getChildAt(i + 1).getClass().toString()) {
@@ -95,7 +95,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public void addLegsSpinner(LinearLayout layout){
-        if(courseType.getRaceCourseLegs().size()>1){  //if there is only one legsType, there is no selection...
+        if(raceCourseDescriptor.getRaceCourseLegs().size()>1){  //if there is only one legsType, there is no selection...
             TextView textView = new TextView(context);  //set value name on a TextView
             textView.setText("Legs");
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -104,7 +104,7 @@ public class CourseTypeSecondDialog extends Dialog {
             layout.addView(textView);
 
             final Spinner dropdown = new Spinner(context);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, courseType.getLegsNames());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, raceCourseDescriptor.getLegsNames());
             dropdown.setAdapter(adapter);
             dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             textView.setGravity(Gravity.CENTER);
@@ -114,8 +114,8 @@ public class CourseTypeSecondDialog extends Dialog {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     redrawOptionsViews(position);
-                    factorResult=courseType.getRaceCourseLegs().get(position).getCourseFactors();
-                    selectedOptions.put("Legs", courseType.getLegsNames()[position]);
+                    factorResult = raceCourseDescriptor.getRaceCourseLegs().get(position).getCourseFactors();
+                    selectedOptions.put("Legs", raceCourseDescriptor.getLegsNames()[position]);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parentView) {
@@ -127,21 +127,21 @@ public class CourseTypeSecondDialog extends Dialog {
 
     public void redrawOptionsViews(int legsIndex){
         ownLayout.removeAllViews();
-        if(courseType.getRaceCourseLegs().size()>0 && courseType.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
-            List<String[]> options = courseType.getRaceCourseLegs().get(legsIndex).getOptions();
+        if(raceCourseDescriptor.getRaceCourseLegs().size()>0 && raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
+            List<List<String>> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
             for (int c = 0; c < options.size(); c++) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
                 TextView textView = new TextView(context);  //set value name on a TextView
-                textView.setText(options.get(c)[0]);
+                textView.setText(options.get(c).get(0));
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 textView.setTextSize(25);
                 textView.setGravity(Gravity.CENTER);
 
                 ownLayout.addView(textView);
                 View setterBox = null;
-                switch (options.get(c)[1]) {   //set an input view to get the value from the user
+                switch (options.get(c).get(1)) {   //set an input view to get the value from the user
                     case "spinner":
                         Spinner dropdown = new Spinner(context);
-                        String[] items = Arrays.copyOfRange(options.get(c), 2, options.get(c).length);
+                        String[] items = (String[])options.get(c).subList(2,options.get(c).size()).toArray();//Arrays.copyOfRange(options.get(c), 2, options.get(c).size());
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, items);
                         dropdown.setAdapter(adapter);
                         dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -178,7 +178,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, String> result, double[] factorResult);
+        void finish(Map<String, String> result, List<Double> factorResult);
     }
 
 }

@@ -107,6 +107,7 @@ public class GeneralUtils {
         try{
             return Float.parseFloat(val);
         }catch (Exception e){
+            Log.d(TAG, "Failed to parse Float");
             return null;
         }
     }
@@ -114,6 +115,7 @@ public class GeneralUtils {
         try{
             return Integer.parseInt(val);
         }catch (Exception e){
+            Log.d(TAG, "Failed to parse Integer");
             return null;
         }
     }
@@ -121,7 +123,16 @@ public class GeneralUtils {
         try{
             return Double.parseDouble(val);
         }catch (Exception e){
+            Log.d(TAG, "Failed to parse Double");
             return null;
         }
+    }
+
+    public static boolean isNull (Object... objects){
+        for (Object o : objects){
+            if (o==null)
+                return true;
+        }
+        return false;
     }
 }

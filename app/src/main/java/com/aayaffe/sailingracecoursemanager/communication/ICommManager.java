@@ -2,11 +2,11 @@ package com.aayaffe.sailingracecoursemanager.communication;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +20,8 @@ public interface ICommManager {
 
     int writeBoatObject(DBObject o);
     int writeBuoyObject(DBObject o);
+
+    int updateBoatLocation(Event e, DBObject boat, AviLocation loc);
 
     List<DBObject> getAllBoats();  //ships
     List<DBObject> getAllBuoys();  //Just buoys, without ships
@@ -50,7 +52,7 @@ public interface ICommManager {
 
     List<DBObject> getAssignedBuoys(DBObject b);
 
-    ArrayList<DBObject> getAssignedBoats(DBObject b);
+    List<DBObject> getAssignedBoats(DBObject b);
 
     DBObject getBoat(String currentBoatName);
 
@@ -66,7 +68,9 @@ public interface ICommManager {
 
     void deleteEvent(Event event);
 
-    void addRaceCourseDescriptor(CourseType ct);
+    void addRaceCourseDescriptor(RaceCourseDescriptor ct);
+
+    List<RaceCourseDescriptor> getRaceCourseDescriptors();
 
     boolean isAdmin(User u);
 }

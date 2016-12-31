@@ -16,6 +16,8 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,7 +45,7 @@ public class DistanceDialog extends Dialog {
     private float factor = 1.5f; //Start line multi factor
 
     private List<Boat> boats;  //list of boats
-    private double[] courseFactors = {1,1,0};
+    private List<Double> courseFactors = new ArrayList<>(Arrays.asList(1d,1d,0d));
 
     public DistanceDialog(Context context, List<Boat> boats) {
         super(context);
@@ -51,11 +53,12 @@ public class DistanceDialog extends Dialog {
         this.boats= boats;
     }
 
-    public DistanceDialog(Context context, List<Boat> boats ,double[] courseFactors) {
+    public DistanceDialog(Context context, List<Boat> boats ,List<Double> courseFactors) {
         super(context);
         this.context=context;
         this.boats= boats;
-        if(courseFactors!=null)this.courseFactors=courseFactors;
+        if(courseFactors!=null)
+            this.courseFactors=courseFactors;
     }
 
     @Override
@@ -141,10 +144,10 @@ public class DistanceDialog extends Dialog {
         void finish(double result, double startLineLength);
     }
 
-    public double calcDistByClassWind (Boat boat, double wind, double targetTime, double[] lengthFactors){  //finds the first leg length, since it equals 1 in the factor.
+    public double calcDistByClassWind (Boat boat, double wind, double targetTime, List<Double> lengthFactors){  //finds the first leg length, since it equals 1 in the factor.
         double sigmaTime= 0;
         for(int i=0;i<3;i++){
-            sigmaTime += (lengthFactors[i]*boat.getVmg()[wind2Index(wind)][i]); //TODO
+            sigmaTime += (lengthFactors.get(i)*boat.getVmg()[wind2Index(wind)][i]); //TODO
         }
         return sigmaTime>0?targetTime/sigmaTime:0;
     }

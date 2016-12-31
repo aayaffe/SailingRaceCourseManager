@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
@@ -21,9 +21,9 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
     private Context context;
     private OnMyDialogResult mDialogResult;
-    private List<CourseType> coursesList;
+    private List<RaceCourseDescriptor> coursesList;
 
-    public CourseTypeDialog(Context context, List<CourseType> coursesList){
+    public CourseTypeDialog(Context context, List<RaceCourseDescriptor> coursesList){
         super(context);
         this.context=context;
         this.coursesList=coursesList;
@@ -45,11 +45,11 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
     }
 
     @Override
-    public void onRecyclerItemClick(CourseType courseType){
-        CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context,courseType);
+    public void onRecyclerItemClick(RaceCourseDescriptor raceCourseDescriptor){
+        CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context, raceCourseDescriptor);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {
-            public void finish(Map<String, String> result , double[] factorResult) {
+            public void finish(Map<String, String> result , List<Double> factorResult) {
                 mDialogResult.finish(result, factorResult);
             }
         });
@@ -62,7 +62,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
 
     public interface OnMyDialogResult{
-        void finish(Map<String, String> result , double[] factorResult);
+        void finish(Map<String, String> result , List<Double> factorResult);
     }
 
 }

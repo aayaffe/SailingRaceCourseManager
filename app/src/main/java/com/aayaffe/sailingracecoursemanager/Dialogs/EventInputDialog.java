@@ -65,7 +65,7 @@ public class EventInputDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         eventName = getArguments().getString("eventName", "");
-        String title = "Add new Event";//(buoy_id==-1)?"Add BUOY":"Edit BUOY: "+ buoy_id;
+        String title = "Add new Event";//(buoyId==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -248,5 +248,8 @@
     <string name="race_officer">"Race Officer"</string>
     <string name="unknown">unknown</string>
     <string name="db_admins">Admins</string>
+    <string name="nautical_miles_unit_symbol">NM</string>
+    <string name="metre_unit_symbol">m</string>
+    <string name="no_gps">NoGPS</string>
 
 </resources>

@@ -15,22 +15,22 @@ import android.widget.Spinner;
 
 import com.aayaffe.sailingracecoursemanager.R;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by aayaffe on 09/02/2016.
  */
 public class BuoyInputDialog extends DialogFragment {
     private static final String TAG = "BuoyInputDialog";
-    public long buoy_id;
+    public long buoyId;
     private List<String> buoyTypes;
     private Context c;
+    BuoyInputDialogListener mListener;
+
     public static BuoyInputDialog newInstance(long id, List<String> buoyTypes, Context c) {
         BuoyInputDialog frag = new BuoyInputDialog();
         Bundle args = new Bundle();
-        args.putLong("buoy_id", id);
+        args.putLong("buoyId", id);
         frag.setArguments(args);
         frag.buoyTypes = buoyTypes;
         frag.c = c;
@@ -41,7 +41,6 @@ public class BuoyInputDialog extends DialogFragment {
         void onDialogPositiveClick(DialogFragment dialog);
     }
     // Use this instance of the interface to deliver action events
-    BuoyInputDialogListener mListener;
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
     public void onAttach(Activity activity) {
@@ -59,8 +58,8 @@ public class BuoyInputDialog extends DialogFragment {
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        buoy_id = getArguments().getLong("buoy_id",-1);
-        String title = (buoy_id==-1)?"Add BUOY":"Edit BUOY: "+ buoy_id;
+        buoyId = getArguments().getLong("buoyId",-1);
+        String title = (buoyId ==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.buoy_input_dialog, null);
@@ -77,7 +76,7 @@ public class BuoyInputDialog extends DialogFragment {
                     }
                 });
         Spinner s = (Spinner)v.findViewById(R.id.select_buoy_type);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, buoyTypes);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

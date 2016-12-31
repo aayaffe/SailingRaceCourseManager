@@ -1,7 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
 import android.content.Context;
-import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -9,16 +8,16 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.crash.FirebaseCrash;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +44,8 @@ public class Firebase implements ICommManager {
     private Users users;
     private CommManagerEventListener listener;
     private boolean connected = false;
+    public EventDeleted eventDeleted;
+
 
     public Firebase(Context c) {
         if (this.c ==null)
@@ -132,13 +133,14 @@ public class Firebase implements ICommManager {
      * @return email's user name only without '.', '#', '$', '[', or ']'
      */
     private String convertToAcceptableDisplayName(String email) {
-        email = email.replace('.',' ');
-        email = email.replace('#',' ');
-        email = email.replace('$',' ');
-        email = email.replace('[',' ');
-        email = email.replace(']',' ');
-        int index = email.indexOf('@');
-        return email.substring(0,index);
+        String e  = email;
+        e = e.replace('.',' ');
+        e = e.replace('#',' ');
+        e = e.replace('$',' ');
+        e = e.replace('[',' ');
+        e = e.replace(']',' ');
+        int index = e.indexOf('@');
+        return e.substring(0,index);
     }
 
     @Override
@@ -159,12 +161,15 @@ public class Firebase implements ICommManager {
     }
 
     private boolean isEventExist(String name){
+        if (name == null || name.isEmpty())
+            return false;
         return ds.child(c.getString(R.string.db_events)).hasChild(name);
     }
 
     @Override
     public int writeBuoyObject(DBObject o) {
-        if (o == null || o.getName() == null || o.getName().isEmpty()|| currentEventName == null) return -1;
+        if (o == null || o.getName() == null || o.getName().isEmpty()|| currentEventName == null)
+            return -1;
         if (isEventExist(currentEventName)) {
             fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(o.getName()).setValue(o);
             fb.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
@@ -175,9 +180,29 @@ public class Firebase implements ICommManager {
     }
 
     @Override
+    public int updateBoatLocation(Event e, DBObject boat, AviLocation loc) {
+        if(loc==null)
+            return -1;
+        if (isBoatExist(e,boat)){
+            fb.child(c.getString(R.string.db_events)).child(e.getName()).child(c.getString(R.string.db_boats)).child(boat.getName()).child("aviLocation").setValue(loc);
+            return 0;
+        }
+        return -1;
+    }
+
+    private boolean isBoatExist(Event e, DBObject boat) {
+        if (e==null || !isEventExist(e.getName()))
+            return false;
+        if (boat == null || boat.getName()==null || boat.getName().isEmpty())
+            return false;
+        return ds.child(c.getString(R.string.db_events)).child(e.getName()).child(c.getString(R.string.db_boats)).hasChild(boat.getName());
+    }
+
+    @Override
     public List<DBObject> getAllBoats() {
         ArrayList<DBObject> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).getChildren()) {
             DBObject o = ps.getValue(DBObject.class);
             ret.add(o);
@@ -188,7 +213,8 @@ public class Firebase implements ICommManager {
     @Override
     public List<DBObject> getAllBuoys() {
         ArrayList<DBObject> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).getChildren()) {
             DBObject o = ps.getValue(DBObject.class);
             ret.add(o);
@@ -204,7 +230,8 @@ public class Firebase implements ICommManager {
 
     @Override
     public long getNewBuoyId() {
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return 1;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return 1;
         Long id = (Long) ds.child(c.getString(R.string.db_events)).child(getCurrentEventName()).child(c.getString(R.string.db_lastbuoyid)).getValue();
         if (id != null) {
             return id + 1;
@@ -258,17 +285,20 @@ public class Firebase implements ICommManager {
 
     @Override
     public long getSupportedVersion() {
-        if (ds == null || ds.getValue() == null) return -1;
+        if (ds == null || ds.getValue() == null)
+            return -1;
         return (long)ds.child(c.getString(R.string.db_compatible_version)).getValue();
     }
 
     @Override
     public DBObject getObjectByUUID(UUID u) {
         for(DBObject b: getAllBoats()){
-            if (b.getUUID().equals(u)) return b;
+            if (b.getUUID().equals(u))
+                return b;
         }
         for(DBObject b: getAllBuoys()){
-            if (b.getUUID().equals(u)) return b;
+            if (b.getUUID().equals(u))
+                return b;
         }
         return null;
     }
@@ -328,9 +358,10 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public ArrayList<DBObject> getAssignedBoats(DBObject b) {
+    public List<DBObject> getAssignedBoats(DBObject b) {
         ArrayList<DBObject> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ret;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(b.getName()).child(c.getString(R.string.db_assinged)).getChildren()) {
             DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
             if (o!=null)
@@ -341,13 +372,15 @@ public class Firebase implements ICommManager {
 
     @Override
     public DBObject getBoat(String boatName) {
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return null;
         return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_boats)).child(boatName).getValue(DBObject.class);
     }
 
     @Override
     public void assignBuoy(DBObject boat, String selectedBuoyName) {
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return ;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return ;
         DBObject buoy = getBuoy(selectedBuoyName);
         if(buoy==null){
             Log.e(TAG,"Error finding buoy for assignment");
@@ -370,7 +403,8 @@ public class Firebase implements ICommManager {
     }
 
     private DBObject getBuoy(String selectedBuoyName) {
-        if (ds == null || ds.getValue() == null|| currentEventName == null) return null;
+        if (ds == null || ds.getValue() == null|| currentEventName == null)
+            return null;
         return ds.child(c.getString(R.string.db_events)).child(currentEventName).child(c.getString(R.string.db_buoys)).child(selectedBuoyName).getValue(DBObject.class);
     }
 
@@ -395,7 +429,8 @@ public class Firebase implements ICommManager {
     @Override
     public List<Boat> getBoatTypes() {
         ArrayList<Boat> ret = new ArrayList<>();
-        if (ds == null || ds.getValue() == null) return ret;
+        if (ds == null || ds.getValue() == null)
+            return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_boattypes)).getChildren()) {
             Boat b = ps.getValue(Boat.class);
             ret.add(b);
@@ -413,8 +448,20 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public void addRaceCourseDescriptor(CourseType ct) {
+    public void addRaceCourseDescriptor(RaceCourseDescriptor ct) {
         fb.child(c.getString(R.string.db_race_course_descriptors)).child(ct.getName()).setValue(ct);
+    }
+
+    @Override
+    public List<RaceCourseDescriptor> getRaceCourseDescriptors(){
+        List<RaceCourseDescriptor> ret = new ArrayList<>();
+        if (ds == null || ds.getValue() == null)
+            return ret;
+        for (DataSnapshot ps : ds.child(c.getString(R.string.db_race_course_descriptors)).getChildren()) {
+            RaceCourseDescriptor b = ps.getValue(RaceCourseDescriptor.class);
+            ret.add(b);
+        }
+        return ret;
     }
 
     @Override
@@ -434,10 +481,8 @@ public class Firebase implements ICommManager {
         ValueEventListener valeventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null) {
-                    if (eventDeleted != null) {
-                        eventDeleted.onEventDeleted(event);
-                    }
+                if (dataSnapshot.getValue()==null && eventDeleted != null) {
+                    eventDeleted.onEventDeleted(event);
                 }
             }
 
@@ -455,8 +500,10 @@ public class Firebase implements ICommManager {
         }
     }
 
-    public EventDeleted eventDeleted;
     public interface EventDeleted{
         void onEventDeleted(Event e);
     }
+
+
+
 }
