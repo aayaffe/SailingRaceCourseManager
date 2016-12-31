@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.text.DecimalFormat;
 
@@ -150,7 +151,11 @@ public class HorizontalNumberPicker extends RelativeLayout {
 
     public float getNumber() {
         String s = numberTV.getText().toString();
-        number = Float.parseFloat(s);
+        Float f = GeneralUtils.tryParseFloat(s);
+        if (f==null)
+            number = 0;
+        else
+            number = f;
         return number;
     }
 

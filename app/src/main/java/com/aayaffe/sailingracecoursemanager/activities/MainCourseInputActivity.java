@@ -13,7 +13,7 @@ import android.widget.Button;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
@@ -38,13 +38,12 @@ public class MainCourseInputActivity extends Activity {
     private ConfigChange configChange;
     SharedPreferences.Editor editor;
 
-    private CourseXmlParser xmlParserC;
-    private List<CourseType> coursesInfo;
+    private List<RaceCourseDescriptor> coursesInfo;
     private List<Boat> boats;
     private IGeo iGeo;
 
 
-    private static double[] courseFactors;
+    private static List<Double> courseFactors;
     private static Map<String,String> courseOptions;
     private static float dist2m1 = 1;
     private static float startLineLength = 0.11f;
@@ -69,7 +68,7 @@ public class MainCourseInputActivity extends Activity {
         configChange = new ConfigChange();
         windDirection = Float.parseFloat(sharedPreferences.getString("windDir", "90"));
         iGeo = new OwnLocation(getBaseContext(), this);
-        xmlParserC = new CourseXmlParser(this, "courses_file.xml");
+        CourseXmlParser xmlParserC = new CourseXmlParser(this, "courses_file.xml");
         coursesInfo = xmlParserC.parseCourseTypes();
         boats = comm.getBoatTypes();
 
@@ -81,7 +80,7 @@ public class MainCourseInputActivity extends Activity {
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(Map<String, String> result, double[] factorResult) {
+                    public void finish(Map<String, String> result, List<Double> factorResult) {
                         courseOptions=result;
                         courseFactors=factorResult;
                     }
@@ -96,6 +95,7 @@ public class MainCourseInputActivity extends Activity {
                 DistanceDialog dialog = new DistanceDialog(context , boats, courseFactors);
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
+                    @Override
                     public void finish(double result,double startLine) {
                         //something to do
                         dist2m1 = (float) result;
@@ -143,9 +143,6 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"dist2m1 = "+dist2m1);
-//                Intent resultIntent = new Intent();
-//                resultIntent.putExtra("RACE_COURSE", rc);
-//                setResult(-1, resultIntent);
                 finish();
             }
         });

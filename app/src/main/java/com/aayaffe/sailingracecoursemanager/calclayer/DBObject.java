@@ -12,6 +12,7 @@ import com.google.firebase.database.Exclude;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,19 +25,20 @@ public class DBObject implements Serializable {
     public Long lastUpdate;
     public long id;
     public String userUid;
-    private UUID _uuid;
-    private UUID _raceCourseUUID;
+    private UUID uuid;
+    private UUID raceCourseUUID;
     private BuoyType buoyType;
-    public HashMap<String,String> assigned;
+    public Map<String,String> assigned;
+
 
     public static final int ORANGE = 0xf49842;
 
     public DBObject() {
-        _uuid = UUID.randomUUID();
+        uuid = UUID.randomUUID();
     }
 
     public DBObject(String name, AviLocation loc) {
-        _uuid = UUID.randomUUID();
+        uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.lastUpdate = new Date().getTime();
@@ -44,31 +46,40 @@ public class DBObject implements Serializable {
     }
 
     public DBObject(String name, AviLocation loc, BuoyType buoyType, UUID raceCourseUUID) {
-        _uuid = UUID.randomUUID();
+        uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
-        this._raceCourseUUID = raceCourseUUID;
-
+        this.raceCourseUUID = raceCourseUUID;
         switch (buoyType) {
             case FINISH_LINE:
                 this.color = Color.BLUE;
                 break;
+            case FLAG_BUOY:
+            case START_FINISH_LINE:
             case START_LINE:
                 this.color = ORANGE;
                 break;
+            case TRIANGLE_BUOY:
             case GATE:
                 this.color = Color.YELLOW;
                 break;
+            case RACE_MANAGER:
+                break;
+            case TOMATO_BUOY:
             case BUOY:
                 this.color = Color.RED;
                 break;
+            case WORKER_BOAT:
+            case REFERENCE_POINT:
+            case OTHER:
+                this.color = Color.BLACK;
         }
     }
 
     public DBObject(String name, AviLocation loc, int color, BuoyType buoyType) {
-        _uuid = UUID.randomUUID();
+        uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.color = color;
@@ -76,7 +87,7 @@ public class DBObject implements Serializable {
         this.lastUpdate = new Date().getTime();
     }
     public DBObject(String name, AviLocation loc, int color, BuoyType buoyType, String userUid) {
-        _uuid = UUID.randomUUID();
+        uuid = UUID.randomUUID();
         this.name = name;
         this.aviLocation = loc;
         this.color = color;
@@ -117,32 +128,32 @@ public class DBObject implements Serializable {
 
     @Exclude
     public UUID getRaceCourseUUID() {
-        return _raceCourseUUID;
+        return raceCourseUUID;
     }
     @Exclude
-    public void setRaceCourseUUID(UUID _raceCourseUUID) {
-        this._raceCourseUUID = _raceCourseUUID;
+    public void setRaceCourseUUID(UUID raceCourseUUID) {
+        this.raceCourseUUID = raceCourseUUID;
     }
 
     @Exclude
     public UUID getUUID() {
-        return _uuid;
+        return uuid;
     }
 
     public void setRCUuidString(String uuid) {
-        this._raceCourseUUID = UUID.fromString(uuid);
+        this.raceCourseUUID = UUID.fromString(uuid);
     }
     public String getRCUuidString() {
-        if (_raceCourseUUID!=null)
-            return this._raceCourseUUID.toString();
+        if (raceCourseUUID !=null)
+            return this.raceCourseUUID.toString();
         else return null;
     }
 
     public void setUuidString(String uuid) {
-        this._uuid = UUID.fromString(uuid);
+        this.uuid = UUID.fromString(uuid);
     }
     public String getUuidString() {
-        return this._uuid.toString();
+        return this.uuid.toString();
     }
 
 
@@ -209,10 +220,8 @@ public class DBObject implements Serializable {
                 case Color.YELLOW:
                     return R.mipmap.triangle_buoy_yellow;
                 case ORANGE:
-                    return R.mipmap.triangle_buoy_orange;
                 default:
-                    return R.mipmap.triangle_buoy;
-
+                    return R.mipmap.triangle_buoy_orange;
             }
         } else
             return R.mipmap.tomato_buoy_black_empty;
@@ -220,13 +229,15 @@ public class DBObject implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         DBObject buoy = (DBObject) o;
 
 
-        return (_uuid != null ? _uuid.equals(buoy._uuid) : buoy._uuid == null);
+        return uuid != null ? uuid.equals(buoy.uuid) : buoy.uuid == null;
 
 
     }
@@ -234,8 +245,8 @@ public class DBObject implements Serializable {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (_uuid != null ? _uuid.hashCode() : 0);
-        result = 31 * result + (_raceCourseUUID != null ? _raceCourseUUID.hashCode() : 0);
+        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (raceCourseUUID != null ? raceCourseUUID.hashCode() : 0);
         result = 31 * result + (buoyType != null ? buoyType.hashCode() : 0);
         return result;
     }

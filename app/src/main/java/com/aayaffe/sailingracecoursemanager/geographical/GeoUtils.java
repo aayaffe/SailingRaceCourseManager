@@ -26,7 +26,6 @@ public class GeoUtils {
         ret.setLatitude(l.lat);
         ret.setLongitude(l.lon);
         ret.setBearing(l.cog);
-        ret.setAltitude(l.depth);
         return ret;
     }
 
@@ -57,7 +56,7 @@ public class GeoUtils {
     static public AviLocation toAviLocation(Location l){
         if (l==null)
             return null;
-        return new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),l.getAltitude(),new Date(l.getTime()));
+        return new AviLocation(l.getLatitude(),l.getLongitude(),l.getBearing(),l.getSpeed(),new Date(l.getTime()));
     }
 
     public static AviLocation getLocationFromDirDist(AviLocation loc, float dir, int distm) {

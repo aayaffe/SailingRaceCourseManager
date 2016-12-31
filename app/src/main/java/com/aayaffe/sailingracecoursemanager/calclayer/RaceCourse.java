@@ -27,7 +27,7 @@ public class RaceCourse implements Serializable{
     private double startLineDist;
     private Map<String, String> selectedOptions;
     private List<DBObject> bouyList = new ArrayList<>();
-    public transient CourseXmlParser xmlParserC;
+    private transient CourseXmlParser xmlParserC;
     private UUID raceCourseUUID;
     transient Context context;
 
@@ -35,7 +35,6 @@ public class RaceCourse implements Serializable{
     public RaceCourse(){
         //Empty constructor for Serializing to firebase
     }
-    //TODO: Change all architecture - bad use of static variables!
     public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineLength,Map<String, String> selectedCourseOptions ){
         this.context = context;
         if(signalBoatLoc!=null)
@@ -57,7 +56,7 @@ public class RaceCourse implements Serializable{
         AviLocation startLineCenter  = new AviLocation(signalBoatLoc,windDir-90,startLineDist/2);
         return new AviLocation(startLineCenter,windDir, 0.05);
     }
-    synchronized public List<DBObject> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
+    public synchronized List<DBObject> convertMarks2Buoys(){ //converts all data into the a list of BUOY class
         Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
         bouyList = referenceMark.parseBuoys(referencePointLoc(), dist2m1, windDir, (float)startLineDist, raceCourseUUID);
         return bouyList;

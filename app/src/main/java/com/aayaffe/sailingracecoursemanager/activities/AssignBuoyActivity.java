@@ -39,9 +39,9 @@ public class AssignBuoyActivity extends AppCompatActivity {
             protected void populateView(View view, final DBObject b, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(b.getName());
                 ((TextView)view.findViewById(android.R.id.text2)).setText(getAssignedBoatName(b));
-                final ImageButton remove =((ImageButton)view.findViewById(R.id.remove_assignment_button));
+                final ImageButton remove =(ImageButton)view.findViewById(R.id.remove_assignment_button);
                 List<DBObject> assigned = commManager.getAssignedBoats(b);
-                if (assigned!=null&& assigned.size()>0)
+                if (assigned!=null && !assigned.isEmpty())
                 {
                     remove.setVisibility(View.VISIBLE);
                     remove.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +59,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedBuoyName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                
+
                 commManager.assignBuoy(currentBoat,selectedBuoyName);
                 onBackPressed();
             }
@@ -71,10 +71,10 @@ public class AssignBuoyActivity extends AppCompatActivity {
     }
 
     private String getAssignedBoatName(DBObject b) {
-        ArrayList<DBObject> boats = commManager.getAssignedBoats(b);
+        List<DBObject> boats = commManager.getAssignedBoats(b);
         if (boats==null)
             return "";
-        if (boats.size()==0)
+        if (boats.isEmpty())
             return "";
         if (boats.get(0)!=null)
             return boats.get(0).getName();

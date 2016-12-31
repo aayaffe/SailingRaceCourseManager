@@ -104,10 +104,12 @@ public class GeneralUtils {
 
 
     public static Float tryParseFloat(String val){
+        if (val==null||val.isEmpty())
+            return null;
         try{
             return Float.parseFloat(val);
         }catch (Exception e){
-            Log.d(TAG, "Failed to parse Float");
+            Log.e(TAG, "Failed to parse Float",e);
             return null;
         }
     }
@@ -115,7 +117,7 @@ public class GeneralUtils {
         try{
             return Integer.parseInt(val);
         }catch (Exception e){
-            Log.d(TAG, "Failed to parse Integer");
+            Log.e(TAG, "Failed to parse Integer",e);
             return null;
         }
     }
@@ -123,7 +125,7 @@ public class GeneralUtils {
         try{
             return Double.parseDouble(val);
         }catch (Exception e){
-            Log.d(TAG, "Failed to parse Double");
+            Log.e(TAG, "Failed to parse Double",e);
             return null;
         }
     }

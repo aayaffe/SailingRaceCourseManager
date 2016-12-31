@@ -19,8 +19,8 @@ public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeL
     {
         Log.v("ConfigChange", "Configuration key " + key + " Changed.");
         if (key.equals("refreshRate")){
-            GoogleMapsActivity.REFRESH_RATE = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
-            Log.d(TAG, "New refresh rate is: " + GoogleMapsActivity.REFRESH_RATE);
+            GoogleMapsActivity.refreshRate = Integer.parseInt(sharedPreferences.getString("refreshRate","10"))*1000;
+            Log.d(TAG, "New refresh rate is: " + GoogleMapsActivity.refreshRate);
         }
 
 

@@ -33,6 +33,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         notification.InitNotification(this);
     }
 
-    private void deleteEvent(Event event) {
+    public void deleteEvent(Event event) {
         final Event e = event;
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -118,8 +119,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
+                    default:
                         //No button clicked
                         break;
+
                 }
             }
         };
@@ -133,7 +136,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
 
     @NonNull
-    private static String getDateRangeString(Event event) {
+    public static String getDateRangeString(Event event) {
         if (event.monthEnd == 0 || event.dayEnd == 0 || event.yearStart == 0 || event.monthStart == 0 || event.dayStart == 0 || event.yearEnd == 0)
             return "";
         if (event.dayStart == event.dayEnd && event.monthStart == event.monthEnd && event.yearStart == event.yearEnd)
@@ -148,12 +151,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (auth.getCurrentUser()!=null)
             loggedIn = true;
         if ((auth.getCurrentUser() == null)&&(!loggedIn)){
-            startActivityForResult(
-                    AuthUI.getInstance().createSignInIntentBuilder()
-                            .setProviders(getSelectedProviders())
-                            .setLogo(R.mipmap.banner)
-                            .build(),
-                    RC_SIGN_IN);
+            startLoginActivity();
         }
     }
     private List<String> getGooglePermissions() {
@@ -199,14 +197,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                     users.logout();
                     enableLogin(menu, true);
                 }
-                else{
-                    startActivityForResult(
-                            AuthUI.getInstance().createSignInIntentBuilder()
-                                    .setProviders(getSelectedProviders())
-                                    .setLogo(R.mipmap.banner)
-                                    .build(),
-                            RC_SIGN_IN);
-                }
+                else startLoginActivity();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -215,16 +206,25 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
     }
 
+    private void startLoginActivity() {
+        startActivityForResult(
+                AuthUI.getInstance().createSignInIntentBuilder()
+                        .setProviders(getSelectedProviders())
+                        .setLogo(R.mipmap.banner)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            handleSignInResponse(resultCode, data);
+            handleSignInResponse(resultCode);
         }
 
     }
-    private void handleSignInResponse(int resultCode, Intent data) {
+    private void handleSignInResponse(int resultCode) {
         if (resultCode == RESULT_OK) {
             Log.d(TAG, "Logged in: " +FirebaseAuth.getInstance().getCurrentUser().getUid());
             enableLogin(menu, false);
@@ -245,35 +245,41 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
-        if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().equals(""))){
-            addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
+        if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().isEmpty())){
+            if (!eventNameText.getText().toString().matches(".*[\\.\\#\\$\\[\\]]+.*"))
+                addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
         }
         else {
             Log.d(TAG, "Event not(!) created.");
-            Toast t = Toast.makeText(this, "Unable to use this name", Toast.LENGTH_LONG);
+            Toast t = Toast.makeText(this, "Event name not acceptable", Toast.LENGTH_LONG);
             t.show();
         }
 
     }
 
     private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
-        //TODO: Check that user is logged in. deal with the possibilty he is not.
-        if  (commManager.getEvent(eventNameText)!=null){
-            Log.d(TAG, "Event not(!) created. Event name exists in DB");
-            Toast t = Toast.makeText(this, "Event with that name already exist.", Toast.LENGTH_LONG);
-            t.show();
-            return;
+        if (users.getCurrentUser()!=null) {
+            if (commManager.getEvent(eventNameText) != null) {
+                Log.d(TAG, "Event not(!) created. Event name exists in DB");
+                Toast t = Toast.makeText(this, "Event with that name already exist.", Toast.LENGTH_LONG);
+                t.show();
+                return;
+            }
+            Event e = new Event();
+            e.setName(eventNameText);
+            e.setManagerUuid(users.getCurrentUser().Uid);
+            e.yearStart = yearStart;
+            e.yearEnd = yearEnd;
+            e.monthStart = monthStart;
+            e.monthEnd = monthEnd;
+            e.dayStart = dayStart;
+            e.dayEnd = dayEnd;
+            commManager.writeEvent(e);
         }
-        Event e = new Event();
-        e.setName(eventNameText);
-        e.setManagerUuid(users.getCurrentUser().Uid);
-        e.yearStart = yearStart;
-        e.yearEnd = yearEnd;
-        e.monthStart = monthStart;
-        e.monthEnd = monthEnd;
-        e.dayStart = dayStart;
-        e.dayEnd = dayEnd;
-        commManager.writeEvent(e);
+        else {
+            FirebaseCrash.logcat(Log.DEBUG, TAG,"User not logged in tried to add new activity");
+            FirebaseCrash.report(new Exception("User not logged in tried to add new activity"));
+        }
     }
 
     @Override
@@ -304,7 +310,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private void enableLogin(Menu menu, boolean toLogin){
         if (toLogin) {
             try {
-                MenuItem logItem = menu.findItem(R.id.action_logout);//(ActionMenuItemView) findViewById(R.id.action_logout);
+                MenuItem logItem = menu.findItem(R.id.action_logout);
                 if (logItem!=null) {
                     logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
                     logItem.setTitle("Login");

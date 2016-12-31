@@ -16,7 +16,6 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.firebase.ui.database.FirebaseListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseBoatActivity extends AppCompatActivity {
@@ -30,16 +29,16 @@ public class ChooseBoatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_boat);
         commManager = new Firebase(this);
-        SetupToolbar();
+        setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BoatsList);
         mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {
             @Override
             protected void populateView(View view, final DBObject b, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText(b.getName());
                 ((TextView)view.findViewById(android.R.id.text2)).setText(getAssignedBuoysNames(b));
-                final ImageButton remove =((ImageButton)view.findViewById(R.id.remove_assignment_button));
+                final ImageButton remove =(ImageButton)view.findViewById(R.id.remove_assignment_button);
                 List<DBObject> assigned = commManager.getAssignedBuoys(b);
-                if (assigned!=null&& assigned.size()>0)
+                if (assigned!=null&& !assigned.isEmpty())
                 {
                     remove.setVisibility(View.VISIBLE);
                     remove.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +76,7 @@ public class ChooseBoatActivity extends AppCompatActivity {
         return ret;
     }
 
-    private void SetupToolbar() {
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar==null) {
             Log.e(TAG,"Unable to find toolbar view.");

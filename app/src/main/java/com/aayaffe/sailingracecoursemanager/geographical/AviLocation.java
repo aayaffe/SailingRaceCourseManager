@@ -15,7 +15,6 @@ public class AviLocation implements Serializable {
     public double lon;
     public double sog = 0;
     public float cog = 0;
-    public double depth = 0;
     public Long lastUpdate;
 
     public AviLocation() {
@@ -62,12 +61,11 @@ public class AviLocation implements Serializable {
     }
 
 
-    public AviLocation(double Lat, double Lng,  float cog, double sog, double depth, Date lastUpdate) {
+    public AviLocation(double Lat, double Lng,  float cog, double sog, Date lastUpdate) {
         lat = Lat;
         lon = Lng;
         this.sog = sog;
         this.cog = cog;
-        this.depth = depth;
         this.lastUpdate = lastUpdate.getTime();
 
     }
@@ -118,15 +116,16 @@ public class AviLocation implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AviLocation that = (AviLocation) o;
-
-        if (Double.compare(that.lat, lat) != 0) return false;
-        if (Double.compare(that.lon, lon) != 0) return false;
-        if (Double.compare(that.sog, sog) != 0) return false;
-        return Float.compare(that.cog, cog) == 0 && Double.compare(that.depth, depth) == 0;
+        if (Double.compare(that.lat, lat) != 0)
+            return false;
+        if (Double.compare(that.lon, lon) != 0)
+            return false;
+        return Double.compare(that.sog, sog) == 0 && Float.compare(that.cog, cog) == 0;
 
     }
 
@@ -141,8 +140,6 @@ public class AviLocation implements Serializable {
         temp = Double.doubleToLongBits(sog);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (cog != +0.0f ? Float.floatToIntBits(cog) : 0);
-        temp = Double.doubleToLongBits(depth);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 

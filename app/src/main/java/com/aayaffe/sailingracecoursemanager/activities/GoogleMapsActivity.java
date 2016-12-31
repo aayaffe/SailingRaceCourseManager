@@ -1,12 +1,16 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.DialogFragment;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,11 +39,11 @@ import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
+import com.aayaffe.sailingracecoursemanager.geographical.GPSService;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
@@ -51,14 +55,14 @@ import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
 
-    public static List<DBObject> buoys; //replaces public static marks marks = new marks();
+    public static List<DBObject> buoys;
     public static List<DBObject> boats;
     private DBObject myBoat; //instead of AviObject class
 
     private static final String TAG = "GoogleMapsActivity";
-    public static int REFRESH_RATE = 1000;
+    public static int refreshRate = 1000;
     private static Users users;
-    private SharedPreferences SP;
+    private SharedPreferences sharedPreferences;
     private GoogleMaps mapLayer;
     private ConfigChange unc = new ConfigChange();
     private IGeo iGeo;
@@ -69,27 +73,31 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private static String currentEventName;
     private boolean firstBoatLoad = true;
     private DBObject assignedTo = null;
-    static public final int NEW_RACE_COURSE_REQUEST = 770;
+    public static final int NEW_RACE_COURSE_REQUEST = 770;
     private ImageView noGps;
+    private DBObject assignedBuoy;
+    GPSService mService;
+    boolean mBound = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_maps);
         noGps = (ImageView)findViewById(R.id.gps_indicator);
-        SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SP.registerOnSharedPreferenceChangeListener(unc);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
         commManager = new Firebase(this);
         commManager.login();
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
-        mapLayer.Init(this, this, SP,getClickMethods());
+        mapLayer.Init(this, this, sharedPreferences,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
 
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
-        SetIconsClickListeners();
+        setIconsClickListeners();
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
@@ -102,6 +110,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 finish();
             }
         };
+        Intent intent = new Intent(this, GPSService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void setupToolbar() {
@@ -129,7 +139,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             @Override
             public void infoWindowClick(UUID u) {
                 DBObject b = commManager.getObjectByUUID(u);
-                if (b==null) return;
+                if (b==null)
+                    return;
                 if (b.equals(assignedTo))
                 { //Turn off assignment
                     assignBuoy((DBObject) null);
@@ -187,12 +198,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case TOMATO_BUOY:
             case TRIANGLE_BUOY:
                 return true;
+            case RACE_MANAGER:
+            case WORKER_BOAT:
+            case REFERENCE_POINT:
+            case OTHER:
+                return false;
         }
         return false;
     }
 
-    private void SetIconsClickListeners() {
-        SetOnClickListenerToView(new View.OnClickListener() {
+    private void setIconsClickListeners() {
+        setOnClickListenerToView(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -202,7 +218,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
             }
         }, R.id.own_location);
-        SetOnClickListenerToView(new View.OnClickListener() {
+        setOnClickListenerToView(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -212,7 +228,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
             }
         }, R.id.zoom_to_bounds);
-        SetOnClickListenerToView(new View.OnClickListener() {
+        setOnClickListenerToView(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -231,7 +247,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
      * @param onClickListener
      * @param id
      */
-    private void SetOnClickListenerToView(View.OnClickListener onClickListener, int id) {
+    private void setOnClickListenerToView(View.OnClickListener onClickListener, int id) {
         View v = findViewById(id);
         if(v!=null)
             v.setOnClickListener(onClickListener);
@@ -271,16 +287,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return true;
 
             case R.id.action_add_race_course:
-                AddRaceCourseItemClick();
+                addRaceCourseItemClick();
                 firstBoatLoad = true;
                 return true;
             case R.id.action_assign_buoys:
-                OpenAssignBuoyActvity();
+                openAssignBuoyActvity();
                 return true;
             case R.id.action_exit:
-                //System.exit(0);
                 finish();
-                //System.exit(0);
                 return true;
 
             default:
@@ -291,13 +305,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private void AddRaceCourseItemClick() {
+    private void addRaceCourseItemClick() {
         Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
 
-    private void OpenAssignBuoyActvity() {
+    private void openAssignBuoyActvity() {
         Intent intent = new Intent(getApplicationContext(), ChooseBoatActivity.class);
         startActivity(intent);
     }
@@ -315,7 +329,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onResume() {
         super.onResume();
-        //addRaceCourse();
         Log.w(TAG, "onResume");
     }
 
@@ -336,7 +349,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private DBObject assignedBuoy;
     private Runnable runnable = new Runnable() {
         private DBObject getMyBoat(String name){
             for (DBObject ao : commManager.getAllBoats()) {
@@ -346,6 +358,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
             return null;
         }
+        @Override
         public void run() {
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
@@ -367,26 +380,26 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
 
             List<DBObject> assignedBuoys = commManager.getAssignedBuoys(myBoat);
-            if (assignedBuoys==null||assignedBuoys.size()==0)
+            if (assignedBuoys==null||assignedBuoys.isEmpty())
                 assignedBuoy = null;
             else
                 assignedBuoy = assignedBuoys.get(0);
             drawMapComponents();
-            handler.postDelayed(runnable, (Integer.parseInt(SP.getString("refreshRate", "5")) * 1000));
+            handler.postDelayed(runnable, Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000);
             //assignBuoy(assignedTo);
             assignBuoy(assignedBuoy);
 
         }
     };
 
-    private boolean isCurrentEventManager(String Uid) {
+    private boolean isCurrentEventManager(String uid) {
         Event e = commManager.getEvent(currentEventName);
         if (e == null)
             return false;
-        if (Uid == null || Uid.isEmpty())
+        if (uid == null || uid.isEmpty())
             return false;
         Log.d(TAG, "Checking for event " + currentEventName + " manager: " + commManager.getEvent(currentEventName).getManagerUuid());
-        return e.getManagerUuid() != null && e.getManagerUuid().equals(Uid);
+        return e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
     }
 
     public static boolean isCurrentEventManager() {
@@ -411,7 +424,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         removeOldMarkers(boats, buoys);
         for (DBObject boat : boats) {
-            //TODO: Handle in case of user is logged out or when database does not contain current user.
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
                 int id = getIconId(users.getCurrentUser().DisplayName, boat);
                 mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
@@ -527,15 +539,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         String units;
         try {
             distance = src.distanceTo(dst) < 1700 ? src.distanceTo(dst) : (src.distanceTo(dst) / 1609.34);
-            units = src.distanceTo(dst) < 1700 ? "m" : "NM";
+            units = src.distanceTo(dst) < 1700 ? getString(R.string.metre_unit_symbol) : getString(R.string.nautical_miles_unit_symbol);
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
         } catch (NullPointerException e) {
             Log.e(TAG,"No gps found", e);
-            return "NoGPS";
+            return getString(R.string.no_gps);
         }
         if (bearing==360)
             bearing = 0;
-        if (units.equals("NM"))
+        if (units.equals(getString(R.string.nautical_miles_unit_symbol)))
             return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.1f", distance) + units;
         return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.0f", distance) + units;
     }
@@ -551,8 +563,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void updateWindArrow() {
-        wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
-        Float rotation = Float.parseFloat(SP.getString("windDir", "90"));
+        wa = new WindArrow((ImageView) findViewById(R.id.windArrow));
+        Float rotation = Float.parseFloat(sharedPreferences.getString("windDir", "90"));
         Log.d(TAG, "New wind arrow rotation is " + rotation);
         wa.setDirection(rotation);
     }
@@ -564,15 +576,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == NEW_RACE_COURSE_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
-                addRaceCourse(rc);
-                firstBoatLoad = true;
-            }
+        if (requestCode == NEW_RACE_COURSE_REQUEST && resultCode == RESULT_OK) {
+            RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
+            addRaceCourse(rc);
+            firstBoatLoad = true;
         }
+
     }
     public void AddMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
@@ -611,7 +620,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (dirText.getText()==null||distText.getText()==null)
             return;
         if (GeneralUtils.isValid(dirText.getText().toString(),Float.class,0f,360f)&&GeneralUtils.isValid(dirText.getText().toString(),Float.class,0f,null)) {
-            long buoyId = ((BuoyInputDialog) df).buoy_id;
+            long buoyId = ((BuoyInputDialog) df).buoyId;
             if (buoyId != -1) {
                 addMark(buoyId, iGeo.getLoc(), Float.parseFloat(dirText.getText().toString()), Float.parseFloat(distText.getText().toString()), BuoyType.valueOf((String) s.getSelectedItem()));
             } else
@@ -627,9 +636,37 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     public void onStop() {
         super.onStop();
-        handler.removeCallbacks(runnable);
-        Log.d(TAG, "OnStop");
+        //handler.removeCallbacks(runnable);
+        Log.d(TAG, "onStop");
     }
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
 
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+        Log.d(TAG,"onDestroy");
+
+    }
 
 }

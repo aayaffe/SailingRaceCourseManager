@@ -13,9 +13,9 @@ import java.util.UUID;
  * Created by Jonathan on 23/07/2016.
  */
 public class Mark {
-    private static String TAG = "Mark";
+    private static final String TAG = "Mark";
     private String name;
-    private int direction = 0; //direction from reference point. clockwise(usually minus, as a result);
+    private int direction = 0;
     private double distance = 0;
     private boolean distanceFactor = false;  //to multiply the distance with Dist2m1 or not?
     public List<Mark> referedMarks;
@@ -42,6 +42,11 @@ public class Mark {
     public void setDirection(int direction) {
         this.direction = direction;
     }
+
+    /**
+     * direction from reference point. clockwise(usually minus, as a result);
+     * @param direction
+     */
     public void setDirection(String direction) {
         if (direction != null)
             this.direction = Integer.parseInt(direction);

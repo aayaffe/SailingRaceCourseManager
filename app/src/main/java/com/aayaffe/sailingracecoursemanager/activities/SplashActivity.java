@@ -20,7 +20,6 @@ import java.util.Date;
 public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
-    private boolean dbConnected;
     private Versioning versioning;
 
     @Override
@@ -31,7 +30,6 @@ public class SplashActivity extends AppCompatActivity {
         commManager.setCommManagerEventListener(new CommManagerEventListener() {
             @Override
             public void onConnect(Date time) {
-                dbConnected = true;
                 if (versioning.getInstalledVersion()<versioning.getSupportedVersion())
                 {
                     alertOnUnsupportedVersion();
@@ -43,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
             }
             @Override
             public void onDisconnect(Date time) {
-                dbConnected = false;
+                Log.d(TAG,"commManager disconnected");
             }
         });
         commManager.login();
