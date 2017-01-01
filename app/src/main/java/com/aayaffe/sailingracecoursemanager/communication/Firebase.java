@@ -14,7 +14,6 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.testObject;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -28,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
