@@ -56,8 +56,9 @@ public class ChooseBoatActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), AssignBuoyActivity.class);
-                String selectedBoatName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                intent.putExtra("boatName", selectedBoatName);
+                DBObject boat = (DBObject) parent.getItemAtPosition(position);
+                //String selectedBoatName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
+                intent.putExtra("boatUid", boat.userUid);
                 startActivity(intent);
             }
         });

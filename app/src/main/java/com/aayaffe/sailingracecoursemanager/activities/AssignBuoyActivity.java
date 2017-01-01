@@ -31,7 +31,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assign_buoy);
         commManager = new Firebase(this);
         Intent i = getIntent();
-        currentBoat = commManager.getBoat(i.getStringExtra("boatName"));
+        currentBoat = commManager.getBoat(i.getStringExtra("boatUid"));
         setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BuoysList);
         mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBuoysReference()) {
@@ -58,9 +58,9 @@ public class AssignBuoyActivity extends AppCompatActivity {
         boatsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedBuoyName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-
-                commManager.assignBuoy(currentBoat,selectedBuoyName);
+                //String selectedBuoyName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
+                DBObject dbo = (DBObject) parent.getItemAtPosition(position);
+                commManager.assignBuoy(currentBoat,dbo.getUuidString());
                 onBackPressed();
             }
         });

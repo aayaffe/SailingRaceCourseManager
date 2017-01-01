@@ -21,6 +21,9 @@ import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.text.DecimalFormat;
 
+import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
+
 public class HorizontalNumberPicker extends RelativeLayout {
     private float initialN=0;
     private float steps=1;
@@ -76,6 +79,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
 
         numberTV = (EditText) this.findViewById(R.id.np_number);
+        numberTV.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
         numberTV.setText(Float.toString(number));
         numberTV.setTextSize(textSize);
 

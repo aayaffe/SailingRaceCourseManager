@@ -101,17 +101,18 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
-        ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),true);
+        ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),true);
         ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
             @Override
             public void onEventDeleted(Event e) {
-                ((Firebase)commManager).subscribeToEventDeletion(commManager.getEvent(currentEventName),false);
+                ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),false);
                 Log.i(TAG,"Closing activity due to event deletion");
                 finish();
             }
         };
         Intent intent = new Intent(this, GPSService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     private void setupToolbar() {
@@ -336,7 +337,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         List<DBObject> buoysToRemove = new ArrayList<>();
         for (DBObject buoy : buoys) {
             if (buoy.getRaceCourseUUID() != null) {
-                mapLayer.removeMark(buoy.getUUID(),true);
+
                 if (assignedTo!=null && assignedTo.equals(buoy))
                 {
                     assignBuoy((DBObject)null);
@@ -345,6 +346,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         }
         for (DBObject buoy:buoysToRemove){
+            mapLayer.removeMark(buoy.getUUID(),true);
             buoys.remove(buoy);
         }
     }
@@ -393,17 +395,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     };
 
     private boolean isCurrentEventManager(String uid) {
-        Event e = commManager.getEvent(currentEventName);
+        Event e = commManager.getCurrentEvent();
         if (e == null)
             return false;
         if (uid == null || uid.isEmpty())
             return false;
-        Log.d(TAG, "Checking for event " + currentEventName + " manager: " + commManager.getEvent(currentEventName).getManagerUuid());
         return e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
     }
 
     public static boolean isCurrentEventManager() {
-        Event e = commManager.getEvent(currentEventName);
+        Event e = commManager.getCurrentEvent();
         if (e == null)
             return false;
         return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid()==null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);

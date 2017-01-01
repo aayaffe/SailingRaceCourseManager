@@ -30,7 +30,7 @@ public interface ICommManager {
 
     long getNewBuoyId();
 
-    void removeBuoyObject(String title);
+    void removeBuoyObject(String uuid);
 
     User findUser(String uid);
 
@@ -46,9 +46,9 @@ public interface ICommManager {
 
     void writeEvent(Event neu);
 
-    String getCurrentEventName();
+    Event getCurrentEvent();
 
-    void setCurrentEventName(String currentEventName);
+    void setCurrentEvent(Event currentEvent);
 
     List<DBObject> getAssignedBuoys(DBObject b);
 

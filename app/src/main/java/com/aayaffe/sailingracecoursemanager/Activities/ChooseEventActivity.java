@@ -45,7 +45,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private com.aayaffe.sailingracecoursemanager.communication.Firebase commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
-    private static String selectedEventName;
+//    private static String selectedEventName;
+    private static Event selectedEvent;
     private Notification notification = new Notification();
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
@@ -98,9 +99,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
-                selectedEventName = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                commManager.setCurrentEventName(selectedEventName);
-                intent.putExtra("eventName", selectedEventName);
+                Event e  = (Event)parent.getItemAtPosition(position);
+                selectedEvent = e;
+                commManager.setCurrentEvent(selectedEvent);
+                intent.putExtra("eventName", selectedEvent.getName());
                 startActivity(intent);
             }
         });

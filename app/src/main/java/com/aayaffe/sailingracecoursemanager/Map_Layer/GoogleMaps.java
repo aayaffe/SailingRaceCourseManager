@@ -193,9 +193,6 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
 //        uuidToId.inverse().remove(m.getId());
 //    }
 
-    public void removeMark(UUID uuid){
-        removeMark(uuid,true);
-    }
     public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
