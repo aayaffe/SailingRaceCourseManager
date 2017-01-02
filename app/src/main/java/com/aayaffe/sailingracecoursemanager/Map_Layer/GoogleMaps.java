@@ -279,9 +279,8 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         b1 = m2.getPosition();
         PolylineOptions po = new PolylineOptions()
                 .add(a1)
-                .add(b1);  // North of the previous point, but at the same longitude
+                .add(b1);
 
-        // Get back the mutable Polyline
         if (polyline!=null)
             polyline.remove();
         polyline = mapView.addPolyline(po);

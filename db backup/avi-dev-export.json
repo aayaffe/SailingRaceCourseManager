@@ -1,0 +1,323 @@
+{
+  "Admins" : {
+    "MN87XpYJcIhCGFGONP2aB03fbxo2" : "MN87XpYJcIhCGFGONP2aB03fbxo2"
+  },
+  "BoatTypes" : {
+    "470 Men" : {
+      "boatClass" : "470 Men",
+      "length" : 4.7,
+      "reach12_15" : 5.5,
+      "reach15_" : 5.5,
+      "reach5_8" : 8,
+      "reach8_12" : 7,
+      "run12_15" : 7.5,
+      "run15_" : 6.5,
+      "run5_8" : 1,
+      "run8_12" : 10,
+      "targettime" : 50,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 11,
+      "upwind15_" : 10,
+      "upwind5_8" : 15,
+      "upwind8_12" : 13,
+      "windward_Leeward" : false
+    },
+    "470 Women" : {
+      "boatClass" : "470 Women",
+      "length" : 4.7,
+      "reach12_15" : 5.5,
+      "reach15_" : 5.5,
+      "reach5_8" : 8,
+      "reach8_12" : 7,
+      "run12_15" : 7.5,
+      "run15_" : 6.5,
+      "run5_8" : 1,
+      "run8_12" : 10,
+      "targettime" : 50,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 11,
+      "upwind15_" : 10,
+      "upwind5_8" : 15,
+      "upwind8_12" : 13,
+      "windward_Leeward" : false
+    },
+    "49er" : {
+      "boatClass" : "49er",
+      "length" : 4.995,
+      "run12_15" : 4.5,
+      "run15_" : 4,
+      "run5_8" : 1,
+      "run8_12" : 5.5,
+      "targettime" : 30,
+      "trapezoid" : false,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 9,
+      "upwind15_" : 7.5,
+      "upwind5_8" : 22.5,
+      "upwind8_12" : 11,
+      "windward_Leeward" : true
+    },
+    "Finn" : {
+      "boatClass" : "Finn",
+      "length" : 4.5,
+      "reach12_15" : 7,
+      "reach15_" : 6,
+      "reach5_8" : 15,
+      "reach8_12" : 10,
+      "run12_15" : 9,
+      "run15_" : 7,
+      "run5_8" : 1,
+      "run8_12" : 11,
+      "targettime" : 50,
+      "trapezoid" : true,
+      "triangular" : false,
+      "upadated" : 1482085662887,
+      "upwind12_15" : 15,
+      "upwind15_" : 15,
+      "upwind5_8" : 16,
+      "upwind8_12" : 15,
+      "windward_Leeward" : true
+    },
+    "Laser" : {
+      "boatClass" : "Laser",
+      "length" : 4.19,
+      "reach12_15" : 6.5,
+      "reach15_" : 6,
+      "reach5_8" : 12,
+      "reach8_12" : 9,
+      "run12_15" : 9.5,
+      "run15_" : 8.5,
+      "run5_8" : 1,
+      "run8_12" : 12,
+      "targettime" : 60,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 15.5,
+      "upwind15_" : 14.5,
+      "upwind5_8" : 20,
+      "upwind8_12" : 18.5,
+      "windward_Leeward" : false
+    },
+    "Laser Radial" : {
+      "boatClass" : "Laser Radial",
+      "length" : 4.19,
+      "reach12_15" : 7.5,
+      "reach15_" : 6.5,
+      "reach5_8" : 13,
+      "reach8_12" : 10,
+      "run12_15" : 9.5,
+      "run15_" : 8.5,
+      "run5_8" : 1,
+      "run8_12" : 14,
+      "targettime" : 50,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 16.5,
+      "upwind15_" : 15.5,
+      "upwind5_8" : 22,
+      "upwind8_12" : 20,
+      "windward_Leeward" : false
+    },
+    "RSX Men" : {
+      "boatClass" : "RSX Men",
+      "length" : 2.86,
+      "reach12_15" : 3,
+      "reach15_" : 3,
+      "reach5_8" : 9,
+      "reach8_12" : 4,
+      "run12_15" : 5,
+      "run15_" : 4,
+      "run5_8" : 1,
+      "run8_12" : 8,
+      "targettime" : 30,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 12,
+      "upwind15_" : 11,
+      "upwind5_8" : 18,
+      "upwind8_12" : 14,
+      "windward_Leeward" : true
+    },
+    "RSX Women" : {
+      "boatClass" : "RSX Women",
+      "length" : 2.86,
+      "reach12_15" : 3,
+      "reach15_" : 3,
+      "reach5_8" : 9,
+      "reach8_12" : 4,
+      "run12_15" : 5,
+      "run15_" : 4,
+      "run5_8" : 1,
+      "run8_12" : 8,
+      "targettime" : 30,
+      "trapezoid" : true,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 12,
+      "upwind15_" : 11,
+      "upwind5_8" : 18,
+      "upwind8_12" : 14,
+      "windward_Leeward" : true
+    },
+    "Star" : {
+      "boatClass" : "Star",
+      "length" : 6.922,
+      "run12_15" : 10,
+      "run15_" : 10,
+      "run5_8" : 1,
+      "run8_12" : 13,
+      "targettime" : 40,
+      "trapezoid" : false,
+      "triangular" : false,
+      "updated" : 1482085662887,
+      "upwind12_15" : 11,
+      "upwind15_" : 11,
+      "upwind5_8" : 13,
+      "upwind8_12" : 12,
+      "windward_Leeward" : true
+    }
+  },
+  "CompatibleVersion" : 24,
+  "RaceCourseDescriptors" : {
+    "Trapezoid 60,120" : {
+      "imageID" : 2130837706,
+      "name" : "Trapezoid 60,120",
+      "raceCourseLegs" : [ {
+        "courseFactors" : [ 1.833, 1.66, 1 ],
+        "name" : "Shorted Outer",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0.7 ],
+        "name" : "Reach is 1/2 Beat",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 1.33333 ],
+        "name" : "Reach is 2/3 Beat",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      } ]
+    },
+    "Trapezoid 70,110" : {
+      "imageID" : 2130837706,
+      "name" : "Trapezoid 70,110",
+      "raceCourseLegs" : [ {
+        "courseFactors" : [ 2, 1, 1 ],
+        "name" : "Shorted Outer",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0.5 ],
+        "name" : "Reach is 1/2 Beat",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 1.33333 ],
+        "name" : "Reach is 2/3 Beat",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      } ]
+    },
+    "Triangular" : {
+      "imageID" : 2130837706,
+      "name" : "Triangular",
+      "raceCourseLegs" : [ {
+        "courseFactors" : [ 2, 1, 1.41 ],
+        "name" : "TL-Leeward finish",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 0, 1.41 ],
+        "name" : "TW-Windward finish",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "3 GATE", "toggle" ] ]
+      } ]
+    },
+    "Windward-Leeward" : {
+      "imageID" : 2130837706,
+      "name" : "Windward-Leeward",
+      "raceCourseLegs" : [ {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "L-Leeward",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "W-Windward",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "LR-Lee. port reach",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "LG-Lee. star reach",
+        "options" : [ [ "1 SATELLITE", "toggle" ], [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "WR-Wind. star reach",
+        "options" : [ [ "4 GATE", "toggle" ] ]
+      }, {
+        "courseFactors" : [ 2, 2, 0 ],
+        "name" : "WG-Wind. port reach",
+        "options" : [ [ "4 GATE", "toggle" ] ]
+      } ]
+    }
+  },
+  "Users" : {
+    "4tUTpLfp4SVj7c5kx9lQFVqA3nH3" : {
+      "DisplayName" : "guest1",
+      "Uid" : "4tUTpLfp4SVj7c5kx9lQFVqA3nH3",
+      "joined" : 1482816875143,
+      "lastConnection" : 1482816875144
+    },
+    "8qDElc4USYbMqgvfCQIUpHPGNCJ3" : {
+      "DisplayName" : "adi",
+      "Uid" : "8qDElc4USYbMqgvfCQIUpHPGNCJ3",
+      "joined" : 1482617193645,
+      "lastConnection" : 1482617193645
+    },
+    "MN87XpYJcIhCGFGONP2aB03fbxo2" : {
+      "DisplayName" : "Amit Y",
+      "Uid" : "MN87XpYJcIhCGFGONP2aB03fbxo2",
+      "joined" : 1483208245726,
+      "lastConnection" : 1483208245726
+    },
+    "Po85px6dJYYieI3AA0rasxXPt7T2" : {
+      "DisplayName" : "Guest3",
+      "Uid" : "Po85px6dJYYieI3AA0rasxXPt7T2",
+      "joined" : 1483303937295,
+      "lastConnection" : 1483303937295
+    },
+    "YjlKNm0DwvesMHGlq6Be2Ez1bqw2" : {
+      "DisplayName" : "None Of your Business",
+      "Uid" : "YjlKNm0DwvesMHGlq6Be2Ez1bqw2",
+      "joined" : 1482672299167,
+      "lastConnection" : 1482672299167
+    },
+    "hWGMDDZ6GMRf8fenyXPGh4QcaPG3" : {
+      "DisplayName" : "guest2",
+      "Uid" : "hWGMDDZ6GMRf8fenyXPGh4QcaPG3",
+      "joined" : 1482264938818,
+      "lastConnection" : 1482264938818
+    },
+    "pBHO50r061RzKmRP5gPcSIyQthg1" : {
+      "DisplayName" : "Avi Marine Innovations",
+      "Uid" : "pBHO50r061RzKmRP5gPcSIyQthg1",
+      "joined" : 1482961196410,
+      "lastConnection" : 1482961196410
+    },
+    "rEqVu1OR8heygF0UpHZBaa6gE6t1" : {
+      "DisplayName" : "Avi Marine",
+      "Uid" : "rEqVu1OR8heygF0UpHZBaa6gE6t1",
+      "joined" : 1483303895237,
+      "lastConnection" : 1483303895237
+    },
+    "y7T3Hu1yAzXCPGYR7xjwRjtYOxB2" : {
+      "DisplayName" : "ayeletsharir",
+      "Uid" : "y7T3Hu1yAzXCPGYR7xjwRjtYOxB2",
+      "joined" : 1482612164808,
+      "lastConnection" : 1482612164809
+    }
+  }
+}

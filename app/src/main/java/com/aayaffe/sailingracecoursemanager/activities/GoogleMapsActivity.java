@@ -44,6 +44,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.google.android.gms.location.LocationListener;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener {
+public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener, LocationListener {
 
     public static List<DBObject> buoys;
     public static List<DBObject> boats;
@@ -92,7 +93,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
-        iGeo = new OwnLocation(getBaseContext(), this);
+        iGeo = new OwnLocation(getBaseContext(), this,this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
 
         Intent i = getIntent();
@@ -144,10 +145,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     return;
                 if (b.equals(assignedTo))
                 { //Turn off assignment
-                    assignBuoy((DBObject) null);
+                    assignBuoyUIUpdate((DBObject) null);
                 }
                 else if (isBuoy(b)){
-                    assignBuoy(u);
+                    assignBuoyUIUpdate(u);
                 }
             }
             @Override
@@ -161,10 +162,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         };
     }
 
-    private void assignBuoy(UUID u) {
-        assignBuoy(commManager.getObjectByUUID(u));
+    private void assignBuoyUIUpdate(UUID u) {
+        assignBuoyUIUpdate(commManager.getObjectByUUID(u));
     }
-    private void assignBuoy(DBObject b){
+    private void assignBuoyUIUpdate(DBObject b){
         if (myBoat==null){
             return;
         }
@@ -340,7 +341,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
                 if (assignedTo!=null && assignedTo.equals(buoy))
                 {
-                    assignBuoy((DBObject)null);
+                    assignBuoyUIUpdate((DBObject)null);
                 }
                 buoysToRemove.add(buoy);
             }
@@ -366,13 +367,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
                 if (myBoat == null) {
                     myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
+                    if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                        myBoat.setBuoyType(BuoyType.RACE_MANAGER);
+                    } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
+                    myBoat.userUid = users.getCurrentUser().Uid;
                 }
-                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                    myBoat.setBuoyType(BuoyType.RACE_MANAGER);
-                } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
-                myBoat.userUid = users.getCurrentUser().Uid;
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -388,8 +389,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 assignedBuoy = assignedBuoys.get(0);
             drawMapComponents();
             handler.postDelayed(runnable, Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000);
-            //assignBuoy(assignedTo);
-            assignBuoy(assignedBuoy);
+            assignBuoyUIUpdate(assignedBuoy);
 
         }
     };
@@ -430,8 +430,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
             }
             if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().DisplayName, boat))) {
-                int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                mapLayer.addMark(boat, null, id,getZIndex(boat));
+                drawOwnBoat(boat);
             }
         }
 
@@ -448,6 +447,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 mapLayer.setZoom(10, myBoat.getLoc());
             }
         }
+    }
+
+    private synchronized void drawOwnBoat(DBObject boat) {
+        int id = getIconId(users.getCurrentUser().DisplayName, boat);
+        mapLayer.addMark(boat, null, id,getZIndex(boat));
+        assignBuoyUIUpdate(assignedBuoy);
     }
 
     private int getZIndex(DBObject boat) {
@@ -488,7 +493,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
             if (assignedTo!=null && assignedTo.getUUID().equals(u))
             {
-                assignBuoy((DBObject)null);
+                assignBuoyUIUpdate((DBObject)null);
             }
             mapLayer.removeMark(u,false);
         }
@@ -670,4 +675,17 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        if(location!=null && myBoat!=null){
+            myBoat.setLoc(location);
+            drawOwnBoat(myBoat);
+        }
+        if (((OwnLocation) iGeo).isGPSFix()) {
+            noGps.setVisibility(View.INVISIBLE);
+        } else {
+            noGps.setVisibility(View.VISIBLE);
+        }
+
+    }
 }

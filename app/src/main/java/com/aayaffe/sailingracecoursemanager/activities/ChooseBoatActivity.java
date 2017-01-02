@@ -34,8 +34,8 @@ public class ChooseBoatActivity extends AppCompatActivity {
         mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {
             @Override
             protected void populateView(View view, final DBObject b, int position) {
-                ((TextView)view.findViewById(android.R.id.text1)).setText(b.getName());
-                ((TextView)view.findViewById(android.R.id.text2)).setText(getAssignedBuoysNames(b));
+                ((TextView)view.findViewById(android.R.id.text1)).setText("Boat: " + b.getName());
+                ((TextView)view.findViewById(android.R.id.text2)).setText("Assigned to: "+getAssignedBuoysNames(b));
                 final ImageButton remove =(ImageButton)view.findViewById(R.id.remove_assignment_button);
                 List<DBObject> assigned = commManager.getAssignedBuoys(b);
                 if (assigned!=null&& !assigned.isEmpty())

@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 12;
+    private LocationListener ll = null;
     private Location mLastLocation;
     private static String TAG = "OwnLocation";
     LocationRequest mLocationRequest;
@@ -41,6 +42,12 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
     public OwnLocation(Context c, Activity a) {
         this.context = c;
         this.activity = a;
+        InitGPS(context);
+    }
+    public OwnLocation(Context c, Activity a, LocationListener ll) {
+        this.context = c;
+        this.activity = a;
+        this.ll = ll;
         InitGPS(context);
     }
 
@@ -83,6 +90,8 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
             return;
         mLastLocation = location;
         mLastLocationMillis = SystemClock.elapsedRealtime();
+        if (ll!= null)
+            ll.onLocationChanged(location);
     }
 
     @Override

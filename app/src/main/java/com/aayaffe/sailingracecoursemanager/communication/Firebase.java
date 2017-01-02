@@ -496,7 +496,7 @@ public class Firebase implements ICommManager {
     public void subscribeToEventDeletion(final Event event, boolean subscribe){
         if (event==null) {
 
-            FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName: " + GoogleMapsActivity.commManager.getCurrentEvent().getName()));
+            FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName"));
             return;
         }
         ValueEventListener valeventListener = new ValueEventListener() {

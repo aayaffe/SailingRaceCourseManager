@@ -86,15 +86,15 @@ public class DistanceDialog extends Dialog {
         tabHost.addTab(spec);
 
         windPicker = (HorizontalNumberPicker)findViewById(R.id.wind_picker);
-        windPicker.configNumbers(15, 2);
+        windPicker.configNumbers(15, 2,2,50);
         targetTimePicker = (HorizontalNumberPicker)findViewById(R.id.target_time_picker);
-        targetTimePicker.configNumbers(boats.get(0).getTargettime(),5);
+        targetTimePicker.configNumbers(boats.get(0).getTargettime(),5,5f,400f);
         distancePicker = (HorizontalNumberPicker)findViewById(R.id.distance_length_picker);
-        distancePicker.configNumbers(1.0f,0.1f);
+        distancePicker.configNumbers(1.0f,0.1f,0f,15f);
         numberOfBoatsPicker = (HorizontalNumberPicker)findViewById(R.id.number_boats_picker);
-        numberOfBoatsPicker.configNumbers(20.0f,1.0f);
+        numberOfBoatsPicker.configNumbers(20.0f,1.0f,0f,100f);
         startlinelengthPicker = (HorizontalNumberPicker)findViewById(R.id.startline_length_picker);
-        startlinelengthPicker.configNumbers(0.11f,0.1f);
+        startlinelengthPicker.configNumbers(0.10f,0.1f,0f,4f);
         spinner = (Spinner) findViewById(R.id.distance_class_spinner);  //NOTE: was Spinner with capital
         final String[] items = new String[boats.size()];
         for(int i=0; i<boats.size();i++){
