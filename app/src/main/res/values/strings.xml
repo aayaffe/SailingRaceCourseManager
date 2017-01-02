@@ -251,5 +251,6 @@
     <string name="nautical_miles_unit_symbol">NM</string>
     <string name="metre_unit_symbol">m</string>
     <string name="no_gps">NoGPS</string>
+    <string name="action_get_help">Get help</string>
 
 </resources>

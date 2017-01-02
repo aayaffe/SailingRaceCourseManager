@@ -42,15 +42,16 @@ android {
         }
     }
     packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
     }
 }
 
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
-    //    compile 'org.twitter4j:twitter4j-core:4.0.2'
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
     // Optional -- Mockito framework
@@ -76,6 +77,7 @@ dependencies {
     compile 'com.borax12.materialdaterangepicker:library:1.9'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.tenmiles:helpstack:1.2.0'
 //    compile 'com.android.support:multidex:1.0.1'
 
 }
