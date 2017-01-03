@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <articles>
 
-    <article subject="How do I get started with the app" text=
-        "Login and join an existing event or create a new event." />
+    <article subject="How do I get started with the app" text="Login and join an existing event or create a new event." />
 
-    <article subject="What is Avi sail race? " text=
-        "Avi sail race is an application designed to assist a race officer with task of setting a proper race course." />
+    <article subject="What is Avi sail race? " text="Avi sail race is an application designed to assist a race officer with task of setting a proper race course." />
 
-    <article subject="How do I start a new event? " text=
-        "In the first screen, after logging in, press the plus sign, select a unique event name and set the dates. Pay attention, the user that created the event is the sole event manager (Race Officer)." />
+    <article subject="How do I start a new event? " text="In the first screen, after logging in, press the plus sign, select a unique event name and set the dates. Pay attention, the user that created the event is the sole event manager (Race Officer)." />
 
-    <article subject="What is an event manager (Race officer)?" text=
-        "An event manager is the user who created the event. He is the only user who can add/edit the race course, add buoys, assign boats to buoys and delete the event. The event manager is shown on the map with a small flag." />
+    <article subject="What is an event manager (Race officer)?" text="An event manager is the user who created the event. He is the only user who can add/edit the race course, add buoys, assign boats to buoys and delete the event. The event manager is shown on the map with a small flag." />
 
-    <article subject="What are the capabilities of the other users joining the event? " text=
-        "Those users have the following capabilities: Joining and leaving events, viewing the other boats, race course and marks, view the bearing and distance of other boats and matks." />
+    <article subject="What are the capabilities of the other users joining the event? " text="Those users have the following capabilities: Joining and leaving events, viewing the other boats, race course and marks, view the bearing and distance of other boats and matks." />
 
-    <article subject="How do I share my content on social network" text=
-        "This is new line \n See if you can see it." />
+    <article subject="What is the meaning of the different map icons?" text="*flag* Race officer, *Yellow Boat* Own boat, *Green boat* Other boats, *Red Boat* Boat whose location is not updated." />
 
-    <article subject="How do I deactivate my account" text=
-        "This is new line \n See if you can see it." />
+    <article subject="How to design a new race course?" text="In the map screen select the *race course* icon and select the course type, wind direction, and course length (according to wind speed and boat type or length of first leg)." />
 
 
 
