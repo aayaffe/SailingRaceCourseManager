@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<articles>
+
+    <article subject="How do I get started with the app" text="Login and join an existing event or create a new event." />
+
+    <article subject="What is Avi sail race? " text="Avi sail race is an application designed to assist a race officer with task of setting a proper race course." />
+
+    <article subject="How do I start a new event? " text="In the first screen, after logging in, press the plus sign, select a unique event name and set the dates. \nPay attention, the user that created the event is the sole event manager (Race Officer)." />
+
+    <article subject="What is an event manager (Race officer)?" text="An event manager is the user who created the event. He is the only user who can add/edit the race course, add buoys, assign boats to buoys and delete the event. \nThe event manager is shown on the map with a small flag." />
+
+    <article subject="What are the capabilities of the other users joining the event? " text="Those users have the following capabilities: Joining and leaving events, viewing the other boats, race course and marks, view the bearing and distance of other boats and marks." />
+
+    <article subject="What is the meaning of the different map icons?" text="*flag* Race officer, \n*Yellow Boat* Own boat, \n*Green boat* Other boats, \n*Red Boat* Boat whose location is not updated." />
+
+    <article subject="How to design a new race course?" text="In the map screen select the *race course* icon and select the course type, wind direction, and course length (according to wind speed and boat type or length of first leg)." />
+
+    <article subject="How to assign boats to buoys?" text="In the map screen select the assign buoys menu item, select a boat and than a buoy. \nOnce this assignment is made, the assigned boats's screen will show the assigned buoy with the bearing and distance from the boat." />
+
+
+
+</articles>

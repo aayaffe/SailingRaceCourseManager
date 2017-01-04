@@ -34,6 +34,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
+import com.tenmiles.helpstack.HSHelpStack;
 
 
 import java.util.ArrayList;
@@ -193,6 +194,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 Log.d(TAG, "Plus Fab Clicked");
                 DialogFragment addevent = EventInputDialog.newInstance(null, this);
                 addevent.show(getFragmentManager(), "Add_Event");
+                return true;
+            case R.id.action_get_help:
+                Log.d(TAG, "Get help pressed");
+                HSHelpStack.getInstance(this).showHelp(this);
                 return true;
             case R.id.action_logout:
                 if (loggedIn) {
