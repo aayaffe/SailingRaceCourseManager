@@ -1,0 +1,5 @@
+<resources>
+    
+    <string name="db_base_address">https://avi.firebaseio.com</string>
+
+</resources>
