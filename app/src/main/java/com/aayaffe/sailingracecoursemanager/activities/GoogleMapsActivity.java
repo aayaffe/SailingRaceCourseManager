@@ -450,6 +450,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private synchronized void drawOwnBoat(DBObject boat) {
+        if (users.getCurrentUser() == null)
+            return;
         int id = getIconId(users.getCurrentUser().DisplayName, boat);
         mapLayer.addMark(boat, null, id,getZIndex(boat));
         assignBuoyUIUpdate(assignedBuoy);
