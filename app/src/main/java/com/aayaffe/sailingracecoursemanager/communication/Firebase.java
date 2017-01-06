@@ -495,7 +495,7 @@ public class Firebase implements ICommManager {
 
     public void subscribeToEventDeletion(final Event event, boolean subscribe){
         if (event==null) {
-
+            //Thread.dumpStack();
             FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName"));
             return;
         }
