@@ -11,7 +11,6 @@ import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -65,13 +64,13 @@ public class DBObject implements Serializable {
             case GATE:
                 this.color = Color.YELLOW;
                 break;
-            case RACE_MANAGER:
+            case RACE_OFFICER:
                 break;
             case TOMATO_BUOY:
             case BUOY:
                 this.color = Color.RED;
                 break;
-            case WORKER_BOAT:
+            case MARK_LAYER:
             case REFERENCE_POINT:
             case OTHER:
                 this.color = Color.BLACK;

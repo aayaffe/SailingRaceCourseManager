@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -229,7 +228,7 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public int sendAction(RaceManagerAction a, DBObject o) {
+    public int sendAction(RaceOfficerAction a, DBObject o) {
         //TODO Implement
         return 0;
     }

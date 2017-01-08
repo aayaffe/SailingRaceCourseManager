@@ -7,8 +7,8 @@ import java.util.List;
  * Created by Jonathan on 27/10/2016.
  */
 public enum BuoyType {
-    RACE_MANAGER(0),
-    WORKER_BOAT(1),
+    RACE_OFFICER(0),
+    MARK_LAYER(1),
     BUOY(2),
     FLAG_BUOY(3),
     TOMATO_BUOY(4),

@@ -26,7 +26,7 @@ public interface ICommManager {
     List<DBObject> getAllBoats();  //ships
     List<DBObject> getAllBuoys();  //Just buoys, without ships
 
-    int sendAction(RaceManagerAction a, DBObject o);
+    int sendAction(RaceOfficerAction a, DBObject o);
 
     long getNewBuoyId();
 

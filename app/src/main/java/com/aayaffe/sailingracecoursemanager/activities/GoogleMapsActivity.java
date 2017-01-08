@@ -200,8 +200,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case TOMATO_BUOY:
             case TRIANGLE_BUOY:
                 return true;
-            case RACE_MANAGER:
-            case WORKER_BOAT:
+            case RACE_OFFICER:
+            case MARK_LAYER:
             case REFERENCE_POINT:
             case OTHER:
                 return false;
@@ -366,10 +366,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
                 if (myBoat == null) {
-                    myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.WORKER_BOAT);//TODO Set color properly
+                    myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setBuoyType(BuoyType.RACE_MANAGER);
-                    } else myBoat.setBuoyType(BuoyType.WORKER_BOAT);
+                        myBoat.setBuoyType(BuoyType.RACE_OFFICER);
+                    } else myBoat.setBuoyType(BuoyType.MARK_LAYER);
                     myBoat.userUid = users.getCurrentUser().Uid;
                 }
                 myBoat.setLoc(iGeo.getLoc());
@@ -506,12 +506,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         int ret;
         if (isOwnObject(string, o)) {
             switch (o.getBuoyType()) {
-                case WORKER_BOAT:
+                case MARK_LAYER:
                     ret = R.drawable.boatgold;
                     if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
-                case RACE_MANAGER:
+                case RACE_OFFICER:
                     ret = R.drawable.managergold;
                     break;
                 default:
@@ -519,12 +519,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             }
         } else {
             switch (o.getBuoyType()) {
-                case WORKER_BOAT:
+                case MARK_LAYER:
                     ret = R.drawable.boatcyan;
                     if (AviLocation.Age(o.getAviLocation()) > 60)
                         ret = R.drawable.boatred;
                     break;
-                case RACE_MANAGER:
+                case RACE_OFFICER:
                     ret = R.drawable.managerblue;
                     break;
                 default:
