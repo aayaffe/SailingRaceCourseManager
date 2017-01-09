@@ -1,9 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
-import com.google.firebase.database.Exclude;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,9 +11,13 @@ import java.util.UUID;
 public class Legs {
     public String name;
     public List<Double> lengthFactors;
-    public List<Mark> marks;
+    public List<Mark2> marks;
 
     private UUID uuid;
+
+    public Legs(){
+        uuid = UUID.randomUUID();
+    }
 
     public void setUuidString(String uuid) {
         this.uuid = UUID.fromString(uuid);

@@ -21,13 +21,15 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
     private Versioning versioning;
+    private CommManagerEventListener onConnectEventListener;
+    private ICommManager commManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
-        final ICommManager commManager = new Firebase(this);
-        commManager.setCommManagerEventListener(new CommManagerEventListener() {
+        commManager = new Firebase(this);
+        onConnectEventListener = new CommManagerEventListener() {
             @Override
             public void onConnect(Date time) {
                 if (versioning.getInstalledVersion()<versioning.getSupportedVersion())
@@ -43,8 +45,16 @@ public class SplashActivity extends AppCompatActivity {
             public void onDisconnect(Date time) {
                 Log.d(TAG,"commManager disconnected");
             }
-        });
+        };
+        commManager.setCommManagerEventListener(onConnectEventListener);
         commManager.login();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(commManager!=null)
+            commManager.removeCommManagerEventListener(onConnectEventListener);
     }
 
     private void alertOnUnsupportedVersion() {

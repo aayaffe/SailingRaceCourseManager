@@ -64,9 +64,9 @@ public class CourseXmlParser {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(stream, null);
             raceCourseDescriptors = getCourseTypes(parser);
-            for (RaceCourseDescriptor rcd: raceCourseDescriptors){
-                GoogleMapsActivity.commManager.addRaceCourseDescriptor(rcd);
-            }
+//            for (RaceCourseDescriptor rcd: raceCourseDescriptors){
+//                GoogleMapsActivity.commManager.addRaceCourseDescriptor(rcd);
+//            }
             stream.close();
         } catch (Exception e) {
             Log.e(TAG,"Error parsing course types",e);

@@ -12,6 +12,7 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +43,7 @@ public class Firebase implements ICommManager {
     private static Event currentEvent;
     private String uid;
     private Users users;
-    private CommManagerEventListener listener;
+    private List<CommManagerEventListener> listeneres = new ArrayList<>();
     private boolean connected = false;
     public EventDeleted eventDeleted;
 
@@ -66,8 +67,13 @@ public class Firebase implements ICommManager {
                 if(users.getCurrentUser()==null){
                     users.setCurrentUser(findUser(uid));
                 }
-                if ((listener != null)&&(!connected))
-                    listener.onConnect(new Date());
+                if ((listeneres != null)&&(!connected))
+                {
+                    for (CommManagerEventListener listener: listeneres){
+                        if (listener!=null)
+                            listener.onConnect(new Date());
+                    }
+                }
                 connected = true;
             }
 
@@ -145,7 +151,7 @@ public class Firebase implements ICommManager {
 
     @Override
     public void setCommManagerEventListener(CommManagerEventListener listener){
-        this.listener = listener;
+        this.listeneres.add(listener);
     }
 
     @Override
@@ -468,17 +474,17 @@ public class Firebase implements ICommManager {
     }
 
     @Override
-    public void addRaceCourseDescriptor(RaceCourseDescriptor ct) {
-        fb.child(c.getString(R.string.db_race_course_descriptors)).child(ct.getName()).setValue(ct);
+    public void addRaceCourseDescriptor(RaceCourseDescriptor2 ct) {
+        fb.child(c.getString(R.string.db_race_course_descriptors)).child(ct.name).setValue(ct);
     }
 
     @Override
-    public List<RaceCourseDescriptor> getRaceCourseDescriptors(){
-        List<RaceCourseDescriptor> ret = new ArrayList<>();
+    public List<RaceCourseDescriptor2> getRaceCourseDescriptors(){
+        List<RaceCourseDescriptor2> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null)
             return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_race_course_descriptors)).getChildren()) {
-            RaceCourseDescriptor b = ps.getValue(RaceCourseDescriptor.class);
+            RaceCourseDescriptor2 b = ps.getValue(RaceCourseDescriptor2.class);
             ret.add(b);
         }
         return ret;
@@ -492,10 +498,14 @@ public class Firebase implements ICommManager {
         return ds.child(c.getString(R.string.db_admins)).hasChild(u.Uid);
     }
 
+    @Override
+    public synchronized void removeCommManagerEventListener(CommManagerEventListener onConnectEventListener) {
+        if (listeneres!=null)
+            listeneres.remove(onConnectEventListener);
+    }
+
     public void subscribeToEventDeletion(final Event event, boolean subscribe){
         if (event==null) {
-            //Thread.dumpStack();
-            FirebaseCrash.report(new Exception("event was null in subscribe to event deletion, EventName"));
             return;
         }
         ValueEventListener valeventListener = new ValueEventListener() {

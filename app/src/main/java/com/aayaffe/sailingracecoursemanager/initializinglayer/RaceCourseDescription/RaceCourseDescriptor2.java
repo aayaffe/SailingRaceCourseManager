@@ -1,5 +1,6 @@
-package com.aayaffe.sailingracecoursemanager.initializinglayer;
+package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Legs;
 import com.google.firebase.database.Exclude;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ public class RaceCourseDescriptor2 {
     public RaceCourseDescriptor2(){
         uuid = UUID.randomUUID();
     }
+
 
     public void setUuidString(String uuid) {
         this.uuid = UUID.fromString(uuid);

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
@@ -29,6 +30,8 @@ import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 
+import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
@@ -109,6 +112,13 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         });
         users = new Users(commManager);
         notification.InitNotification(this);
+
+        ////////////////////////////////
+        InitialCourseDescriptor icd = new InitialCourseDescriptor();
+        for (RaceCourseDescriptor2 rcd: icd.raceCourseDescriptors){
+            commManager.addRaceCourseDescriptor(rcd);
+        }
+        ///////////////////////////////
     }
 
     public void deleteEvent(Event event) {
