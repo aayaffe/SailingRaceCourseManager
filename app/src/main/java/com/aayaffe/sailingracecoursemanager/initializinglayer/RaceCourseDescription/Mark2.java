@@ -1,9 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateOption;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateReference;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateType;
-
 import java.util.UUID;
 
 /**

@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.util.ArrayList;
@@ -39,7 +41,6 @@ public class Firebase implements ICommManager {
     private Context c;
     private static DatabaseReference fb;
     private static DataSnapshot ds;
-//    private static String currentEventName;
     private static Event currentEvent;
     private String uid;
     private Users users;
@@ -59,6 +60,7 @@ public class Firebase implements ICommManager {
         if (fb == null) {
             fb = FirebaseDatabase.getInstance()
                     .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
+
         }
         fb.addValueEventListener(new ValueEventListener() {
             @Override

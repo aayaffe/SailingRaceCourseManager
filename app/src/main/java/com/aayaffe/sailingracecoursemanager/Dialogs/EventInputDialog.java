@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 
@@ -20,16 +22,20 @@ import java.util.Calendar;
 /**
  * Created by aayaffe on 09/02/2016.
  */
-public class EventInputDialog extends DialogFragment {
+public class EventInputDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "EventInputDialog";
+    private View v;
     public String eventName;
-    public int yearStart;
-    public int yearEnd;
-    public int monthStart;
-    public int monthEnd;
-    public int dayStart;
-    public int dayEnd;
+    public int yearStart=0;
+    public int yearEnd=0;
+    public int monthStart=0;
+    public int monthEnd=0;
+    public int dayStart=0;
+    public int dayEnd=0;
     private Context c;
+    EventInputDialogListener mListener;
+    private boolean datesSelected = false;
+
     public static EventInputDialog newInstance(String eventName, Context c) {
         EventInputDialog frag = new EventInputDialog();
         Bundle args = new Bundle();
@@ -39,60 +45,71 @@ public class EventInputDialog extends DialogFragment {
         return frag;
 
     }
+
+
+
     /* The activity that creates an instance of this dialog fragment must
          * implement this interface in order to receive event callbacks.
          * Each method passes the DialogFragment in case the host needs to query it. */
     public interface EventInputDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
     }
-    // Use this instance of the interface to deliver action events
-    EventInputDialogListener mListener;
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
+        yearStart = year;
+        this.yearEnd = yearEnd;
+        monthStart=  monthOfYear;
+        monthEnd = monthOfYearEnd;
+        dayStart = dayOfMonth;
+        dayEnd = dayOfMonthEnd;
+        if (v!=null) {
+            TextView dates = (TextView) v.findViewById(R.id.selectedDateRange);
+            dates.setText(EventsListAdapter.getDateRangeString(year, yearEnd, monthOfYear, monthOfYearEnd, dayOfMonth, dayOfMonthEnd));
+        }
+    }
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (EventInputDialogListener) activity;
+            mListener = (EventInputDialogListener) c;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             Log.e(TAG,"Exception",e);
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(c.toString()
                     + " must implement NoticeDialogListener");
         }
-    }
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
         eventName = getArguments().getString("eventName", "");
         String title = "Add new Event";//(buoyId==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.event_input_dialog, null);
+        v = inflater.inflate(R.layout.event_input_dialog, null);
         Button b = (Button) v.findViewById(R.id.selectDateRange);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
+                if (yearStart==0){
+                    yearStart = now.get(Calendar.YEAR);
+                    yearEnd = yearStart;
+                    monthStart = now.get(Calendar.MONTH);
+                    monthEnd = monthStart;
+                    dayStart = now.get(Calendar.DAY_OF_MONTH);
+                    dayEnd =  dayStart;
+                }
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
-                                yearStart = year;
-                                EventInputDialog.this.yearEnd = yearEnd;
-                                monthStart=  monthOfYear;
-                                monthEnd = monthOfYearEnd;
-                                dayStart = dayOfMonth;
-                                dayEnd = dayOfMonthEnd;
-                            }
-                        },
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
+                        EventInputDialog.this,
+                        yearStart,monthStart,dayStart,
+                        yearEnd,monthEnd,dayEnd
                 );
+                dpd.setOnDateSetListener(EventInputDialog.this);
                 dpd.show(getFragmentManager(), "Datepickerdialog");
+                datesSelected=true;
             }
         });
         builder.setView(v)
@@ -111,6 +128,10 @@ public class EventInputDialog extends DialogFragment {
                     }
                 });
         // Create the AlertDialog object and return it
+        if (datesSelected){
+            TextView dates = (TextView) v.findViewById(R.id.selectedDateRange);
+            dates.setText(EventsListAdapter.getDateRangeString(yearStart,yearEnd,monthStart,monthEnd,dayStart,dayEnd));
+        }
         return builder.create();
     }
 }

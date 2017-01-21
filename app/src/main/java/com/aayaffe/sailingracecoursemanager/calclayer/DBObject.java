@@ -185,7 +185,7 @@ public class DBObject implements Serializable {
 
     @Exclude
     public int getIconResourceId() {
-        if (this.getBuoyType() == BuoyType.FLAG_BUOY || this.getBuoyType() == BuoyType.FINISH_LINE || this.getBuoyType() == BuoyType.START_LINE) {
+        if (this.getBuoyType() == BuoyType.FLAG_BUOY || this.getBuoyType() == BuoyType.FINISH_LINE || this.getBuoyType() == BuoyType.START_LINE || this.getBuoyType() == BuoyType.START_FINISH_LINE) {
             switch (this.color) {
                 case Color.RED:
                     return R.mipmap.flag_buoy_red;

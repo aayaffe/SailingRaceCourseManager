@@ -55,10 +55,6 @@ public class RaceCourseDescriptor {
         else return null;
     }
 
-//    public void setLastLegCourseFactors(int windDirIndex, double factor){
-//        if(raceCourseLegs.size()>0) raceCourseLegs.get(raceCourseLegs.size()-1).setCourseFactor(windDirIndex, factor);
-//        else Log.w("RaceCourseDescriptor", "cannot use setLastLegCourseFactors: null raceCourseLegs");
-//    }
     @Exclude
     public String[] getLegsNames(){
         String[] names = new String[raceCourseLegs.size()];

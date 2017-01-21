@@ -252,5 +252,7 @@
     <string name="metre_unit_symbol">m</string>
     <string name="no_gps">NoGPS</string>
     <string name="action_get_help">Get help</string>
+    <string name="new_event_name_not_accepted_toast_message">Event name is unacceptable</string>
+    <string name="new_event_duplicate_name_toast_message">Event with that name already exist.</string>
 
 </resources>

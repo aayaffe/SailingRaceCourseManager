@@ -1,9 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateOption;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateReference;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.GateType;
-
 public class GateConfiguration{
     public GateType gateType; //Type of gate
     public GateOption gateOption; //Gate optional?
