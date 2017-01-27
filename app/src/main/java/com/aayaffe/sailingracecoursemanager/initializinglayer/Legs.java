@@ -62,7 +62,7 @@ public class Legs {
      * Each Mark is a tree root to marks that uses it's location, so this function must act recursively
      */
     @Exclude
-    public List<DBObject> parseBuoys(AviLocation rcLocation, double dist2m1, int windDir, float startLineLength, UUID raceCourseUUID, Map<String, Boolean> selectedOptions) {  //parses the mark and his sons into buoys
+    public List<DBObject> parseBuoys(AviLocation rcLocation, double dist2m1, int windDir, float startLineLength,float gateLength, UUID raceCourseUUID, Map<String, Boolean> selectedOptions) {  //parses the mark and his sons into buoys
         List<DBObject> buoys = new ArrayList<>();
         AviLocation lastLoc = rcLocation;
         for (Mark2 m: marks){
@@ -72,19 +72,19 @@ public class Legs {
                     switch (m.ml.locationOptions){
                         case FROM_LAST_MARK:
                             if (m.ml.relativeDistance){
-                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction,m.ml.distance*dist2m1);
+                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance*dist2m1);
                             }
                             else{
-                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction,m.ml.distance);
+                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance);
                             }
                             lastLoc = loc;
                             break;
                         case FROM_RACE_COMMITTEE:
                             if (m.ml.relativeDistance){
-                                loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction,m.ml.distance*dist2m1);
+                                loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction+windDir,m.ml.distance*dist2m1);
                             }
                             else{
-                                loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction,m.ml.distance);
+                                loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction+windDir,m.ml.distance);
                             }
                             lastLoc = loc; //TODO Assert correctness
                             break;
@@ -103,13 +103,13 @@ public class Legs {
                     switch (m.go.gateOption) {
                         case GATABLE:
                             if (selectedOptions.containsKey(m.name) && (selectedOptions.get(m.name))) { //isGatable true and option selected
-                                buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, loc, port, stbd));
+                                buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, loc, port, stbd));
                             } else {
                                 buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
                             }
                             break;
                         case ALWAYS_GATED:
-                            buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, loc, port, stbd));
+                            buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, loc, port, stbd));
                             break;
                         case NEVER_GATABLE:
                             buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
@@ -168,25 +168,30 @@ public class Legs {
         return isPort?port:stbd;
     }
 
-    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark2 m, AviLocation loc, BuoyType portType, BuoyType stbdType) {
+    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark2 m, double gateLength, AviLocation loc, BuoyType portType, BuoyType stbdType) {
         List<DBObject> ret = new ArrayList<>();
         DBObject port;
         DBObject stbd;
+        double width;
+        if (m.go.gateRelativeWidth){
+            width = gateLength;
+        }
+        else width = m.go.gateWidth;
         switch(m.go.gateReference) {
             case GATE_CENTER:
-                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, m.go.gateWidth / 2), portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, m.go.gateWidth / 2), stbdType,raceCourseUUID);
+                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width / 2), portType,raceCourseUUID);
+                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, width / 2), stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
             case LEFT_MARK:
                 port = new DBObject(m.name + "P", loc, portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, m.go.gateWidth), stbdType,raceCourseUUID);
+                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, width), stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
             case RIGHT_MARK:
-                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, m.go.gateWidth), portType,raceCourseUUID);
+                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width), portType,raceCourseUUID);
                 stbd = new DBObject(m.name + "S", loc, stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);

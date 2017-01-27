@@ -41,11 +41,15 @@ public class DistanceDialog extends Dialog {
     private HorizontalNumberPicker distancePicker;
     private HorizontalNumberPicker startlinelengthPicker;
     private HorizontalNumberPicker numberOfBoatsPicker;
+    private HorizontalNumberPicker gateLengthPicker;
+    private HorizontalNumberPicker gateBoatsLengthPicker;
+
     public Button finishB;
     private float factor = 1.5f; //Start line multi factor
 
     private List<Boat> boats;  //list of boats
     private List<Double> courseFactors = new ArrayList<>(Arrays.asList(1d,1d,0d));
+
 
     public DistanceDialog(Context context, List<Boat> boats) {
         super(context);
@@ -95,6 +99,10 @@ public class DistanceDialog extends Dialog {
         numberOfBoatsPicker.configNumbers(20.0f,1.0f,0f,100f);
         startlinelengthPicker = (HorizontalNumberPicker)findViewById(R.id.startline_length_picker);
         startlinelengthPicker.configNumbers(0.10f,0.1f,0f,4f);
+        gateLengthPicker = (HorizontalNumberPicker)findViewById(R.id.gate_length_picker);
+        gateLengthPicker.configNumbers(0.023f,0.001f,0.005f,0.15f);
+        gateBoatsLengthPicker = (HorizontalNumberPicker)findViewById(R.id.gate_length_boats_picker);
+        gateBoatsLengthPicker.configNumbers(9,1,5,12);
         spinner = (Spinner) findViewById(R.id.distance_class_spinner);  //NOTE: was Spinner with capital
         final String[] items = new String[boats.size()];
         for(int i=0; i<boats.size();i++){
@@ -120,16 +128,20 @@ public class DistanceDialog extends Dialog {
             public void onClick(View v) {
                 switch (tabHost.getCurrentTab()){
                     case 0:
-                        mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber());
+                        mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber(),gateLengthPicker.getNumber());
                         break;
                     case 1:
                         mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors),
-                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()));
+                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()),calcGateWidth(boats.get(spinner.getSelectedItemPosition()).length,(int)gateBoatsLengthPicker.getNumber()));
                         break;
                 }
                 dismiss();
             }
         });
+    }
+
+    private double calcGateWidth(double boatLength, int boatsNumber) {
+        return GeoUtils.toNauticalMiles(boatLength)*boatsNumber;
     }
 
     private double calcStartLine(double boatLength, float factor, int boatsNumber) {
@@ -141,7 +153,7 @@ public class DistanceDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(double result, double startLineLength);
+        void finish(double result, double startLineLength, double gateLength);
     }
 
     public double calcDistByClassWind (Boat boat, double wind, double targetTime, List<Double> lengthFactors){  //finds the first leg length, since it equals 1 in the factor.

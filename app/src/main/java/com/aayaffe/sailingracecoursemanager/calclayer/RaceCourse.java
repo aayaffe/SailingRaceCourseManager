@@ -16,6 +16,7 @@ import java.util.UUID;
  * Created by Jonathan on 27/08/2016.
  */
 public class RaceCourse implements Serializable{
+
     /**
      * RaceCourse represents the actual race course, and serves:
      * -holding course input (windDir, Dist2m1, courseType, marks array)
@@ -26,6 +27,7 @@ public class RaceCourse implements Serializable{
     private int windDir;  //wind direction
     private AviLocation signalBoatLoc;
     private double startLineDist;
+    private double gateLength;
     private Map<String, Boolean> selectedOptions;
     private List<DBObject> bouyList = new ArrayList<>();
     //private transient CourseXmlParser xmlParserC;
@@ -36,7 +38,7 @@ public class RaceCourse implements Serializable{
     public RaceCourse(){
         //Empty constructor for Serializing to firebase
     }
-    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineLength, Legs l, Map<String, Boolean> selectedCourseOptions ){
+    public RaceCourse(Context context, AviLocation signalBoatLoc, int windDirection, double distance2mark1 , double startLineLength, double gateLength,Legs l, Map<String, Boolean> selectedCourseOptions ){
         this.context = context;
         if(signalBoatLoc!=null)
             this.signalBoatLoc = signalBoatLoc;
@@ -45,6 +47,7 @@ public class RaceCourse implements Serializable{
         windDir=windDirection;
         dist2m1=distance2mark1;
         startLineDist=startLineLength;
+        this.gateLength = gateLength;
         selectedOptions=selectedCourseOptions;
         //xmlParserC = new CourseXmlParser(context, "courses_file.xml");
         raceCourseUUID = UUID.randomUUID();
@@ -59,7 +62,7 @@ public class RaceCourse implements Serializable{
 //    }
     public synchronized List<DBObject> convertMarks2Buoys(Legs l){ //converts all data into the a list of BUOY class
         //Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
-        bouyList = l.parseBuoys(signalBoatLoc, dist2m1, windDir, (float)startLineDist, raceCourseUUID, selectedOptions);
+        bouyList = l.parseBuoys(signalBoatLoc, dist2m1, windDir, (float)startLineDist,(float)gateLength, raceCourseUUID, selectedOptions);
         return bouyList;
     }
 

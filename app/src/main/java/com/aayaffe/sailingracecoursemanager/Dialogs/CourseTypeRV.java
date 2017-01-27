@@ -65,7 +65,7 @@ public class CourseTypeRV extends RecyclerView.Adapter<CourseTypeRV.AdapterViewH
     public void onBindViewHolder(AdapterViewHolder avh, int i) {        //on each message template
         avh.raceCourseDescriptorOptions = infoList.get(i);
         avh.courseName.setText(infoList.get(i).getName());
-        avh.courseImage.setBackgroundResource(infoList.get(i).getImageID());
+        avh.courseImage.setImageResource(infoList.get(i).getImageID());
     }
 
     @Override
