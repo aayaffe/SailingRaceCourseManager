@@ -98,9 +98,9 @@ public class DistanceDialog extends Dialog {
         numberOfBoatsPicker = (HorizontalNumberPicker)findViewById(R.id.number_boats_picker);
         numberOfBoatsPicker.configNumbers(20.0f,1.0f,0f,100f);
         startlinelengthPicker = (HorizontalNumberPicker)findViewById(R.id.startline_length_picker);
-        startlinelengthPicker.configNumbers(0.10f,0.1f,0f,4f);
+        startlinelengthPicker.configNumbers(230f,5f,10f,1000f);
         gateLengthPicker = (HorizontalNumberPicker)findViewById(R.id.gate_length_picker);
-        gateLengthPicker.configNumbers(0.023f,0.001f,0.005f,0.15f);
+        gateLengthPicker.configNumbers(45f,2f,10f,275f);
         gateBoatsLengthPicker = (HorizontalNumberPicker)findViewById(R.id.gate_length_boats_picker);
         gateBoatsLengthPicker.configNumbers(9,1,5,12);
         spinner = (Spinner) findViewById(R.id.distance_class_spinner);  //NOTE: was Spinner with capital

@@ -46,7 +46,7 @@ public class MainCourseInputActivity extends Activity {
 
 
     private static List<Double> courseFactors;
-    private static Map<String,Boolean> courseOptions;
+    private static Map<String,Boolean> courseOptions = new HashMap<>();
     private static float dist2m1 = 1;
     private static float startLineLength = 0.11f;
     private static float gateLength = 0.11f;
@@ -62,19 +62,16 @@ public class MainCourseInputActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_course_input);
         ICommManager comm = GoogleMapsActivity.commManager;
-        //Map<String,String> defaultCourseOptions  = new HashMap<>();
-        //defaultCourseOptions.put("type","Windward-Leeward");
-        //defaultCourseOptions.put("Legs","L-Leeward");
-        //courseOptions=;
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(configChange);
         configChange = new ConfigChange();
         windDirection = Float.parseFloat(sharedPreferences.getString("windDir", "90"));
         iGeo = new OwnLocation(getBaseContext(), this);
-        CourseXmlParser xmlParserC = new CourseXmlParser(this, "courses_file.xml");
         coursesInfo = new InitialCourseDescriptor().getRaceCourseDescriptors();
         boats = comm.getBoatTypes();
+        legs = coursesInfo.get(0).getRaceCourseLegs().get(0); //TODO: use last race course selected.
+
 
         Button courseButton = (Button) findViewById(R.id.coursetype_input_button);
         courseButton.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +82,8 @@ public class MainCourseInputActivity extends Activity {
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
                     public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
-                        courseOptions=result;
-                        courseFactors=factorResult;
+                        MainCourseInputActivity.this.courseOptions=result;
+                        MainCourseInputActivity.this.courseFactors=factorResult;
                         MainCourseInputActivity.this.legs = legs;
                     }
                 });
@@ -104,8 +101,8 @@ public class MainCourseInputActivity extends Activity {
                     public void finish(double result,double startLine,double gate) {
                         //something to do
                         dist2m1 = (float) result;
-                        startLineLength = (float) startLine;
-                        gateLength = (float) gate;
+                        startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
+                        gateLength = (float) GeoUtils.toNauticalMiles(gate); //TODO: Better to send meters
                     }
 
                 });

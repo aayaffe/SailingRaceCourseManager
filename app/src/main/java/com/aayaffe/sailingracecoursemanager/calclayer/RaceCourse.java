@@ -49,7 +49,6 @@ public class RaceCourse implements Serializable{
         startLineDist=startLineLength;
         this.gateLength = gateLength;
         selectedOptions=selectedCourseOptions;
-        //xmlParserC = new CourseXmlParser(context, "courses_file.xml");
         raceCourseUUID = UUID.randomUUID();
         convertMarks2Buoys(l);
         Log.d("RaceCourse class note", "constructor done");

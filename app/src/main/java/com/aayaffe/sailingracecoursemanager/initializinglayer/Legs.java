@@ -96,20 +96,20 @@ public class Legs {
 
                 if (m.isGatable) {
                     if (m.go.gateType == GateType.START_FINISH_LINE || m.go.gateType==GateType.START_LINE){
-                        lastLoc = GeoUtils.getLocationFromDirDist(lastLoc,m.go.gateDirection,m.go.gateWidth/2);
+                        lastLoc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir+m.go.gateDirection,startLineLength/2);
                     }
                     BuoyType port = getPortBuoyType(m);
                     BuoyType stbd = getStbdBuoyType(m);
                     switch (m.go.gateOption) {
                         case GATABLE:
                             if (selectedOptions.containsKey(m.name) && (selectedOptions.get(m.name))) { //isGatable true and option selected
-                                buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, loc, port, stbd));
+                                buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, startLineLength, loc, port, stbd));
                             } else {
                                 buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
                             }
                             break;
                         case ALWAYS_GATED:
-                            buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, loc, port, stbd));
+                            buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength,startLineLength, loc, port, stbd));
                             break;
                         case NEVER_GATABLE:
                             buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
@@ -168,13 +168,16 @@ public class Legs {
         return isPort?port:stbd;
     }
 
-    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark2 m, double gateLength, AviLocation loc, BuoyType portType, BuoyType stbdType) {
+    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark2 m, double gateLength, double startLength, AviLocation loc, BuoyType portType, BuoyType stbdType) {
         List<DBObject> ret = new ArrayList<>();
         DBObject port;
         DBObject stbd;
         double width;
         if (m.go.gateRelativeWidth){
-            width = gateLength;
+            if (m.go.gateType == GateType.START_FINISH_LINE || m.go.gateType == GateType.START_LINE) {
+                width = startLength;
+            }
+            else width = gateLength;
         }
         else width = m.go.gateWidth;
         switch(m.go.gateReference) {
