@@ -2,9 +2,8 @@ package com.aayaffe.sailingracecoursemanager.calclayer;
 import android.content.Context;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 
 import java.io.Serializable;
 import java.util.ArrayList;

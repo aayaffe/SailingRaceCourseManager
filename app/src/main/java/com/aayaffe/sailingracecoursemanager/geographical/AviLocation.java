@@ -150,11 +150,13 @@ public class AviLocation implements Serializable {
         return lon;
     }
 
-    public void setLat(double Lat) {
+    public AviLocation setLat(double Lat) {
         this.lat=Lat;
+        return this;
     }
-    public void setLon(double Lng) {
+    public AviLocation setLon(double Lng) {
         this.lon=Lng;
+        return this;
     }
 
     @Exclude

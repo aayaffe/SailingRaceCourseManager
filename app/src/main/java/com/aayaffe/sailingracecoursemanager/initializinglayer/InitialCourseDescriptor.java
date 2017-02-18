@@ -6,13 +6,16 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateOption;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateReference;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.LocationOptions;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkLocation;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class InitialCourseDescriptor implements Serializable {
         raceCourseDescriptors.add(GenerateTrapezoid60120());
         raceCourseDescriptors.add(GenerateTrapezoid70110());
         raceCourseDescriptors.add(GenerateWindWardLeeWard());
-        raceCourseDescriptors.add(GenerateInnerOuterSlalom());
+        //raceCourseDescriptors.add(GenerateInnerOuterSlalom());
         raceCourseDescriptors.add(GenerateOptimist());
 
     }
@@ -78,8 +81,19 @@ public class InitialCourseDescriptor implements Serializable {
         finish = new Mark2("Finish",5,new MarkLocation(0,0,false,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(twoThirdsBeat.marks,start,mk4,mk1,mk2,mk3,finish);
 
-
         GeneralUtils.addAll(trapezoid60120.legDescriptors,shortedOuter,halfBeat,twoThirdsBeat);
+
+        MarkRoundingOrder I2 = new MarkRoundingOrder("I2",new ArrayList<>(Arrays.asList(0,4,1,4,1,2,3,5)));
+        MarkRoundingOrder I3 = new MarkRoundingOrder("I3",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,2,3,5)));
+        MarkRoundingOrder I4 = new MarkRoundingOrder("I4",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,4,1,2,3,5)));
+        MarkRoundingOrder O2 = new MarkRoundingOrder("O2",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,5)));
+        MarkRoundingOrder O3 = new MarkRoundingOrder("O3",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,5)));
+        MarkRoundingOrder O4 = new MarkRoundingOrder("O4",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,2,3,5)));
+
+        trapezoid60120.markRoundingOptions = new ArrayList<>();
+        GeneralUtils.addAll(trapezoid60120.markRoundingOptions,I2,I3,I4,O2,O3,O4);
+        trapezoid60120.defaultMarkRounding = I2;
+
         return trapezoid60120;
     }
 
@@ -122,9 +136,19 @@ public class InitialCourseDescriptor implements Serializable {
         mk3 = new Mark2("Mk3",3,new MarkLocation(-180,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         finish = new Mark2("Finish",5,new MarkLocation(0,0,false,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(twoThirdsBeat.marks,start,mk4,mk1,mk2,mk3,finish);
-
-
         GeneralUtils.addAll(trapezoid70110.legDescriptors,shortedOuter,halfBeat,twoThirdsBeat);
+
+        MarkRoundingOrder I2 = new MarkRoundingOrder("I2",new ArrayList<>(Arrays.asList(0,4,1,4,1,2,3,5)));
+        MarkRoundingOrder I3 = new MarkRoundingOrder("I3",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,2,3,5)));
+        MarkRoundingOrder I4 = new MarkRoundingOrder("I4",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,4,1,2,3,5)));
+        MarkRoundingOrder O2 = new MarkRoundingOrder("O2",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,5)));
+        MarkRoundingOrder O3 = new MarkRoundingOrder("O3",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,5)));
+        MarkRoundingOrder O4 = new MarkRoundingOrder("O4",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,2,3,5)));
+
+        trapezoid70110.markRoundingOptions = new ArrayList<>();
+        GeneralUtils.addAll(trapezoid70110.markRoundingOptions,I2,I3,I4,O2,O3,O4);
+        trapezoid70110.defaultMarkRounding = I2;
+
         return trapezoid70110;
     }
 
@@ -143,35 +167,43 @@ public class InitialCourseDescriptor implements Serializable {
         Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(windlee.marks,startfinish,mk4,mk1);
 
-
         GeneralUtils.addAll(windwardLeeward.legDescriptors,windlee);
+
+        MarkRoundingOrder L2 = new MarkRoundingOrder("L2",new ArrayList<>(Arrays.asList(0,4,1,4,1,0)));
+        MarkRoundingOrder L3 = new MarkRoundingOrder("L3",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,0)));
+        MarkRoundingOrder L4 = new MarkRoundingOrder("L4",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,4,1,0)));
+
+        windwardLeeward.markRoundingOptions = new ArrayList<>();
+        GeneralUtils.addAll(windwardLeeward.markRoundingOptions,L2,L3,L4);
+        windwardLeeward.defaultMarkRounding = L2;
+
         return windwardLeeward;
     }
 
-    private RaceCourseDescriptor2 GenerateInnerOuterSlalom() {
-        RaceCourseDescriptor2 innerOuterSlalom = new RaceCourseDescriptor2();
-        innerOuterSlalom.name = "Trapezoid 70\\110 Slalom";
-        innerOuterSlalom.setLastUpdate(new Date());
-        innerOuterSlalom.legDescriptors = new ArrayList<>();
-        innerOuterSlalom.imageID = R.drawable.trapzoid_slalum_inner;
-
-        Legs shortedOuter = new Legs();
-        shortedOuter.marks = new ArrayList<>();
-        shortedOuter.name = "Shorted Outer";
-        Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
-        Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
-        Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
-        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.67,true,LocationOptions.FROM_LAST_MARK));
-        Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
-        Mark2 s1 = new Mark2("S1",5,new MarkLocation(100,0.5,true,LocationOptions.FROM_LAST_MARK));
-        Mark2 s2 = new Mark2("S2",6,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK));
-        Mark2 s3 = new Mark2("S3",7,new MarkLocation(100,1,true,LocationOptions.FROM_LAST_MARK));
-        Mark2 finish = new Mark2("Finish",8,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
-        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,s1,s2,s3,finish);
-
-        GeneralUtils.addAll(innerOuterSlalom.legDescriptors,shortedOuter);
-        return innerOuterSlalom;
-    }
+//    private RaceCourseDescriptor2 GenerateInnerOuterSlalom() {
+//        RaceCourseDescriptor2 innerOuterSlalom = new RaceCourseDescriptor2();
+//        innerOuterSlalom.name = "Trapezoid 70\\110 Slalom";
+//        innerOuterSlalom.setLastUpdate(new Date());
+//        innerOuterSlalom.legDescriptors = new ArrayList<>();
+//        innerOuterSlalom.imageID = R.drawable.trapzoid_slalum_inner;
+//
+//        Legs shortedOuter = new Legs();
+//        shortedOuter.marks = new ArrayList<>();
+//        shortedOuter.name = "Shorted Outer";
+//        Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
+//        Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
+//        Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
+//        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.67,true,LocationOptions.FROM_LAST_MARK));
+//        Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
+//        Mark2 s1 = new Mark2("S1",5,new MarkLocation(100,0.5,true,LocationOptions.FROM_LAST_MARK));
+//        Mark2 s2 = new Mark2("S2",6,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK));
+//        Mark2 s3 = new Mark2("S3",7,new MarkLocation(100,1,true,LocationOptions.FROM_LAST_MARK));
+//        Mark2 finish = new Mark2("Finish",8,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
+//        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,s1,s2,s3,finish);
+//
+//        GeneralUtils.addAll(innerOuterSlalom.legDescriptors,shortedOuter);
+//        return innerOuterSlalom;
+//    }
 
     /**
      * Verified according to ISAF RACE MANAGEMENT MANUAL November 2011
@@ -195,6 +227,13 @@ public class InitialCourseDescriptor implements Serializable {
         GeneralUtils.addAll(shortedOuter.marks,start,mk1,mk2,mk3,finish);
 
         GeneralUtils.addAll(optimist.legDescriptors,shortedOuter);
+
+        MarkRoundingOrder IOD = new MarkRoundingOrder("IOD",new ArrayList<>(Arrays.asList(0,1,2,3,4)));
+
+        optimist.markRoundingOptions = new ArrayList<>();
+        GeneralUtils.addAll(optimist.markRoundingOptions,IOD);
+        optimist.defaultMarkRounding = IOD;
+
         return optimist;
     }
 

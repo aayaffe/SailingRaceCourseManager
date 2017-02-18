@@ -1,5 +1,8 @@
 
 package com.aayaffe.sailingracecoursemanager.initializinglayer;
+
+import com.google.firebase.database.Exclude;
+
 /**
  * Created by Jonathan on 16/08/2016.
  */
@@ -68,6 +71,41 @@ public class Boat {
     }
     public void setVmg(double[][] vmg) {
         this.vmg = vmg;
+    }
+
+    public double getVmg(WindSpeed ws, PointOfSail pos){
+        return getVmg()[ws.ordinal()][pos.ordinal()];
+    }
+
+    public double getVmg(double ws, PointOfSail pos){
+        return getVmg(wind2Index(ws),pos);
+    }
+
+    @Exclude
+    public static Boat.WindSpeed wind2Index(double wind){  //index the wind strength. knots to right index at the boat's vmg table.
+        if (wind<8)
+            return Boat.WindSpeed.WIND_SPEED5_8;
+        else if (wind<=12)
+            return Boat.WindSpeed.WIND_SPEED8_12;
+        else if (wind<=15)
+            return Boat.WindSpeed.WIND_SPEED12_15;
+        return Boat.WindSpeed.WIND_SPEED15_;
+    }
+
+    @Exclude
+    public static Boat.PointOfSail dir2PointOfSail(int windDir){
+        if (windDir>310 || windDir<50)
+            return PointOfSail.UpWind;
+        else if ((windDir>=225 && windDir<=310)||(windDir>=50 && windDir<=135))
+            return PointOfSail.Reach;
+        return PointOfSail.Run;
+    }
+
+    public enum PointOfSail{
+        UpWind , Run , Reach
+    }
+    public enum WindSpeed{
+        WIND_SPEED5_8, WIND_SPEED8_12, WIND_SPEED12_15, WIND_SPEED15_
     }
 }
 
