@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class GeoUtils {
 
+    public static final double NM2m = 1852.5;
     static public Location toLocation(AviLocation l){
         if (l==null)
             return null;
@@ -75,7 +76,7 @@ public class GeoUtils {
 //    }
 
     public static AviLocation getLocationFromDirDist(AviLocation loc, double dir, double distNM) {
-        return getLocationFromDirDist(loc,dir,(int)(distNM*1852));
+        return getLocationFromDirDist(loc,dir,(int)(distNM*GeoUtils.NM2m));
     }
 
     public static Location getLocationFromDirDist(Location loc, double dir, int dist) {
@@ -150,7 +151,7 @@ public class GeoUtils {
     }
 
     public static double toNauticalMiles(double meters){
-        return meters/1852;
+        return meters/NM2m;
     }
 
     public static long ageInSeconds(Date d){
