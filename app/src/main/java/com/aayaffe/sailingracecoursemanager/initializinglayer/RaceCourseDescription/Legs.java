@@ -86,6 +86,7 @@ public class Legs {
                 }
             }
         }
+        return 0;
     }
     public List<Mark2> getOptions() {
         List<Mark2> ret = new ArrayList<>();

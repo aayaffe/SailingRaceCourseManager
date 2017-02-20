@@ -38,6 +38,7 @@ public class InitialCourseDescriptor implements Serializable {
         raceCourseDescriptors.add(GenerateWindWardLeeWard());
         //raceCourseDescriptors.add(GenerateInnerOuterSlalom());
         raceCourseDescriptors.add(GenerateOptimist());
+        raceCourseDescriptors.add(GenerateTriangular());
 
     }
 
@@ -167,43 +168,51 @@ public class InitialCourseDescriptor implements Serializable {
         Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(windlee.marks,startfinish,mk4,mk1);
 
-        GeneralUtils.addAll(windwardLeeward.legDescriptors,windlee);
+        Legs cruisersWL = new Legs();
+        cruisersWL.marks = new ArrayList<>();
+        cruisersWL.name = "Cruisers Wind-Lee";
+        startfinish = new Mark2("StartFinish",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
+        mk1 = new Mark2("Mk1",1,new MarkLocation(0,0.5,true, LocationOptions.FROM_LAST_MARK));
+        Mark2 mk3 = new Mark2("Mk3",2,new MarkLocation(-180,1,true,LocationOptions.FROM_LAST_MARK));
+        GeneralUtils.addAll(cruisersWL.marks,startfinish,mk1,mk3);
 
-        MarkRoundingOrder L2 = new MarkRoundingOrder("L2",new ArrayList<>(Arrays.asList(0,4,1,4,1,0)));
-        MarkRoundingOrder L3 = new MarkRoundingOrder("L3",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,0)));
-        MarkRoundingOrder L4 = new MarkRoundingOrder("L4",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,4,1,0)));
+        GeneralUtils.addAll(windwardLeeward.legDescriptors,windlee,cruisersWL);
 
-        windwardLeeward.markRoundingOptions = new ArrayList<>();
-        GeneralUtils.addAll(windwardLeeward.markRoundingOptions,L2,L3,L4);
-        windwardLeeward.defaultMarkRounding = L2;
+//        MarkRoundingOrder L2 = new MarkRoundingOrder("L2",new ArrayList<>(Arrays.asList(0,4,1,4,1,0)));
+//        MarkRoundingOrder L3 = new MarkRoundingOrder("L3",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,0)));
+//        MarkRoundingOrder L4 = new MarkRoundingOrder("L4",new ArrayList<>(Arrays.asList(0,4,1,4,1,4,1,4,1,0)));
+//
+//        windwardLeeward.markRoundingOptions = new ArrayList<>();
+//        GeneralUtils.addAll(windwardLeeward.markRoundingOptions,L2,L3,L4);
+//        windwardLeeward.defaultMarkRounding = L2;
 
         return windwardLeeward;
     }
 
-//    private RaceCourseDescriptor2 GenerateInnerOuterSlalom() {
-//        RaceCourseDescriptor2 innerOuterSlalom = new RaceCourseDescriptor2();
-//        innerOuterSlalom.name = "Trapezoid 70\\110 Slalom";
-//        innerOuterSlalom.setLastUpdate(new Date());
-//        innerOuterSlalom.legDescriptors = new ArrayList<>();
-//        innerOuterSlalom.imageID = R.drawable.trapzoid_slalum_inner;
-//
-//        Legs shortedOuter = new Legs();
-//        shortedOuter.marks = new ArrayList<>();
-//        shortedOuter.name = "Shorted Outer";
-//        Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
-//        Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
-//        Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
-//        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.67,true,LocationOptions.FROM_LAST_MARK));
-//        Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
-//        Mark2 s1 = new Mark2("S1",5,new MarkLocation(100,0.5,true,LocationOptions.FROM_LAST_MARK));
-//        Mark2 s2 = new Mark2("S2",6,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK));
-//        Mark2 s3 = new Mark2("S3",7,new MarkLocation(100,1,true,LocationOptions.FROM_LAST_MARK));
-//        Mark2 finish = new Mark2("Finish",8,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
-//        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,s1,s2,s3,finish);
-//
-//        GeneralUtils.addAll(innerOuterSlalom.legDescriptors,shortedOuter);
-//        return innerOuterSlalom;
-//    }
+    private RaceCourseDescriptor2 GenerateInnerOuterSlalom() {
+        RaceCourseDescriptor2 innerOuterSlalom = new RaceCourseDescriptor2();
+        innerOuterSlalom.name = "Trapezoid 70\\110 Slalom";
+        innerOuterSlalom.setLastUpdate(new Date());
+        innerOuterSlalom.legDescriptors = new ArrayList<>();
+        innerOuterSlalom.imageID = R.drawable.trapzoid_slalum_inner;
+
+        Legs shortedOuter = new Legs();
+        shortedOuter.marks = new ArrayList<>();
+        shortedOuter.name = "Shorted Outer";
+        Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
+        Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
+        Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
+        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.67,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
+        Mark2 s1 = new Mark2("S1",5,new MarkLocation(100,0.5,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 s2 = new Mark2("S2",6,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 s3 = new Mark2("S3",7,new MarkLocation(100,1,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 finish = new Mark2("Finish",8,new MarkLocation(265,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
+        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,s1,s2,s3,finish);
+
+        GeneralUtils.addAll(innerOuterSlalom.legDescriptors,shortedOuter);
+        return innerOuterSlalom;
+    }
 
     /**
      * Verified according to ISAF RACE MANAGEMENT MANUAL November 2011
@@ -235,6 +244,42 @@ public class InitialCourseDescriptor implements Serializable {
         optimist.defaultMarkRounding = IOD;
 
         return optimist;
+    }
+
+    /**
+     * @return
+     */
+    private RaceCourseDescriptor2 GenerateTriangular() {
+        RaceCourseDescriptor2 triangular = new RaceCourseDescriptor2();
+        triangular.name = "Cruisers Triangular";
+        triangular.setLastUpdate(new Date());
+        triangular.legDescriptors = new ArrayList<>();
+        triangular.imageID = R.drawable.triangular;
+
+        Legs cruisersTriangle = new Legs();
+        cruisersTriangle.marks = new ArrayList<>();
+        cruisersTriangle.name = "Cruisers Triangle";
+        Mark2 start = new Mark2("StartFinish",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
+        Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,0.5,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-120,1,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(120,1,true,LocationOptions.FROM_LAST_MARK));
+        //Mark2 finish = new Mark2("Finish",4,new MarkLocation(10,0.97,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
+        //GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3,finish);
+        GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3);
+
+//        Legs Triangle = new Legs();
+//        Triangle.marks = new ArrayList<>();
+//        Triangle.name = "Olympic Triangle";
+//        start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
+//        mk3 = new Mark2("Mk3",1,new MarkLocation(0,0.05,false,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
+//        mk1 = new Mark2("Mk1",2,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
+//        mk2 = new Mark2("Mk2",3,new MarkLocation(-135,0.71,true,LocationOptions.FROM_LAST_MARK));
+//        Mark2 finish = new Mark2("Finish",4,new MarkLocation(10,0.97,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,false));
+//        GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3,finish);
+
+
+        GeneralUtils.addAll(triangular.legDescriptors,cruisersTriangle);
+        return triangular;
     }
 
 
