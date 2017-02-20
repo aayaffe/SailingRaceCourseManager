@@ -19,14 +19,14 @@ public class GeoUtilsTest {
     @Test
     public void getLocationFromDirDist() throws Exception {
         AviLocation loc1 = new AviLocation();
-        int distInMeters = 10;
+        int distInMeters = 1852;
         loc1.setLat(32.0);
         loc1.setLon(32.0);
-        AviLocation loc2 = GeoUtils.getLocationFromDirDist(loc1,174f,distInMeters);
+        AviLocation loc2 = GeoUtils.getLocationFromDirDist(loc1,15f,distInMeters);
 
         float dist = (int)loc1.distanceTo(loc2);
 
-        Assert.assertEquals("Distance difference is " + Math.abs(100 - (dist/1000.0/(float)distInMeters)*100) + "%" ,distInMeters,dist/1000.0,0.3);
+        Assert.assertEquals("Distance difference is " + Math.abs(100 - (dist/(float)distInMeters)*100) + "%" ,distInMeters,dist,0.3);
     }
 
 

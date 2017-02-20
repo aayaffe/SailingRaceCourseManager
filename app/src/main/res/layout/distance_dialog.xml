@@ -53,7 +53,8 @@
                         layout="@layout/distance_tab_class_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="A semi-random button" />
+                        android:text="A semi-random button"
+                        android:visibility="invisible" />
                 </FrameLayout>
             </LinearLayout>
         </TabHost>

@@ -54,7 +54,7 @@ public class InitialCourseDescriptor implements Serializable {
         Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
-        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-120,0.67,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-120,0.5,true,LocationOptions.FROM_LAST_MARK));
         Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark2 finish = new Mark2("Finish",5,new MarkLocation(0,0,false,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish);
@@ -110,7 +110,7 @@ public class InitialCourseDescriptor implements Serializable {
         Mark2 start = new Mark2("Start",0,new MarkLocation(0,0,false, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,-125,0.08,GateReference.LEFT_MARK,false));
-        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.67,true,LocationOptions.FROM_LAST_MARK));
+        Mark2 mk2 = new Mark2("Mk2",2,new MarkLocation(-110,0.658,true,LocationOptions.FROM_LAST_MARK));
         Mark2 mk3 = new Mark2("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_LAST_MARK),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark2 finish = new Mark2("Finish",5,new MarkLocation(0,0,false,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
         GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish);

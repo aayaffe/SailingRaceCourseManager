@@ -542,12 +542,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (src==null){
             return "NoGPS";
         }
+        int maxMetreDistance = 500;
         double distance;
         int bearing;
         String units;
         try {
-            distance = src.distanceTo(dst) < 1700 ? src.distanceTo(dst) : (src.distanceTo(dst) / 1609.34);
-            units = src.distanceTo(dst) < 1700 ? getString(R.string.metre_unit_symbol) : getString(R.string.nautical_miles_unit_symbol);
+            distance = src.distanceTo(dst) < maxMetreDistance ? src.distanceTo(dst) : (src.distanceTo(dst) / GeoUtils.NM2m);
+            units = src.distanceTo(dst) < maxMetreDistance ? getString(R.string.metre_unit_symbol) : getString(R.string.nautical_miles_unit_symbol);
             bearing = src.bearingTo(dst) > 0 ? (int) src.bearingTo(dst) : (int) src.bearingTo(dst) + 360;
         } catch (NullPointerException e) {
             Log.e(TAG,"No gps found", e);
@@ -556,7 +557,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (bearing==360)
             bearing = 0;
         if (units.equals(getString(R.string.nautical_miles_unit_symbol)))
-            return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.1f", distance) + units;
+            return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.2f", distance) + units;
         return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.0f", distance) + units;
     }
 
