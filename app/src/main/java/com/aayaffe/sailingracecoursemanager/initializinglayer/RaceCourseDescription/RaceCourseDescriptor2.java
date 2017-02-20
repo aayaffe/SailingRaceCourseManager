@@ -1,16 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
-import android.util.Log;
-
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
-import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
-import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
-import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.Legs;
 import com.google.firebase.database.Exclude;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +17,8 @@ public class RaceCourseDescriptor2 {
     public List<Legs> legDescriptors;
     private UUID uuid;
     public Long lastUpdate;
+    public List<MarkRoundingOrder> markRoundingOptions;
+    public MarkRoundingOrder defaultMarkRounding;
 
     public RaceCourseDescriptor2(){
         uuid = UUID.randomUUID();

@@ -1,9 +1,11 @@
-package com.aayaffe.sailingracecoursemanager.initializinglayer;
+package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
+import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateOption;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateType;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
@@ -45,6 +47,47 @@ public class Legs {
         return lengthFactors;
     }
 
+    /**
+     * Returns the distance of a course (relative  to distance to m1 parts or absolute parts) according
+     * to the MarkRoundingOrder and specific point of sail
+     * @param mro desired Mark rounding order
+     * @param pos desired Point of sail
+     * @param dt Relative parts or absolute parts.
+     * @return The distance required (absolute in NM or relative to distance to M1)
+     */
+    @Exclude
+    public double getDistance(MarkRoundingOrder mro, Boat.PointOfSail pos, DistanceType dt){
+        double ret = 0;
+        //TODO factor in the mro...
+        for(Mark2 m: marks){
+            if (dt == DistanceType.Relative) {
+                if (m.ml.relativeDistance){
+                    if (pos == Boat.dir2PointOfSail(m.ml.direction)){
+                        ret += m.ml.distance;
+                    }
+                }
+            }
+            else {
+                if (!m.ml.relativeDistance){
+                    if (pos == Boat.dir2PointOfSail(m.ml.direction)){
+                        ret += m.ml.distance;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    private double markDistance(int m1, int m2){
+        if (m1+1==m2 || m1-1==m2){
+            for (Mark2 m: marks){
+                if (m.id == m1){
+                    //TODO: Think of how to handle this (IE absolute location...)
+                }
+            }
+        }
+        return 0;
+    }
     public List<Mark2> getOptions() {
         List<Mark2> ret = new ArrayList<>();
         for(Mark2 m : marks){
