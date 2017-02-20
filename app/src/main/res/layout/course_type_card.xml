@@ -9,7 +9,7 @@
         android:layout_margin="2dp"
         android:gravity="center"
         android:layout_centerInParent="true"
-        android:background="@drawable/racecourse_optimist"
+
         android:contentDescription="Set course type"
         />
         <!--
@@ -23,7 +23,6 @@
         android:layout_alignLeft="@id/course_type_image"
         android:layout_alignRight="@id/course_type_image"
         android:layout_margin="2dp"
-        android:text="Race Course is a nice thing"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp"

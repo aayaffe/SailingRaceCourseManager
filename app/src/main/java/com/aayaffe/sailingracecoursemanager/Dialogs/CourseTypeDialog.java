@@ -7,7 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
     private Context context;
     private OnMyDialogResult mDialogResult;
-    private List<RaceCourseDescriptor> coursesList;
+    private List<RaceCourseDescriptor2> coursesList;
 
-    public CourseTypeDialog(Context context, List<RaceCourseDescriptor> coursesList){
+    public CourseTypeDialog(Context context, List<RaceCourseDescriptor2> coursesList){
         super(context);
         this.context=context;
         this.coursesList=coursesList;
@@ -45,12 +46,12 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
     }
 
     @Override
-    public void onRecyclerItemClick(RaceCourseDescriptor raceCourseDescriptor){
+    public void onRecyclerItemClick(RaceCourseDescriptor2 raceCourseDescriptor){
         CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context, raceCourseDescriptor);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {
-            public void finish(Map<String, String> result , List<Double> factorResult) {
-                mDialogResult.finish(result, factorResult);
+            public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
+                mDialogResult.finish(result, factorResult,legs);
             }
         });
         dismiss();
@@ -62,7 +63,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
 
     public interface OnMyDialogResult{
-        void finish(Map<String, String> result , List<Double> factorResult);
+        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs);
     }
 
 }

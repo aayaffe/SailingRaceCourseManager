@@ -9,6 +9,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -95,6 +96,15 @@ public class GeneralUtils {
         if ((max!=null)&&(n.floatValue()>max))
                 return false;
         return true;
+    }
+
+    public static <T> void addAll(List<T> list, T... elements) {
+        if (list!=null)
+        {
+            for (T elem: elements){
+                list.add(elem);
+            }
+        }
     }
 
     enum CLAZZ {

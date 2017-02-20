@@ -13,7 +13,9 @@ import android.widget.Button;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.CourseXmlParser;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
@@ -38,39 +40,38 @@ public class MainCourseInputActivity extends Activity {
     private ConfigChange configChange;
     SharedPreferences.Editor editor;
 
-    private List<RaceCourseDescriptor> coursesInfo;
+    private List<RaceCourseDescriptor2> coursesInfo;
     private List<Boat> boats;
     private IGeo iGeo;
 
 
     private static List<Double> courseFactors;
-    private static Map<String,String> courseOptions;
+    private static Map<String,Boolean> courseOptions = new HashMap<>();
     private static float dist2m1 = 1;
     private static float startLineLength = 0.11f;
-
+    private static float gateLength = 0.11f;
     private static float windDirection;
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
+    private Legs legs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_course_input);
         ICommManager comm = GoogleMapsActivity.commManager;
-        Map<String,String> defaultCourseOptions  = new HashMap<>();
-        defaultCourseOptions.put("type","Windward-Leeward");
-        defaultCourseOptions.put("Legs","L-Leeward");
-        courseOptions=defaultCourseOptions;
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(configChange);
         configChange = new ConfigChange();
         windDirection = Float.parseFloat(sharedPreferences.getString("windDir", "90"));
         iGeo = new OwnLocation(getBaseContext(), this);
-        CourseXmlParser xmlParserC = new CourseXmlParser(this, "courses_file.xml");
-        coursesInfo = xmlParserC.parseCourseTypes();
+        coursesInfo = new InitialCourseDescriptor().getRaceCourseDescriptors();
         boats = comm.getBoatTypes();
+        legs = coursesInfo.get(0).getRaceCourseLegs().get(0); //TODO: use last race course selected.
+
 
         Button courseButton = (Button) findViewById(R.id.coursetype_input_button);
         courseButton.setOnClickListener(new View.OnClickListener() {
@@ -80,9 +81,10 @@ public class MainCourseInputActivity extends Activity {
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(Map<String, String> result, List<Double> factorResult) {
-                        courseOptions=result;
-                        courseFactors=factorResult;
+                    public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
+                        MainCourseInputActivity.this.courseOptions=result;
+                        MainCourseInputActivity.this.courseFactors=factorResult;
+                        MainCourseInputActivity.this.legs = legs;
                     }
                 });
             }
@@ -96,10 +98,11 @@ public class MainCourseInputActivity extends Activity {
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(double result,double startLine) {
+                    public void finish(double result,double startLine,double gate) {
                         //something to do
                         dist2m1 = (float) result;
-                        startLineLength = (float) startLine;
+                        startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
+                        gateLength = (float) GeoUtils.toNauticalMiles(gate); //TODO: Better to send meters
                     }
 
                 });
@@ -131,7 +134,8 @@ public class MainCourseInputActivity extends Activity {
                 editor = sharedPreferences.edit();
                 editor.putString("windDir",String.valueOf(windDirection));
                 editor.apply();
-                RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength ,courseOptions);  //defultStartLine: 200m
+
+                RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength, gateLength ,legs ,courseOptions);  //defultStartLine: 200m
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
                 setResult(-1, resultIntent);

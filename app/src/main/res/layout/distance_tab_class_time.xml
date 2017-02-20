@@ -70,6 +70,22 @@
         android:layout_gravity="center_horizontal"
         app:buttonsTextColor="@color/cmark_blue_light"/>
 
+    <TextView
+        android:id="@+id/gate_length_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gate width (Boat lengths)"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <com.aayaffe.sailingracecoursemanager.dialogs.HorizontalNumberPicker
+        android:id="@+id/gate_length_boats_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        app:buttonsTextColor="@color/cmark_blue_light"/>
+
 </LinearLayout>
 
 <!--

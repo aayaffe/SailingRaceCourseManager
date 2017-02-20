@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
@@ -29,6 +31,8 @@ import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 
+import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
@@ -60,41 +64,14 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         setContentView(R.layout.activity_choose_event);
         commManager = new com.aayaffe.sailingracecoursemanager.communication.Firebase(this);
         commManager.login();
+        users = new Users(commManager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
         eventsView.setItemsCanFocus(false);
-        mAdapter = new FirebaseListAdapter<Event>(this, Event.class, R.layout.three_line_list_item, commManager.getFireBaseRef().child(getString(R.string.db_events))) {
-            @Override
-            protected void populateView(View view, final Event event, int position) {
-                ((TextView)view.findViewById(android.R.id.text1)).setText(event.getName());
-                String dates = getDateRangeString(event);
-                User manager = commManager.findUser(event.getManagerUuid());
-                final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
-                if ((manager!=null && manager.equals(users.getCurrentUser()))||users.isAdmin(users.getCurrentUser())){
-                    delete.setVisibility(View.VISIBLE);
-                    delete.setEnabled(true);
-                    delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            deleteEvent(event);
 
-                        }
-                    });
-                }
-                else {
-                    delete.setVisibility(View.INVISIBLE);
-                    delete.setEnabled(false);
-                }
-                if (manager==null) {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText(getString(R.string.race_officer) + ": " +getString(R.string.unknown));
-                }
-                else {
-                    ((TextView) view.findViewById(android.R.id.text2)).setText(getString(R.string.race_officer) + ": " + manager.DisplayName);
-                }
-                ((TextView) view.findViewById(R.id.text3)).setText(dates);
-            }
-        };
+        mAdapter = new EventsListAdapter(this, Event.class, R.layout.three_line_list_item,
+                commManager.getFireBaseRef().child(getString(R.string.db_events)),commManager,users);
         eventsView.setAdapter(mAdapter);
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,8 +84,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 startActivity(intent);
             }
         });
-        users = new Users(commManager);
+
         notification.InitNotification(this);
+
+
     }
 
     public void deleteEvent(Event event) {
@@ -134,17 +113,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
 
-    }
-
-
-
-    @NonNull
-    public static String getDateRangeString(Event event) {
-        if (event.monthEnd == 0 || event.dayEnd == 0 || event.yearStart == 0 || event.monthStart == 0 || event.dayStart == 0 || event.yearEnd == 0)
-            return "";
-        if (event.dayStart == event.dayEnd && event.monthStart == event.monthEnd && event.yearStart == event.yearEnd)
-            return String.valueOf(event.dayStart) + '/' + event.monthStart + '/' + event.yearStart;
-        return String.valueOf(event.dayStart) + '/' + event.monthStart + '/' + event.yearStart + " - " + event.dayEnd + '/' + event.monthEnd + '/' + event.yearEnd;
     }
 
     @Override
@@ -191,7 +159,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_event:
-                Log.d(TAG, "Plus Fab Clicked");
+                Log.d(TAG, "Add event pressed");
                 DialogFragment addevent = EventInputDialog.newInstance(null, this);
                 addevent.show(getFragmentManager(), "Add_Event");
                 return true;
@@ -249,16 +217,23 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
 
+    /**
+     * Event add dialog positive click listener
+     * @param dialog
+     */
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
         if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().isEmpty())){
             if (!eventNameText.getText().toString().matches(".*[\\.\\#\\$\\[\\]]+.*"))
-                addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,((EventInputDialog)dialog).yearEnd,((EventInputDialog)dialog).monthStart,((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,((EventInputDialog)dialog).dayEnd);
+                addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,
+                        ((EventInputDialog)dialog).yearEnd, ((EventInputDialog)dialog).monthStart,
+                        ((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,
+                        ((EventInputDialog)dialog).dayEnd);
         }
         else {
             Log.d(TAG, "Event not(!) created.");
-            Toast t = Toast.makeText(this, "Event name not acceptable", Toast.LENGTH_LONG);
+            Toast t = Toast.makeText(this, R.string.new_event_name_not_accepted_toast_message, Toast.LENGTH_LONG);
             t.show();
         }
 
@@ -268,7 +243,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (users.getCurrentUser()!=null) {
             if (commManager.getEvent(eventNameText) != null) {
                 Log.d(TAG, "Event not(!) created. Event name exists in DB");
-                Toast t = Toast.makeText(this, "Event with that name already exist.", Toast.LENGTH_LONG);
+                Toast t = Toast.makeText(this, R.string.new_event_duplicate_name_toast_message, Toast.LENGTH_LONG);
                 t.show();
                 return;
             }

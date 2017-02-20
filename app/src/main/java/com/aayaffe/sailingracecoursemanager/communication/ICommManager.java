@@ -5,6 +5,7 @@ import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface ICommManager {
     List<DBObject> getAllBoats();  //ships
     List<DBObject> getAllBuoys();  //Just buoys, without ships
 
-    int sendAction(RaceManagerAction a, DBObject o);
+    int sendAction(RaceOfficerAction a, DBObject o);
 
     long getNewBuoyId();
 
@@ -68,9 +69,11 @@ public interface ICommManager {
 
     void deleteEvent(Event event);
 
-    void addRaceCourseDescriptor(RaceCourseDescriptor ct);
+    void addRaceCourseDescriptor(RaceCourseDescriptor2 ct);
 
-    List<RaceCourseDescriptor> getRaceCourseDescriptors();
+    List<RaceCourseDescriptor2> getRaceCourseDescriptors();
 
     boolean isAdmin(User u);
+
+    void removeCommManagerEventListener(CommManagerEventListener onConnectEventListener);
 }

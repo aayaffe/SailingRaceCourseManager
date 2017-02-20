@@ -80,7 +80,7 @@ public class Mark {
     public void setDistaneFactor(String distanceFactor) {
         if (distanceFactor != null)
             this.distanceFactor = "true".equals(distanceFactor) || "always".equals(distanceFactor);
-        else Log.w(TAG, "null distanceFactor set - Mark named:" + this.name);
+        else Log.w(TAG, "null relativeDistance set - Mark named:" + this.name);
     }
     @Exclude
     public boolean addReferedMark(Mark referedMark) {
@@ -118,7 +118,7 @@ public class Mark {
     public void setGateDistance(String gateDistance) {
         if (gateDistance != null)
             this.gateDistance = Double.parseDouble(gateDistance);
-        else Log.w(TAG, "null gateDistance set - Mark named:" + this.name);
+        else Log.w(TAG, "null gateWidth set - Mark named:" + this.name);
     }
     public double getGateDistance() {
         return gateDistance;
@@ -134,9 +134,9 @@ public class Mark {
      *
      * Each Mark is a tree root to marks that uses it's location, so this function must act recursively
      */
-    public List<DBObject> parseBuoys(AviLocation referencePoint, double multiplication, int windDir, float startLineLength, UUID raceCourseUUID) {  //parses the mark and his sons into buoys
+    public List<DBObject> parseBuoys(AviLocation referencePoint, double dist2m1, int windDir, float startLineLength, UUID raceCourseUUID) {  //parses the mark and his sons into buoys
         List<DBObject> buoys = new ArrayList<>();
-        AviLocation location = new AviLocation(referencePoint, getDirection() + windDir, getAbsDistance(multiplication));
+        AviLocation location = new AviLocation(referencePoint, getDirection() + windDir, getAbsDistance(dist2m1));
         if (isGatable || "REFERENCE_POINT".equals(gateType)) {
             switch (gateType) {
                 case "BUOY":  //adds a single buoy
@@ -177,7 +177,7 @@ public class Mark {
         //parseChildren
         for (int i = 0; i < this.getReferedMarks().size(); i++) {
             Mark child = this.getReferedMarks().get(i);
-            buoys.addAll(child.parseBuoys(location, multiplication, windDir,startLineLength, raceCourseUUID));
+            buoys.addAll(child.parseBuoys(location, dist2m1, windDir,startLineLength, raceCourseUUID));
         }
         return buoys;
     }
