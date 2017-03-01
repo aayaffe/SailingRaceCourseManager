@@ -5,8 +5,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,31 +16,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
-import com.aayaffe.sailingracecoursemanager.general.Notification;
-
-import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.tenmiles.helpstack.HSHelpStack;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +44,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Users users;
 //    private static String selectedEventName;
     private static Event selectedEvent;
-    private Notification notification = new Notification();
+
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
-    private Boolean exit = false;
+
     private Menu menu;
 
     @Override
@@ -88,7 +77,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             }
         });
 
-        notification.InitNotification(this);
+
         showRecentUpdateOnce(this);
 
 
@@ -284,23 +273,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
 
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            notification.cancelAll();
-            finish();
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-        }
-    }
+
 
     private void enableLogin(Menu menu, boolean toLogin){
         if (toLogin) {

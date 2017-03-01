@@ -38,6 +38,7 @@ import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GPSService;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -55,7 +56,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener, LocationListener {
-
+    private Notification notification = new Notification();
+    private Boolean exit = false;
     public static List<DBObject> buoys;
     public static List<DBObject> boats;
     private DBObject myBoat; //instead of AviObject class
@@ -113,6 +115,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         };
         Intent intent = new Intent(this, GPSService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        notification.InitNotification(this);
 
     }
 
@@ -690,5 +693,22 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             noGps.setVisibility(View.VISIBLE);
         }
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            notification.cancelAll();
+            finish();
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
     }
 }
