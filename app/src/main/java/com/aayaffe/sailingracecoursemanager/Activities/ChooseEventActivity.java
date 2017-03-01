@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,12 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
@@ -86,8 +89,17 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         });
 
         notification.InitNotification(this);
+        showRecentUpdateOnce(this);
 
 
+
+    }
+    /** Show the recent updates prompt once per version. */
+    public static void showRecentUpdateOnce(Activity activity) {
+        new OneTimeAlertDialog.Builder(activity, "recent_updates_dialog" + BuildConfig.VERSION_NAME)
+                .setTitle(activity.getString(R.string.disclaimer_title))
+                .setMessage(activity.getString(R.string.disclaimer_message))
+                .show();
     }
 
     public void deleteEvent(Event event) {
@@ -186,6 +198,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setProviders(getSelectedProviders())
                         .setLogo(R.mipmap.banner)
+                        /*.setTosUrl()*/ //TODO: Add TOS
                         .build(),
                 RC_SIGN_IN);
     }
