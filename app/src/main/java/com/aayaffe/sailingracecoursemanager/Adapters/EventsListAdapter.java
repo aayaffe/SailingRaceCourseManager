@@ -44,6 +44,8 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
         String dates = getDateRangeString(event);
         User manager = commManager.findUser(event.getManagerUuid());
         final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
+        final ImageButton viewOnly =(ImageButton)view.findViewById(R.id.view_only_event_button);
+
         if ((manager!=null && manager.equals(users.getCurrentUser()))||users.isAdmin(users.getCurrentUser())){
             delete.setVisibility(View.VISIBLE);
             delete.setEnabled(true);
@@ -58,6 +60,21 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
         else {
             delete.setVisibility(View.INVISIBLE);
             delete.setEnabled(false);
+        }
+        if (users.isAdmin(users.getCurrentUser())){
+            viewOnly.setVisibility(View.VISIBLE);
+            viewOnly.setEnabled(true);
+            viewOnly.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ChooseEventActivity)mActivity).viewOnly(event);
+
+                }
+            });
+        }
+        else {
+            viewOnly.setVisibility(View.INVISIBLE);
+            viewOnly.setEnabled(false);
         }
         if (manager==null) {
             ((TextView) view.findViewById(android.R.id.text2)).setText(mActivity.getString(R.string.race_officer) + ": " +mActivity.getString(R.string.unknown));

@@ -68,20 +68,20 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
                 Event e  = (Event)parent.getItemAtPosition(position);
-                selectedEvent = e;
-                commManager.setCurrentEvent(selectedEvent);
-                intent.putExtra("eventName", selectedEvent.getName());
-                startActivity(intent);
+                enterEvent(false,e);
             }
         });
-
-
         showRecentUpdateOnce(this);
+    }
 
-
-
+    private void enterEvent(boolean viewOnly,Event e){
+        Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
+        selectedEvent = e;
+        commManager.setCurrentEvent(selectedEvent);
+        intent.putExtra("eventName", selectedEvent.getName());
+        intent.putExtra("viewOnly", viewOnly);
+        startActivity(intent);
     }
     /** Show the recent updates prompt once per version. */
     public static void showRecentUpdateOnce(Activity activity) {
@@ -305,6 +305,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             }
             loggedIn = true;
         }
+    }
+
+    public void viewOnly(Event event) {
+        enterEvent(true, event);
     }
 }
 

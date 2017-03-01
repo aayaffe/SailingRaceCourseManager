@@ -81,6 +81,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private DBObject assignedBuoy;
     GPSService mService;
     boolean mBound = false;
+    private boolean viewOnly = false;
 
 
     @Override
@@ -100,6 +101,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
+        viewOnly = i.getBooleanExtra("viewOnly",false);
         setIconsClickListeners();
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
@@ -158,7 +160,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             public void infoWindowLongClick(UUID u) {
                 Log.d(TAG, "OninfowindowLongClick: "+ u.toString());
                 boolean isBuoy = isBuoy(commManager.getObjectByUUID(u));
-                if (isBuoy && GoogleMapsActivity.isCurrentEventManager()) {
+                if (isBuoy && GoogleMapsActivity.isCurrentEventManager() && !viewOnly) {
                     mapLayer.removeMark(u,true);
                 }
             }
@@ -262,7 +264,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
-        if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid))) {
+        if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid)) || viewOnly) {
             menu.getItem(3).setEnabled(false);
             menu.getItem(3).setVisible(false);
             menu.getItem(2).setEnabled(false);
@@ -366,7 +368,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         @Override
         public void run() {
-            if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null)) {
+            if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
                 myBoat = getMyBoat(users.getCurrentUser().DisplayName);
                 if (myBoat == null) {
                     myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
@@ -423,7 +425,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void drawMapComponents() {
         boats = commManager.getAllBoats();
         buoys = commManager.getAllBuoys();
-        if (isCurrentEventManager()){
+        if (isCurrentEventManager() && !viewOnly){
             removeOldBoats(boats);
         }
         removeOldMarkers(boats, buoys);
@@ -700,7 +702,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             notification.cancelAll();
             finish();
         } else {
-            Toast.makeText(this, "Press Back again to Exit.",
+            Toast.makeText(this, "Press back again to leave event.",
                     Toast.LENGTH_SHORT).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {
