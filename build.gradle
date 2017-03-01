@@ -3,6 +3,9 @@
 buildscript {
     repositories {
         jcenter()
+        //Required for firebase-auth-ui
+        maven {
+            url 'https://maven.fabric.io/public' }
 
     }
     dependencies {
@@ -16,7 +19,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
+        //Required for firebase-auth-ui
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
 
 }

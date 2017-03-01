@@ -254,5 +254,7 @@
     <string name="action_get_help">Get help</string>
     <string name="new_event_name_not_accepted_toast_message">Event name is unacceptable</string>
     <string name="new_event_duplicate_name_toast_message">Event with that name already exist.</string>
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer_message">This application is meant for reviewing purposes only.\nIt is based on free infrastructure and as such cannot be gurenteed to work at all times.\n\nPlease contact the developer with any requests, suggestions or comments.</string>
 
 </resources>
