@@ -26,7 +26,7 @@ public class GeoUtilsTest {
 
         float dist = (int)loc1.distanceTo(loc2);
 
-        Assert.assertEquals("Distance difference is " + Math.abs(100 - (dist/(float)distInMeters)*100) + "%" ,distInMeters,dist,0.3);
+        Assert.assertEquals("Distance difference is " + Math.abs(100 - (dist/(float)distInMeters)*100) + "%" ,distInMeters,dist,6);
     }
 
 

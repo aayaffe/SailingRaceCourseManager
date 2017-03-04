@@ -1,11 +1,10 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,22 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
+import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.general.Notification;
-
-import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.communication.Firebase;
+import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
@@ -40,9 +34,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.tenmiles.helpstack.HSHelpStack;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.doorbell.android.Doorbell;
 
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
@@ -52,10 +47,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Users users;
 //    private static String selectedEventName;
     private static Event selectedEvent;
-    private Notification notification = new Notification();
+
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
-    private Boolean exit = false;
+
     private Menu menu;
 
     @Override
@@ -76,18 +71,28 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
                 Event e  = (Event)parent.getItemAtPosition(position);
-                selectedEvent = e;
-                commManager.setCurrentEvent(selectedEvent);
-                intent.putExtra("eventName", selectedEvent.getName());
-                startActivity(intent);
+                enterEvent(false,e);
             }
         });
+        showRecentUpdateOnce(this);
+    }
 
-        notification.InitNotification(this);
 
-
+    private void enterEvent(boolean viewOnly,Event e){
+        Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
+        selectedEvent = e;
+        commManager.setCurrentEvent(selectedEvent);
+        intent.putExtra("eventName", selectedEvent.getName());
+        intent.putExtra("viewOnly", viewOnly);
+        startActivity(intent);
+    }
+    /** Show the recent updates prompt once per version. */
+    public static void showRecentUpdateOnce(Activity activity) {
+        new OneTimeAlertDialog.Builder(activity, "recent_updates_dialog" + BuildConfig.VERSION_NAME)
+                .setTitle(activity.getString(R.string.disclaimer_title))
+                .setMessage(activity.getString(R.string.disclaimer_message))
+                .show();
     }
 
     public void deleteEvent(Event event) {
@@ -99,20 +104,16 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                     case DialogInterface.BUTTON_POSITIVE:
                         commManager.deleteEvent(e);
                         break;
-
                     case DialogInterface.BUTTON_NEGATIVE:
                     default:
                         //No button clicked
                         break;
-
                 }
             }
         };
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
-
     }
 
     @Override
@@ -144,6 +145,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         this.menu = menu;
+        menu.clear();
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_event_toolbar, menu);
         if (loggedIn)
@@ -167,6 +169,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 Log.d(TAG, "Get help pressed");
                 HSHelpStack.getInstance(this).showHelp(this);
                 return true;
+            case R.id.action_feedback:
+                Log.d(TAG, "Give feedback pressed");
+                new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
+                return true;
             case R.id.action_logout:
                 if (loggedIn) {
                     users.logout();
@@ -175,8 +181,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 else startLoginActivity();
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -186,6 +190,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setProviders(getSelectedProviders())
                         .setLogo(R.mipmap.banner)
+                        /*.setTosUrl()*/ //TODO: Add TOS
                         .build(),
                 RC_SIGN_IN);
     }
@@ -236,7 +241,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Toast t = Toast.makeText(this, R.string.new_event_name_not_accepted_toast_message, Toast.LENGTH_LONG);
             t.show();
         }
-
     }
 
     private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
@@ -270,25 +274,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         mAdapter.cleanup();
     }
 
-
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            notification.cancelAll();
-            finish();
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-        }
-    }
-
     private void enableLogin(Menu menu, boolean toLogin){
         if (toLogin) {
             try {
@@ -319,6 +304,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             }
             loggedIn = true;
         }
+    }
+
+    public void viewOnly(Event event) {
+        enterEvent(true, event);
     }
 }
 

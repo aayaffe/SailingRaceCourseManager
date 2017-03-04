@@ -48,7 +48,7 @@ public class Legs {
     }
 
     /**
-     * Returns the distance of a course (relative  to distance to m1 parts or absolute parts) according
+     * Returns the distance of a course (relative to distance to m1 parts or absolute parts) according
      * to the MarkRoundingOrder and specific point of sail
      * @param mro desired Mark rounding order
      * @param pos desired Point of sail
