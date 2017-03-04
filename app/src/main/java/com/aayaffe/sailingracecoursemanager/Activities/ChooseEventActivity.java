@@ -24,6 +24,7 @@ import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.firebase.ui.auth.AuthUI;
@@ -35,6 +36,8 @@ import com.tenmiles.helpstack.HSHelpStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.doorbell.android.Doorbell;
 
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
@@ -75,6 +78,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         showRecentUpdateOnce(this);
     }
 
+
     private void enterEvent(boolean viewOnly,Event e){
         Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
         selectedEvent = e;
@@ -100,20 +104,16 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                     case DialogInterface.BUTTON_POSITIVE:
                         commManager.deleteEvent(e);
                         break;
-
                     case DialogInterface.BUTTON_NEGATIVE:
                     default:
                         //No button clicked
                         break;
-
                 }
             }
         };
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
-
     }
 
     @Override
@@ -145,6 +145,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         this.menu = menu;
+        menu.clear();
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_event_toolbar, menu);
         if (loggedIn)
@@ -168,6 +169,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 Log.d(TAG, "Get help pressed");
                 HSHelpStack.getInstance(this).showHelp(this);
                 return true;
+            case R.id.action_feedback:
+                Log.d(TAG, "Give feedback pressed");
+                new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
+                return true;
             case R.id.action_logout:
                 if (loggedIn) {
                     users.logout();
@@ -176,8 +181,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 else startLoginActivity();
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -238,7 +241,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Toast t = Toast.makeText(this, R.string.new_event_name_not_accepted_toast_message, Toast.LENGTH_LONG);
             t.show();
         }
-
     }
 
     private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
@@ -271,9 +273,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         super.onDestroy();
         mAdapter.cleanup();
     }
-
-
-
 
     private void enableLogin(Menu menu, boolean toLogin){
         if (toLogin) {

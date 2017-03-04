@@ -5,8 +5,12 @@
         android:id="@+id/action_add_event"
         android:icon="@drawable/ic_add_circle_black_24dp"
         android:title="@string/action_add_event"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_feedback"
+        android:icon="@drawable/ic_feedback_black_24dp"
+        android:title="@string/action_feedback"
         app:showAsAction="ifRoom"/>
-
     <item
         android:id="@+id/action_get_help"
         android:icon="@drawable/ic_help_outline_black_24dp"
