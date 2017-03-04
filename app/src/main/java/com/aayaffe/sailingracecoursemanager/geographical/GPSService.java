@@ -2,25 +2,18 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import static com.google.common.base.Predicates.isNull;
 
 /**
  * Created by aayaffe on 31/12/2016.

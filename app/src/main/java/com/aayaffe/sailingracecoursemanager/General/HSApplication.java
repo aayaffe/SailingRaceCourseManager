@@ -1,7 +1,8 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.General;
 
 import android.app.Application;
 
+import com.aayaffe.sailingracecoursemanager.R;
 import com.tenmiles.helpstack.HSHelpStack;
 import com.tenmiles.helpstack.gears.HSEmailGear;
 
@@ -15,7 +16,7 @@ public class HSApplication extends Application {
 		helpStack = HSHelpStack.getInstance(this); // Get the HSHelpStack instance
 
 		HSEmailGear emailGear = new HSEmailGear(
-				"avimarineinnovations@gmail.com",
+				"support@avimarine.in",
 				R.xml.articles);
 
 		helpStack.setGear(emailGear); // Set the Gear

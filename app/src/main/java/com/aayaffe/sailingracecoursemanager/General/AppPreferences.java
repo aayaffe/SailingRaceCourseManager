@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.General;
 
 /**
  * Created by aayaffe on 29/09/2015.
@@ -6,6 +6,8 @@ package com.aayaffe.sailingracecoursemanager;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.aayaffe.sailingracecoursemanager.R;
 
 public class AppPreferences extends PreferenceActivity {
     public static final String RENDERTHEME_MENU = "renderthememenu";

@@ -13,7 +13,8 @@ import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.communication.CommManagerEventListener;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.general.Versioning;
+import com.aayaffe.sailingracecoursemanager.General.Analytics;
+import com.aayaffe.sailingracecoursemanager.General.Versioning;
 
 import java.util.Date;
 
@@ -23,12 +24,14 @@ public class SplashActivity extends AppCompatActivity {
     private Versioning versioning;
     private CommManagerEventListener onConnectEventListener;
     private ICommManager commManager;
+    private Analytics analytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
         commManager = new Firebase(this);
+        analytics = new Analytics(this);
         onConnectEventListener = new CommManagerEventListener() {
             @Override
             public void onConnect(Date time) {

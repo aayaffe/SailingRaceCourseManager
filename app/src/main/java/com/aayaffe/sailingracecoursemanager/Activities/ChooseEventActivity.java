@@ -24,9 +24,9 @@ import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
+import com.aayaffe.sailingracecoursemanager.General.Analytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
@@ -35,6 +35,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.tenmiles.helpstack.HSHelpStack;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.doorbell.android.Doorbell;
@@ -47,7 +48,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Users users;
 //    private static String selectedEventName;
     private static Event selectedEvent;
-
+    private Analytics analytics;
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
 
@@ -57,6 +58,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
+        analytics = new Analytics(this);
         commManager = new com.aayaffe.sailingracecoursemanager.communication.Firebase(this);
         commManager.login();
         users = new Users(commManager);
@@ -103,6 +105,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         commManager.deleteEvent(e);
+                        analytics.LogDeleteEvent(e,users.getCurrentUser());
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                     default:
@@ -261,6 +264,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             e.dayStart = dayStart;
             e.dayEnd = dayEnd;
             commManager.writeEvent(e);
+            Calendar start = Calendar.getInstance();
+            start.set(yearStart,monthStart,dayStart);
+            Calendar end = Calendar.getInstance();
+            end.set(yearEnd,monthEnd,dayEnd);
+            analytics.LogAddEvent(e.getName(),start.getTime(),end.getTime(),users.getCurrentUser());
         }
         else {
             FirebaseCrash.logcat(Log.DEBUG, TAG,"User not logged in tried to add new activity");

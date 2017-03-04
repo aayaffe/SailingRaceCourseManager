@@ -7,8 +7,6 @@ package com.aayaffe.sailingracecoursemanager.dialogs;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 
 import java.text.DecimalFormat;
 

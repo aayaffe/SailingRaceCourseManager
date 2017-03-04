@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name=".HSApplication"
+        android:name=".General.HSApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/sailingracecoursemanager_white_ic"
@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="false">
         <activity
-            android:name=".AppPreferences"
+            android:name=".General.AppPreferences"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"/>
         <activity

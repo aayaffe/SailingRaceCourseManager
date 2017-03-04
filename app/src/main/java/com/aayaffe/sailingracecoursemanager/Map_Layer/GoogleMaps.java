@@ -5,16 +5,13 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.nfc.Tag;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
 import com.google.android.gms.maps.CameraUpdate;

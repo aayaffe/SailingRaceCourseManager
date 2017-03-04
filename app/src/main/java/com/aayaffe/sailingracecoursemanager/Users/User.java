@@ -10,6 +10,7 @@ import java.util.Date;
 public class User{
     public String Uid;
     public String DisplayName;
+    //public String Email;
     public Long joined;
     public Long lastConnection;
     @Exclude

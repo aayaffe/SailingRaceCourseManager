@@ -1,7 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateConfiguration;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateOption;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateReference;

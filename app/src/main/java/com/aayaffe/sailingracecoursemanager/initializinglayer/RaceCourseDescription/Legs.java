@@ -14,6 +14,7 @@ import com.google.firebase.database.Exclude;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -105,8 +106,9 @@ public class Legs {
      * Each Mark is a tree root to marks that uses it's location, so this function must act recursively
      */
     @Exclude
-    public List<DBObject> parseBuoys(AviLocation rcLocation, double dist2m1, int windDir, float startLineLength,float gateLength, UUID raceCourseUUID, Map<String, Boolean> selectedOptions) {  //parses the mark and his sons into buoys
+    public List<DBObject> parseBuoys(AviLocation rcLocation, double dist2m1, int windDir, float startLineLength,float gateLength, UUID raceCourseUUID, Map<String, Boolean> selectedOptions) throws RaceCourseException {  //parses the mark and his sons into buoys
         List<DBObject> buoys = new ArrayList<>();
+        Map<Integer,AviLocation> id2Location = new HashMap();
         AviLocation lastLoc = rcLocation;
         for (Mark2 m: marks){
             AviLocation loc = new AviLocation();
@@ -130,6 +132,18 @@ public class Legs {
                                 loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction+windDir,m.ml.distance);
                             }
                             lastLoc = loc; //TODO Assert correctness
+                            break;
+                        case FROM_MARK_ID:
+                            AviLocation refMark = id2Location.get(m.ml.fromMarkId);
+                            if (refMark ==null)
+                                throw new RaceCourseException("Wrong mark order (missing refmark location)");
+                            if (m.ml.relativeDistance){
+                                loc = GeoUtils.getLocationFromDirDist(refMark,m.ml.direction+windDir,m.ml.distance*dist2m1);
+                            }
+                            else{
+                                loc = GeoUtils.getLocationFromDirDist(refMark,m.ml.direction+windDir,m.ml.distance);
+                            }
+                            lastLoc = loc;
                             break;
                         case GEOGRAPHICAL:
                             throw new UnsupportedOperationException();
@@ -157,11 +171,10 @@ public class Legs {
                         case NEVER_GATABLE:
                             buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
                             break;
-
                     }
                 } else
                     buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
-
+                id2Location.put(m.id,lastLoc);
             }
         }
         return buoys;

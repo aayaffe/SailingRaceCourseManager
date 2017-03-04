@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager;
+package com.aayaffe.sailingracecoursemanager.General;
 
 import android.content.SharedPreferences;
 import android.util.Log;
