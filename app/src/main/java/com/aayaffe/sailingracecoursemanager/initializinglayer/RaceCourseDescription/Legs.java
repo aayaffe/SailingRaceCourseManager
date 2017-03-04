@@ -115,15 +115,15 @@ public class Legs {
             if (m!=null) {
                 if (m.ml!=null){
                     switch (m.ml.locationOptions){
-                        case FROM_LAST_MARK:
-                            if (m.ml.relativeDistance){
-                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance*dist2m1);
-                            }
-                            else{
-                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance);
-                            }
-                            lastLoc = loc;
-                            break;
+//                        case FROM_LAST_MARK:
+//                            if (m.ml.relativeDistance){
+//                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance*dist2m1);
+//                            }
+//                            else{
+//                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance);
+//                            }
+//                            lastLoc = loc;
+//                            break;
                         case FROM_RACE_COMMITTEE:
                             if (m.ml.relativeDistance){
                                 loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction+windDir,m.ml.distance*dist2m1);
@@ -239,7 +239,7 @@ public class Legs {
         switch(m.go.gateReference) {
             case GATE_CENTER:
                 port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width / 2), portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, width / 2), stbdType,raceCourseUUID);
+                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection - 180, width / 2), stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
