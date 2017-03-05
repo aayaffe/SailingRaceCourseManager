@@ -91,9 +91,9 @@ public class InitialCourseDescriptor implements Serializable {
         MarkRoundingOrder O3 = new MarkRoundingOrder("O3",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,5)));
         MarkRoundingOrder O4 = new MarkRoundingOrder("O4",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,2,3,5)));
 
-        trapezoid60120.markRoundingOptions = new ArrayList<>();
-        GeneralUtils.addAll(trapezoid60120.markRoundingOptions,I2,I3,I4,O2,O3,O4);
-        trapezoid60120.defaultMarkRounding = I2;
+//        trapezoid60120.markRoundingOptions = new ArrayList<>();
+//        GeneralUtils.addAll(trapezoid60120.markRoundingOptions,I2,I3,I4,O2,O3,O4);
+//        trapezoid60120.defaultMarkRounding = I2;
 
         return trapezoid60120;
     }
@@ -146,9 +146,9 @@ public class InitialCourseDescriptor implements Serializable {
         MarkRoundingOrder O3 = new MarkRoundingOrder("O3",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,5)));
         MarkRoundingOrder O4 = new MarkRoundingOrder("O4",new ArrayList<>(Arrays.asList(0,4,1,2,3,2,3,2,3,2,3,5)));
 
-        trapezoid70110.markRoundingOptions = new ArrayList<>();
-        GeneralUtils.addAll(trapezoid70110.markRoundingOptions,I2,I3,I4,O2,O3,O4);
-        trapezoid70110.defaultMarkRounding = I2;
+//        trapezoid70110.markRoundingOptions = new ArrayList<>();
+//        GeneralUtils.addAll(trapezoid70110.markRoundingOptions,I2,I3,I4,O2,O3,O4);
+//        trapezoid70110.defaultMarkRounding = I2;
 
         return trapezoid70110;
     }
@@ -239,9 +239,9 @@ public class InitialCourseDescriptor implements Serializable {
 
         MarkRoundingOrder IOD = new MarkRoundingOrder("IOD",new ArrayList<>(Arrays.asList(0,1,2,3,4)));
 
-        optimist.markRoundingOptions = new ArrayList<>();
-        GeneralUtils.addAll(optimist.markRoundingOptions,IOD);
-        optimist.defaultMarkRounding = IOD;
+//        optimist.markRoundingOptions = new ArrayList<>();
+//        GeneralUtils.addAll(optimist.markRoundingOptions,IOD);
+//        optimist.defaultMarkRounding = IOD;
 
         return optimist;
     }

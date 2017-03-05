@@ -1,5 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
+import android.util.Log;
+
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
@@ -23,9 +25,12 @@ import java.util.UUID;
  * Created by aayaffe on 29/12/2016.
  */
 public class Legs {
+    private static final String TAG = "LEGS";
     public String name;
     public List<Double> lengthFactors = Collections.emptyList();
     public List<Mark2> marks = Collections.emptyList();
+    public List<MarkRoundingOrder> markRoundingOptions;
+    public MarkRoundingOrder defaultMarkRounding;
 
     private UUID uuid;
 
@@ -58,36 +63,72 @@ public class Legs {
      */
     @Exclude
     public double getDistance(MarkRoundingOrder mro, Boat.PointOfSail pos, DistanceType dt){
-        double ret = 0;
-        //TODO factor in the mro...
-        for(Mark2 m: marks){
-            if (dt == DistanceType.Relative) {
-                if (m.ml.relativeDistance){
-                    if (pos == Boat.dir2PointOfSail(m.ml.direction)){
-                        ret += m.ml.distance;
+        double abs = 0;
+        double rel = 0;
+        Mark2 last = marks.get(0);
+        for(int id: mro.getMarks()) {
+            for (Mark2 m : marks) {
+                if (m.id == id){
+                    Distance d = markDistance(last.id,m.id);
+                    if (d==null){
+                        Log.d(TAG,"Unable to calc distance");
+                        return 0;
                     }
+                    if (Boat.dir2PointOfSail(markDir(last.id,m.id))==pos) {
+                        switch (d.dt) {
+                            case Relative:
+                                rel += d.dist;
+                                break;
+                            case Absolute:
+                                abs += d.dist;
+                                break;
+                        }
+                    }
+                    last = m;
                 }
             }
-            else {
-                if (!m.ml.relativeDistance){
-                    if (pos == Boat.dir2PointOfSail(m.ml.direction)){
-                        ret += m.ml.distance;
-                    }
+        }
+        return dt==DistanceType.Absolute?abs:rel;
+    }
+
+    private int markDir(int m1, int m2) {
+        int ret = -1;
+        for (Mark2 m : marks) {
+            if (m.id == m1) {
+                if (m.ml.fromMarkId == m2){
+                    return (m.ml.direction - 180)<0? m.ml.direction - 180 + 360:m.ml.direction - 180;
+                }
+            }
+            if (m.id == m2) {
+                if (m.ml.fromMarkId == m1){
+                    return (m.ml.direction)<0? m.ml.direction + 360:m.ml.direction;
                 }
             }
         }
         return ret;
     }
 
-    private double markDistance(int m1, int m2){
-        if (m1+1==m2 || m1-1==m2){
-            for (Mark2 m: marks){
-                if (m.id == m1){
-                    //TODO: Think of how to handle this (IE absolute location...)
+    private Distance markDistance(int m1, int m2) {
+        Distance ret = null;
+        for (Mark2 m : marks) {
+            if (m.id == m1) {
+                if (m.ml.fromMarkId == m2){
+                    ret = new Distance();
+                    ret.dt = m.ml.relativeDistance?DistanceType.Relative:DistanceType.Absolute;
+                    ret.dist = m.ml.distance;
+                    return ret;
+                }
+            }
+            if (m.id == m2) {
+                if (m.ml.fromMarkId == m1){
+                    ret = new Distance();
+                    ret.dt = m.ml.relativeDistance?DistanceType.Relative:DistanceType.Absolute;
+                    ret.dist = m.ml.distance;
+                    return ret;
                 }
             }
         }
-        return 0;
+        return ret;
     }
     public List<Mark2> getOptions() {
         List<Mark2> ret = new ArrayList<>();

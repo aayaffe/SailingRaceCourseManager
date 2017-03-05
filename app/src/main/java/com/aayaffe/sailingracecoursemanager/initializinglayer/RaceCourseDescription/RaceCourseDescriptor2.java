@@ -17,8 +17,7 @@ public class RaceCourseDescriptor2 {
     public List<Legs> legDescriptors;
     private UUID uuid;
     public Long lastUpdate;
-    public List<MarkRoundingOrder> markRoundingOptions;
-    public MarkRoundingOrder defaultMarkRounding;
+
 
     public RaceCourseDescriptor2(){
         uuid = UUID.randomUUID();
