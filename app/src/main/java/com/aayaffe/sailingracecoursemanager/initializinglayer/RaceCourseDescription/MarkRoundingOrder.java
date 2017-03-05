@@ -1,6 +1,10 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by aayaffe on 18/02/2017.
@@ -16,6 +20,11 @@ public class MarkRoundingOrder {
     public MarkRoundingOrder(String name, List<Integer> marks) {
         this.name = name;
         this.marks = marks;
+    }
+
+    public MarkRoundingOrder(String name, Integer... marks) {
+        this.name = name;
+        this.marks = new ArrayList<>(asList(marks));
     }
 
     public String getName() {
