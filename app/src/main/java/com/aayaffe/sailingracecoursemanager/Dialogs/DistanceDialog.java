@@ -84,11 +84,10 @@ public class DistanceDialog extends Dialog {
         spec.setIndicator("Distance");
         tabHost.addTab(spec);
         //second tab:
-        // TODO: Removed for release - add when class and wind fixed.
-//        spec=tabHost.newTabSpec("Class & Wind");
-//        spec.setContent(R.id.tab2);
-//        spec.setIndicator("Class & Wind");
-//        tabHost.addTab(spec);
+        spec=tabHost.newTabSpec("Class & Wind");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("Class & Wind");
+        tabHost.addTab(spec);
 
         windPicker = (HorizontalNumberPicker)findViewById(R.id.wind_picker);
         windPicker.configNumbers(15, 2,2,50);

@@ -85,6 +85,7 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:10.2.0'
     compile 'com.tenmiles:helpstack:1.2.0'
     compile 'io.doorbell:android-sdk:0.2.6@aar'
+    compile 'com.stepstone.stepper:material-stepper:2.3.2'
     //    compile 'com.android.support:multidex:1.0.1'
 }
 

@@ -5,27 +5,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
+import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -30,6 +30,19 @@ public class InitialCourseDescriptor implements Serializable {
         return raceCourseDescriptors;
     }
 
+    /***
+     * Returns the racecoursedecriptor with the matching name
+     * null if none was found.
+     * @param name
+     * @return
+     */
+    public RaceCourseDescriptor2 getRaceCourse(String name){
+        for (RaceCourseDescriptor2 rcd: getRaceCourseDescriptors()){
+            if (rcd.name == name) return rcd;
+        }
+        return null;
+    }
+
     public List<RaceCourseDescriptor2> raceCourseDescriptors;
 
     public InitialCourseDescriptor(){

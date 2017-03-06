@@ -4,17 +4,12 @@ import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
-import com.aayaffe.sailingracecoursemanager.calclayer.Mark;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateOption;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateType;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +48,7 @@ public class Legs {
         return lengthFactors;
     }
 
-    /**
+    /***
      * Returns the distance of a course (relative to distance to m1 parts or absolute parts) according
      * to the MarkRoundingOrder and specific point of sail
      * @param mro desired Mark rounding order
@@ -62,7 +57,7 @@ public class Legs {
      * @return The distance required (absolute in NM or relative to distance to M1)
      */
     @Exclude
-    public double getDistance(MarkRoundingOrder mro, Boat.PointOfSail pos, DistanceType dt){
+    public double GetLength(MarkRoundingOrder mro, Boat.PointOfSail pos, DistanceType dt) throws RaceCourseException {
         double abs = 0;
         double rel = 0;
         Mark2 last = marks.get(0);
@@ -72,7 +67,7 @@ public class Legs {
                     Distance d = markDistance(last.id,m.id);
                     if (d==null){
                         Log.d(TAG,"Unable to calc distance");
-                        return 0;
+                        throw new RaceCourseException("Unable to calculate course length");
                     }
                     if (Boat.dir2PointOfSail(markDir(last.id,m.id))==pos) {
                         switch (d.dt) {

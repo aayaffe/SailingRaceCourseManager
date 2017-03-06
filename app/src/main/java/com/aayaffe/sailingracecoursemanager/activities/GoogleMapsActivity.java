@@ -290,7 +290,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return true;
 
             case R.id.action_add_object:
-                AddMenuItemOnClick();
+                AddBuoyMenuItemOnClick();
                 return true;
 
             case R.id.action_add_race_course:
@@ -314,8 +314,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void addRaceCourseItemClick() {
         Log.d(TAG, "FAB Setting Clicked");
+
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
+//        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
+//        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
 
     private void openAssignBuoyActvity() {
@@ -597,9 +600,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
 
     }
-    public void AddMenuItemOnClick() {
+    public void AddBuoyMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-
         df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
         df.show(getFragmentManager(), "Add_Buoy");
     }

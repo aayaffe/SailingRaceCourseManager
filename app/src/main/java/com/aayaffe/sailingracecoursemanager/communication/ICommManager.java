@@ -1,12 +1,11 @@
 package com.aayaffe.sailingracecoursemanager.communication;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 
 import java.util.List;
 import java.util.UUID;
