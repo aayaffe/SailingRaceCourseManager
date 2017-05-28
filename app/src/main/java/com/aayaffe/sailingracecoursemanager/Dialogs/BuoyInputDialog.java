@@ -18,7 +18,9 @@ import com.aayaffe.sailingracecoursemanager.R;
 import java.util.List;
 
 /**
- * Created by aayaffe on 09/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 09/02/2016.
  */
 public class BuoyInputDialog extends DialogFragment {
     private static final String TAG = "BuoyInputDialog";

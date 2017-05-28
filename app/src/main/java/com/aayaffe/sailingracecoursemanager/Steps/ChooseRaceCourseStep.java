@@ -1,44 +1,27 @@
 package com.aayaffe.sailingracecoursemanager.Steps;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.dialogs.CourseTypeRV;
-import com.aayaffe.sailingracecoursemanager.dialogs.CourseTypeSecondDialog;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import butterknife.BindView;
 
 /**
- * Created by aayaffe on 11/03/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 11/03/2017.
  */
 
 public class ChooseRaceCourseStep extends ButterKnifeFragment implements Step, CourseTypeRV.OnRecyclerItemClickListener {

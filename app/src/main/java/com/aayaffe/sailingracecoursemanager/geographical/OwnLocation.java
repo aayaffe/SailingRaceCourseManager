@@ -12,9 +12,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -22,7 +20,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 /**
- * Created by aayaffe on 28/09/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 28/09/2015.
  */
 public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 

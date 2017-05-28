@@ -7,7 +7,9 @@ import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 import java.util.Date;
 
 /**
- * Created by aayaffe on 16/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 16/02/2016.
  */
 public class Users {
     private static final String TAG = "Users";

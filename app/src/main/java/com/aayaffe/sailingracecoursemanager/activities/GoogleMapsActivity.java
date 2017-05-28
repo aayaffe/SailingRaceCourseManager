@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMaps;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
-import com.aayaffe.sailingracecoursemanager.Steps.ChooseRaceCourseStep;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
@@ -414,16 +413,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Event e = commManager.getCurrentEvent();
         if (e == null)
             return false;
-        if (uid == null || uid.isEmpty())
-            return false;
-        return e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
+        return !(uid == null || uid.isEmpty()) && e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
     }
 
     public static boolean isCurrentEventManager() {
         Event e = commManager.getCurrentEvent();
-        if (e == null)
-            return false;
-        return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid()==null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
+        return e != null && !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid() == null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
     }
 
     public void addBuoys() {

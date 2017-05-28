@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.aayaffe.sailingracecoursemanager.R;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 04/11/2016.
  */
 public class WindDirDialog extends Dialog {

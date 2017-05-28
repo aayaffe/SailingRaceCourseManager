@@ -1,7 +1,9 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
 /**
- * Created by aayaffe on 18/02/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 18/02/2017.
  */
 
 public enum DistanceType {

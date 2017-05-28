@@ -1,7 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
-import android.app.AlertDialog;
-
 /**
  * The MIT License (MIT)
  *

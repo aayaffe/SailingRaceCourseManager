@@ -9,7 +9,9 @@ import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 
 /**
- * Created by aayaffe on 19/03/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 19/03/2016.
  */
 public class Versioning {
     private static final String TAG = "Versioning";

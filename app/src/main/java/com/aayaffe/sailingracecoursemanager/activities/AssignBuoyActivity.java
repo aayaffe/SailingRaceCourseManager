@@ -16,7 +16,6 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.firebase.ui.database.FirebaseListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AssignBuoyActivity extends AppCompatActivity {
@@ -95,7 +94,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle("Choose buoy");
+        getSupportActionBar().setTitle(R.string.choose_buoy);
     }
 
     @Override

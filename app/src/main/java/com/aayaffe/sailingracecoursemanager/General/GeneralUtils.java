@@ -8,13 +8,16 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by aayaffe on 02/10/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 02/10/2015.
  */
 public class GeneralUtils {
     public static String TAG = "GeneralUtils";
@@ -101,9 +104,7 @@ public class GeneralUtils {
     public static <T> void addAll(List<T> list, T... elements) {
         if (list!=null)
         {
-            for (T elem: elements){
-                list.add(elem);
-            }
+            Collections.addAll(list, elements);
         }
     }
 

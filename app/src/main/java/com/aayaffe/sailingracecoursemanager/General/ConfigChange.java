@@ -6,7 +6,9 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 
 /**
- * Created by aayaffe on 29/09/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 29/09/2015.
  */
 
 public class ConfigChange implements SharedPreferences.OnSharedPreferenceChangeListener

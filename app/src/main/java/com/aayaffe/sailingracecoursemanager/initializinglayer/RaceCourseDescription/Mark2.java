@@ -3,7 +3,9 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescrip
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 29/12/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 29/12/2016.
  */
 
 public class Mark2 {

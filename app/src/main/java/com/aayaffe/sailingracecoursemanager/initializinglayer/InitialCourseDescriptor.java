@@ -1,7 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer;
 
-import android.support.v7.widget.ActivityChooserView;
-
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateConfiguration;
@@ -17,12 +15,13 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by aayaffe on 29/12/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 29/12/2016.
  */
 
 public class InitialCourseDescriptor implements Serializable {

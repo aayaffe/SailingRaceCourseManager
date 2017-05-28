@@ -4,10 +4,9 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import com.google.firebase.database.Exclude;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 16/08/2016.
- */
-/*
-    represents a boat class
  */
 public class Boat {
     private String boatClass;  //class boatClass

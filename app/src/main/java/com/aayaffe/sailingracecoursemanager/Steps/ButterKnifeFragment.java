@@ -1,7 +1,9 @@
 package com.aayaffe.sailingracecoursemanager.Steps;
 
 /**
- * Created by aayaffe on 11/03/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 11/03/2017.
  */
 
 import android.os.Bundle;

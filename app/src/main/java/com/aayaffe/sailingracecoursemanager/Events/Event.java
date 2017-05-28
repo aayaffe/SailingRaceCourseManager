@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 19/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 19/02/2016.
  */
 public class Event {
     private String name;

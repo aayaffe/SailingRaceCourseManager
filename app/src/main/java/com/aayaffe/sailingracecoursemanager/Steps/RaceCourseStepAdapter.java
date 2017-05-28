@@ -1,7 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.Steps;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,9 @@ import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 import com.stepstone.stepper.viewmodel.StepViewModel;
 
 /**
- * Created by aayaffe on 11/03/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 11/03/2017.
  */
 
 public class RaceCourseStepAdapter extends AbstractFragmentStepAdapter {

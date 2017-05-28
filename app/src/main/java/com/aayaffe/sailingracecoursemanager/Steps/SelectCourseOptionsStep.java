@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by aayaffe on 11/03/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 11/03/2017.
  */
 
 public class SelectCourseOptionsStep extends ButterKnifeFragment implements Step, CourseTypeRV.OnRecyclerItemClickListener {

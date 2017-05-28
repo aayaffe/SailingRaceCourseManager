@@ -12,6 +12,8 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 import java.util.List;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 13/07/2016.
  */
 public class CourseTypeRV extends RecyclerView.Adapter<CourseTypeRV.AdapterViewHolder> {

@@ -281,6 +281,7 @@
     <string name="plus_sign">+</string>
     <string name="set_wind_direction">Set Wind Direction</string>
     <string name="wind">Wind</string>
+    <string name="choose_buoy">Choose buoy</string>
 
 
 </resources>

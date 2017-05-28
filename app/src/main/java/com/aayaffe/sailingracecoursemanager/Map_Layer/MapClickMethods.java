@@ -3,7 +3,9 @@ package com.aayaffe.sailingracecoursemanager.Map_Layer;
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 11/11/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 11/11/2016.
  */
 
 public interface MapClickMethods {

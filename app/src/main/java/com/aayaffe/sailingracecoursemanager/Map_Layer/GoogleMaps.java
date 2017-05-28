@@ -35,7 +35,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 04/10/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 04/10/2015.
  */
 public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowLongClickListener, OnMapReadyCallback {
     private static final String TAG = "GoogleMaps";

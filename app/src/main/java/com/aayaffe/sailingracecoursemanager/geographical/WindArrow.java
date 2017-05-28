@@ -1,10 +1,11 @@
 package com.aayaffe.sailingracecoursemanager.geographical;
 
-import android.graphics.Color;
 import android.widget.ImageView;
 
 /**
- * Created by aayaffe on 08/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 08/02/2016.
  */
 public class WindArrow {
     private ImageView windArrow;

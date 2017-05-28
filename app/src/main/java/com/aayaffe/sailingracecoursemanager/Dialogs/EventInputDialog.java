@@ -1,6 +1,5 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -20,7 +19,9 @@ import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import java.util.Calendar;
 
 /**
- * Created by aayaffe on 09/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 09/20/2016.
  */
 public class EventInputDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "EventInputDialog";

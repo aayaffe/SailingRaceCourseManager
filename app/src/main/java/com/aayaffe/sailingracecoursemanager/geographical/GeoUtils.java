@@ -2,14 +2,15 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by aayaffe on 30/09/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 30/09/2015.
  */
 public class GeoUtils {
 

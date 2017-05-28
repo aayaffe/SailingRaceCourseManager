@@ -5,7 +5,9 @@ import com.google.firebase.database.Exclude;
 import java.util.Date;
 
 /**
- * Created by aayaffe on 17/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 17/02/2016.
  */
 public class User{
     public String Uid;

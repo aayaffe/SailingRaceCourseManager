@@ -29,7 +29,9 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 21/11/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 21/11/2015.
  */
 public class Firebase implements ICommManager {
     private static final String TAG = "Firebase";
@@ -163,15 +165,11 @@ public class Firebase implements ICommManager {
         return -1;
     }
 
-    private boolean isEventExist(String uuid){
-        if (uuid == null || uuid.isEmpty())
-            return false;
-        return ds.child(c.getString(R.string.db_events)).hasChild(uuid);
+    private boolean isEventExist(String uuid) {
+        return !(uuid == null || uuid.isEmpty()) && ds.child(c.getString(R.string.db_events)).hasChild(uuid);
     }
-    private boolean isEventExist(Event e){
-        if (e == null || e.getUuid()==null)
-            return false;
-        return ds.child(c.getString(R.string.db_events)).hasChild(e.getUuid());
+    private boolean isEventExist(Event e) {
+        return !(e == null || e.getUuid() == null) && ds.child(c.getString(R.string.db_events)).hasChild(e.getUuid());
     }
 
     @Override
@@ -199,11 +197,9 @@ public class Firebase implements ICommManager {
     }
 
     private boolean isBoatExist(Event e, DBObject boat) {
-        if (e==null || !isEventExist(e.getUuid()))
+        if (e == null || !isEventExist(e.getUuid()))
             return false;
-        if (boat == null || boat.getUUID()==null)
-            return false;
-        return ds.child(c.getString(R.string.db_events)).child(e.getUuid().toString()).child(c.getString(R.string.db_boats)).hasChild(boat.getUuidString());
+        return !(boat == null || boat.getUUID() == null) && ds.child(c.getString(R.string.db_events)).child(e.getUuid().toString()).child(c.getString(R.string.db_boats)).hasChild(boat.getUuidString());
     }
 
     @Override
@@ -329,7 +325,7 @@ public class Firebase implements ICommManager {
 
     @Override
     public void writeEvent(Event neu) {
-        fb.child(c.getString(R.string.db_events)).child(neu.getUuid().toString()).setValue(neu);
+        fb.child(c.getString(R.string.db_events)).child(neu.getUuid()).setValue(neu);
     }
 
 
@@ -467,7 +463,7 @@ public class Firebase implements ICommManager {
     }
     @Override
     public void deleteEvent(Event event) {
-        fb.child(c.getString(R.string.db_events)).child(event.getUuid().toString()).removeValue();
+        fb.child(c.getString(R.string.db_events)).child(event.getUuid()).removeValue();
     }
 
     @Override
@@ -489,10 +485,7 @@ public class Firebase implements ICommManager {
 
     @Override
     public boolean isAdmin(User u) {
-        if (u==null){
-            return false;
-        }
-        return ds.child(c.getString(R.string.db_admins)).hasChild(u.Uid);
+        return u != null && ds.child(c.getString(R.string.db_admins)).hasChild(u.Uid);
     }
 
     @Override
@@ -520,9 +513,9 @@ public class Firebase implements ICommManager {
         };
         if (event.getUuid()!=null) {
             if (subscribe) {
-                fb.child(c.getString(R.string.db_events)).child(event.getUuid().toString()).child(c.getString(R.string.db_uuid)).addValueEventListener(valeventListener);
+                fb.child(c.getString(R.string.db_events)).child(event.getUuid()).child(c.getString(R.string.db_uuid)).addValueEventListener(valeventListener);
             } else {
-                fb.child(c.getString(R.string.db_events)).child(event.getUuid().toString()).child(c.getString(R.string.db_uuid)).removeEventListener(valeventListener);
+                fb.child(c.getString(R.string.db_events)).child(event.getUuid()).child(c.getString(R.string.db_uuid)).removeEventListener(valeventListener);
             }
         }
     }

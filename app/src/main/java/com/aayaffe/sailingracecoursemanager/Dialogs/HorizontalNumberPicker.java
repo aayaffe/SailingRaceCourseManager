@@ -1,6 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 18/07/2016.
  */
 

@@ -16,7 +16,9 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.Query;
 
 /**
- * Created by aayaffe on 14/01/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 14/01/2017.
  */
 
 public class EventsListAdapter extends FirebaseListAdapter<Event> {

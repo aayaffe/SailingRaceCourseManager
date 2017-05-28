@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 31/10/2016.
  */
 public class MainCourseInputActivity extends Activity {

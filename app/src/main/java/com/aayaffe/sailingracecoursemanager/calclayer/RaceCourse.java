@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 27/08/2016.
  */
 public class RaceCourse implements Serializable{

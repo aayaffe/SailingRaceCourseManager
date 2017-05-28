@@ -16,7 +16,9 @@ import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
 import java.util.Date;
 
 /**
- * Created by aayaffe on 31/12/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 31/12/2016.
  */
 public class GPSService extends Service {
 

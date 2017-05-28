@@ -1,13 +1,14 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
 /**
- * Created by aayaffe on 18/02/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 18/02/2017.
  */
 
 /**
