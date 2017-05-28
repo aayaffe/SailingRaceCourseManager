@@ -258,6 +258,29 @@
     <string name="disclaimer_message">This application is meant for reviewing purposes only.\nIt is based on free infrastructure and as such cannot be guaranteed to work at all times.\n\nPlease contact the developer with any requests, suggestions or comments.</string>
     <string name="view_only_content_description">view only</string>
     <string name="action_feedback">Feedback</string>
+    <string name="set_race_course">Set Race Course</string>
+    <string name="course_type">COURSE TYPE</string>
+    <string name="wind_direction">WIND DIRECTION</string>
+    <string name="distance">DISTANCE</string>
+    <string name="set_course_type">Set course type</string>
+    <string name="choose_race_course">Choose Race Course</string>
+    <string name="choose">Choose</string>
+    <string name="choose_course">Choose course</string>
+    <string name="done">DONE</string>
+    <string name="choose_class">Choose Class</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="target_time">Target Time</string>
+    <string name="number_of_boats">Number of boats</string>
+    <string name="gate_width_boat_lengths">Gate width (Boat lengths)</string>
+    <string name="distance_to_m1_in_nm">Distance to M1 in NM</string>
+    <string name="start_line_length_in_m">Start line length in m</string>
+    <string name="gate_length_in_m">Gate length in m</string>
+    <string name="select_dates">Select Dates</string>
+    <string name="na">NA</string>
+    <string name="minus_sign">—</string>
+    <string name="plus_sign">+</string>
+    <string name="set_wind_direction">Set Wind Direction</string>
+    <string name="wind">Wind</string>
 
 
 </resources>

@@ -71,11 +71,6 @@ public class CourseTypeSecondDialog extends Dialog {
                 for (int i = 0; i < ownLayout.getChildCount() - 1; i = i + 2) {
                     TextView tv = (TextView) ownLayout.getChildAt(i);
                     switch (ownLayout.getChildAt(i + 1).getClass().toString()) {
-//                        case "class android.widget.Spinner":
-//                            Toast.makeText(context, "we can work from home! oooh o-oh", Toast.LENGTH_LONG).show();
-//                            Spinner spinner = (Spinner) ownLayout.getChildAt(i + 1);
-//                            selectedOptions.put(tv.getText().toString(), spinner.getSelectedItem().toString());
-//                            break;
                         case "class android.widget.ToggleButton":
                             ToggleButton toggleButton = (ToggleButton) ownLayout.getChildAt(i + 1);
                             if (toggleButton.isChecked())
@@ -140,26 +135,6 @@ public class CourseTypeSecondDialog extends Dialog {
 
                 ownLayout.addView(textView);
                 View setterBox = null;
-//                switch (m.get(1)) {   //set an input view to get the value from the user
-//                    case "spinner":
-//                        Spinner dropdown = new Spinner(context);
-//                        String[] items = (String[])options.get(c).subList(2,options.get(c).size()).toArray();//Arrays.copyOfRange(options.get(c), 2, options.get(c).size());
-//                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, items);
-//                        dropdown.setAdapter(adapter);
-//                        dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//
-//                        setterBox=dropdown;
-//                        break;
-//                    case "toggle":
-//                        ToggleButton toggleB = new ToggleButton(context);
-//                        toggleB.setTextSize(25);
-//                        toggleB.setText("NO");
-//                        toggleB.setTextOff("NO");
-//                        toggleB.setTextOn("YES");
-//                        setterBox=toggleB;
-//                        break;
-//                }
                 ToggleButton toggleB = new ToggleButton(context);
                 toggleB.setTextSize(25);
                 toggleB.setText("NO");

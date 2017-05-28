@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="15dp"
-        android:text="Set Wind Direction"
+        android:text="@string/set_wind_direction"
         android:textColor="#000000"
         android:textSize="22sp" />
 
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@color/cmark_blue_light"
-        android:contentDescription="Wind"/>
+        android:contentDescription="@string/wind"/>
 
 
     <com.aayaffe.sailingracecoursemanager.dialogs.HorizontalNumberPicker
@@ -33,7 +33,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/cmark_blue_light"
         android:gravity="center"
-        android:text="DONE"
+        android:text="@string/done"
         android:textAlignment="center"
         android:textColor="@color/cmark_orange_lighter"
         android:textSize="25sp" />

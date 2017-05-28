@@ -10,7 +10,7 @@
         android:id="@+id/distance_class_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Class"
+        android:text="@string/choose_class"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -27,7 +27,7 @@
         android:id="@+id/distance_wind_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Wind Strength"
+        android:text="@string/wind_speed"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -43,7 +43,7 @@
         android:id="@+id/distance_time_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Target Time"
+        android:text="@string/target_time"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -58,7 +58,7 @@
         android:id="@+id/number_boats_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Number of boats"
+        android:text="@string/number_of_boats"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -74,7 +74,7 @@
         android:id="@+id/gate_length_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gate width (Boat lengths)"
+        android:text="@string/gate_width_boat_lengths"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />

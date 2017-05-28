@@ -215,7 +215,7 @@ public class InitialCourseDescriptor implements Serializable {
         Legs windlee = new Legs();
         windlee.marks = new ArrayList<>();
         windlee.markRoundingOptions = new ArrayList<>();
-        windlee.name = "L";
+        windlee.name = "ISAF Wind\\Lee";
         Mark2 startfinish = new Mark2("Start",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         Mark2 mk4 = new Mark2("Mk4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_MARK_ID,0),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark2 mk1 = new Mark2("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,4),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,125,0.08,GateReference.LEFT_MARK,false));

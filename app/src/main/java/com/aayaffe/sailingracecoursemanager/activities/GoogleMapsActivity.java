@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.Map_Layer.GoogleMaps;
 import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
+import com.aayaffe.sailingracecoursemanager.Steps.ChooseRaceCourseStep;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
@@ -290,7 +291,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return true;
 
             case R.id.action_add_object:
-                AddBuoyMenuItemOnClick();
+                ChooseRaceCourseItemClick();
+
+                //AddBuoyMenuItemOnClick(); //TODO: Return!!
                 return true;
 
             case R.id.action_add_race_course:
@@ -310,6 +313,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void ChooseRaceCourseItemClick() {
+        Intent i = new Intent(getApplicationContext(), ChooseRaceCourseActivity.class);
+        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
 
     private void addRaceCourseItemClick() {

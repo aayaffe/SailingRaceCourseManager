@@ -9,10 +9,10 @@
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Set Race Course"
+    android:text="@string/set_race_course"
     android:textColor="@color/cmark_gray"
     android:textStyle="bold"
-    android:textSize="25dp"
+    android:textSize="25sp"
     android:layout_margin="15dp"
     android:layout_gravity="center"/>
     <LinearLayout
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="COURSE TYPE"
+            android:text="@string/course_type"
             android:textStyle="bold"
             android:layout_margin="5dp"
             android:gravity="bottom|center_horizontal"
@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WIND DIRECTION"
+                android:text="@string/wind_direction"
                 android:textStyle="bold"
                 android:layout_margin="5dp"
                 android:gravity="bottom|center_horizontal"
@@ -75,7 +75,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DISTANCE"
+                android:text="@string/distance"
                 android:textStyle="bold"
                 android:layout_margin="5dp"
                 android:gravity="bottom|center_horizontal"

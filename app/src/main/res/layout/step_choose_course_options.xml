@@ -33,7 +33,7 @@
         android:layout_height="fill_parent">
 
         <LinearLayout
-            android:id="@+id/course_type_second_dialog"
+            android:id="@+id/step_choose_course_options"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">

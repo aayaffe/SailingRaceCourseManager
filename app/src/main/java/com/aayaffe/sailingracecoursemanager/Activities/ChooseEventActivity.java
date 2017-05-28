@@ -187,6 +187,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+
 
     private void startLoginActivity() {
         startActivityForResult(

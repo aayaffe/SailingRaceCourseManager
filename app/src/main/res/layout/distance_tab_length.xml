@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Distance to M1 in NM"
+        android:text="@string/distance_to_m1_in_nm"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Start line length in m"
+        android:text="@string/start_line_length_in_m"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Gate length in m"
+        android:text="@string/gate_length_in_m"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="25sp" />
