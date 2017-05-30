@@ -31,14 +31,14 @@ import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
-import com.aayaffe.sailingracecoursemanager.General.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
-import com.aayaffe.sailingracecoursemanager.General.Notification;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GPSService;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -411,9 +411,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private boolean isCurrentEventManager(String uid) {
         Event e = commManager.getCurrentEvent();
-        if (e == null)
-            return false;
-        return !(uid == null || uid.isEmpty()) && e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
+        return e != null && !(uid == null || uid.isEmpty()) && e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
     }
 
     public static boolean isCurrentEventManager() {

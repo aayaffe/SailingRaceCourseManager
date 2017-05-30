@@ -19,14 +19,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
-import com.aayaffe.sailingracecoursemanager.General.Analytics;
+import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;

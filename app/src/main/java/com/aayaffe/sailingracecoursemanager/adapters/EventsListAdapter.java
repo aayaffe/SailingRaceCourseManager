@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Adapters;
+package com.aayaffe.sailingracecoursemanager.adapters;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;

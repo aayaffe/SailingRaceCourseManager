@@ -1,7 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateConfiguration;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateOption;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.GateReference;
@@ -15,11 +15,8 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static java.util.Arrays.asList;
 

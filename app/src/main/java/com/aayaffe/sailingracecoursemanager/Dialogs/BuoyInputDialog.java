@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -64,7 +65,7 @@ public class BuoyInputDialog extends DialogFragment {
         String title = (buoyId ==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.buoy_input_dialog, null);
+        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.buoy_input_dialog, null);
         builder.setView(v)
                 .setTitle(title)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {

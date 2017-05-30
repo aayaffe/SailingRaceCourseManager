@@ -197,9 +197,7 @@ public class Firebase implements ICommManager {
     }
 
     private boolean isBoatExist(Event e, DBObject boat) {
-        if (e == null || !isEventExist(e.getUuid()))
-            return false;
-        return !(boat == null || boat.getUUID() == null) && ds.child(c.getString(R.string.db_events)).child(e.getUuid().toString()).child(c.getString(R.string.db_boats)).hasChild(boat.getUuidString());
+        return !(e == null || !isEventExist(e.getUuid())) && !(boat == null || boat.getUUID() == null) && ds.child(c.getString(R.string.db_events)).child(e.getUuid().toString()).child(c.getString(R.string.db_boats)).hasChild(boat.getUuidString());
     }
 
     @Override

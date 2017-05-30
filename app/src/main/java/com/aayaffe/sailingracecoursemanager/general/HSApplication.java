@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.General;
+package com.aayaffe.sailingracecoursemanager.general;
 
 import android.app.Application;
 

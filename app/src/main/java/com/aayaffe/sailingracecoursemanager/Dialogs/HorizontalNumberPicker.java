@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.text.DecimalFormat;
 

@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.General;
+package com.aayaffe.sailingracecoursemanager.general;
 
 /**
  * Avi Marine Innovations - www.avimarine.in

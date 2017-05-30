@@ -123,10 +123,7 @@ public class AviLocation implements Serializable {
         if (o == null || getClass() != o.getClass())
             return false;
         AviLocation that = (AviLocation) o;
-        if (Double.compare(that.lat, lat) != 0)
-            return false;
-        return Double.compare(that.lon, lon) == 0 && Double.compare(that.sog, sog) == 0 && Float.compare(that.cog, cog) == 0;
-
+        return Double.compare(that.lat, lat) == 0 && Double.compare(that.lon, lon) == 0 && Double.compare(that.sog, sog) == 0 && Float.compare(that.cog, cog) == 0;
     }
 
     @Override

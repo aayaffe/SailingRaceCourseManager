@@ -13,8 +13,8 @@ import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.communication.CommManagerEventListener;
 import com.aayaffe.sailingracecoursemanager.communication.Firebase;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.General.Analytics;
-import com.aayaffe.sailingracecoursemanager.General.Versioning;
+import com.aayaffe.sailingracecoursemanager.general.Analytics;
+import com.aayaffe.sailingracecoursemanager.general.Versioning;
 
 import java.util.Date;
 

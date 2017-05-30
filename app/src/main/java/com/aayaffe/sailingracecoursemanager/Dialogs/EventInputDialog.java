@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 
@@ -71,6 +72,7 @@ public class EventInputDialog extends DialogFragment implements DatePickerDialog
     }
 
 
+    @SuppressLint("InflateParams")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Verify that the host activity implements the callback interface

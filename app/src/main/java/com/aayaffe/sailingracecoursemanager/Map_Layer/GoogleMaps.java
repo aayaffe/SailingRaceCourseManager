@@ -11,7 +11,7 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 
 import com.google.android.gms.maps.CameraUpdate;

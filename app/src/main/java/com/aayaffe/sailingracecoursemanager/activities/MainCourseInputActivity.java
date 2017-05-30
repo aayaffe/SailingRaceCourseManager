@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
-import com.aayaffe.sailingracecoursemanager.General.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;

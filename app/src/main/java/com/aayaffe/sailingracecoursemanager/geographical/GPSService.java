@@ -11,7 +11,7 @@ import android.util.Log;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
-import com.aayaffe.sailingracecoursemanager.General.GeneralUtils;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.util.Date;
 

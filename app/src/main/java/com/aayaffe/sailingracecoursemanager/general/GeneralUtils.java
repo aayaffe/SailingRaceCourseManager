@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.General;
+package com.aayaffe.sailingracecoursemanager.general;
 
 import android.app.Activity;
 import android.content.Context;
@@ -60,14 +60,12 @@ public class GeneralUtils {
     public static int getDeviceWidth(Activity activity) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int screenWidth = displaymetrics.widthPixels;
-        return screenWidth;
+        return displaymetrics.widthPixels;
     }
     public static int getDeviceHeight(Activity activity) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int screenHeight = displaymetrics.heightPixels;
-        return screenHeight;
+        return displaymetrics.heightPixels;
     }
 
     public static boolean isValid(String text, Class type, Float min, Float max) {
@@ -96,9 +94,7 @@ public class GeneralUtils {
             return false;
         if ((min!=null) && (n.floatValue()<min))
                 return false;
-        if ((max!=null)&&(n.floatValue()>max))
-                return false;
-        return true;
+        return !((max != null) && (n.floatValue() > max));
     }
 
     public static <T> void addAll(List<T> list, T... elements) {
