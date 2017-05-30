@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import static java.util.Arrays.asList;
 /**
  * Denotes a rounding order of a race course
  */
-public class MarkRoundingOrder {
+public class MarkRoundingOrder implements Serializable{
     private String name;
     private List<Integer> marks;
 

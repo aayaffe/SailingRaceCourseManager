@@ -64,6 +64,7 @@ public class MainCourseInputActivity extends Activity {
         setContentView(R.layout.activity_main_course_input);
         ICommManager comm = GoogleMapsActivity.commManager;
 
+
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(configChange);
         configChange = new ConfigChange();
@@ -71,7 +72,27 @@ public class MainCourseInputActivity extends Activity {
         iGeo = new OwnLocation(getBaseContext(), this);
         coursesInfo = new InitialCourseDescriptor().getRaceCourseDescriptors();
         boats = comm.getBoatTypes();
-        legs = coursesInfo.get(0).getRaceCourseLegs().get(0); //TODO: use last race course selected.
+        //Intent i =getIntent();
+
+        try{
+            if (savedInstanceState == null) {
+                Bundle extras = getIntent().getExtras();
+                if(extras == null) {
+                    legs = null;
+                } else {
+                    legs =(Legs) extras.getSerializable("LEGS");
+                }
+            } else {
+                legs = (Legs) savedInstanceState.getSerializable("LEGS");
+            }
+
+        } catch (Exception e)
+        {
+            Log.e(TAG,"Unable to get extra legs",e);
+        }
+        if (legs == null){
+            legs = coursesInfo.get(0).getRaceCourseLegs().get(0);
+        }
 
 
         Button courseButton = (Button) findViewById(R.id.coursetype_input_button);
@@ -139,6 +160,7 @@ public class MainCourseInputActivity extends Activity {
                 RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength, gateLength ,legs ,courseOptions);  //defultStartLine: 200m
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
+                resultIntent.putExtra("LEGS", legs);
                 setResult(-1, resultIntent);
                 finish();
             }

@@ -9,6 +9,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.UUID;
  *
  * Created by Amit Y. on 29/12/2016.
  */
-public class Legs {
+public class Legs implements Serializable{
     private static final String TAG = "LEGS";
     public String name;
     public List<Double> lengthFactors = Collections.emptyList();

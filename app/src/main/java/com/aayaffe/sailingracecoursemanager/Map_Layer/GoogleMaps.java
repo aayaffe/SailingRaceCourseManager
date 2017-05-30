@@ -185,19 +185,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
     }
 
-//    public void removeMark(Marker m) {
-//        m.remove();
-//        GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle());
-//        uuidToMarker.inverse().remove(m); //TODO: Check if works... else use uuidToID to obtain Uuid and delete
-//        uuidToId.inverse().remove(m.getId());
-//    }
 
     public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
             if (removeFromDB) {
-                GoogleMapsActivity.commManager.removeBuoyObject(uuid.toString()); //TODO Check if mapping correct using title - convert to usign UUID as title
+                GoogleMapsActivity.commManager.removeBuoyObject(uuid.toString());
             }
             uuidToMarker.remove(uuid);
             uuidToId.remove(uuid);

@@ -45,6 +45,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.google.android.gms.location.LocationListener;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -82,6 +83,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     GPSService mService;
     boolean mBound = false;
     private boolean viewOnly = false;
+    private Legs legs;
 
 
     @Override
@@ -323,6 +325,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "FAB Setting Clicked");
 
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
+        i.putExtra("LEGS",legs);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
 //        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
 //        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
@@ -368,9 +371,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private Runnable runnable = new Runnable() {
-        private DBObject getMyBoat(String name){
+        private DBObject getMyBoat(String uid){
             for (DBObject ao : commManager.getAllBoats()) {
-                if (isOwnObject(name, ao)) {
+                if (isOwnObject(uid, ao)) {
                     return ao;
                 }
             }
@@ -379,7 +382,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         @Override
         public void run() {
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
-                myBoat = getMyBoat(users.getCurrentUser().DisplayName);
+                myBoat = getMyBoat(users.getCurrentUser().Uid);
                 if (myBoat == null) {
                     myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
@@ -434,11 +437,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         removeOldMarkers(boats, buoys);
         for (DBObject boat : boats) {
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
-                int id = getIconId(users.getCurrentUser().DisplayName, boat);
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().Uid, boat))) {
+                //int id = getIconId(users.getCurrentUser().DisplayName, boat);
+                int id = getIconId(users.getCurrentUser().Uid, boat);
                 mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
             }
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().DisplayName, boat))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().Uid, boat))) {
                 drawOwnBoat(boat);
             }
         }
@@ -461,13 +465,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private synchronized void drawOwnBoat(DBObject boat) {
         if (users.getCurrentUser() == null)
             return;
-        int id = getIconId(users.getCurrentUser().DisplayName, boat);
+        //int id = getIconId(users.getCurrentUser().DisplayName, boat);
+        int id = getIconId(users.getCurrentUser().Uid, boat);
         mapLayer.addMark(boat, null, id,getZIndex(boat));
         assignBuoyUIUpdate(assignedBuoy);
     }
 
     private int getZIndex(DBObject boat) {
-        if (isOwnObject(users.getCurrentUser().DisplayName,boat))
+        if (isOwnObject(users.getCurrentUser().Uid,boat))
             return 10;
         return 0;
     }
@@ -510,10 +515,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private int getIconId(String string, DBObject o) {
-        //TODO change to test race officer with UUID
+    private int getIconId(String uid, DBObject o) {
         int ret;
-        if (isOwnObject(string, o)) {
+        if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatgold;
@@ -543,8 +547,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return ret;
     }
 
-    private boolean isOwnObject(String string, DBObject o) {
-        return o.getName().equals(string);
+    private boolean isOwnObject(String uid, DBObject o) {
+        return o.userUid.equals(uid);
     }
 
     private String getDirDistTXT(Location src, Location dst) {
@@ -596,6 +600,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NEW_RACE_COURSE_REQUEST && resultCode == RESULT_OK) {
             RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
+            legs = (Legs) data.getExtras().getSerializable("LEGS");
             addRaceCourse(rc);
             firstBoatLoad = true;
         }

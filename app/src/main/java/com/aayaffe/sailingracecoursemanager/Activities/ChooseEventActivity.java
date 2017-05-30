@@ -195,7 +195,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setProviders(getSelectedProviders())
                         .setLogo(R.mipmap.banner)
-                        /*.setTosUrl()*/ //TODO: Add TOS
+                        .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
                         .build(),
                 RC_SIGN_IN);
     }

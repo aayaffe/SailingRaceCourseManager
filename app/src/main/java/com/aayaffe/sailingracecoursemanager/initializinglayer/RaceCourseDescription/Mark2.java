@@ -1,5 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -8,7 +9,7 @@ import java.util.UUID;
  * Created by Amit Y. on 29/12/2016.
  */
 
-public class Mark2 {
+public class Mark2 implements Serializable{
     public String name; //Display name
     public int id; //ID used to identify in race course
     public MarkLocation ml;

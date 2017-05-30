@@ -1,6 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
-public class MarkLocation{
+import java.io.Serializable;
+
+public class MarkLocation implements Serializable{
     public int direction; //Direction from last mark
     public double distance; // Distance from last mark (relative or NM)
     public boolean relativeDistance; //If true, distance is a multiplication of distance to M1
