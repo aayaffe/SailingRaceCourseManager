@@ -204,7 +204,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             setCenter((ms.get(0).getPosition()));
             return;
         }
-        if (ms.size() == 0) {
+        if (ms.isEmpty()) {
             return;
         }
         ZoomToBounds(ms);
