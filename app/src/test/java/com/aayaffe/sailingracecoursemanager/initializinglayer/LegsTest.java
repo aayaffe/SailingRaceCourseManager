@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class LegsTest {
     private static double error = 0.0001;
     @Test
-    public void getDistance() throws Exception, RaceCourseException {
+    public void getDistance() throws AssertionError, RaceCourseException {
         RaceCourseDescriptor2 rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
         double dist = rc.getRaceCourseLegs().get(0).GetLength(rc.getRaceCourseLegs().get(0).defaultMarkRounding, Boat.PointOfSail.Reach, DistanceType.Absolute);
         assertEquals(2.5,dist,0.1);
@@ -75,7 +75,7 @@ public class LegsTest {
 
 
     @Test
-    public void parseBuoys() throws Exception {
+    public void parseBuoys() throws AssertionError {
         RaceCourseDescriptor2 rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
         AviLocation rcLoc = new AviLocation();
         rcLoc.setLon(0).setLat(0);

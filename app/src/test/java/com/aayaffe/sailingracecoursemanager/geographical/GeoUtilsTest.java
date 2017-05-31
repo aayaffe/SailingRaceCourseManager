@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(CustomRobolectricRunner.class)
 public class GeoUtilsTest {
     @Test
-    public void getLocationFromDirDist() throws Exception {
+    public void getLocationFromDirDist() throws AssertionError {
         AviLocation loc1 = new AviLocation();
         int distInMeters = 1852;
         loc1.setLat(32.0);
@@ -43,17 +43,17 @@ public class GeoUtilsTest {
 //    }
 
     @Test
-    public void getLocationFromDirDist2() throws Exception {
+    public void getLocationFromDirDist2() throws AssertionError {
 
     }
 
     @Test
-    public void getLocationFromTriangulation() throws Exception {
+    public void getLocationFromTriangulation() throws AssertionError {
 
     }
 
     @Test
-    public void getMidPointLocation() throws Exception {
+    public void getMidPointLocation() throws AssertionError {
 
     }
 
