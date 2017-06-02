@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.communication;
+package com.aayaffe.sailingracecoursemanager.db;
 
 /**
  * Created by aayaffe on 22/09/2015.

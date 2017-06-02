@@ -5,8 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 
 /**
  * Avi Marine Innovations - www.avimarine.in
@@ -16,11 +16,11 @@ import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
 public class Versioning {
     private static final String TAG = "Versioning";
     private Context c;
-    private ICommManager commManager;
+    private IDBManager commManager;
 
     public Versioning(Context c){
         this.c = c;
-        commManager = new Firebase(c);
+        commManager = new FirebaseDB(c);
     }
 
     public long getSupportedVersion(){

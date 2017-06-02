@@ -17,7 +17,7 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescr
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
@@ -62,7 +62,7 @@ public class MainCourseInputActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_course_input);
-        ICommManager comm = GoogleMapsActivity.commManager;
+        IDBManager comm = GoogleMapsActivity.commManager;
 
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());

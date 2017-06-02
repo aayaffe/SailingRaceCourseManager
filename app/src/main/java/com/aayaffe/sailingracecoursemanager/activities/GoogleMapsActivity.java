@@ -30,13 +30,13 @@ import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -72,7 +72,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private IGeo iGeo;
     private Handler handler = new Handler();
     private WindArrow wa;
-    public static ICommManager commManager;
+    public static IDBManager commManager;
     private DialogFragment df;
     private static String currentEventName;
     private boolean firstBoatLoad = true;
@@ -93,8 +93,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         noGps = (ImageView)findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
-        commManager = new Firebase(this);
-        commManager.login();
+        commManager = new FirebaseDB(this);
+//        commManager.login();
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
@@ -108,11 +108,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
-        ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),true);
-        ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
+        ((FirebaseDB)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),true);
+        ((FirebaseDB)commManager).eventDeleted = new FirebaseDB.EventDeleted() {
             @Override
             public void onEventDeleted(Event e) {
-                ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),false);
+                ((FirebaseDB)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),false);
                 Log.i(TAG,"Closing activity due to event deletion");
                 finish();
             }

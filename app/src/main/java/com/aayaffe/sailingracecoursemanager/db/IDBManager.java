@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.communication;
+package com.aayaffe.sailingracecoursemanager.db;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -6,6 +6,7 @@ import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
  *
  * Created by Amit Y. on 22/09/2015.
  */
-public interface ICommManager {
+public interface IDBManager {
     int login();
 
     void setCommManagerEventListener(CommManagerEventListener listener);
@@ -28,7 +29,6 @@ public interface ICommManager {
     List<DBObject> getAllBoats();  //ships
     List<DBObject> getAllBuoys();  //Just buoys, without ships
 
-    int sendAction(RaceOfficerAction a, DBObject o);
 
     long getNewBuoyId();
 
@@ -77,4 +77,18 @@ public interface ICommManager {
     boolean isAdmin(User u);
 
     void removeCommManagerEventListener(CommManagerEventListener onConnectEventListener);
+
+    String getLoggedInUid();
+
+    User findUser(UUID uid);
+
+    DatabaseReference getEventBoatsReference();
+
+    DatabaseReference getFireBaseRef();
+
+    DatabaseReference getEventBuoysReference();
+
+    DBObject getBuoy(String uuid);
+
+    void subscribeToEventDeletion(Event event, boolean subscribe);
 }

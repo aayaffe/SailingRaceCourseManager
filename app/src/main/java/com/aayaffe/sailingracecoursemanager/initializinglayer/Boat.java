@@ -30,7 +30,7 @@ public class Boat {
     public boolean windward_Leeward;
 
     public Boat(){
-        //For Firebase only
+        //For FirebaseDB only
     }
 
 

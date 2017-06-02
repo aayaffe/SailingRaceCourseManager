@@ -2,7 +2,7 @@ package com.aayaffe.sailingracecoursemanager.Users;
 
 import android.util.Log;
 
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 
 import java.util.Date;
 
@@ -14,21 +14,29 @@ import java.util.Date;
 public class Users {
     private static final String TAG = "Users";
     private static User currentUser;
-    private ICommManager commManager;
+    private static IDBManager commManager;
 
-    public Users(ICommManager cm){
+    public Users(IDBManager cm){
         commManager = cm;
     }
 
+    /**
+     *
+     * @return The currently logged in user, null if no user is logged in.
+     */
     public User getCurrentUser() {
         return currentUser;
     }
 
     public void setCurrentUser(User currentUser) {
         Users.currentUser = currentUser;
+        if (currentUser!=null) {
+            Users.currentUser.setLastConnection(new Date());
+        }
+        commManager.addUser(Users.currentUser);
     }
-    public void setCurrentUser(String Uid, String displayName) {
-        Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);//TODO: to sync with current user found in Firebase class
+    public static void setCurrentUser(String Uid, String displayName) {
+        Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);//TODO: to sync with current user found in FirebaseDB class
         User u = commManager.findUser(Uid);
         if (u!=null) {
             currentUser = u;
@@ -45,6 +53,9 @@ public class Users {
         }
     }
 
+    /**
+     * Logs out of the db and application
+     */
     public void logout() {
         currentUser = null;
         commManager.logout();

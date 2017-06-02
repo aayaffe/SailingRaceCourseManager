@@ -11,7 +11,7 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.activities.ChooseEventActivity;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.Query;
 
@@ -22,19 +22,19 @@ import com.google.firebase.database.Query;
  */
 
 public class EventsListAdapter extends FirebaseListAdapter<Event> {
-    private final ICommManager commManager;
+    private final IDBManager commManager;
     private final Users users;
 
     /**
      * @param activity    The activity containing the ListView
-     * @param modelClass  Firebase will marshall the data at a location into an instance of a class that you provide
+     * @param modelClass  FirebaseDB will marshall the data at a location into an instance of a class that you provide
      * @param modelLayout This is the layout used to represent a single list item. You will be responsible for populating an
  *                    instance of the corresponding view with the data from an instance of modelClass.
-     * @param ref         The Firebase location to watch for data changes. Can also be a slice of a location, using some
+     * @param ref         The FirebaseDB location to watch for data changes. Can also be a slice of a location, using some
 *                    combination of {@code limit()}, {@code startAt()}, and {@code endAt()}.
      * @param users
      */
-    public EventsListAdapter(Activity activity, Class<Event> modelClass, int modelLayout, Query ref, ICommManager commManager, Users users) {
+    public EventsListAdapter(Activity activity, Class<Event> modelClass, int modelLayout, Query ref, IDBManager commManager, Users users) {
         super(activity, modelClass, modelLayout, ref);
         this.commManager = commManager;
         this.users = users;

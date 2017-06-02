@@ -9,10 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
-import com.aayaffe.sailingracecoursemanager.communication.CommManagerEventListener;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.CommManagerEventListener;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.aayaffe.sailingracecoursemanager.general.Versioning;
 
@@ -23,14 +23,14 @@ public class SplashActivity extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
     private Versioning versioning;
     private CommManagerEventListener onConnectEventListener;
-    private ICommManager commManager;
+    private IDBManager commManager;
     private Analytics analytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
-        commManager = new Firebase(this);
+        commManager = new FirebaseDB(this);
         analytics = new Analytics(this);
         onConnectEventListener = new CommManagerEventListener() {
             @Override
@@ -39,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
                 {
                     alertOnUnsupportedVersion();
                 } else {
+                    ((FirebaseDB)commManager).setUser();
                     Intent intent = new Intent(SplashActivity.this, ChooseEventActivity.class);
                     startActivity(intent);
                     finish();
@@ -70,7 +71,7 @@ public class SplashActivity extends AppCompatActivity {
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                 } catch (android.content.ActivityNotFoundException e) {
-                    Log.e(TAG,"Error Firebase OnConnect",e);
+                    Log.e(TAG,"Error FirebaseDB OnConnect",e);
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
             }

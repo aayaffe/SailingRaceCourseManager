@@ -24,6 +24,7 @@ import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
@@ -43,10 +44,9 @@ import io.doorbell.android.Doorbell;
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
-    private com.aayaffe.sailingracecoursemanager.communication.Firebase commManager;
+    private FirebaseDB commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
-//    private static String selectedEventName;
     private static Event selectedEvent;
     private Analytics analytics;
     private boolean loggedIn = false;
@@ -59,7 +59,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
         analytics = new Analytics(this);
-        commManager = new com.aayaffe.sailingracecoursemanager.communication.Firebase(this);
+        commManager = new FirebaseDB(this);
         commManager.login();
         users = new Users(commManager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -295,6 +295,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 MenuItem addEventItem = menu.findItem(R.id.action_add_event);
                 addEventItem.setEnabled(false);
                 addEventItem.setVisible(false);
+                startLoginActivity();
             }catch (Exception e){
                 Log.e(TAG,"Error logging in", e);
             }

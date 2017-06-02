@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.firebase.ui.database.FirebaseListAdapter;
 
 import java.util.List;
@@ -21,14 +21,14 @@ import java.util.List;
 public class ChooseBoatActivity extends AppCompatActivity {
 
     private static final String TAG = "ChooseBoatActivity";
-    private Firebase commManager;
+    private FirebaseDB commManager;
     private FirebaseListAdapter<DBObject> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_boat);
-        commManager = new Firebase(this);
+        commManager = new FirebaseDB(this);
         setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BoatsList);
         mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {
