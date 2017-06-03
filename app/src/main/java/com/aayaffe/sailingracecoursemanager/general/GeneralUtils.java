@@ -105,7 +105,7 @@ public class GeneralUtils {
     }
 
     enum CLAZZ {
-        Integer,Double,Float;
+        Integer,Double,Float
 
     }
 

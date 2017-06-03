@@ -13,7 +13,7 @@ import java.util.UUID;
  * Created by Amit Y. on 29/12/2016.
  */
 
-public class RaceCourseDescriptor2 {
+public class RaceCourseDescriptor {
     public String name;
     public int imageID = R.drawable.racecourse_optimist;
     public List<Legs> legDescriptors;
@@ -21,7 +21,7 @@ public class RaceCourseDescriptor2 {
     public Long lastUpdate;
 
 
-    public RaceCourseDescriptor2(){
+    public RaceCourseDescriptor(){
         uuid = UUID.randomUUID();
     }
 

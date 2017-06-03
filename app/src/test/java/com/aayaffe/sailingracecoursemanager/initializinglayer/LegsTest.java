@@ -3,7 +3,7 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.DistanceType;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
 
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class LegsTest {
     private static double error = 0.0001;
     @Test
     public void getDistance() throws AssertionError, RaceCourseException {
-        RaceCourseDescriptor2 rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
+        RaceCourseDescriptor rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
         double dist = rc.getRaceCourseLegs().get(0).GetLength(rc.getRaceCourseLegs().get(0).defaultMarkRounding, Boat.PointOfSail.Reach, DistanceType.Absolute);
         assertEquals(2.5,dist,0.1);
         dist = rc.getRaceCourseLegs().get(0).GetLength(rc.getRaceCourseLegs().get(0).defaultMarkRounding, Boat.PointOfSail.Reach, DistanceType.Relative);
@@ -35,7 +35,7 @@ public class LegsTest {
     }
     @Test
     public void getDistanceTrapezoid60120ShortedOuter() throws RaceCourseException {
-        RaceCourseDescriptor2 rc = new InitialCourseDescriptor().getRaceCourse("Trapezoid 60\\120");
+        RaceCourseDescriptor rc = new InitialCourseDescriptor().getRaceCourse("Trapezoid 60\\120");
         double dist;
         Legs legs;
         legs = rc.getRaceCourseLegs().get(0); //Shorted outer
@@ -54,7 +54,7 @@ public class LegsTest {
     }
     @Test
     public void getDistanceTrapezoid60120halfBeat() throws RaceCourseException {
-        RaceCourseDescriptor2 rc = new InitialCourseDescriptor().getRaceCourse("Trapezoid 60\\120");
+        RaceCourseDescriptor rc = new InitialCourseDescriptor().getRaceCourse("Trapezoid 60\\120");
         double dist;
         Legs legs;
         legs = rc.getRaceCourseLegs().get(1); //Half beat
@@ -76,7 +76,7 @@ public class LegsTest {
 
     @Test
     public void parseBuoys() throws AssertionError {
-        RaceCourseDescriptor2 rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
+        RaceCourseDescriptor rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
         AviLocation rcLoc = new AviLocation();
         rcLoc.setLon(0).setLat(0);
         double dist2M1 = 1;

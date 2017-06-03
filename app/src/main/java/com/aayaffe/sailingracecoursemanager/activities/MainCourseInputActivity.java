@@ -15,7 +15,7 @@ import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -41,7 +41,7 @@ public class MainCourseInputActivity extends Activity {
     private ConfigChange configChange;
     SharedPreferences.Editor editor;
 
-    private List<RaceCourseDescriptor2> coursesInfo;
+    private List<RaceCourseDescriptor> coursesInfo;
     private List<Boat> boats;
     private IGeo iGeo;
 
@@ -104,8 +104,8 @@ public class MainCourseInputActivity extends Activity {
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
                     public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
-                        MainCourseInputActivity.this.courseOptions=result;
-                        MainCourseInputActivity.this.courseFactors=factorResult;
+                        courseOptions=result;
+                        courseFactors=factorResult;
                         MainCourseInputActivity.this.legs = legs;
                     }
                 });
@@ -171,6 +171,15 @@ public class MainCourseInputActivity extends Activity {
             public void onClick(View v) {
                 Log.d(TAG,"dist2m1 = "+dist2m1);
                 finish();
+            }
+        });
+        Button courseStatisticsButton = (Button) findViewById(R.id.course_statistics_button);
+        courseStatisticsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), RaceCourseStatisticsActivity.class);
+                //i.putExtra("LEGS",legs);
+                startActivity(i);
             }
         });
 

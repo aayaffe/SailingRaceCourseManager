@@ -26,7 +26,7 @@ public class Legs implements Serializable{
     private static final String TAG = "LEGS";
     public String name;
     public List<Double> lengthFactors = Collections.emptyList();
-    public List<Mark2> marks = Collections.emptyList();
+    public List<Mark> marks = Collections.emptyList();
     public List<MarkRoundingOrder> markRoundingOptions;
     public MarkRoundingOrder defaultMarkRounding;
 
@@ -63,9 +63,9 @@ public class Legs implements Serializable{
     public double GetLength(MarkRoundingOrder mro, Boat.PointOfSail pos, DistanceType dt) throws RaceCourseException {
         double abs = 0;
         double rel = 0;
-        Mark2 last = marks.get(0);
+        Mark last = marks.get(0);
         for(int id: mro.getMarks()) {
-            for (Mark2 m : marks) {
+            for (Mark m : marks) {
                 if (m.id == id){
                     Distance d = markDistance(last.id,m.id);
                     if (d==null){
@@ -91,7 +91,7 @@ public class Legs implements Serializable{
 
     private int markDir(int m1, int m2) {
         int ret = -1;
-        for (Mark2 m : marks) {
+        for (Mark m : marks) {
             if (m.id == m1) {
                 if (m.ml.fromMarkId == m2){
                     return (m.ml.direction - 180)<0? m.ml.direction - 180 + 360:m.ml.direction - 180;
@@ -108,7 +108,7 @@ public class Legs implements Serializable{
 
     private Distance markDistance(int m1, int m2) {
         Distance ret = null;
-        for (Mark2 m : marks) {
+        for (Mark m : marks) {
             if (m.id == m1) {
                 if (m.ml.fromMarkId == m2){
                     ret = new Distance();
@@ -128,9 +128,9 @@ public class Legs implements Serializable{
         }
         return ret;
     }
-    public List<Mark2> getOptions() {
-        List<Mark2> ret = new ArrayList<>();
-        for(Mark2 m : marks){
+    public List<Mark> getOptions() {
+        List<Mark> ret = new ArrayList<>();
+        for(Mark m : marks){
             if (m!=null&&m.go!=null&&m.go.gateOption!=null&&m.go.gateOption == GateOption.GATABLE)
                     ret.add(m);
         }
@@ -149,7 +149,7 @@ public class Legs implements Serializable{
         List<DBObject> buoys = new ArrayList<>();
         Map<Integer,AviLocation> id2Location = new HashMap();
         AviLocation lastLoc = rcLocation;
-        for (Mark2 m: marks){
+        for (Mark m: marks){
             AviLocation loc = new AviLocation();
             if (m!=null) {
                 if (m.ml!=null){
@@ -218,13 +218,13 @@ public class Legs implements Serializable{
         }
         return buoys;
     }
-    private BuoyType getPortBuoyType(Mark2 m){
+    private BuoyType getPortBuoyType(Mark m){
         return getGateBuoyType(m, true);
     }
-    private BuoyType getStbdBuoyType(Mark2 m){
+    private BuoyType getStbdBuoyType(Mark m){
         return getGateBuoyType(m, false);
     }
-    private BuoyType getGateBuoyType(Mark2 m, boolean isPort) {
+    private BuoyType getGateBuoyType(Mark m, boolean isPort) {
         BuoyType port;
         BuoyType stbd;
         switch (m.go.gateType){
@@ -263,7 +263,7 @@ public class Legs implements Serializable{
         return isPort?port:stbd;
     }
 
-    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark2 m, double gateLength, double startLength, AviLocation loc, BuoyType portType, BuoyType stbdType) {
+    private static List<DBObject> getGateMarks(int windDir, UUID raceCourseUUID, Mark m, double gateLength, double startLength, AviLocation loc, BuoyType portType, BuoyType stbdType) {
         List<DBObject> ret = new ArrayList<>();
         DBObject port;
         DBObject stbd;

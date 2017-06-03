@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.HashMap;
@@ -33,14 +33,14 @@ public class CourseTypeSecondDialog extends Dialog {
     private Context context;
     private LinearLayout ownLayout;
     private OnMyDialogResult mDialogResult;
-    private RaceCourseDescriptor2 raceCourseDescriptor;
+    private RaceCourseDescriptor raceCourseDescriptor;
     private Button finishB;
     private List<Double> factorResult;
     private Map<String, Boolean> selectedOptions = new HashMap<>();  //map of the selected settings
     private Legs legs;
 
 
-    public CourseTypeSecondDialog(Context context, RaceCourseDescriptor2 raceCourseDescriptor) {
+    public CourseTypeSecondDialog(Context context, RaceCourseDescriptor raceCourseDescriptor) {
         super(context);
         this.context = context;
         this.raceCourseDescriptor = raceCourseDescriptor;
@@ -127,8 +127,8 @@ public class CourseTypeSecondDialog extends Dialog {
     public void redrawOptionsViews(int legsIndex){
         ownLayout.removeAllViews();
         if(raceCourseDescriptor.getRaceCourseLegs().size()>0 && raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
-            List<Mark2> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
-            for (Mark2 m : options) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
+            List<Mark> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
+            for (Mark m : options) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
                 TextView textView = new TextView(context);  //set value name on a TextView
                 textView.setText(m.name + "-" +m.go.gateType.toString());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);

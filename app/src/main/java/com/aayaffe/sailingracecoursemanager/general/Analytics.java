@@ -18,7 +18,7 @@ import java.util.Date;
 public class Analytics {
     private static final String TAG = "Analytics";
     private static FirebaseAnalytics firebaseAnalytics;
-    public static enum EventName {
+    public enum EventName {
         ADD_EVENT,DELETE_EVENT,ENTER_EVENT,LEAVE_EVENT,ADD_RACECOURSE,ADD_BUOY
     }
     public Analytics(Context c) {

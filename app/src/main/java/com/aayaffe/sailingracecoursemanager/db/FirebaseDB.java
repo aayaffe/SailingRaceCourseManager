@@ -12,7 +12,7 @@ import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -115,7 +115,7 @@ public class FirebaseDB implements IDBManager {
                     Log.e(TAG, "Error getting display name", e);
                     displayName = "User" + new Random().nextInt(10000);
                 }
-                users.setCurrentUser(uid, displayName);
+                Users.setCurrentUser(uid, displayName);
             }
             users.setCurrentUser(findUser(uid));
 
@@ -412,17 +412,17 @@ public class FirebaseDB implements IDBManager {
     }
 
     @Override
-    public void addRaceCourseDescriptor(RaceCourseDescriptor2 ct) {
+    public void addRaceCourseDescriptor(RaceCourseDescriptor ct) {
         fb.child(c.getString(R.string.db_race_course_descriptors)).child(ct.name).setValue(ct);
     }
 
     @Override
-    public List<RaceCourseDescriptor2> getRaceCourseDescriptors() {
-        List<RaceCourseDescriptor2> ret = new ArrayList<>();
+    public List<RaceCourseDescriptor> getRaceCourseDescriptors() {
+        List<RaceCourseDescriptor> ret = new ArrayList<>();
         if (ds == null || ds.getValue() == null)
             return ret;
         for (DataSnapshot ps : ds.child(c.getString(R.string.db_race_course_descriptors)).getChildren()) {
-            RaceCourseDescriptor2 b = ps.getValue(RaceCourseDescriptor2.class);
+            RaceCourseDescriptor b = ps.getValue(RaceCourseDescriptor.class);
             ret.add(b);
         }
         return ret;

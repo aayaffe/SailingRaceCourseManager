@@ -5,7 +5,7 @@ import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
@@ -70,9 +70,9 @@ public interface IDBManager {
 
     void deleteEvent(Event event);
 
-    void addRaceCourseDescriptor(RaceCourseDescriptor2 ct);
+    void addRaceCourseDescriptor(RaceCourseDescriptor ct);
 
-    List<RaceCourseDescriptor2> getRaceCourseDescriptors();
+    List<RaceCourseDescriptor> getRaceCourseDescriptors();
 
     boolean isAdmin(User u);
 

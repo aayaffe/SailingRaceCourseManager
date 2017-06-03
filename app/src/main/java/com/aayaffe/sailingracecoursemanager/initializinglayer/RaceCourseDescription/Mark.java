@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created by Amit Y. on 29/12/2016.
  */
 
-public class Mark2 implements Serializable{
+public class Mark implements Serializable{
     public String name; //Display name
     public int id; //ID used to identify in race course
     public MarkLocation ml;
@@ -18,13 +18,13 @@ public class Mark2 implements Serializable{
 
     private UUID uuid;
 
-    public Mark2(String name, int id, MarkLocation ml, GateConfiguration go) {
+    public Mark(String name, int id, MarkLocation ml, GateConfiguration go) {
         this(name, id, ml);
         isGatable = true;
         this.go = go;
     }
 
-    public Mark2(String name, int id, MarkLocation ml) {
+    public Mark(String name, int id, MarkLocation ml) {
         this.name = name;
         this.id = id;
         this.ml = ml;

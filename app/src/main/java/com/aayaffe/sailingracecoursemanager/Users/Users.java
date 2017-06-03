@@ -36,7 +36,7 @@ public class Users {
         commManager.addUser(Users.currentUser);
     }
     public static void setCurrentUser(String Uid, String displayName) {
-        Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);//TODO: to sync with current user found in FirebaseDB class
+        Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);
         User u = commManager.findUser(Uid);
         if (u!=null) {
             currentUser = u;

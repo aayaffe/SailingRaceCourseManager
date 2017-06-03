@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
@@ -24,9 +24,9 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
     private Context context;
     private OnMyDialogResult mDialogResult;
-    private List<RaceCourseDescriptor2> coursesList;
+    private List<RaceCourseDescriptor> coursesList;
 
-    public CourseTypeDialog(Context context, List<RaceCourseDescriptor2> coursesList){
+    public CourseTypeDialog(Context context, List<RaceCourseDescriptor> coursesList){
         super(context);
         this.context=context;
         this.coursesList=coursesList;
@@ -48,7 +48,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
     }
 
     @Override
-    public void onRecyclerItemClick(RaceCourseDescriptor2 raceCourseDescriptor){
+    public void onRecyclerItemClick(RaceCourseDescriptor raceCourseDescriptor){
         CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context, raceCourseDescriptor);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {

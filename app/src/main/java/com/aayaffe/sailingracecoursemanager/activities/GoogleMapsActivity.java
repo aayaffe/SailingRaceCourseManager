@@ -109,11 +109,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
-        ((FirebaseDB)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),true);
+        commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
         ((FirebaseDB)commManager).eventDeleted = new FirebaseDB.EventDeleted() {
             @Override
             public void onEventDeleted(Event e) {
-                ((FirebaseDB)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),false);
+                commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
                 Log.i(TAG,"Closing activity due to event deletion");
                 finish();
             }
@@ -293,13 +293,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case R.id.action_settings:
                 SettingsMenuItemOnClick();
                 return true;
-
             case R.id.action_add_object:
-                ChooseRaceCourseItemClick();
-
-                //AddBuoyMenuItemOnClick(); //TODO: Return!!
+                AddBuoyMenuItemOnClick();
                 return true;
-
             case R.id.action_add_race_course:
                 addRaceCourseItemClick();
                 firstBoatLoad = true;
@@ -319,10 +315,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private void ChooseRaceCourseItemClick() {
-        Intent i = new Intent(getApplicationContext(), ChooseRaceCourseActivity.class);
-        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
-    }
 
     private void addRaceCourseItemClick() {
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
