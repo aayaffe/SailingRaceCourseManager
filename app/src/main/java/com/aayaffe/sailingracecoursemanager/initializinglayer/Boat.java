@@ -54,18 +54,18 @@ public class Boat {
     }
 
     public double[][] getVmg() {
-        vmg[0][0] = upwind5_8;
-        vmg[1][0] = upwind8_12;
-        vmg[2][0] = upwind12_15;
-        vmg[3][0] = upwind15_;
-        vmg[0][1] = run5_8;
-        vmg[1][1] = run8_12;
-        vmg[2][1] = run12_15;
-        vmg[3][1] = run15_;
-        vmg[0][2] = reach5_8;
-        vmg[1][2] = reach8_12;
-        vmg[2][2] = reach12_15;
-        vmg[3][2] = reach15_;
+//        vmg[0][0] = upwind5_8;
+//        vmg[1][0] = upwind8_12;
+//        vmg[2][0] = upwind12_15;
+//        vmg[3][0] = upwind15_;
+//        vmg[0][1] = run5_8;
+//        vmg[1][1] = run8_12;
+//        vmg[2][1] = run12_15;
+//        vmg[3][1] = run15_;
+//        vmg[0][2] = reach5_8;
+//        vmg[1][2] = reach8_12;
+//        vmg[2][2] = reach12_15;
+//        vmg[3][2] = reach15_;
         return vmg;
     }
     public void setVmg(double[][] vmg) {
@@ -80,8 +80,15 @@ public class Boat {
         return getVmg(wind2Index(ws),pos);
     }
 
+    /**
+     *
+     * @param wind in knots
+     * @return WindSpeed value, null if wind<0
+     */
     @Exclude
     public static Boat.WindSpeed wind2Index(double wind){  //index the wind strength. knots to right index at the boat's vmg table.
+        if (wind<0)
+            return null;
         if (wind<8)
             return Boat.WindSpeed.WIND_SPEED5_8;
         else if (wind<=12)
@@ -91,8 +98,15 @@ public class Boat {
         return Boat.WindSpeed.WIND_SPEED15_;
     }
 
+    /**
+     *
+     * @param windDir
+     * @return point of sail. null if windDir < 0
+     */
     @Exclude
     public static Boat.PointOfSail dir2PointOfSail(int windDir){
+        if(windDir<0) return null;
+        windDir = windDir % 360;
         if (windDir>310 || windDir<50)
             return PointOfSail.UpWind;
         else if ((windDir>=225 && windDir<=310)||(windDir>=50 && windDir<=135))
