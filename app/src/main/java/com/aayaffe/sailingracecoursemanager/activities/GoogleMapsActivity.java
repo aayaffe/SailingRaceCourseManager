@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -48,6 +49,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.google.android.gms.location.LocationListener;
 import com.google.firebase.crash.FirebaseCrash;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,13 +97,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
         commManager = new FirebaseDB(this);
-//        commManager.login();
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this,this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
-
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
         viewOnly = i.getBooleanExtra("viewOnly",false);
@@ -143,6 +144,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
+    @Contract(" -> !null")
     private MapClickMethods getClickMethods() {
         return new MapClickMethods() {
             @Override
@@ -193,6 +195,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         firstBoatLoad = true;
     }
 
+    @Contract("null -> false")
     private boolean isBuoy(DBObject b) {
         if (b==null){
             return false;
@@ -322,8 +325,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private void addRaceCourseItemClick() {
-        Log.d(TAG, "FAB Setting Clicked");
-
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         i.putExtra("LEGS",legs);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
@@ -371,6 +372,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private Runnable runnable = new Runnable() {
+        @Nullable
         private DBObject getMyBoat(String uid){
             for (DBObject ao : commManager.getAllBoats()) {
                 if (isOwnObject(uid, ao)) {
@@ -392,6 +394,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
+                myBoat.leftEvent = null;
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -521,7 +524,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation()) > 60)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -534,7 +537,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation()) > 60)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -551,6 +554,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return o.userUid.equals(uid);
     }
 
+    @Contract("null, _ -> !null")
     private String getDirDistTXT(Location src, Location dst) {
         if (src==null){
             return "NoGPS";
@@ -708,6 +712,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onBackPressed() {
         if (exit) {
             notification.cancelAll();
+            commManager.writeLeaveEvent(users.getCurrentUser(),commManager.getCurrentEvent());
             finish();
         } else {
             Toast.makeText(this, "Press back again to leave event.",

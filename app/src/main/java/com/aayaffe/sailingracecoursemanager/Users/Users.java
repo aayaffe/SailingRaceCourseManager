@@ -43,7 +43,7 @@ public class Users {
             u.setLastConnection(new Date());
             commManager.addUser(u);
         }
-        else{
+        else{ //New user in the system
             u = new User();
             u.Uid = Uid;
             u.DisplayName = displayName;

@@ -91,4 +91,6 @@ public interface IDBManager {
     DBObject getBuoy(String uuid);
 
     void subscribeToEventDeletion(Event event, boolean subscribe);
+
+    void writeLeaveEvent(User currentUser, Event currentEvent);
 }

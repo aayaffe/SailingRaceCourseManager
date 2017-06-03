@@ -539,6 +539,24 @@ public class FirebaseDB implements IDBManager {
         }
     }
 
+    @Override
+    public void writeLeaveEvent(User currentUser, Event currentEvent) {
+        if (currentEvent==null||currentUser==null){
+            return;
+        }
+        DBObject boat = null;
+        for (DBObject o: getAllBoats()){
+            if (o.userUid.equals(currentUser.Uid)){
+                boat = o;
+                break;
+            }
+        }
+        if (boat!=null){
+            boat.setLeftEvent(new Date());
+        }
+        writeBoatObject(boat);
+    }
+
     public interface EventDeleted {
         void onEventDeleted(Event e);
     }

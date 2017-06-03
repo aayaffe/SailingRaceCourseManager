@@ -29,6 +29,7 @@ public class DBObject implements Serializable {
     private UUID uuid;
     private UUID raceCourseUUID;
     private BuoyType buoyType;
+    public Long leftEvent;
     public Map<String,String> assigned;
 
 
@@ -43,6 +44,7 @@ public class DBObject implements Serializable {
         this.name = name;
         this.aviLocation = loc;
         this.lastUpdate = new Date().getTime();
+        this.leftEvent = null;
         this.buoyType = BuoyType.OTHER;
     }
 
@@ -52,6 +54,7 @@ public class DBObject implements Serializable {
         this.aviLocation = loc;
         this.buoyType = buoyType;
         this.lastUpdate = new Date().getTime();
+        this.leftEvent = null;
         this.raceCourseUUID = raceCourseUUID;
         switch (buoyType) {
             case FINISH_LINE:
@@ -158,7 +161,17 @@ public class DBObject implements Serializable {
     }
 
 
-
+    @Exclude
+    public Date getLeftEvent(){
+        if (leftEvent==null) return null;
+        return new Date(leftEvent);
+    }
+    @Exclude
+    public void setLeftEvent(Date leftEvent) {
+        if (leftEvent==null)
+            this.leftEvent=null;
+        this.leftEvent = leftEvent.getTime();
+    }
 
     @Exclude
     public Date getLastUpdate() {
