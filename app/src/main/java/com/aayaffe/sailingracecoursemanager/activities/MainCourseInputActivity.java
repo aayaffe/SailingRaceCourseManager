@@ -177,8 +177,12 @@ public class MainCourseInputActivity extends Activity {
         courseStatisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent(getApplicationContext(), RaceCourseStatisticsActivity.class);
-                //i.putExtra("LEGS",legs);
+                i.putExtra("Legs",legs);
+                i.putExtra("Dist2m1",dist2m1);
+                i.putExtra("WindSpeed",12);
+
                 startActivity(i);
             }
         });

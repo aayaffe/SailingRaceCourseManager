@@ -1,26 +1,39 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
 
 import java.util.List;
 
 public class RaceCourseStatisticsActivity extends AppCompatActivity {
-
+    private Legs l = null;
+    private double dist2m1 = -1;
+    private int windSpeed = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race_course_statistics);
+        Intent i = getIntent();
+        l = (Legs) i.getSerializableExtra("Legs");
+        dist2m1 = i.getFloatExtra("Dist2m1",-1);
+        windSpeed = i.getIntExtra("WindSpeed",-1);
         IDBManager db = new FirebaseDB(this);
         final List<Boat> boatTypes =  db.getBoatTypes();
         ArrayAdapter<Boat> boatAdapter =
@@ -52,6 +65,29 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
                 };
         Spinner s = ((Spinner)findViewById(R.id.class_spinner));
         s.setAdapter(boatAdapter);
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Boat b = (Boat) parent.getItemAtPosition(position);
+                TableLayout tl = (TableLayout) findViewById(R.id.statistics_table_layout);
+                tl.removeViewsInLayout(1,tl.getChildCount()-1);
+                for (MarkRoundingOrder mro : l.markRoundingOptions) {
+                    TableRow tr = new TableRow(getApplicationContext());
+                    TextView tv1 = new TextView(getApplicationContext());
+                    tv1.setText(mro.getName());
+                    TextView tv2 = new TextView(getApplicationContext());
+                    tv2.setText(String.valueOf(RaceCourseStatistics.GetSailTime(b, l, mro, dist2m1, windSpeed)));
+                    tr.addView(tv1);
+                    tr.addView(tv2);
+                    tl.addView(tr);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
     }

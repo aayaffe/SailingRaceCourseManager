@@ -54,18 +54,18 @@ public class Boat {
     }
 
     public double[][] getVmg() {
-//        vmg[0][0] = upwind5_8;
-//        vmg[1][0] = upwind8_12;
-//        vmg[2][0] = upwind12_15;
-//        vmg[3][0] = upwind15_;
-//        vmg[0][1] = run5_8;
-//        vmg[1][1] = run8_12;
-//        vmg[2][1] = run12_15;
-//        vmg[3][1] = run15_;
-//        vmg[0][2] = reach5_8;
-//        vmg[1][2] = reach8_12;
-//        vmg[2][2] = reach12_15;
-//        vmg[3][2] = reach15_;
+        vmg[0][0] = upwind5_8;
+        vmg[1][0] = upwind8_12;
+        vmg[2][0] = upwind12_15;
+        vmg[3][0] = upwind15_;
+        vmg[0][1] = run5_8;
+        vmg[1][1] = run8_12;
+        vmg[2][1] = run12_15;
+        vmg[3][1] = run15_;
+        vmg[0][2] = reach5_8;
+        vmg[1][2] = reach8_12;
+        vmg[2][2] = reach12_15;
+        vmg[3][2] = reach15_;
         return vmg;
     }
     public void setVmg(double[][] vmg) {
