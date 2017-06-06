@@ -76,7 +76,11 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
                     TextView tv1 = new TextView(getApplicationContext());
                     tv1.setText(mro.getName());
                     TextView tv2 = new TextView(getApplicationContext());
-                    tv2.setText(String.valueOf(RaceCourseStatistics.GetSailTime(b, l, mro, dist2m1, windSpeed)));
+                    tv2.setText(String.valueOf(Math.round(RaceCourseStatistics.GetSailTime(b, l, mro, dist2m1, windSpeed))));
+                    tv1.setTextSize(18);
+                    tv1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tv2.setTextSize(18);
+                    tv2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     tr.addView(tv1);
                     tr.addView(tv2);
                     tl.addView(tr);

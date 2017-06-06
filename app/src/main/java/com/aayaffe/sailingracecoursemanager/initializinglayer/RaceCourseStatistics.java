@@ -33,7 +33,7 @@ public class RaceCourseStatistics {
                 double length = l.GetLength(mro, p, DistanceType.Relative);
                 time[p.ordinal()] = length * dist2m1 * vmg;
                 length = l.GetLength(mro, p, DistanceType.Absolute);
-                time[p.ordinal()] += length * dist2m1 * vmg;
+                time[p.ordinal()] += length * vmg;
             } catch (RaceCourseException e) {
                 Log.e(TAG, "Error calculating!", e);
                 return -1;

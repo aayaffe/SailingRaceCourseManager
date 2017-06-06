@@ -2,6 +2,7 @@ package com.aayaffe.sailingracecoursemanager.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -12,9 +13,14 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.DistanceType;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +39,8 @@ import java.util.List;
     those input methods are separated by 2 tabs, both produce double class output - the distance
  */
 public class DistanceDialog extends Dialog {
+    private static final String TAG = "DistanceDialog";
+    private Legs legs;
     private Context context;
     private OnMyDialogResult mDialogResult;
     private TabHost tabHost;
@@ -59,12 +67,12 @@ public class DistanceDialog extends Dialog {
         this.boats= boats;
     }
 
-    public DistanceDialog(Context context, List<Boat> boats ,List<Double> courseFactors) {
+    public DistanceDialog(Context context, List<Boat> boats ,Legs legs) {
         super(context);
         this.context=context;
         this.boats= boats;
-        if(courseFactors!=null)
-            this.courseFactors=courseFactors;
+        if(legs!=null)
+            this.legs = legs;
     }
 
     @Override
@@ -130,11 +138,11 @@ public class DistanceDialog extends Dialog {
             public void onClick(View v) {
                 switch (tabHost.getCurrentTab()){
                     case 0:
-                        mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber(),gateLengthPicker.getNumber());
+                        mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber(),gateLengthPicker.getNumber(),windPicker.getNumber());
                         break;
                     case 1:
-                        mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), courseFactors),
-                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()),calcGateWidth(boats.get(spinner.getSelectedItemPosition()).length,(int)gateBoatsLengthPicker.getNumber()));
+                        mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), legs),
+                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()),calcGateWidth(boats.get(spinner.getSelectedItemPosition()).length,(int)gateBoatsLengthPicker.getNumber()),windPicker.getNumber());
                         break;
                 }
                 dismiss();
@@ -155,23 +163,37 @@ public class DistanceDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(double result, double startLineLength, double gateLength);
+        void finish(double dist2M1, double startLineLength, double gateLength, double windSpeed);
     }
 
     /**
      *
-     * @param boat - boat class descriptor
+     * @param b - boat class descriptor
      * @param wind - wind speed in knots
      * @param targetTime - in minutes
-     * @param lengthFactors -
-     * @return
+     * @return dist2M1 or -1 if faild
      */
-    public double calcDistByClassWind (Boat boat, double wind, double targetTime, List<Double> lengthFactors){  //finds the first leg length, since it equals 1 in the factor.
-        double sigmaTime= 0;
-        for (Boat.PointOfSail p : Boat.PointOfSail.values()) {
-            sigmaTime += (lengthFactors.get(p.ordinal())*boat.getVmg(wind,p)); //TODO
+    public double calcDistByClassWind (Boat b, double wind, double targetTime, Legs l){  //finds the first leg length, since it equals 1 in the factor.
+        //dist2M1 = ((targetTime/speed)-AbsoluteDistance)/RelativeDistance
+        if (GeneralUtils.isNull(b,l)) return -1;
+        MarkRoundingOrder mro = l.defaultMarkRounding;
+        if (mro==null) return -1;
+        double[] Abs = new double[3];
+        double[] Rel = new double[3];
+        for(Boat.PointOfSail p: Boat.PointOfSail.values()) {
+            try {
+                double vmg = b.getVmg(wind, p);
+                double length = l.GetLength(mro, p, DistanceType.Relative);
+                Rel[p.ordinal()] = length * vmg;
+                length = l.GetLength(mro, p, DistanceType.Absolute);
+                Abs[p.ordinal()] = length * vmg;
+            } catch (RaceCourseException e) {
+                Log.e(TAG, "Error calculating!", e);
+                return -1;
+            }
         }
-        return sigmaTime>0?targetTime/sigmaTime:0;
+        Log.d(TAG,"Dist 2 M1 calculted is: "+ (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]));
+        return (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]);
     }
 
 

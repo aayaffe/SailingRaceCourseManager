@@ -52,6 +52,7 @@ public class MainCourseInputActivity extends Activity {
     private static float startLineLength = 0.11f;
     private static float gateLength = 0.11f;
     private static float windDirection;
+    private static double windSpeed = 15;
 
     private static OnMyCourseInputResult mInputResult;
     private Context context=this;
@@ -72,7 +73,7 @@ public class MainCourseInputActivity extends Activity {
         iGeo = new OwnLocation(getBaseContext(), this);
         coursesInfo = new InitialCourseDescriptor().getRaceCourseDescriptors();
         boats = comm.getBoatTypes();
-        //Intent i =getIntent();
+
 
         try{
             if (savedInstanceState == null) {
@@ -116,15 +117,16 @@ public class MainCourseInputActivity extends Activity {
         distanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DistanceDialog dialog = new DistanceDialog(context , boats, courseFactors);
+                DistanceDialog dialog = new DistanceDialog(context , boats, legs);
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(double result,double startLine,double gate) {
+                    public void finish(double dist2M1,double startLine,double gate, double windSpeed) {
                         //something to do
-                        dist2m1 = (float) result;
-                        startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
-                        gateLength = (float) GeoUtils.toNauticalMiles(gate); //TODO: Better to send meters
+                        dist2m1 = (float) dist2M1;
+                        startLineLength = (float) startLine;
+                        gateLength = (float) gate; //TODO: Better to send meters
+                        MainCourseInputActivity.windSpeed = windSpeed;
                     }
 
                 });
@@ -181,7 +183,7 @@ public class MainCourseInputActivity extends Activity {
                 Intent i = new Intent(getApplicationContext(), RaceCourseStatisticsActivity.class);
                 i.putExtra("Legs",legs);
                 i.putExtra("Dist2m1",dist2m1);
-                i.putExtra("WindSpeed",12);
+                i.putExtra("WindSpeed",windSpeed);
 
                 startActivity(i);
             }

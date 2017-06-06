@@ -28,6 +28,7 @@ public class Boat {
     public boolean trapezoid;
     public boolean triangular;
     public boolean windward_Leeward;
+    private boolean vmgArraySet = false;
 
     public Boat(){
         //For FirebaseDB only
@@ -54,6 +55,7 @@ public class Boat {
     }
 
     public double[][] getVmg() {
+        if (vmgArraySet) return vmg;
         vmg[0][0] = upwind5_8;
         vmg[1][0] = upwind8_12;
         vmg[2][0] = upwind12_15;
@@ -70,6 +72,7 @@ public class Boat {
     }
     public void setVmg(double[][] vmg) {
         this.vmg = vmg;
+        vmgArraySet = true;
     }
 
     public double getVmg(WindSpeed ws, PointOfSail pos){

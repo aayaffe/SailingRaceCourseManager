@@ -129,6 +129,7 @@ public class CourseTypeSecondDialog extends Dialog {
         if(raceCourseDescriptor.getRaceCourseLegs().size()>0 && raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
             List<Mark> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
             for (Mark m : options) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
+                if (m.DummyMark) continue;
                 TextView textView = new TextView(context);  //set value name on a TextView
                 textView.setText(m.name + "-" +m.go.gateType.toString());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);

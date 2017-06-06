@@ -15,22 +15,30 @@ public class Mark implements Serializable{
     public MarkLocation ml;
     public boolean isGatable;
     public GateConfiguration go;
-
+    public boolean DummyMark; //True if mark is to be used only for length calculations
     private UUID uuid;
 
     public Mark(String name, int id, MarkLocation ml, GateConfiguration go) {
+        this(name, id, ml,go,false);
+    }
+    public Mark(String name, int id, MarkLocation ml, GateConfiguration go, boolean dummyMark) {
         this(name, id, ml);
         isGatable = true;
         this.go = go;
+        DummyMark = dummyMark;
     }
 
+
     public Mark(String name, int id, MarkLocation ml) {
+        this(name,id,ml,false);
+    }
+    public Mark(String name, int id, MarkLocation ml, boolean dummyMark) {
         this.name = name;
         this.id = id;
         this.ml = ml;
         this.isGatable = false;
         uuid = UUID.randomUUID();
-
+        DummyMark = dummyMark;
     }
 
     public void setUuidString(String uuid) {

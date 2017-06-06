@@ -73,13 +73,14 @@ public class InitialCourseDescriptor implements Serializable {
         Mark mk2 = new Mark("Mk2",2,new MarkLocation(-120,0.5,true,LocationOptions.FROM_MARK_ID,1));
         Mark mk3 = new Mark("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_MARK_ID,2),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark finish = new Mark("Finish",5,new MarkLocation(0,0,true,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
-        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish);
-        MarkRoundingOrder Inner2 = new MarkRoundingOrder("I2",0,4,1,4,1,2,3,5); //TODO - Cannot calculate last leg!!!!
-        MarkRoundingOrder Inner3 = new MarkRoundingOrder("I3",0,4,1,4,1,4,1,2,3,5);
-        MarkRoundingOrder Inner4 = new MarkRoundingOrder("I4",0,4,1,4,1,4,1,4,1,2,3,5);
-        MarkRoundingOrder Outer2 = new MarkRoundingOrder("O2",0,4,1,2,3,2,3,5);
-        MarkRoundingOrder Outer3 = new MarkRoundingOrder("O3",0,4,1,2,3,2,3,2,3,5);
-        MarkRoundingOrder Outer4 = new MarkRoundingOrder("O4",0,4,1,2,3,2,3,2,3,2,3,5);
+        Mark dummyFinish = new Mark("dummyFinish",6,new MarkLocation(121,0.5,true,LocationOptions.FROM_MARK_ID,3),true);
+        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish,dummyFinish);
+        MarkRoundingOrder Inner2 = new MarkRoundingOrder("I2",0,4,1,4,1,2,3,6); //TODO - Cannot calculate last leg!!!!
+        MarkRoundingOrder Inner3 = new MarkRoundingOrder("I3",0,4,1,4,1,4,1,2,3,6);
+        MarkRoundingOrder Inner4 = new MarkRoundingOrder("I4",0,4,1,4,1,4,1,4,1,2,3,6);
+        MarkRoundingOrder Outer2 = new MarkRoundingOrder("O2",0,4,1,2,3,2,3,6);
+        MarkRoundingOrder Outer3 = new MarkRoundingOrder("O3",0,4,1,2,3,2,3,2,3,6);
+        MarkRoundingOrder Outer4 = new MarkRoundingOrder("O4",0,4,1,2,3,2,3,2,3,2,3,6);
         GeneralUtils.addAll(shortedOuter.markRoundingOptions,Inner2,Inner3, Inner4,Outer2,Outer3,Outer4);
         shortedOuter.defaultMarkRounding = Inner2;
 
@@ -148,13 +149,14 @@ public class InitialCourseDescriptor implements Serializable {
         Mark mk2 = new Mark("Mk2",2,new MarkLocation(-110,0.658,true,LocationOptions.FROM_MARK_ID,1));
         Mark mk3 = new Mark("Mk3",3,new MarkLocation(-180,0.5,true,LocationOptions.FROM_MARK_ID,2),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark finish = new Mark("Finish",5,new MarkLocation(0,0,true,LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-180,0.032,GateReference.LEFT_MARK,false));
-        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish);
-        MarkRoundingOrder Inner2 = new MarkRoundingOrder("I2",0,4,1,4,1,2,3,5); //TODO - Cannot calculate last leg!!!!
-        MarkRoundingOrder Inner3 = new MarkRoundingOrder("I3",0,4,1,4,1,4,1,2,3,5);
-        MarkRoundingOrder Inner4 = new MarkRoundingOrder("I4",0,4,1,4,1,4,1,4,1,2,3,5);
-        MarkRoundingOrder Outer2 = new MarkRoundingOrder("O2",0,4,1,2,3,2,3,5);
-        MarkRoundingOrder Outer3 = new MarkRoundingOrder("O3",0,4,1,2,3,2,3,2,3,5);
-        MarkRoundingOrder Outer4 = new MarkRoundingOrder("O4",0,4,1,2,3,2,3,2,3,2,3,5);
+        Mark dummyFinish = new Mark("dummyFinish",6,new MarkLocation(111,0.658,true,LocationOptions.FROM_MARK_ID,3),true);
+        GeneralUtils.addAll(shortedOuter.marks,start,mk4,mk1,mk2,mk3,finish,dummyFinish);
+        MarkRoundingOrder Inner2 = new MarkRoundingOrder("I2",0,4,1,4,1,2,3,6); //TODO - Cannot calculate last leg!!!!
+        MarkRoundingOrder Inner3 = new MarkRoundingOrder("I3",0,4,1,4,1,4,1,2,3,6);
+        MarkRoundingOrder Inner4 = new MarkRoundingOrder("I4",0,4,1,4,1,4,1,4,1,2,3,6);
+        MarkRoundingOrder Outer2 = new MarkRoundingOrder("O2",0,4,1,2,3,2,3,6);
+        MarkRoundingOrder Outer3 = new MarkRoundingOrder("O3",0,4,1,2,3,2,3,2,3,6);
+        MarkRoundingOrder Outer4 = new MarkRoundingOrder("O4",0,4,1,2,3,2,3,2,3,2,3,6);
         GeneralUtils.addAll(shortedOuter.markRoundingOptions,Inner2,Inner3, Inner4,Outer2,Outer3,Outer4);
         shortedOuter.defaultMarkRounding = Inner2;
 
@@ -233,11 +235,11 @@ public class InitialCourseDescriptor implements Serializable {
         mk1 = new Mark("Mk1",1,new MarkLocation(0,0.5,true, LocationOptions.FROM_MARK_ID,0));
         Mark mk3 = new Mark("Mk3",2,new MarkLocation(-180,1,true,LocationOptions.FROM_MARK_ID,1));
         GeneralUtils.addAll(cruisersWL.marks,startfinish,mk1,mk3);
-        L2 = new MarkRoundingOrder("L2",0,4,1,4,1,4,0); //TODO: Unable to calculate...!!!
-        L3 = new MarkRoundingOrder("L3",0,4,1,4,1,4,1,4,0);
-        L4 = new MarkRoundingOrder("L4",0,4,1,4,1,4,1,4,1,4,0);
-        GeneralUtils.addAll(cruisersWL.markRoundingOptions,L2,L3, L4);
-        windlee.defaultMarkRounding = L2;
+        MarkRoundingOrder L1 = new MarkRoundingOrder("L1",0,1,0,2,0);
+        L2 = new MarkRoundingOrder("L2",0,1,0,2,0,1,0,2,0); //TODO: Unable to calculate...!!!
+        L3 = new MarkRoundingOrder("L3",0,1,0,2,0,1,0,2,0,1,0,2,0);
+        GeneralUtils.addAll(cruisersWL.markRoundingOptions,L1,L2,L3);
+        windlee.defaultMarkRounding = L1;
 
         GeneralUtils.addAll(windwardLeeward.legDescriptors,windlee,cruisersWL);
         return windwardLeeward;
@@ -315,10 +317,11 @@ public class InitialCourseDescriptor implements Serializable {
         Mark mk1 = new Mark("Mk1",1,new MarkLocation(0,0.5,true,LocationOptions.FROM_MARK_ID,0));
         Mark mk2 = new Mark("Mk2",2,new MarkLocation(-120,1,true,LocationOptions.FROM_MARK_ID,1));
         Mark mk3 = new Mark("Mk3",3,new MarkLocation(120,1,true,LocationOptions.FROM_MARK_ID,2));
-        GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3);
-        MarkRoundingOrder IOD = new MarkRoundingOrder("IOD",0,1,2,3,4); //TODO: Unable to calculate
-        GeneralUtils.addAll(cruisersTriangle.markRoundingOptions,IOD);
-        cruisersTriangle.defaultMarkRounding = IOD;
+        Mark dummyFinish = new Mark("DummyFinish",4,new MarkLocation(0, 0.5 ,true,LocationOptions.FROM_MARK_ID,3));
+        GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3,dummyFinish);
+        MarkRoundingOrder R1 = new MarkRoundingOrder("R1",0,1,2,3,4); //TODO: Unable to calculate
+        GeneralUtils.addAll(cruisersTriangle.markRoundingOptions,R1);
+        cruisersTriangle.defaultMarkRounding = R1;
 
         Legs Triangle = new Legs();
         Triangle.marks = new ArrayList<>();
@@ -328,11 +331,14 @@ public class InitialCourseDescriptor implements Serializable {
         mk3 = new Mark("Mk3",3,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,0),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         mk1 = new Mark("Mk1",1,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,3),new GateConfiguration(GateType.SATELLITE,GateOption.GATABLE,125,0.08,GateReference.LEFT_MARK,false));
         mk2 = new Mark("Mk2",2,new MarkLocation(-135,0.71,true,LocationOptions.FROM_MARK_ID,1));
-        Mark finish = new Mark("Finish",4,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,1),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,true));
-        GeneralUtils.addAll(Triangle.marks,start,mk3,mk1,mk2,finish);
-        MarkRoundingOrder TW2 = new MarkRoundingOrder("TW2",0,1,2,3,4); //TODO: Unable to calculate, add all TW and TL
-        GeneralUtils.addAll(Triangle.markRoundingOptions,IOD);
-        Triangle.defaultMarkRounding = IOD;
+        Mark finish = new Mark("Finish",4,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,6),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,true));
+        Mark dummyM3 = new Mark("dummyMk3",5,new MarkLocation(135,0.71,true,LocationOptions.FROM_MARK_ID,2),true);
+        Mark dummyM1 = new Mark("dummyMk1",6,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,5),true);
+        GeneralUtils.addAll(Triangle.marks,start,mk3,mk1,mk2,finish,dummyM3,dummyM1);
+        MarkRoundingOrder TW2 = new MarkRoundingOrder("TW2",0,3,1,2,5,6,4);
+        MarkRoundingOrder TW3 = new MarkRoundingOrder("TW3",0,3,1,2,5,6,5,6,4); //TODO: add all TW and TL
+        GeneralUtils.addAll(Triangle.markRoundingOptions,TW2,TW3);
+        Triangle.defaultMarkRounding = TW2;
 
         GeneralUtils.addAll(triangular.legDescriptors,Triangle,cruisersTriangle);
         return triangular;

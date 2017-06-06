@@ -131,6 +131,7 @@ public class Legs implements Serializable{
     public List<Mark> getOptions() {
         List<Mark> ret = new ArrayList<>();
         for(Mark m : marks){
+            if (m.DummyMark) continue;
             if (m!=null&&m.go!=null&&m.go.gateOption!=null&&m.go.gateOption == GateOption.GATABLE)
                     ret.add(m);
         }
@@ -150,6 +151,7 @@ public class Legs implements Serializable{
         Map<Integer,AviLocation> id2Location = new HashMap();
         AviLocation lastLoc = rcLocation;
         for (Mark m: marks){
+            if (m.DummyMark) continue;
             AviLocation loc = new AviLocation();
             if (m!=null) {
                 if (m.ml!=null){

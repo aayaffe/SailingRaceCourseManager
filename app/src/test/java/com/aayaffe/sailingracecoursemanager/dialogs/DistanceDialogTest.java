@@ -1,18 +1,21 @@
-package com.aayaffe.sailingracecoursemanager.initializinglayer;
+package com.aayaffe.sailingracecoursemanager.dialogs;
 
+import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by aayaffe on 03/06/2017.
+ * Created by aayaffe on 06/06/2017.
  */
-public class RaceCourseStatisticsTest {
+public class DistanceDialogTest {
     @Test
-    public void getSailTime() throws Exception {
+    public void calcDistByClassWind() throws Exception {
         RaceCourseDescriptor rc = new InitialCourseDescriptor().getRaceCourse("Trapezoid 60\\120");
         Legs l = rc.getRaceCourseLegs().get(1); //Half beat
         Boat b = new Boat();
@@ -21,8 +24,8 @@ public class RaceCourseStatisticsTest {
         b.setVmg(arr);
         b.setBoatClass("TestClass1");
         b.setTargettime(12);
-        assertEquals(12.5,RaceCourseStatistics.GetSailTime(b,l,l.markRoundingOptions.get(0),1,10),0.0001);
-
+        DistanceDialog dd = new DistanceDialog(null, null);
+        assertEquals(4.125, dd.calcDistByClassWind(b,10,50,l),0.0001);
     }
 
 }
