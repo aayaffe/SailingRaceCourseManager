@@ -290,8 +290,9 @@ public class InitialCourseDescriptor implements Serializable {
         Mark mk2 = new Mark("Mk2",2,new MarkLocation(-120,1,true,LocationOptions.FROM_MARK_ID,1));
         Mark mk3 = new Mark("Mk3",3,new MarkLocation(-180,1,true,LocationOptions.FROM_MARK_ID,2),new GateConfiguration(GateType.GATE,GateOption.ALWAYS_GATED,-90,0.027,GateReference.GATE_CENTER,true));
         Mark finish = new Mark("Finish",4,new MarkLocation(135,0.027,false,LocationOptions.FROM_MARK_ID,2),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-35,0.032,GateReference.GATE_CENTER,false));
-        GeneralUtils.addAll(shortedOuter.marks,start,mk1,mk2,mk3,finish);
-        MarkRoundingOrder IOD = new MarkRoundingOrder("IOD",0,1,2,3,4);
+        Mark dummyFinish = new Mark("dummyFinish",5,new MarkLocation(5,0.98,true,LocationOptions.FROM_MARK_ID,3),true);
+        GeneralUtils.addAll(shortedOuter.marks,start,mk1,mk2,mk3,finish,dummyFinish);
+        MarkRoundingOrder IOD = new MarkRoundingOrder("IOD",0,1,2,3,5);
         GeneralUtils.addAll(shortedOuter.markRoundingOptions,IOD);
         shortedOuter.defaultMarkRounding = IOD;
 

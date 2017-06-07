@@ -189,7 +189,7 @@ public class DistanceDialog extends Dialog {
                 Abs[p.ordinal()] = length * vmg;
             } catch (RaceCourseException e) {
                 Log.e(TAG, "Error calculating!", e);
-                return -1;
+                return -1; //TODO Throw a better error up to the user!
             }
         }
         Log.d(TAG,"Dist 2 M1 calculted is: "+ (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]));

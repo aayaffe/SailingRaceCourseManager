@@ -25,7 +25,7 @@ import java.util.List;
 public class RaceCourseStatisticsActivity extends AppCompatActivity {
     private Legs l = null;
     private double dist2m1 = -1;
-    private int windSpeed = -1;
+    private double windSpeed = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +33,7 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
         Intent i = getIntent();
         l = (Legs) i.getSerializableExtra("Legs");
         dist2m1 = i.getFloatExtra("Dist2m1",-1);
-        windSpeed = i.getIntExtra("WindSpeed",-1);
+        windSpeed = i.getDoubleExtra("WindSpeed",-2);
         IDBManager db = new FirebaseDB(this);
         final List<Boat> boatTypes =  db.getBoatTypes();
         ArrayAdapter<Boat> boatAdapter =

@@ -22,7 +22,7 @@ public class RaceCourseStatistics {
      * @param windSpeed - Wind speed in knots
      * @return time in minutes to finish the course in these conditions, negative value if failed
      */
-    public static double GetSailTime(Boat b, Legs l, MarkRoundingOrder mro, double dist2m1, int windSpeed){
+    public static double GetSailTime(Boat b, Legs l, MarkRoundingOrder mro, double dist2m1, double windSpeed){
         double ret = -1;
         if (GeneralUtils.isNull(b,l)||windSpeed<=0)
             return ret;
