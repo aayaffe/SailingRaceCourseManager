@@ -234,12 +234,13 @@ public class InitialCourseDescriptor implements Serializable {
         startfinish = new Mark("StartFinish",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         mk1 = new Mark("Mk1",1,new MarkLocation(0,0.5,true, LocationOptions.FROM_MARK_ID,0));
         Mark mk3 = new Mark("Mk3",2,new MarkLocation(-180,1,true,LocationOptions.FROM_MARK_ID,1));
-        GeneralUtils.addAll(cruisersWL.marks,startfinish,mk1,mk3);
-        MarkRoundingOrder L1 = new MarkRoundingOrder("L1",0,1,0,2,0);
-        L2 = new MarkRoundingOrder("L2",0,1,0,2,0,1,0,2,0); //TODO: Unable to calculate...!!!
-        L3 = new MarkRoundingOrder("L3",0,1,0,2,0,1,0,2,0,1,0,2,0);
+        Mark dummyFinish = new Mark("dummyFinish",3,new MarkLocation(0,0.5,true,LocationOptions.FROM_MARK_ID,2),true);
+        GeneralUtils.addAll(cruisersWL.marks,startfinish,mk1,mk3,dummyFinish);
+        MarkRoundingOrder L1 = new MarkRoundingOrder("L1",0,1,2,3);
+        L2 = new MarkRoundingOrder("L2",0,1,2,1,2,3);
+        L3 = new MarkRoundingOrder("L3",0,1,2,1,2,1,2,3);
         GeneralUtils.addAll(cruisersWL.markRoundingOptions,L1,L2,L3);
-        windlee.defaultMarkRounding = L1;
+        cruisersWL.defaultMarkRounding = L1;
 
         GeneralUtils.addAll(windwardLeeward.legDescriptors,windlee,cruisersWL);
         return windwardLeeward;
