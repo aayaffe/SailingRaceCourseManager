@@ -124,8 +124,8 @@ public class MainCourseInputActivity extends Activity {
                     public void finish(double dist2M1,double startLine,double gate, double windSpeed) {
                         //something to do
                         dist2m1 = (float) dist2M1;
-                        startLineLength = (float) startLine;
-                        gateLength = (float) gate; //TODO: Better to send meters
+                        startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
+                        gateLength = (float) GeoUtils.toNauticalMiles(gate); //TODO: Better to send meters
                         MainCourseInputActivity.windSpeed = windSpeed;
                     }
 
