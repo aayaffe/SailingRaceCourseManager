@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
@@ -139,13 +140,20 @@ public class DistanceDialog extends Dialog {
                 switch (tabHost.getCurrentTab()){
                     case 0:
                         mDialogResult.finish(distancePicker.getNumber(),startlinelengthPicker.getNumber(),gateLengthPicker.getNumber(),windPicker.getNumber());
+                        dismiss();
                         break;
                     case 1:
-                        mDialogResult.finish(calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), legs),
-                                calcStartLine(boats.get(spinner.getSelectedItemPosition()).length,factor,(int)numberOfBoatsPicker.getNumber()),calcGateWidth(boats.get(spinner.getSelectedItemPosition()).length,(int)gateBoatsLengthPicker.getNumber()),windPicker.getNumber());
+                        double dist =calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), legs);
+                        if (dist<0)
+                                Toast.makeText(context, "Unable to calculate course automatically!!", Toast.LENGTH_LONG).show();
+                        else {
+                            mDialogResult.finish(dist,
+                                    calcStartLine(boats.get(spinner.getSelectedItemPosition()).length, factor, (int) numberOfBoatsPicker.getNumber()), calcGateWidth(boats.get(spinner.getSelectedItemPosition()).length, (int) gateBoatsLengthPicker.getNumber()), windPicker.getNumber());
+                            dismiss();
+                        }
                         break;
                 }
-                dismiss();
+
             }
         });
     }
@@ -189,7 +197,7 @@ public class DistanceDialog extends Dialog {
                 Abs[p.ordinal()] = length * vmg;
             } catch (RaceCourseException e) {
                 Log.e(TAG, "Error calculating!", e);
-                return -1; //TODO Throw a better error up to the user!
+                return -1;
             }
         }
         Log.d(TAG,"Dist 2 M1 calculted is: "+ (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]));
