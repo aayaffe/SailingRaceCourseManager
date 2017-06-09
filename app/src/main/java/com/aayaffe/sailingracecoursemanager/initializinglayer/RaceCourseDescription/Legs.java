@@ -242,7 +242,7 @@ public class Legs implements Serializable{
                 port =  BuoyType.START_FINISH_LINE;
                 stbd =  BuoyType.START_FINISH_LINE;
                 break;
-            case SATELLITE:
+            case OFFSET:
                 switch (m.go.gateReference){
                     case LEFT_MARK:
                         stbd = BuoyType.TRIANGLE_BUOY;
@@ -279,24 +279,41 @@ public class Legs implements Serializable{
         else width = m.go.gateWidth;
         switch(m.go.gateReference) {
             case GATE_CENTER:
-                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width / 2), portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection - 180, width / 2), stbdType,raceCourseUUID);
+                port = new DBObject(getGateName(m,Side.PORT), GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width / 2), portType,raceCourseUUID);
+                stbd = new DBObject(getGateName(m,Side.STBD), GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection - 180, width / 2), stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
             case LEFT_MARK:
-                port = new DBObject(m.name + "P", loc, portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, width), stbdType,raceCourseUUID);
+                port = new DBObject(getGateName(m,Side.PORT), loc, portType,raceCourseUUID);
+                stbd = new DBObject(getGateName(m,Side.STBD), GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction - m.go.gateDirection, width), stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
             case RIGHT_MARK:
-                port = new DBObject(m.name + "P", GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width), portType,raceCourseUUID);
-                stbd = new DBObject(m.name + "S", loc, stbdType,raceCourseUUID);
+                port = new DBObject(getGateName(m,Side.PORT), GeoUtils.getLocationFromDirDist(loc, windDir + m.ml.direction + m.go.gateDirection, width), portType,raceCourseUUID);
+                stbd = new DBObject(getGateName(m,Side.STBD), loc, stbdType,raceCourseUUID);
                 ret.add(port);
                 ret.add(stbd);
                 break;
         }
         return ret;
+    }
+
+    private static String getGateName(Mark m, Side s) {
+        if (m==null)
+            return null;
+        switch (m.go.gateType){
+            case OFFSET:
+                if (s==Side.PORT) return m.name+"a";
+                return m.name;
+            case FINISH_LINE:
+            case GATE:
+            case START_FINISH_LINE:
+            case START_LINE:
+            default:
+                if (s==Side.PORT) return m.name+"P";
+                return m.name+"S";
+        }
     }
 }
