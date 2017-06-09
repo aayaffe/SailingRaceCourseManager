@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -18,11 +19,15 @@ import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class RaceCourseStatisticsActivity extends AppCompatActivity {
+    private RaceCourseDescriptor rcd;
     private Legs l = null;
     private double dist2m1 = -1;
     private double windSpeed = -1;
@@ -32,6 +37,13 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_race_course_statistics);
         Intent i = getIntent();
         l = (Legs) i.getSerializableExtra("Legs");
+        rcd = (RaceCourseDescriptor) i.getSerializableExtra("RCD");
+        TextView rcNameTV = (TextView)findViewById(R.id.tv_course_type);
+        rcNameTV.setText(rcd.getName());
+        TextView legsNameTV = (TextView)findViewById(R.id.tv_legs_type);
+        legsNameTV.setText(l.getName());
+        ImageView rcimg = (ImageView) findViewById(R.id.img_course_type);
+        rcimg.setImageResource(rcd.getImageID());
         dist2m1 = i.getFloatExtra("Dist2m1",-1);
         windSpeed = i.getDoubleExtra("WindSpeed",-2);
         IDBManager db = new FirebaseDB(this);

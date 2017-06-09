@@ -83,7 +83,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 }
                 Log.w("check", selectedOptions.values().toString());
 
-                mDialogResult.finish(selectedOptions, factorResult, legs);
+                mDialogResult.finish(selectedOptions, factorResult, legs,raceCourseDescriptor);
                 dismiss();
             }
         });
@@ -164,7 +164,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs);
+        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd);
     }
 
 }

@@ -3,6 +3,7 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescrip
 import com.aayaffe.sailingracecoursemanager.R;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
  * Created by Amit Y. on 29/12/2016.
  */
 
-public class RaceCourseDescriptor {
+public class RaceCourseDescriptor implements Serializable{
     public String name;
     public int imageID = R.drawable.racecourse_optimist;
     public List<Legs> legDescriptors;

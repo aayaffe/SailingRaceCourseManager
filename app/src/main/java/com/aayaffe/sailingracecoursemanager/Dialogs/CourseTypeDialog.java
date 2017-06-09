@@ -52,8 +52,8 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
         CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context, raceCourseDescriptor);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {
-            public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
-                mDialogResult.finish(result, factorResult,legs);
+            public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd) {
+                mDialogResult.finish(result, factorResult,legs,rcd);
             }
         });
         dismiss();
@@ -65,7 +65,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
 
     public interface OnMyDialogResult{
-        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs);
+        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd);
     }
 
 }

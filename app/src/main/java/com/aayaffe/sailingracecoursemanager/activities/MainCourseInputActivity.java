@@ -48,6 +48,7 @@ public class MainCourseInputActivity extends Activity {
 
     private static List<Double> courseFactors;
     private static Map<String,Boolean> courseOptions = new HashMap<>();
+    private static RaceCourseDescriptor selectedRCD;
     private static float dist2m1 = 1;
     private static float startLineLength = 0.11f;
     private static float gateLength = 0.11f;
@@ -82,17 +83,23 @@ public class MainCourseInputActivity extends Activity {
                     legs = null;
                 } else {
                     legs =(Legs) extras.getSerializable("LEGS");
+                    selectedRCD = (RaceCourseDescriptor) extras.getSerializable("RCD");
                 }
             } else {
                 legs = (Legs) savedInstanceState.getSerializable("LEGS");
+                selectedRCD = (RaceCourseDescriptor) savedInstanceState.getSerializable("RCD");
             }
+
 
         } catch (Exception e)
         {
             Log.e(TAG,"Unable to get extra legs",e);
         }
+        if (selectedRCD==null){
+            selectedRCD= coursesInfo.get(0);
+        }
         if (legs == null){
-            legs = coursesInfo.get(0).getRaceCourseLegs().get(0);
+            legs = selectedRCD.getRaceCourseLegs().get(0);
         }
 
 
@@ -104,7 +111,8 @@ public class MainCourseInputActivity extends Activity {
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
+                    public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd) {
+                        selectedRCD = rcd;
                         courseOptions=result;
                         courseFactors=factorResult;
                         MainCourseInputActivity.this.legs = legs;
@@ -125,7 +133,7 @@ public class MainCourseInputActivity extends Activity {
                         //something to do
                         dist2m1 = (float) dist2M1;
                         startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
-                        gateLength = (float) GeoUtils.toNauticalMiles(gate); //TODO: Better to send meters
+                        gateLength = (float) GeoUtils.toNauticalMiles(gate);
                         MainCourseInputActivity.windSpeed = windSpeed;
                     }
 
@@ -163,6 +171,7 @@ public class MainCourseInputActivity extends Activity {
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
                 resultIntent.putExtra("LEGS", legs);
+                resultIntent.putExtra("RCD", selectedRCD);
                 setResult(-1, resultIntent);
                 finish();
             }
@@ -182,6 +191,7 @@ public class MainCourseInputActivity extends Activity {
 
                 Intent i = new Intent(getApplicationContext(), RaceCourseStatisticsActivity.class);
                 i.putExtra("Legs",legs);
+                i.putExtra("RCD",selectedRCD);
                 i.putExtra("Dist2m1",dist2m1);
                 i.putExtra("WindSpeed",windSpeed);
 

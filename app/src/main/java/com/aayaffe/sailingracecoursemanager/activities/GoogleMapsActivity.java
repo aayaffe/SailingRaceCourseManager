@@ -47,6 +47,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.google.android.gms.location.LocationListener;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -87,6 +88,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     boolean mBound = false;
     private boolean viewOnly = false;
     private Legs legs;
+    private RaceCourseDescriptor rcd;
 
 
     @Override
@@ -319,6 +321,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private void addRaceCourseItemClick() {
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         i.putExtra("LEGS",legs);
+        i.putExtra("RCD",legs);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
 //        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
 //        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
@@ -597,6 +600,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (requestCode == NEW_RACE_COURSE_REQUEST && resultCode == RESULT_OK) {
             RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
             legs = (Legs) data.getExtras().getSerializable("LEGS");
+            rcd = (RaceCourseDescriptor) data.getExtras().getSerializable("RCD");
             addRaceCourse(rc);
             firstBoatLoad = true;
         }
