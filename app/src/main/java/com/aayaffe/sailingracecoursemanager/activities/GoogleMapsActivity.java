@@ -76,7 +76,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private IGeo iGeo;
     private Handler handler = new Handler();
     private WindArrow wa;
-    public static IDBManager commManager;
+
+    public static IDBManager getCommManager() {
+        return commManager;
+    }
+
+    private static IDBManager commManager;
     private DialogFragment df;
     private static String currentEventName;
     private boolean firstBoatLoad = true;
@@ -112,14 +117,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
         commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
-        ((FirebaseDB)commManager).eventDeleted = new FirebaseDB.EventDeleted() {
+        ((FirebaseDB)commManager).setEventDeleted(new FirebaseDB.EventDeleted() {
             @Override
             public void onEventDeleted(Event e) {
                 commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
                 Log.i(TAG,"Closing activity due to event deletion");
                 finish();
             }
-        };
+        });
         Intent intent = new Intent(this, GPSService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         notification.InitNotification(this);
@@ -389,7 +394,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
-                myBoat.leftEvent = null;
+                myBoat.setLeftEvent((Date)null);
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -519,7 +524,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEventAsDate()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -532,7 +537,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEventAsDate()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -569,8 +574,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (bearing==360)
             bearing = 0;
         if (units.equals(getString(R.string.nautical_miles_unit_symbol)))
-            return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.2f", distance) + units;
-        return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%0$.0f", distance) + units;
+            return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%1$.2f", distance) + units;
+        return String.format(Locale.getDefault(),"%03d", bearing) + "\\" + String.format(Locale.getDefault(),"%1$.0f", distance) + units;
     }
 
     @Override

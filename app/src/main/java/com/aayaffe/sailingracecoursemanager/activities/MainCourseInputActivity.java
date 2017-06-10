@@ -46,7 +46,6 @@ public class MainCourseInputActivity extends Activity {
     private IGeo iGeo;
 
 
-    private static List<Double> courseFactors;
     private static Map<String,Boolean> courseOptions = new HashMap<>();
     private static RaceCourseDescriptor selectedRCD;
     private static float dist2m1 = 1;
@@ -64,7 +63,7 @@ public class MainCourseInputActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_course_input);
-        IDBManager comm = GoogleMapsActivity.commManager;
+        IDBManager comm = GoogleMapsActivity.getCommManager();
 
 
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -111,10 +110,9 @@ public class MainCourseInputActivity extends Activity {
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
-                    public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd) {
+                    public void finish(Map<String, Boolean> result, Legs legs, RaceCourseDescriptor rcd) {
                         selectedRCD = rcd;
                         courseOptions=result;
-                        courseFactors=factorResult;
                         MainCourseInputActivity.this.legs = legs;
                     }
                 });

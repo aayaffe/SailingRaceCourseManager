@@ -4,6 +4,7 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class RaceCourseDescriptor implements Serializable{
     public String name;
     public int imageID = R.drawable.racecourse_optimist;
-    public List<Legs> legDescriptors;
+    public ArrayList<Legs> legDescriptors;
     private UUID uuid;
     public Long lastUpdate;
 

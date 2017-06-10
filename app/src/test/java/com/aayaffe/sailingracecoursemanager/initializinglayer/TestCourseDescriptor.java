@@ -24,7 +24,7 @@ import static java.util.Arrays.asList;
  * Created by aayaffe on 29/12/2016.
  */
 
-public class TestCourseDescriptor implements Serializable {
+public class TestCourseDescriptor {
     public List<RaceCourseDescriptor> getRaceCourseDescriptors() {
         return raceCourseDescriptors;
     }

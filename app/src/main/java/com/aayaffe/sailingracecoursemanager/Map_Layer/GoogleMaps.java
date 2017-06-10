@@ -191,7 +191,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         if (m != null) {
             m.remove();
             if (removeFromDB) {
-                GoogleMapsActivity.commManager.removeBuoyObject(uuid.toString());
+                GoogleMapsActivity.getCommManager().removeBuoyObject(uuid.toString());
             }
             uuidToMarker.remove(uuid);
             uuidToId.remove(uuid);

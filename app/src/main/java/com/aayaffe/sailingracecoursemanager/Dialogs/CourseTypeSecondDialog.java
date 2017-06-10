@@ -35,7 +35,6 @@ public class CourseTypeSecondDialog extends Dialog {
     private OnMyDialogResult mDialogResult;
     private RaceCourseDescriptor raceCourseDescriptor;
     private Button finishB;
-    private List<Double> factorResult;
     private Map<String, Boolean> selectedOptions = new HashMap<>();  //map of the selected settings
     private Legs legs;
 
@@ -83,7 +82,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 }
                 Log.w("check", selectedOptions.values().toString());
 
-                mDialogResult.finish(selectedOptions, factorResult, legs,raceCourseDescriptor);
+                mDialogResult.finish(selectedOptions, legs,raceCourseDescriptor);
                 dismiss();
             }
         });
@@ -112,9 +111,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     redrawOptionsViews(position);
-                    factorResult = raceCourseDescriptor.getRaceCourseLegs().get(position).getCourseFactors();
                     legs = raceCourseDescriptor.getRaceCourseLegs().get(position);
-                    //selectedOptions.put("Legs", raceCourseDescriptor.getLegsNames()[position]);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parentView) {
@@ -164,7 +161,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd);
+        void finish(Map<String, Boolean> result, Legs legs, RaceCourseDescriptor rcd);
     }
 
 }

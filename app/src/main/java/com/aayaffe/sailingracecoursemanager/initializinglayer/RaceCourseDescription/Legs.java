@@ -25,9 +25,8 @@ import java.util.UUID;
 public class Legs implements Serializable{
     private static final String TAG = "LEGS";
     public String name;
-    public List<Double> lengthFactors = Collections.emptyList();
-    public List<Mark> marks = Collections.emptyList();
-    public List<MarkRoundingOrder> markRoundingOptions;
+    public ArrayList<Mark> marks = new ArrayList<>();
+    public ArrayList<MarkRoundingOrder> markRoundingOptions;
     public MarkRoundingOrder defaultMarkRounding;
 
     private UUID uuid;
@@ -47,9 +46,6 @@ public class Legs implements Serializable{
         return name;
     }
 
-    public List<Double> getCourseFactors() {
-        return lengthFactors;
-    }
 
     /***
      * Returns the distance of a course (relative to distance to m1 parts or absolute parts) according

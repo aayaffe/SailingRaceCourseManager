@@ -74,18 +74,18 @@ public class LegsTest {
 
 
 
-    @Test
-    public void parseBuoys() throws AssertionError {
-        RaceCourseDescriptor rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
-        AviLocation rcLoc = new AviLocation();
-        rcLoc.setLon(0).setLat(0);
-        double dist2M1 = 1;
-        int windDir = 0;
-        float startLineLength = 150;
-        UUID uuid = UUID.randomUUID();
+//    @Test
+//    public void parseBuoys() throws AssertionError {
+//        RaceCourseDescriptor rc = new TestCourseDescriptor().getRaceCourseDescriptors().get(0);
+//        AviLocation rcLoc = new AviLocation();
+//        rcLoc.setLon(0).setLat(0);
+//        double dist2M1 = 1;
+//        int windDir = 0;
+//        float startLineLength = 150;
+//        UUID uuid = UUID.randomUUID();
 
         //rc.getRaceCourseLegs().get(0).parseBuoys(rcLoc,)
 
-    }
+//    }
 
 }

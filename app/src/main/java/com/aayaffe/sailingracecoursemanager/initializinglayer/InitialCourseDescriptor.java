@@ -25,9 +25,11 @@ import java.util.List;
  */
 
 public class InitialCourseDescriptor implements Serializable {
+    public ArrayList<RaceCourseDescriptor> raceCourseDescriptors;
     public List<RaceCourseDescriptor> getRaceCourseDescriptors() {
         return raceCourseDescriptors;
     }
+
 
     /***
      * Returns the racecoursedecriptor with the matching name
@@ -42,7 +44,7 @@ public class InitialCourseDescriptor implements Serializable {
         return null;
     }
 
-    public List<RaceCourseDescriptor> raceCourseDescriptors;
+
 
     public InitialCourseDescriptor(){
         raceCourseDescriptors = new ArrayList<>();

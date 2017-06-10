@@ -29,7 +29,7 @@ public class DBObject implements Serializable {
     private UUID uuid;
     private UUID raceCourseUUID;
     private BuoyType buoyType;
-    public Long leftEvent;
+    private Long leftEvent;
     public Map<String,String> assigned;
 
 
@@ -162,15 +162,23 @@ public class DBObject implements Serializable {
 
 
     @Exclude
-    public Date getLeftEvent(){
+    public Date getLeftEventAsDate(){
         if (leftEvent==null) return null;
         return new Date(leftEvent);
     }
     @Exclude
     public void setLeftEvent(Date leftEvent) {
-        if (leftEvent==null)
-            this.leftEvent=null;
+        if (leftEvent==null) {
+            this.leftEvent = null;
+            return;
+        }
         this.leftEvent = leftEvent.getTime();
+    }
+    public void setLeftEvent(long leftEvent) {
+        this.leftEvent = leftEvent;
+    }
+    public Long getLeftEvent(){
+        return leftEvent;
     }
 
     @Exclude

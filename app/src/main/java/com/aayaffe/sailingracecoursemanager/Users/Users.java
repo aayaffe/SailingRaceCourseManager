@@ -17,7 +17,8 @@ public class Users {
     private static IDBManager commManager;
 
     public Users(IDBManager cm){
-        commManager = cm;
+        if (commManager==null)
+            commManager = cm;
     }
 
     /**
@@ -28,12 +29,13 @@ public class Users {
         return currentUser;
     }
 
-    public void setCurrentUser(User currentUser) {
+    public static void setCurrentUser(User currentUser) {
         Users.currentUser = currentUser;
         if (currentUser!=null) {
             Users.currentUser.setLastConnection(new Date());
         }
-        commManager.addUser(Users.currentUser);
+        if (commManager!=null)
+            commManager.addUser(Users.currentUser);
     }
     public static void setCurrentUser(String Uid, String displayName) {
         Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);

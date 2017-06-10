@@ -40,7 +40,12 @@ public class FirebaseDB implements IDBManager {
     private static DatabaseReference fb;
     private static DataSnapshot ds;
     private static Event currentEvent;
-    public EventDeleted eventDeleted;
+
+    public void setEventDeleted(EventDeleted eventDeleted) {
+        this.eventDeleted = eventDeleted;
+    }
+
+    private EventDeleted eventDeleted;
     private Context c;
     private String uid;
     private Users users;
@@ -475,6 +480,8 @@ public class FirebaseDB implements IDBManager {
      */
     @NonNull
     private String convertToAcceptableDisplayName(String email) {
+        if (email==null)
+            return null;
         String e = email;
         e = e.replace('.', ' ');
         e = e.replace('#', ' ');
