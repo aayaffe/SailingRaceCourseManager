@@ -1,6 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
-public class GateConfiguration{
+import java.io.Serializable;
+
+public class GateConfiguration implements Serializable{
     public GateType gateType; //Type of gate
     public GateOption gateOption; //Gate optional?
     /**

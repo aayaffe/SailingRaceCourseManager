@@ -33,8 +33,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:elevation="4dp"
-
                 app:layout_collapseMode = "pin"/>
             <!--"?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -104,7 +102,6 @@
         android:layout_centerHorizontal="true">
         <TextView
             android:id="@+id/goto_text_view"
-            android:text="Buoy1\n302/2500m"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textAlignment="center"
             android:textStyle="normal|bold"

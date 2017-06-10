@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark2;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Mark;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.HashMap;
@@ -25,20 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 13/07/2016.
  */
 public class CourseTypeSecondDialog extends Dialog {
     private Context context;
     private LinearLayout ownLayout;
     private OnMyDialogResult mDialogResult;
-    private RaceCourseDescriptor2 raceCourseDescriptor;
+    private RaceCourseDescriptor raceCourseDescriptor;
     private Button finishB;
     private List<Double> factorResult;
     private Map<String, Boolean> selectedOptions = new HashMap<>();  //map of the selected settings
     private Legs legs;
 
 
-    public CourseTypeSecondDialog(Context context, RaceCourseDescriptor2 raceCourseDescriptor) {
+    public CourseTypeSecondDialog(Context context, RaceCourseDescriptor raceCourseDescriptor) {
         super(context);
         this.context = context;
         this.raceCourseDescriptor = raceCourseDescriptor;
@@ -71,11 +73,6 @@ public class CourseTypeSecondDialog extends Dialog {
                 for (int i = 0; i < ownLayout.getChildCount() - 1; i = i + 2) {
                     TextView tv = (TextView) ownLayout.getChildAt(i);
                     switch (ownLayout.getChildAt(i + 1).getClass().toString()) {
-//                        case "class android.widget.Spinner":
-//                            Toast.makeText(context, "we can work from home! oooh o-oh", Toast.LENGTH_LONG).show();
-//                            Spinner spinner = (Spinner) ownLayout.getChildAt(i + 1);
-//                            selectedOptions.put(tv.getText().toString(), spinner.getSelectedItem().toString());
-//                            break;
                         case "class android.widget.ToggleButton":
                             ToggleButton toggleButton = (ToggleButton) ownLayout.getChildAt(i + 1);
                             if (toggleButton.isChecked())
@@ -86,7 +83,7 @@ public class CourseTypeSecondDialog extends Dialog {
                 }
                 Log.w("check", selectedOptions.values().toString());
 
-                mDialogResult.finish(selectedOptions, factorResult, legs);
+                mDialogResult.finish(selectedOptions, factorResult, legs,raceCourseDescriptor);
                 dismiss();
             }
         });
@@ -130,8 +127,9 @@ public class CourseTypeSecondDialog extends Dialog {
     public void redrawOptionsViews(int legsIndex){
         ownLayout.removeAllViews();
         if(raceCourseDescriptor.getRaceCourseLegs().size()>0 && raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions().size()>0){
-            List<Mark2> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
-            for (Mark2 m : options) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
+            List<Mark> options = raceCourseDescriptor.getRaceCourseLegs().get(legsIndex).getOptions();
+            for (Mark m : options) {  //add all the race course options views. textView for the name and Spinner/Toggle/... for value
+                if (m.DummyMark) continue;
                 TextView textView = new TextView(context);  //set value name on a TextView
                 textView.setText(m.name + "-" +m.go.gateType.toString());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -140,26 +138,6 @@ public class CourseTypeSecondDialog extends Dialog {
 
                 ownLayout.addView(textView);
                 View setterBox = null;
-//                switch (m.get(1)) {   //set an input view to get the value from the user
-//                    case "spinner":
-//                        Spinner dropdown = new Spinner(context);
-//                        String[] items = (String[])options.get(c).subList(2,options.get(c).size()).toArray();//Arrays.copyOfRange(options.get(c), 2, options.get(c).size());
-//                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_layout, items);
-//                        dropdown.setAdapter(adapter);
-//                        dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//
-//                        setterBox=dropdown;
-//                        break;
-//                    case "toggle":
-//                        ToggleButton toggleB = new ToggleButton(context);
-//                        toggleB.setTextSize(25);
-//                        toggleB.setText("NO");
-//                        toggleB.setTextOff("NO");
-//                        toggleB.setTextOn("YES");
-//                        setterBox=toggleB;
-//                        break;
-//                }
                 ToggleButton toggleB = new ToggleButton(context);
                 toggleB.setTextSize(25);
                 toggleB.setText("NO");
@@ -186,7 +164,7 @@ public class CourseTypeSecondDialog extends Dialog {
     }
 
     public interface OnMyDialogResult{
-        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs);
+        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd);
     }
 
 }

@@ -2,14 +2,15 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.location.Location;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by aayaffe on 30/09/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 30/09/2015.
  */
 public class GeoUtils {
 
@@ -79,10 +80,6 @@ public class GeoUtils {
         return getLocationFromDirDist(loc,dir,(int)(distNM*GeoUtils.NM2m));
     }
 
-    public static Location getLocationFromDirDist(Location loc, double dir, int dist) {
-        return toLocation(getLocationFromDirDist(toAviLocation(loc),(int)dir,dist));
-    }
-
     public static AviLocation getLocationFromTriangulation(AviLocation p1, double brng1, AviLocation p2,  double brng2){
         AviLocation ret = new AviLocation();
         double lat1 = Math.toRadians(p1.getLat()), lon1 = Math.toRadians(p1.getLon());
@@ -92,7 +89,6 @@ public class GeoUtils {
         double dist12 = 2 * Math.asin(Math.sqrt(Math.sin(dLat / 2)
                 * Math.sin(dLat / 2) + Math.cos(lat1) * Math.cos(lat2)
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2)));
-        if (dist12 == 0); //TODO: Why is this here?
         Double brngA = Math.acos((Math.sin(lat2) - Math.sin(lat1) * Math.cos(dist12)) / (Math.sin(dist12) * Math.cos(lat1)));
         if (brngA.isNaN())
             brngA = 0.0;

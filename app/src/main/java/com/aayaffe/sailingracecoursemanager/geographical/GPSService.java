@@ -2,28 +2,23 @@ package com.aayaffe.sailingracecoursemanager.geographical;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 
 import com.aayaffe.sailingracecoursemanager.Events.Event;
-import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import static com.google.common.base.Predicates.isNull;
 
 /**
- * Created by aayaffe on 31/12/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 31/12/2016.
  */
 public class GPSService extends Service {
 
@@ -43,7 +38,7 @@ public class GPSService extends Service {
                 handler.postDelayed(runnable, updateInterval);
         }
     };
-    private ICommManager commManager;
+    private IDBManager commManager;
     private IGeo geo;
     private DBObject myBoat;
     private Event event;
@@ -67,7 +62,7 @@ public class GPSService extends Service {
     }
 
     /** method for clients */
-    public void update(long interval, DBObject myBoat, Event event,ICommManager commManager, IGeo geo) {
+    public void update(long interval, DBObject myBoat, Event event, IDBManager commManager, IGeo geo) {
         if (interval<0 || GeneralUtils.isNull(event,commManager,geo))
             return;
         this.commManager = commManager;

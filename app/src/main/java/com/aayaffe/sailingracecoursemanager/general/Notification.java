@@ -10,7 +10,9 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 
 /**
- * Created by aayaffe on 04/10/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 04/10/2015.
  */
 public class Notification {
     private NotificationManager mNotifyMgr;

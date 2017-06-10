@@ -6,32 +6,33 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 
 import java.util.List;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 13/07/2016.
  */
 public class CourseTypeRV extends RecyclerView.Adapter<CourseTypeRV.AdapterViewHolder> {
-    public List<RaceCourseDescriptor2> infoList;
+    public List<RaceCourseDescriptor> infoList;
     private OnRecyclerItemClickListener onRecyclerItemClickListener;
 
-    public CourseTypeRV(List<RaceCourseDescriptor2> infoList , OnRecyclerItemClickListener onRecyclerItemClickListener) {
+    public CourseTypeRV(List<RaceCourseDescriptor> infoList , OnRecyclerItemClickListener onRecyclerItemClickListener) {
         this.infoList=infoList;
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
 
     public interface OnRecyclerItemClickListener {
-        void onRecyclerItemClick(RaceCourseDescriptor2 raceCourseDescriptorOptions);
+        void onRecyclerItemClick(RaceCourseDescriptor raceCourseDescriptorOptions);
     }
 
     public class AdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView courseName;
         public ImageView courseImage;
-        public RaceCourseDescriptor2 raceCourseDescriptorOptions;
+        public RaceCourseDescriptor raceCourseDescriptorOptions;
         private OnRecyclerItemClickListener onRecyclerItemClickListener;
         public AdapterViewHolder(View itemView,OnRecyclerItemClickListener onRecyclerItemClickListener){
             super(itemView);
@@ -44,7 +45,7 @@ public class CourseTypeRV extends RecyclerView.Adapter<CourseTypeRV.AdapterViewH
             onRecyclerItemClickListener.onRecyclerItemClick(raceCourseDescriptorOptions);
         }
     }
-    public void changeList(List<RaceCourseDescriptor2> infoList){
+    public void changeList(List<RaceCourseDescriptor> infoList){
         this.infoList.clear();
         this.infoList.addAll(infoList);
         notifyDataSetChanged();

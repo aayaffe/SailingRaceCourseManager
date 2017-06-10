@@ -19,14 +19,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
+import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.common.Scopes;
@@ -35,6 +36,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.tenmiles.helpstack.HSHelpStack;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.doorbell.android.Doorbell;
@@ -42,12 +44,11 @@ import io.doorbell.android.Doorbell;
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
-    private com.aayaffe.sailingracecoursemanager.communication.Firebase commManager;
+    private FirebaseDB commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
-//    private static String selectedEventName;
     private static Event selectedEvent;
-
+    private Analytics analytics;
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
 
@@ -57,7 +58,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
-        commManager = new com.aayaffe.sailingracecoursemanager.communication.Firebase(this);
+        analytics = new Analytics(this);
+        commManager = new FirebaseDB(this);
         commManager.login();
         users = new Users(commManager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,6 +105,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         commManager.deleteEvent(e);
+                        analytics.LogDeleteEvent(e,users.getCurrentUser());
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                     default:
@@ -184,13 +187,15 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+
 
     private void startLoginActivity() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setProviders(getSelectedProviders())
                         .setLogo(R.mipmap.banner)
-                        /*.setTosUrl()*/ //TODO: Add TOS
+                        .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
                         .build(),
                 RC_SIGN_IN);
     }
@@ -261,6 +266,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             e.dayStart = dayStart;
             e.dayEnd = dayEnd;
             commManager.writeEvent(e);
+            Calendar start = Calendar.getInstance();
+            start.set(yearStart,monthStart,dayStart);
+            Calendar end = Calendar.getInstance();
+            end.set(yearEnd,monthEnd,dayEnd);
+            analytics.LogAddEvent(e.getName(),start.getTime(),end.getTime(),users.getCurrentUser());
         }
         else {
             FirebaseCrash.logcat(Log.DEBUG, TAG,"User not logged in tried to add new activity");
@@ -285,6 +295,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 MenuItem addEventItem = menu.findItem(R.id.action_add_event);
                 addEventItem.setEnabled(false);
                 addEventItem.setVisible(false);
+                startLoginActivity();
             }catch (Exception e){
                 Log.e(TAG,"Error logging in", e);
             }

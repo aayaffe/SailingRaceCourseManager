@@ -8,13 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor2;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.R;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 13/07/2016.
  */
 public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerItemClickListener{
@@ -22,9 +24,9 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
     private Context context;
     private OnMyDialogResult mDialogResult;
-    private List<RaceCourseDescriptor2> coursesList;
+    private List<RaceCourseDescriptor> coursesList;
 
-    public CourseTypeDialog(Context context, List<RaceCourseDescriptor2> coursesList){
+    public CourseTypeDialog(Context context, List<RaceCourseDescriptor> coursesList){
         super(context);
         this.context=context;
         this.coursesList=coursesList;
@@ -46,12 +48,12 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
     }
 
     @Override
-    public void onRecyclerItemClick(RaceCourseDescriptor2 raceCourseDescriptor){
+    public void onRecyclerItemClick(RaceCourseDescriptor raceCourseDescriptor){
         CourseTypeSecondDialog dialog = new CourseTypeSecondDialog(context, raceCourseDescriptor);
         dialog.show();
         dialog.setDialogResult(new CourseTypeSecondDialog.OnMyDialogResult() {
-            public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs) {
-                mDialogResult.finish(result, factorResult,legs);
+            public void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd) {
+                mDialogResult.finish(result, factorResult,legs,rcd);
             }
         });
         dismiss();
@@ -63,7 +65,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
 
 
     public interface OnMyDialogResult{
-        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs);
+        void finish(Map<String, Boolean> result, List<Double> factorResult, Legs legs, RaceCourseDescriptor rcd);
     }
 
 }

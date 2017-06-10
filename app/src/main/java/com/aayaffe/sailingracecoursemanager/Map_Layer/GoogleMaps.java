@@ -5,11 +5,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.nfc.Tag;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
@@ -38,7 +35,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by aayaffe on 04/10/2015.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 04/10/2015.
  */
 public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowLongClickListener, OnMapReadyCallback {
     private static final String TAG = "GoogleMaps";
@@ -186,19 +185,13 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         return (ao != null) && (ao.getAviLocation() != null) && (ao.getName() != null) && (ao.getBuoyType() != null) && (ao.getLastUpdate() != null);
     }
 
-//    public void removeMark(Marker m) {
-//        m.remove();
-//        GoogleMapsActivity.commManager.removeBuoyObject(m.getTitle());
-//        uuidToMarker.inverse().remove(m); //TODO: Check if works... else use uuidToID to obtain Uuid and delete
-//        uuidToId.inverse().remove(m.getId());
-//    }
 
     public void removeMark(UUID uuid, boolean removeFromDB) {
         Marker m = uuidToMarker.get(uuid);
         if (m != null) {
             m.remove();
             if (removeFromDB) {
-                GoogleMapsActivity.commManager.removeBuoyObject(uuid.toString()); //TODO Check if mapping correct using title - convert to usign UUID as title
+                GoogleMapsActivity.commManager.removeBuoyObject(uuid.toString());
             }
             uuidToMarker.remove(uuid);
             uuidToId.remove(uuid);
@@ -211,7 +204,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             setCenter((ms.get(0).getPosition()));
             return;
         }
-        if (ms.size() == 0) {
+        if (ms.isEmpty()) {
             return;
         }
         ZoomToBounds(ms);

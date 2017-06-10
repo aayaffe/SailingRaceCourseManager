@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by aayaffe on 09/01/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 09/01/2016.
  */
 public class AviLocation implements Serializable {
     public double lat;
@@ -121,12 +123,7 @@ public class AviLocation implements Serializable {
         if (o == null || getClass() != o.getClass())
             return false;
         AviLocation that = (AviLocation) o;
-        if (Double.compare(that.lat, lat) != 0)
-            return false;
-        if (Double.compare(that.lon, lon) != 0)
-            return false;
-        return Double.compare(that.sog, sog) == 0 && Float.compare(that.cog, cog) == 0;
-
+        return Double.compare(that.lat, lat) == 0 && Double.compare(that.lon, lon) == 0 && Double.compare(that.sog, sog) == 0 && Float.compare(that.cog, cog) == 0;
     }
 
     @Override

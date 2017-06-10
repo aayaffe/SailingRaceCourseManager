@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.aayaffe.sailingracecoursemanager.R;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 04/11/2016.
  */
 public class WindDirDialog extends Dialog {
@@ -33,7 +35,7 @@ public class WindDirDialog extends Dialog {
 
 
         TextView titleV=(TextView) findViewById(R.id.wind_dir_dialog_title);   //set dialog title
-        titleV.setText("Wind Direction");
+        titleV.setText(R.string.wind_dir_label);
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleV.setGravity(Gravity.CENTER);
 

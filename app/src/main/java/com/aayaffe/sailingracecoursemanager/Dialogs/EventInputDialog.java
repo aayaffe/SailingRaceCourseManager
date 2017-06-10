@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -13,14 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.Adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
 
 /**
- * Created by aayaffe on 09/02/2016.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 09/20/2016.
  */
 public class EventInputDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "EventInputDialog";
@@ -70,6 +72,7 @@ public class EventInputDialog extends DialogFragment implements DatePickerDialog
     }
 
 
+    @SuppressLint("InflateParams")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Verify that the host activity implements the callback interface

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
-        android:text="NA"
+        android:text="@string/na"
         android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:textStyle="bold"
-        android:text="—"
+        android:text="@string/minus_sign"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/np_number" />
 
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:textSize="25sp"
         android:background="@null"
-        android:text="+"
+        android:text="@string/plus_sign"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/np_number" />
 </RelativeLayout>

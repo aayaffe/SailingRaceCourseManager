@@ -4,10 +4,9 @@ package com.aayaffe.sailingracecoursemanager.initializinglayer;
 import com.google.firebase.database.Exclude;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 16/08/2016.
- */
-/*
-    represents a boat class
  */
 public class Boat {
     private String boatClass;  //class boatClass
@@ -29,9 +28,10 @@ public class Boat {
     public boolean trapezoid;
     public boolean triangular;
     public boolean windward_Leeward;
+    private boolean vmgArraySet = false;
 
     public Boat(){
-        //For Firebase only
+        //For FirebaseDB only
     }
 
 
@@ -55,6 +55,7 @@ public class Boat {
     }
 
     public double[][] getVmg() {
+        if (vmgArraySet) return vmg;
         vmg[0][0] = upwind5_8;
         vmg[1][0] = upwind8_12;
         vmg[2][0] = upwind12_15;
@@ -71,6 +72,7 @@ public class Boat {
     }
     public void setVmg(double[][] vmg) {
         this.vmg = vmg;
+        vmgArraySet = true;
     }
 
     public double getVmg(WindSpeed ws, PointOfSail pos){
@@ -81,8 +83,15 @@ public class Boat {
         return getVmg(wind2Index(ws),pos);
     }
 
+    /**
+     *
+     * @param wind in knots
+     * @return WindSpeed value, null if wind<0
+     */
     @Exclude
     public static Boat.WindSpeed wind2Index(double wind){  //index the wind strength. knots to right index at the boat's vmg table.
+        if (wind<0)
+            return null;
         if (wind<8)
             return Boat.WindSpeed.WIND_SPEED5_8;
         else if (wind<=12)
@@ -92,8 +101,15 @@ public class Boat {
         return Boat.WindSpeed.WIND_SPEED15_;
     }
 
+    /**
+     *
+     * @param windDir
+     * @return point of sail. null if windDir < 0
+     */
     @Exclude
     public static Boat.PointOfSail dir2PointOfSail(int windDir){
+        if(windDir<0) return null;
+        windDir = windDir % 360;
         if (windDir>310 || windDir<50)
             return PointOfSail.UpWind;
         else if ((windDir>=225 && windDir<=310)||(windDir>=50 && windDir<=135))

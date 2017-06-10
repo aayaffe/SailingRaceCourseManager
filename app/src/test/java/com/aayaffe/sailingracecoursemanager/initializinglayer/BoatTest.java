@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
  */
 public class BoatTest {
     @Test
-    public void dir2PointOfSail() throws Exception {
+    public void dir2PointOfSail() throws AssertionError {
         Assert.assertEquals(Boat.PointOfSail.UpWind,Boat.dir2PointOfSail(49));
         Assert.assertEquals(Boat.PointOfSail.UpWind,Boat.dir2PointOfSail(311));
         Assert.assertEquals(Boat.PointOfSail.UpWind,Boat.dir2PointOfSail(0));

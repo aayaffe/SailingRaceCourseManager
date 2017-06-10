@@ -13,23 +13,22 @@ import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.firebase.ui.database.FirebaseListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AssignBuoyActivity extends AppCompatActivity {
 
     private static final String TAG = "AssignBuoyActivity";
-    private Firebase commManager;
+    private FirebaseDB commManager;
     private FirebaseListAdapter<DBObject> mAdapter;
     private DBObject currentBoat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign_buoy);
-        commManager = new Firebase(this);
+        commManager = new FirebaseDB(this);
         Intent i = getIntent();
         currentBoat = commManager.getBoat(i.getStringExtra("boatUid"));
         setupToolbar();
@@ -95,7 +94,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setTitle("Choose buoy");
+        getSupportActionBar().setTitle(R.string.choose_buoy);
     }
 
     @Override

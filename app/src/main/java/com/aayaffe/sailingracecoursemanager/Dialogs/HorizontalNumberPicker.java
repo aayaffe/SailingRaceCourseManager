@@ -1,14 +1,14 @@
 package com.aayaffe.sailingracecoursemanager.dialogs;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 18/07/2016.
  */
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

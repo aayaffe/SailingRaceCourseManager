@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,13 +31,13 @@ import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
-import com.aayaffe.sailingracecoursemanager.ConfigChange;
+import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.Events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
-import com.aayaffe.sailingracecoursemanager.communication.Firebase;
-import com.aayaffe.sailingracecoursemanager.communication.ICommManager;
+import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -45,8 +46,12 @@ import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.IGeo;
 import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.google.android.gms.location.LocationListener;
 import com.google.firebase.crash.FirebaseCrash;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +76,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private IGeo iGeo;
     private Handler handler = new Handler();
     private WindArrow wa;
-    public static ICommManager commManager;
+    public static IDBManager commManager;
     private DialogFragment df;
     private static String currentEventName;
     private boolean firstBoatLoad = true;
@@ -82,6 +87,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     GPSService mService;
     boolean mBound = false;
     private boolean viewOnly = false;
+    private Legs legs;
+    private RaceCourseDescriptor rcd;
 
 
     @Override
@@ -91,14 +98,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         noGps = (ImageView)findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
-        commManager = new Firebase(this);
-        commManager.login();
+        commManager = new FirebaseDB(this);
         users = new Users(commManager);
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this,this);
         wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
-
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
         viewOnly = i.getBooleanExtra("viewOnly",false);
@@ -106,11 +111,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         FirebaseCrash.log("Current event name = " + currentEventName);
-        ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),true);
-        ((Firebase)commManager).eventDeleted = new Firebase.EventDeleted() {
+        commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
+        ((FirebaseDB)commManager).eventDeleted = new FirebaseDB.EventDeleted() {
             @Override
             public void onEventDeleted(Event e) {
-                ((Firebase)commManager).subscribeToEventDeletion(commManager.getCurrentEvent(),false);
+                commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
                 Log.i(TAG,"Closing activity due to event deletion");
                 finish();
             }
@@ -141,6 +146,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     }
 
+    @Contract(" -> !null")
     private MapClickMethods getClickMethods() {
         return new MapClickMethods() {
             @Override
@@ -191,6 +197,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         firstBoatLoad = true;
     }
 
+    @Contract("null -> false")
     private boolean isBuoy(DBObject b) {
         if (b==null){
             return false;
@@ -288,11 +295,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case R.id.action_settings:
                 SettingsMenuItemOnClick();
                 return true;
-
             case R.id.action_add_object:
-                AddMenuItemOnClick();
+                AddBuoyMenuItemOnClick();
                 return true;
-
             case R.id.action_add_race_course:
                 addRaceCourseItemClick();
                 firstBoatLoad = true;
@@ -312,10 +317,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
+
     private void addRaceCourseItemClick() {
-        Log.d(TAG, "FAB Setting Clicked");
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
+        i.putExtra("LEGS",legs);
+        i.putExtra("RCD",rcd);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
+//        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
+//        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
 
     private void openAssignBuoyActvity() {
@@ -358,9 +367,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
 
     private Runnable runnable = new Runnable() {
-        private DBObject getMyBoat(String name){
+        @Nullable
+        private DBObject getMyBoat(String uid){
             for (DBObject ao : commManager.getAllBoats()) {
-                if (isOwnObject(name, ao)) {
+                if (isOwnObject(uid, ao)) {
                     return ao;
                 }
             }
@@ -369,7 +379,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         @Override
         public void run() {
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
-                myBoat = getMyBoat(users.getCurrentUser().DisplayName);
+                myBoat = getMyBoat(users.getCurrentUser().Uid);
                 if (myBoat == null) {
                     myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
@@ -379,6 +389,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
+                myBoat.leftEvent = null;
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
@@ -401,18 +412,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private boolean isCurrentEventManager(String uid) {
         Event e = commManager.getCurrentEvent();
-        if (e == null)
-            return false;
-        if (uid == null || uid.isEmpty())
-            return false;
-        return e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
+        return e != null && !(uid == null || uid.isEmpty()) && e.getManagerUuid() != null && e.getManagerUuid().equals(uid);
     }
 
     public static boolean isCurrentEventManager() {
         Event e = commManager.getCurrentEvent();
-        if (e == null)
-            return false;
-        return !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid()==null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
+        return e != null && !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid() == null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
     }
 
     public void addBuoys() {
@@ -430,11 +435,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         removeOldMarkers(boats, buoys);
         for (DBObject boat : boats) {
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().DisplayName, boat))) {
-                int id = getIconId(users.getCurrentUser().DisplayName, boat);
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().Uid, boat))) {
+                //int id = getIconId(users.getCurrentUser().DisplayName, boat);
+                int id = getIconId(users.getCurrentUser().Uid, boat);
                 mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
             }
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().DisplayName, boat))) {
+            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().Uid, boat))) {
                 drawOwnBoat(boat);
             }
         }
@@ -457,13 +463,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private synchronized void drawOwnBoat(DBObject boat) {
         if (users.getCurrentUser() == null)
             return;
-        int id = getIconId(users.getCurrentUser().DisplayName, boat);
+        //int id = getIconId(users.getCurrentUser().DisplayName, boat);
+        int id = getIconId(users.getCurrentUser().Uid, boat);
         mapLayer.addMark(boat, null, id,getZIndex(boat));
         assignBuoyUIUpdate(assignedBuoy);
     }
 
     private int getZIndex(DBObject boat) {
-        if (isOwnObject(users.getCurrentUser().DisplayName,boat))
+        if (isOwnObject(users.getCurrentUser().Uid,boat))
             return 10;
         return 0;
     }
@@ -506,14 +513,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
-    private int getIconId(String string, DBObject o) {
-        //TODO change to test race officer with UUID
+    private int getIconId(String uid, DBObject o) {
         int ret;
-        if (isOwnObject(string, o)) {
+        if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatgold;
-                    if (AviLocation.Age(o.getAviLocation()) > 60)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -526,7 +532,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
                     ret = R.drawable.boatcyan;
-                    if (AviLocation.Age(o.getAviLocation()) > 60)
+                    if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEvent()!=null)
                         ret = R.drawable.boatred;
                     break;
                 case RACE_OFFICER:
@@ -539,10 +545,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return ret;
     }
 
-    private boolean isOwnObject(String string, DBObject o) {
-        return o.getName().equals(string);
+    private boolean isOwnObject(String uid, DBObject o) {
+        return o.userUid.equals(uid);
     }
 
+    @Contract("null, _ -> !null")
     private String getDirDistTXT(Location src, Location dst) {
         if (src==null){
             return "NoGPS";
@@ -592,14 +599,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NEW_RACE_COURSE_REQUEST && resultCode == RESULT_OK) {
             RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
+            legs = (Legs) data.getExtras().getSerializable("LEGS");
+            rcd = (RaceCourseDescriptor) data.getExtras().getSerializable("RCD");
             addRaceCourse(rc);
             firstBoatLoad = true;
         }
 
     }
-    public void AddMenuItemOnClick() {
+    public void AddBuoyMenuItemOnClick() {
         Log.d(TAG, "Plus Fab Clicked");
-
         df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
@@ -700,6 +708,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onBackPressed() {
         if (exit) {
             notification.cancelAll();
+            commManager.writeLeaveEvent(users.getCurrentUser(),commManager.getCurrentEvent());
             finish();
         } else {
             Toast.makeText(this, "Press back again to leave event.",

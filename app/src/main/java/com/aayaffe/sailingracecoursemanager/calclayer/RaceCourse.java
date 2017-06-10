@@ -1,9 +1,13 @@
 package com.aayaffe.sailingracecoursemanager.calclayer;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,10 +16,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * Avi Marine Innovations - www.avimarine.in
+ *
  * Created by Jonathan on 27/08/2016.
  */
 public class RaceCourse implements Serializable{
 
+    private static final String TAG = "RACECOURSE" ;
     /**
      * RaceCourse represents the actual race course, and serves:
      * -holding course input (windDir, Dist2m1, courseType, marks array)
@@ -60,7 +67,14 @@ public class RaceCourse implements Serializable{
 //    }
     public synchronized List<DBObject> convertMarks2Buoys(Legs l){ //converts all data into the a list of BUOY class
         //Mark referenceMark = xmlParserC.parseMarks(selectedOptions);
-        bouyList = l.parseBuoys(signalBoatLoc, dist2m1, windDir, (float)startLineDist,(float)gateLength, raceCourseUUID, selectedOptions);
+        try {
+            bouyList = l.parseBuoys(signalBoatLoc, dist2m1, windDir, (float) startLineDist, (float) gateLength, raceCourseUUID, selectedOptions);
+        } catch(RaceCourseException e){
+            FirebaseCrash.logcat(Log.DEBUG, TAG,"Failed to parse buoys");
+            FirebaseCrash.report(e);
+            Log.e(TAG,"Failed to parse buoys",e);
+            Toast.makeText(context, R.string.error_adding_race_course, Toast.LENGTH_LONG).show();
+        }
         return bouyList;
     }
 

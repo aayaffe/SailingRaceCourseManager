@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="15dp"
-        android:text="Choose"
+        android:text="@string/choose"
         android:textColor="#000000"
         android:textSize="22sp" />
 
@@ -20,7 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="5dp"
         android:background="@color/cmark_blue_light"
-        android:contentDescription="Distance"/>
+        android:contentDescription="@string/distance"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -67,7 +67,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/cmark_blue_light"
         android:gravity="center"
-        android:text="DONE"
+        android:text="@string/done"
         android:textAlignment="center"
         android:textColor="@color/cmark_orange_lighter"
         android:textSize="25sp" />
