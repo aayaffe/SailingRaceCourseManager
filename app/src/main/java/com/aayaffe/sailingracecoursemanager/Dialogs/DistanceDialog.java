@@ -83,7 +83,7 @@ public class DistanceDialog extends Dialog {
         super.setContentView(R.layout.distance_dialog);
 
         TextView titleV=(TextView) findViewById(R.id.distance_dialog_title);   //set dialog title
-        titleV.setText("Choose Distance to Mark 1");
+        titleV.setText(R.string.distance_to_mk1_label);
         titleV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleV.setGravity(Gravity.CENTER);
 
@@ -159,11 +159,11 @@ public class DistanceDialog extends Dialog {
     }
 
     private double calcGateWidth(double boatLength, int boatsNumber) {
-        return GeoUtils.toNauticalMiles(boatLength)*boatsNumber;
+        return boatLength*boatsNumber;
     }
 
     private double calcStartLine(double boatLength, float factor, int boatsNumber) {
-        return GeoUtils.toNauticalMiles(boatLength)*factor*boatsNumber;
+        return boatLength*factor*boatsNumber;
     }
 
     public void setDialogResult(OnMyDialogResult dialogResult){

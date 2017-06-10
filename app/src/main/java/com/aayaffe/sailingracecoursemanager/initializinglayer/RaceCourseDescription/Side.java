@@ -1,7 +1,9 @@
 package com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription;
 
 /**
- * Created by aayaffe on 09/06/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 09/06/2017.
  */
 
 enum Side {

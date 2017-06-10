@@ -216,7 +216,7 @@ public class InitialCourseDescriptor implements Serializable {
         Legs windlee = new Legs();
         windlee.marks = new ArrayList<>();
         windlee.markRoundingOptions = new ArrayList<>();
-        windlee.name = "ISAF Wind\\Lee";
+        windlee.name = "ISAF";
         Mark startfinish = new Mark("S",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         Mark mk4 = new Mark("4",4,new MarkLocation(0,0.05,false, LocationOptions.FROM_MARK_ID,0),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         Mark mk1 = new Mark("1",1,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,4),new GateConfiguration(GateType.OFFSET,GateOption.GATABLE,-100,0.08,GateReference.RIGHT_MARK,false));
@@ -230,7 +230,7 @@ public class InitialCourseDescriptor implements Serializable {
         Legs cruisersWL = new Legs();
         cruisersWL.marks = new ArrayList<>();
         cruisersWL.markRoundingOptions = new ArrayList<>();
-        cruisersWL.name = "Cruisers Wind-Lee";
+        cruisersWL.name = "Cruisers'";
         startfinish = new Mark("SF",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
         mk1 = new Mark("1",1,new MarkLocation(0,0.5,true, LocationOptions.FROM_MARK_ID,0));
         Mark mk3 = new Mark("3",2,new MarkLocation(-180,1,true,LocationOptions.FROM_MARK_ID,1));
@@ -319,7 +319,7 @@ public class InitialCourseDescriptor implements Serializable {
         Mark mk1 = new Mark("1",1,new MarkLocation(0,0.5,true,LocationOptions.FROM_MARK_ID,0));
         Mark mk2 = new Mark("2",2,new MarkLocation(-120,1,true,LocationOptions.FROM_MARK_ID,1));
         Mark mk3 = new Mark("3",3,new MarkLocation(120,1,true,LocationOptions.FROM_MARK_ID,2));
-        Mark dummyFinish = new Mark("DummyFinish",4,new MarkLocation(0, 0.5 ,true,LocationOptions.FROM_MARK_ID,3));
+        Mark dummyFinish = new Mark("DummyFinish",4,new MarkLocation(0, 0.5 ,true,LocationOptions.FROM_MARK_ID,3),true);
         GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3,dummyFinish);
         MarkRoundingOrder R1 = new MarkRoundingOrder("R1",0,1,2,3,4);
         GeneralUtils.addAll(cruisersTriangle.markRoundingOptions,R1);
@@ -333,10 +333,11 @@ public class InitialCourseDescriptor implements Serializable {
         mk3 = new Mark("3",3,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,0),new GateConfiguration(GateType.GATE,GateOption.GATABLE,-90,0.027,GateReference.GATE_CENTER,true));
         mk1 = new Mark("1",1,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,3),new GateConfiguration(GateType.OFFSET,GateOption.GATABLE,-100,0.08,GateReference.RIGHT_MARK,false));
         mk2 = new Mark("2",2,new MarkLocation(-135,0.71,true,LocationOptions.FROM_MARK_ID,1));
-        Mark finish = new Mark("F",4,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,6),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,true));
         Mark dummyM3 = new Mark("dummyMk3",5,new MarkLocation(135,0.71,true,LocationOptions.FROM_MARK_ID,2),true);
         Mark dummyM1 = new Mark("dummyMk1",6,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,5),true);
-        GeneralUtils.addAll(Triangle.marks,start,mk3,mk1,mk2,finish,dummyM3,dummyM1);
+        Mark finish = new Mark("F",4,new MarkLocation(0,0.1,false,LocationOptions.FROM_MARK_ID,6),new GateConfiguration(GateType.FINISH_LINE,GateOption.ALWAYS_GATED,-90,0.032,GateReference.GATE_CENTER,true));
+
+        GeneralUtils.addAll(Triangle.marks,start,mk3,mk1,mk2,dummyM3,dummyM1,finish);
         MarkRoundingOrder TW2 = new MarkRoundingOrder("TW2",0,3,1,2,5,6,4);
         MarkRoundingOrder TW3 = new MarkRoundingOrder("TW3",0,3,1,2,5,6,5,6,4); //TODO: add all TW and TL
         GeneralUtils.addAll(Triangle.markRoundingOptions,TW2,TW3);

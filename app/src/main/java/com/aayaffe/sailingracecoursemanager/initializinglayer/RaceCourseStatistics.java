@@ -9,7 +9,9 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
 
 /**
- * Created by aayaffe on 03/06/2017.
+ * Avi Marine Innovations - www.avimarine.in
+ *
+ * Created by Amit Y. on 03/06/2017.
  */
 
 public class RaceCourseStatistics {

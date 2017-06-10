@@ -151,20 +151,10 @@ public class Legs implements Serializable{
         Map<Integer,AviLocation> id2Location = new HashMap();
         AviLocation lastLoc = rcLocation;
         for (Mark m: marks){
-            if (m.DummyMark) continue;
             AviLocation loc = new AviLocation();
             if (m!=null) {
                 if (m.ml!=null){
                     switch (m.ml.locationOptions){
-//                        case FROM_LAST_MARK:
-//                            if (m.ml.relativeDistance){
-//                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance*dist2m1);
-//                            }
-//                            else{
-//                                loc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir,m.ml.distance);
-//                            }
-//                            lastLoc = loc;
-//                            break;
                         case FROM_RACE_COMMITTEE:
                             if (m.ml.relativeDistance){
                                 loc = GeoUtils.getLocationFromDirDist(rcLocation,m.ml.direction+windDir,m.ml.distance*dist2m1);
@@ -191,30 +181,31 @@ public class Legs implements Serializable{
                     }
 
                 }
-
-                if (m.isGatable) {
-                    if (m.go.gateType == GateType.START_FINISH_LINE || m.go.gateType==GateType.START_LINE){
-                        lastLoc = GeoUtils.getLocationFromDirDist(lastLoc,m.ml.direction+windDir+m.go.gateDirection,startLineLength/2);
-                    }
-                    BuoyType port = getPortBuoyType(m);
-                    BuoyType stbd = getStbdBuoyType(m);
-                    switch (m.go.gateOption) {
-                        case GATABLE:
-                            if (selectedOptions.containsKey(m.name) && (selectedOptions.get(m.name))) { //isGatable true and option selected
+                if(!m.DummyMark) {
+                    if (m.isGatable) {
+                        if (m.go.gateType == GateType.START_FINISH_LINE || m.go.gateType == GateType.START_LINE) {
+                            lastLoc = GeoUtils.getLocationFromDirDist(lastLoc, m.ml.direction + windDir + m.go.gateDirection, startLineLength / 2);
+                        }
+                        BuoyType port = getPortBuoyType(m);
+                        BuoyType stbd = getStbdBuoyType(m);
+                        switch (m.go.gateOption) {
+                            case GATABLE:
+                                if (selectedOptions.containsKey(m.name) && (selectedOptions.get(m.name))) { //isGatable true and option selected
+                                    buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, startLineLength, loc, port, stbd));
+                                } else {
+                                    buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
+                                }
+                                break;
+                            case ALWAYS_GATED:
                                 buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength, startLineLength, loc, port, stbd));
-                            } else {
+                                break;
+                            case NEVER_GATABLE:
                                 buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
-                            }
-                            break;
-                        case ALWAYS_GATED:
-                            buoys.addAll(getGateMarks(windDir, raceCourseUUID, m, gateLength,startLineLength, loc, port, stbd));
-                            break;
-                        case NEVER_GATABLE:
-                            buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
-                            break;
-                    }
-                } else
-                    buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
+                                break;
+                        }
+                    } else
+                        buoys.add(new DBObject(m.name, loc, BuoyType.TOMATO_BUOY, raceCourseUUID));
+                }
                 id2Location.put(m.id,lastLoc);
             }
         }

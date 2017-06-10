@@ -321,7 +321,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private void addRaceCourseItemClick() {
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         i.putExtra("LEGS",legs);
-        i.putExtra("RCD",legs);
+        i.putExtra("RCD",rcd);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
 //        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
 //        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);

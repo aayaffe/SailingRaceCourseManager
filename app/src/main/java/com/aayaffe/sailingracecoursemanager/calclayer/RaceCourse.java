@@ -1,7 +1,9 @@
 package com.aayaffe.sailingracecoursemanager.calclayer;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
@@ -70,6 +72,8 @@ public class RaceCourse implements Serializable{
         } catch(RaceCourseException e){
             FirebaseCrash.logcat(Log.DEBUG, TAG,"Failed to parse buoys");
             FirebaseCrash.report(e);
+            Log.e(TAG,"Failed to parse buoys",e);
+            Toast.makeText(context, R.string.error_adding_race_course, Toast.LENGTH_LONG).show();
         }
         return bouyList;
     }
