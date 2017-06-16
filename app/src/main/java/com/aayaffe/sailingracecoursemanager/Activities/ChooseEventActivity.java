@@ -61,7 +61,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         analytics = new Analytics(this);
         commManager = new FirebaseDB(this);
         commManager.login();
-        users = new Users(commManager);
+        Users.Init(commManager);
+        users = Users.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
@@ -178,7 +179,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return true;
             case R.id.action_logout:
                 if (loggedIn) {
-                    users.logout();
+                    Users.logout();
                     enableLogin(menu, true);
                 }
                 else startLoginActivity();

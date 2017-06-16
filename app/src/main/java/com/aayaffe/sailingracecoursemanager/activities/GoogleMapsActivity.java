@@ -104,7 +104,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
         commManager = new FirebaseDB(this);
-        users = new Users(commManager);
+        Users.Init(commManager);
+        users = Users.getInstance();
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
         iGeo = new OwnLocation(getBaseContext(), this,this);
@@ -394,7 +395,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 }
                 myBoat.setLoc(iGeo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
-                myBoat.setLeftEvent((Date)null);
+                myBoat.setLeftEvent(null);
                 commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {

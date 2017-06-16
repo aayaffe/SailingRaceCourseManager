@@ -12,14 +12,25 @@ import java.util.Date;
  * Created by Amit Y. on 16/02/2016.
  */
 public class Users {
+    private static Users instance;
     private static final String TAG = "Users";
     private static User currentUser;
     private static IDBManager commManager;
 
-    public Users(IDBManager cm){
+
+    private Users(IDBManager cm){
         if (commManager==null)
             commManager = cm;
     }
+
+    public static void Init(IDBManager cm){
+        if (instance == null){
+            instance = new Users(cm);
+        }
+    }
+     public static Users getInstance(){
+         return instance;
+     }
 
     /**
      *

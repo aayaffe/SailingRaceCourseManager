@@ -54,7 +54,8 @@ public class FirebaseDB implements IDBManager {
 
     public FirebaseDB(Context c) {
         this.c = c;
-        users = new Users(this);
+        Users.Init(this);
+        users = Users.getInstance();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class FirebaseDB implements IDBManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ds = dataSnapshot;
                 if (users.getCurrentUser() == null) {
-                    users.setCurrentUser(findUser(uid));
+                    Users.setCurrentUser(findUser(uid));
                 }
                 if ((listeneres != null) && (!connected)) {
                     for (CommManagerEventListener listener : listeneres) {
@@ -122,11 +123,11 @@ public class FirebaseDB implements IDBManager {
                 }
                 Users.setCurrentUser(uid, displayName);
             }
-            users.setCurrentUser(findUser(uid));
+            Users.setCurrentUser(findUser(uid));
 
         } else {
             uid = null;
-            users.setCurrentUser(null);
+            Users.setCurrentUser(null);
             Log.d(TAG, "User has logged out.");
         }
     }
