@@ -86,7 +86,7 @@ public class EventInputDialog extends DialogFragment implements DatePickerDialog
                     + " must implement NoticeDialogListener");
         }
         eventName = getArguments().getString("eventName", "");
-        String title = "Add new Event";//(buoyId==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
+        String title = getString(R.string.event_input_dialog_title);
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -116,7 +116,6 @@ public class EventInputDialog extends DialogFragment implements DatePickerDialog
             }
         });
         builder.setView(v)
-        /*builder.setView(R.layout.event_input_dialog)*/
                 .setTitle(title)
                 // Add action buttons
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {

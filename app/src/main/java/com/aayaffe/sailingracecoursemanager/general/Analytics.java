@@ -3,7 +3,7 @@ package com.aayaffe.sailingracecoursemanager.general;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;

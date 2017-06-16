@@ -152,6 +152,8 @@ public class DistanceDialog extends Dialog {
                             dismiss();
                         }
                         break;
+                    default:
+                        break;
                 }
 
             }

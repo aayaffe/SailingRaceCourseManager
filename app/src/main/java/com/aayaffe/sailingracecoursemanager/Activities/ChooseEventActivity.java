@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
@@ -47,7 +47,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private FirebaseDB commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
-    private static Event selectedEvent;
+    private  Event selectedEvent;
     private Analytics analytics;
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;

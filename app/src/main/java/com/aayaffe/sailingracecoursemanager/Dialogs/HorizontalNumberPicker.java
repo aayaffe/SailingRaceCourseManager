@@ -25,7 +25,6 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class HorizontalNumberPicker extends RelativeLayout {
-    private float initialN=0;
     private float steps=1;
     private float number = 0;
     private float textSize = 30;
@@ -53,7 +52,6 @@ public class HorizontalNumberPicker extends RelativeLayout {
 
     public HorizontalNumberPicker(Context context, float initialNumber, float steps) {
         super(context);
-        this.initialN=initialNumber;
         this.number=initialNumber;
         this.steps=steps;
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
@@ -169,19 +167,14 @@ public class HorizontalNumberPicker extends RelativeLayout {
     public double getSteps() {
         return steps;
     }
-    public void setInitialN(float initialN) {
-        this.initialN = initialN;
-    }
 
     public void configNumbers(float initialNum, float steps){
-        this.initialN=initialNum;
         this.number=initialNum;
         this.steps=steps;
         setNumber(number);
     }
 
     public void configNumbers(float initialNum, float steps , float min, float max){
-        this.initialN=initialNum;
         this.number=initialNum;
         this.steps=steps;
         setBoundaries(min, max);

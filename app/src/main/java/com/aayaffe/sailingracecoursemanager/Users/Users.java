@@ -58,7 +58,7 @@ public class Users {
     /**
      * Logs out of the db and application
      */
-    public void logout() {
+    public static void logout() {
         currentUser = null;
         commManager.logout();
     }

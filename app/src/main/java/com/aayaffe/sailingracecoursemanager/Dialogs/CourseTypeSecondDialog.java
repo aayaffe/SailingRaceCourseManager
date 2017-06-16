@@ -74,9 +74,9 @@ public class CourseTypeSecondDialog extends Dialog {
                     switch (ownLayout.getChildAt(i + 1).getClass().toString()) {
                         case "class android.widget.ToggleButton":
                             ToggleButton toggleButton = (ToggleButton) ownLayout.getChildAt(i + 1);
-                            if (toggleButton.isChecked())
-                                selectedOptions.put(tv.getText().toString().split("-")[0], true);
-                            else selectedOptions.put(tv.getText().toString().split("-")[0], false);
+                            selectedOptions.put(tv.getText().toString().split("-")[0], toggleButton.isChecked());
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -134,14 +134,13 @@ public class CourseTypeSecondDialog extends Dialog {
                 textView.setGravity(Gravity.CENTER);
 
                 ownLayout.addView(textView);
-                View setterBox = null;
+
                 ToggleButton toggleB = new ToggleButton(context);
                 toggleB.setTextSize(25);
-                toggleB.setText("NO");
-                toggleB.setTextOff("NO");
-                toggleB.setTextOn("YES");
-                setterBox=toggleB;
-                if (setterBox != null) ownLayout.addView(setterBox);
+                toggleB.setText(R.string.toggle_button_no);
+                toggleB.setTextOff(context.getString(R.string.toggle_button_no));
+                toggleB.setTextOn(context.getString(R.string.toggle_button_yes));
+                ownLayout.addView(toggleB);
             }
         }
         else{

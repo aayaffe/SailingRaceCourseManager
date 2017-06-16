@@ -1,4 +1,4 @@
-package com.aayaffe.sailingracecoursemanager.Events;
+package com.aayaffe.sailingracecoursemanager.events;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.google.firebase.database.Exclude;

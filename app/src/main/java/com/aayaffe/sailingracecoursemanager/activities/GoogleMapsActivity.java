@@ -34,7 +34,7 @@ import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
-import com.aayaffe.sailingracecoursemanager.Events.Event;
+import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
@@ -221,9 +221,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case MARK_LAYER:
             case REFERENCE_POINT:
             case OTHER:
+            default:
                 return false;
         }
-        return false;
     }
 
     private void setIconsClickListeners() {
@@ -440,17 +440,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         removeOldMarkers(boats, buoys);
         for (DBObject boat : boats) {
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (!isOwnObject(users.getCurrentUser().Uid, boat))) {
-                //int id = getIconId(users.getCurrentUser().DisplayName, boat);
-                int id = getIconId(users.getCurrentUser().Uid, boat);
-                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), id, getZIndex(boat));
+            if((boat==null)||(boat.getLoc() == null) || (users.getCurrentUser() == null)) continue;
+            if ((!isOwnObject(users.getCurrentUser().Uid, boat))) {
+                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), getIconId(users.getCurrentUser().Uid, boat), getZIndex(boat));
             }
-            if ((boat != null) && (boat.getLoc() != null) && (users.getCurrentUser() != null) && (isOwnObject(users.getCurrentUser().Uid, boat))) {
+            if ((isOwnObject(users.getCurrentUser().Uid, boat))) {
                 drawOwnBoat(boat);
             }
         }
-
-        Log.d(TAG, "commBuoyList size: " + buoys.size());
         for (DBObject buoy : buoys) {
             mapLayer.addBuoy(buoy, getDirDistTXT(iGeo.getLoc(), buoy.getLoc()));
         }

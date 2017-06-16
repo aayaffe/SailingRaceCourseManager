@@ -286,6 +286,9 @@
     <string name="distance_to_mk1_label">Choose Distance to Mark 1</string>
     <string name="wind_dir_label">Wind Direction</string>
     <string name="error_adding_race_course">Unable to add race course!</string>
+    <string name="toggle_button_no">NO</string>
+    <string name="toggle_button_yes">YES</string>
+    <string name="event_input_dialog_title">Add new Event</string>
 
 
 </resources>
