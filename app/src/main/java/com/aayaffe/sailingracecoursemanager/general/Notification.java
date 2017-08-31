@@ -32,6 +32,7 @@ public class Notification {
                 (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
 // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
     }
 
     public void cancelAll(){

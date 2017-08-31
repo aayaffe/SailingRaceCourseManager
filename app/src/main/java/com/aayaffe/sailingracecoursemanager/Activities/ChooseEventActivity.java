@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -51,17 +54,18 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Analytics analytics;
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
-
     private Menu menu;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
         analytics = new Analytics(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         commManager = new FirebaseDB(this);
         commManager.login();
-        Users.Init(commManager);
+        Users.Init(commManager,sharedPreferences);
         users = Users.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -175,7 +179,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return true;
             case R.id.action_feedback:
                 Log.d(TAG, "Give feedback pressed");
+                if(BuildConfig.DEBUG){
+                    throw new RuntimeException("For testing purposes only");
+                }
                 new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
+
                 return true;
             case R.id.action_logout:
                 if (loggedIn) {

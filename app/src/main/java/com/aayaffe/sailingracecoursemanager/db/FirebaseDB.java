@@ -1,6 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.db;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -54,7 +55,7 @@ public class FirebaseDB implements IDBManager {
 
     public FirebaseDB(Context c) {
         this.c = c;
-        Users.Init(this);
+        Users.Init(this, PreferenceManager.getDefaultSharedPreferences(c));
         users = Users.getInstance();
     }
 

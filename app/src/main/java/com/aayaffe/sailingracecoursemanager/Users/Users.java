@@ -1,5 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.Users;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
@@ -16,16 +18,19 @@ public class Users {
     private static final String TAG = "Users";
     private static User currentUser;
     private static IDBManager commManager;
+    private static SharedPreferences sharedPreferences = null;
 
 
-    private Users(IDBManager cm){
+    private Users(IDBManager cm,SharedPreferences sp){
+        sharedPreferences = sp;
         if (commManager==null)
             commManager = cm;
+        setCurrentUser(null);
     }
 
-    public static void Init(IDBManager cm){
+    public static void Init(IDBManager cm, SharedPreferences sp){
         if (instance == null){
-            instance = new Users(cm);
+            instance = new Users(cm,sp);
         }
     }
      public static Users getInstance(){
@@ -37,13 +42,20 @@ public class Users {
      * @return The currently logged in user, null if no user is logged in.
      */
     public User getCurrentUser() {
+        if (currentUser==null&&commManager!=null){
+            currentUser = commManager.findUser(commManager.getLoggedInUid());
+        }
         return currentUser;
+
     }
 
     public static void setCurrentUser(User currentUser) {
         Users.currentUser = currentUser;
         if (currentUser!=null) {
             Users.currentUser.setLastConnection(new Date());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("UID", currentUser.Uid);
+            editor.apply();
         }
         if (commManager!=null)
             commManager.addUser(Users.currentUser);
@@ -52,17 +64,14 @@ public class Users {
         Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);
         User u = commManager.findUser(Uid);
         if (u!=null) {
-            currentUser = u;
-            u.setLastConnection(new Date());
-            commManager.addUser(u);
+            setCurrentUser(u);
         }
         else{ //New user in the system
             u = new User();
             u.Uid = Uid;
             u.DisplayName = displayName;
             u.setJoined(new Date());
-            u.setLastConnection(new Date());
-            commManager.addUser(u);
+            setCurrentUser(u);
         }
     }
 

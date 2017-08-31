@@ -99,12 +99,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"OnCreate");
         setContentView(R.layout.activity_google_maps);
         noGps = (ImageView)findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
         commManager = new FirebaseDB(this);
-        Users.Init(commManager);
+        commManager.login();
+        Users.Init(commManager,sharedPreferences);
         users = Users.getInstance();
         mapLayer = new GoogleMaps();
         mapLayer.Init(this, this, sharedPreferences,getClickMethods());
@@ -351,7 +353,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onResume() {
         super.onResume();
-        Log.w(TAG, "onResume");
+        Log.v(TAG, "onResume");
     }
 
     private void removeAllRaceCourseMarks() {
@@ -384,6 +386,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         @Override
         public void run() {
+            if (users.getCurrentUser()== null) Log.e(TAG,"Current user is null");
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
                 myBoat = getMyBoat(users.getCurrentUser().Uid);
                 if (myBoat == null) {
@@ -471,13 +474,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         mapLayer.addMark(boat, null, id,getZIndex(boat));
         assignBuoyUIUpdate(assignedBuoy);
     }
-
     private int getZIndex(DBObject boat) {
         if (isOwnObject(users.getCurrentUser().Uid,boat))
             return 10;
         return 0;
     }
-
     private void removeOldBoats(List<DBObject> boats){
         List<UUID> boatsToRemove = new LinkedList<>();
         for(DBObject b:boats){
@@ -490,7 +491,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             commManager.removeBoat(u);
         }
     }
-
     private void removeOldMarkers(List<DBObject> boats, List<DBObject> buoys) {
         List<UUID> uuids = new LinkedList<>();
         for (DBObject b : boats) {
@@ -515,7 +515,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             mapLayer.removeMark(u,false);
         }
     }
-
     private int getIconId(String uid, DBObject o) {
         int ret;
         if (isOwnObject(uid, o)) {
@@ -547,11 +546,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         return ret;
     }
-
     private boolean isOwnObject(String uid, DBObject o) {
         return o.userUid.equals(uid);
     }
-
     @Contract("null, _ -> !null")
     private String getDirDistTXT(Location src, Location dst) {
         if (src==null){
@@ -578,7 +575,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     @Override
     protected void onStart() {
-        Log.d(TAG, "OnStart");
+        Log.v(TAG, "OnStart");
         super.onStart();
         firstBoatLoad = true;
         updateWindArrow();
@@ -614,8 +611,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
         df.show(getFragmentManager(), "Add_Buoy");
     }
-
-
     private void addMark(long id, Location loc, Float dir, Float dist, BuoyType buoyType) {
         if (loc == null)
             return;
@@ -625,12 +620,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         o.id = id;
         addMark(o);
     }
-
     private void addMark(DBObject m) {
         commManager.writeBuoyObject(m);
     }
-
-
     /**
      * Add buoy dialog click
      * @param dialog
@@ -662,7 +654,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onStop() {
         super.onStop();
         //handler.removeCallbacks(runnable);
-        Log.d(TAG, "onStop");
+        Log.v(TAG, "onStop");
     }
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -684,14 +676,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.v(TAG,"onDestroy");
         handler.removeCallbacks(runnable);
         // Unbind from the service
         if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
-        Log.d(TAG,"onDestroy");
-
     }
 
     @Override

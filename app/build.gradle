@@ -7,6 +7,10 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
+
+
+def final yourApplicationId = 'com.aayaffe.sailingracecoursemanager'
+
 android {
     signingConfigs {
         release {
@@ -19,7 +23,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
     defaultConfig {
-        applicationId "com.aayaffe.sailingracecoursemanager"
+        applicationId = yourApplicationId
         minSdkVersion 18
         targetSdkVersion 25
         versionCode 30
@@ -29,6 +33,7 @@ android {
 
 
     }
+
     buildTypes {
         debug {
             testCoverageEnabled = true
