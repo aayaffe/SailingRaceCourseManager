@@ -2,6 +2,8 @@
 Develop: [![Build Status](https://travis-ci.org/aayaffe/SailingRaceCourseManager.svg?branch=develop)](https://travis-ci.org/aayaffe/SailingRaceCourseManager)
 Master: [![Build Status](https://travis-ci.org/aayaffe/SailingRaceCourseManager.svg?branch=master)](https://travis-ci.org/aayaffe/SailingRaceCourseManager)
 
+[![Coverage Status](https://coveralls.io/repos/github/aayaffe/SailingRaceCourseManager/badge.svg?branch=master)](https://coveralls.io/github/aayaffe/SailingRaceCourseManager?branch=master)
+
  [![SonarQube Coverage](https://img.shields.io/sonar/http/www.sonarqube.com/AVI:master/coverage.svg?label=SonarQubeCoverage)]()
  [![SonarQube Tech Debt](https://img.shields.io/sonar/http/www.sonarqube.com/AVI:master/tech_debt.svg)]()
 
