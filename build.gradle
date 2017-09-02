@@ -35,5 +35,6 @@ sonarqube {
   properties {
     property "sonar.projectName", "SailingRaceCourseManager"
     property "sonar.projectKey", "AVI:dev"
+    property "sonar.sources", "src"
   }
 }
