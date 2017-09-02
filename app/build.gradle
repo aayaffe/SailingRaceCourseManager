@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "org.sonarqube"
 
 // Load keystore
 def keystorePropertiesFile = rootProject.file("keystore.properties");
@@ -7,6 +8,22 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "SailingRaceCourseManager"
+        property "sonar.projectKey", "AVI:dev"
+
+        property "sonar.sourceEncoding","UTF-8"
+        property "sonar.sources","."
+        property "sonar.exclusions","build/**,**/*.png"
+
+        property "sonar.import_unknown_files", true
+
+        property "sonar.android.lint.report", "./build/outputs/lint-results.xml"
+    }
+}
+
 android {
     signingConfigs {
         release {
