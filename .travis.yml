@@ -25,17 +25,15 @@ android:
     - sys-img-x86-android-17
     
 addons:
-  sonarqube: 
+  sonarcloud: 
     branches:
       - develop
       - master
 env:
   global:
     - secure: "A2+vgzqfRNpa/1cQq0jWNiKwriv7g1MpN7cziJcnPqcOukV/SqWb2+PtVyQihdrjmxLjczuCRfs/9iV/24u3tGfV0/UAJMlddFBg/kidkg70BHjqqfmj41d31oRU5PnCypJG3MklsKHpmEcBl4BxY0rQ/xHEH029BPronUeoT2P6Xeu3aTbkR8NpKNlMTaGQQi8VL3Y7tfYCEXuxj+2oCIUX3HbdN3Vywdf92yzrmD2gf85H5ackoQqjqe5bpFdqp97ChL+R5sHLt9fm2MeNgUmy1PflsPHyi5Yr4TvMhFVhm3K2lFjxWk3EBGeOeL5ex7i6Fqv+u4zaJSWNWcMOC8cY7pPIbKuhkULS6RzI/QrO1ElBn/gKjcM6ejqVv1J5c7j+Ny9/zGDTWhEFUQsH+JMmsunaIUf5yEo8uHB0pls6hoZRt8znChd0tbX/KPfa0I2zTq8nuNSTNAbyi17cEFDjJUSMPmzD08wJPGIbl4a+FC+E49SH4TpDAyfWMhtSVZnYFKwLwD6lk8+T95VbV7wpwRSHA/Mli7vLUE5UpaEQIdwhBfii+QoCEBcvSXY6Le+LjzOedFilDHzKeX/dBqfPtRps769QbJ4eslzh9swiKwYUbSSJOybE1ACqity2s8lVe/gNu0Fhz6Bb919ybYuESIx/vigyWpMJbdWmU8A=" 
-    # defines SONAR_TOKEN=abcdef0123456789
-script:
-  # other script steps might be done before running the actual SonarQube analysis
-  - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+
+
 notifications:
   email:
     recipients:
