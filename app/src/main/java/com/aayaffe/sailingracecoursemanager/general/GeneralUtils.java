@@ -89,12 +89,12 @@ public class GeneralUtils {
                 return false;
         }
     }
-    public static boolean isInBounds(Number n, Float min, Float max){
+    public static boolean isInBounds(Number n, Number min, Number max){
         if (n==null)
             return false;
-        if ((min!=null) && (n.floatValue()<min))
+        if ((min!=null) && (n.floatValue()<min.floatValue()))
                 return false;
-        return !((max != null) && (n.floatValue() > max));
+        return !((max != null) && (n.floatValue() > max.floatValue()));
     }
 
     public static <T> void addAll(List<T> list, T... elements) {

@@ -9,7 +9,12 @@ package com.aayaffe.sailingracecoursemanager.dialogs;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,30 +25,29 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 
 import java.text.DecimalFormat;
+import android.text.InputFilter;
+import android.text.Spanned;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class HorizontalNumberPicker extends RelativeLayout {
+    private static final String TAG = "HorizontalNumberPicker";
     private float steps=1;
     private float number = 0;
     private float textSize = 30;
     private int buttonsBackgroundColor;
     private int buttonsTextColor;
 
-
     private float upperBoundary = 1000;  //if Activated, CAN NOT BE this number as well.
     private boolean upperBoundaryActivation = false;
     private float lowerBoundary = -1000; //if Activated, CAN NOT BE this number as well.
     private boolean lowerBoundaryActivation = false;
-
-
     private DecimalFormat df = new DecimalFormat(".##");
-
-    private EditText numberTV;
+    private TextInputLayout textLayout;
+    private TextInputEditText numberTV;
     private Button plusB;
     private Button minusB;
-
 
     public HorizontalNumberPicker(Context context) {
         super(context);
@@ -76,10 +80,14 @@ public class HorizontalNumberPicker extends RelativeLayout {
 
         LayoutInflater.from(context).inflate(R.layout.horizontal_number_picker, this);
 
-        numberTV = (EditText) this.findViewById(R.id.np_number);
+        textLayout = this.findViewById(R.id.numberPickerInputLayout);
+
+        numberTV = this.findViewById(R.id.np_number);
         numberTV.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
         numberTV.setText(Float.toString(number));
         numberTV.setTextSize(textSize);
+
+        //numberTV.setEnabled(false);
 
         plusB = (Button) this.findViewById(R.id.np_plus);
         plusB.setTextSize(textSize);
@@ -92,6 +100,7 @@ public class HorizontalNumberPicker extends RelativeLayout {
                 if(number >= upperBoundary&&upperBoundaryActivation){
                     number=lowerBoundary+1+(number-upperBoundary);
                 }
+                Log.d(TAG, "PlusButton: number= " + number);
                 setNumber(number);
             }
         });
@@ -109,7 +118,6 @@ public class HorizontalNumberPicker extends RelativeLayout {
                 setNumber(number);
             }
         });
-
     }
     public void setTextSize(float textSize){
         this.textSize=textSize;
@@ -117,30 +125,25 @@ public class HorizontalNumberPicker extends RelativeLayout {
         plusB.setTextSize(textSize);
         minusB.setTextSize(textSize);
     }
-
     public float getTextSize() {
         return textSize;
     }
-
     public void setNumber(double text) {
         this.number = Float.valueOf(df.format(text));
         if(numberTV!=null){
             numberTV.setText(Float.toString(number));
         }
     }
-
     public void setButtonsTextColor(int buttonsTextColor) {
         this.buttonsTextColor = buttonsTextColor;
         plusB.setTextColor(buttonsTextColor);
         minusB.setTextColor(buttonsTextColor);
     }
-
     public void setButtonsBackgroundColor(int buttonsBackgroundColor) {
         this.buttonsBackgroundColor = buttonsBackgroundColor;
         plusB.setBackgroundColor(buttonsBackgroundColor);
         minusB.setBackgroundColor(buttonsBackgroundColor);
     }
-
     public void setButtonsColors(int buttonsTextColor, int buttonsBackgroundColor) {
         this.buttonsTextColor = buttonsTextColor;
         plusB.setTextColor(buttonsTextColor);
@@ -186,32 +189,29 @@ public class HorizontalNumberPicker extends RelativeLayout {
         lowerBoundary=min;
         upperBoundaryActivation=true;
         lowerBoundaryActivation=true;
+//        InputFilter filter = new MinMaxFilter(0.0,upperBoundary);
+//        numberTV.setFilters(new InputFilter[]{filter});
+        numberTV.addTextChangedListener(new myWatcher(lowerBoundary,upperBoundary,textLayout));
     }
 
     public void setUpperBoundary(float upperBoundary) {
         this.upperBoundary = upperBoundary;
     }
-
     public double getUpperBoundary() {
         return upperBoundary;
     }
-
     public boolean getUpperBoundaryActivation(){
         return upperBoundaryActivation;
     }
     public void setUpperBoundaryActivation(boolean b){
         upperBoundaryActivation = b;
     }
-
     public void setLowerBoundary(float lowerBoundary) {
         this.lowerBoundary = lowerBoundary;
     }
-
     public void setLowerBoundaryActivation(boolean lowerBounderyActivation) {
         this.lowerBoundaryActivation = lowerBounderyActivation;
     }
-
-
     public double getLowerBoundary() {
         return lowerBoundary;
     }
@@ -219,5 +219,34 @@ public class HorizontalNumberPicker extends RelativeLayout {
         return lowerBoundaryActivation;
     }
 
+    
+
+    public class myWatcher implements TextWatcher{
+        private double min, max;
+        private TextInputLayout layout;
+        public myWatcher(double minValue, double maxValue, TextInputLayout l) {
+            this.min = minValue;
+            this.max = maxValue;
+            this.layout=l;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            Double input = GeneralUtils.tryParseDouble(s.toString());
+            if (GeneralUtils.isInBounds(input, min, max)) {
+                layout.setError(null);
+                return;
+            }
+            layout.setError(getContext().getString(R.string.number_picker_out_of_range));
+        }
+    }
 
 }
