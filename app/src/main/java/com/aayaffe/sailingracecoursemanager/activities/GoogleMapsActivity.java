@@ -674,6 +674,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public void onStop() {
         super.onStop();
         //handler.removeCallbacks(runnable);
+
         Log.v(TAG, "onStop");
     }
     /** Defines callbacks for service binding, passed to bindService() */
@@ -703,6 +704,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         // Unbind from the service
         if (mBound) {
             unbindService(mConnection);
+            mService.stop();
             mBound = false;
         }
     }
@@ -725,6 +727,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (exit) {
             notification.cancelAll();
             commManager.writeLeaveEvent(users.getCurrentUser(),commManager.getCurrentEvent());
+            // Unbind from the service
+            if (mBound) {
+                unbindService(mConnection);
+                mService.stop();
+                mBound = false;
+            }
             finish();
         } else {
             Toast.makeText(this, "Press back again to leave event.",
