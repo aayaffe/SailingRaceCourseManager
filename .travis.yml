@@ -26,7 +26,7 @@ android:
     
 addons:
   sonarcloud: 
-    organization: "aayaffe"
+    organization: "aayaffe-github"
     branches:
       - develop
       - master
