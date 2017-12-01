@@ -63,7 +63,7 @@
         <EditTextPreference android:title="Refresh Rate"
             android:key="refreshRate"
             android:inputType="number"
-            android:defaultValue="1"
+            android:defaultValue="2"
             android:summary="Input Desired refresh rate in seconds. Higher consumes more bandwidth, lower updates slower"/>
     </PreferenceCategory>
 

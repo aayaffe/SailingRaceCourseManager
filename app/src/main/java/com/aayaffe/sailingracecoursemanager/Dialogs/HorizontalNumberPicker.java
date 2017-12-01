@@ -224,6 +224,8 @@ public class HorizontalNumberPicker extends RelativeLayout {
     public class myWatcher implements TextWatcher{
         private double min, max;
         private TextInputLayout layout;
+
+        //Here you can add an event firing to disable\enable Done button of dialog
         public myWatcher(double minValue, double maxValue, TextInputLayout l) {
             this.min = minValue;
             this.max = maxValue;

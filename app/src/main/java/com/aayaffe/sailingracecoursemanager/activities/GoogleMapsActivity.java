@@ -101,7 +101,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         super.onCreate(savedInstanceState);
         Log.v(TAG,"OnCreate");
         setContentView(R.layout.activity_google_maps);
-        noGps = (ImageView)findViewById(R.id.gps_indicator);
+        noGps = findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
         commManager = new FirebaseDB(this);
@@ -131,7 +131,16 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Intent intent = new Intent(this, GPSService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         notification.InitNotification(this);
+        setReturnedToEvent();
 
+    }
+
+    private void setReturnedToEvent() {
+        if(users.getCurrentUser()!=null) {
+            myBoat = getMyBoat(users.getCurrentUser().Uid);
+            myBoat.setLeftEvent(null);
+            commManager.writeBoatObject(myBoat);
+        }
     }
 
     private void setupToolbar() {
@@ -353,6 +362,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     protected void onResume() {
         super.onResume();
+        setReturnedToEvent();
         Log.v(TAG, "onResume");
     }
 
@@ -373,7 +383,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             buoys.remove(buoy);
         }
     }
-
+    @Nullable
+    private DBObject getMyBoat(String uid){
+        for (DBObject ao : commManager.getAllBoats()) {
+            if (isOwnObject(uid, ao)) {
+                return ao;
+            }
+        }
+        return null;
+    }
     private Runnable runnable = new Runnable() {
         @Nullable
         private DBObject getMyBoat(String uid){
@@ -395,11 +413,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                         myBoat.setBuoyType(BuoyType.RACE_OFFICER);
                     } else myBoat.setBuoyType(BuoyType.MARK_LAYER);
                     myBoat.userUid = users.getCurrentUser().Uid;
+                    myBoat.setLeftEvent(null);
+                    commManager.writeBoatObject(myBoat);
                 }
-                myBoat.setLoc(iGeo.getLoc());
-                myBoat.lastUpdate = new Date().getTime();
-                myBoat.setLeftEvent(null);
-                commManager.writeBoatObject(myBoat);
+//                myBoat.setLoc(iGeo.getLoc());
+//                myBoat.lastUpdate = new Date().getTime();
+//                myBoat.setLeftEvent(null);
+//                commManager.writeBoatObject(myBoat);
             }
             if (((OwnLocation) iGeo).isGPSFix()) {
                 noGps.setVisibility(View.INVISIBLE);
@@ -666,10 +686,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+            mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000,myBoat,commManager.getCurrentEvent(),commManager,iGeo);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            mService.stop();
             mBound = false;
         }
     };

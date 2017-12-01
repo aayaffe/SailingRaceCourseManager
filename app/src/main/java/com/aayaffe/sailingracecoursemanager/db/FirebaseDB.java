@@ -47,10 +47,10 @@ public class FirebaseDB implements IDBManager {
     }
 
     private EventDeleted eventDeleted;
-    private Context c;
+    private final Context c;
     private String uid;
-    private Users users;
-    private List<CommManagerEventListener> listeneres = new ArrayList<>();
+    private final Users users;
+    private final List<CommManagerEventListener> listeneres = new ArrayList<>();
     private boolean connected = false;
 
     public FirebaseDB(Context c) {
@@ -64,7 +64,6 @@ public class FirebaseDB implements IDBManager {
         if (fb == null) {
             fb = FirebaseDatabase.getInstance()
                     .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-
         }
         fb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -80,7 +79,6 @@ public class FirebaseDB implements IDBManager {
                     }
                 }
                 connected = true;
-
             }
 
             @Override
@@ -94,10 +92,10 @@ public class FirebaseDB implements IDBManager {
             @Override
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (ds!=null)
+                if (ds != null)
                     setUser(user);
                 else {
-                    if (user!=null)
+                    if (user != null)
                         uid = user.getUid();
                     else
                         uid = null;
@@ -106,10 +104,12 @@ public class FirebaseDB implements IDBManager {
         });
         return 0;
     }
-    public void setUser(){
+
+    public void setUser() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         setUser(auth.getCurrentUser());
     }
+
     private void setUser(FirebaseUser user) {
         if (user != null) {
             uid = user.getUid();
@@ -125,7 +125,6 @@ public class FirebaseDB implements IDBManager {
                 Users.setCurrentUser(uid, displayName);
             }
             Users.setCurrentUser(findUser(uid));
-
         } else {
             uid = null;
             Users.setCurrentUser(null);
@@ -143,11 +142,17 @@ public class FirebaseDB implements IDBManager {
         if (o == null || o.userUid == null || o.userUid.isEmpty() || currentEvent == null)
             return -1;
         if (isEventExist(currentEvent)) {
-            fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(o.userUid).setValue(o);
+            getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(o.userUid).setValue(o);
             Log.v(TAG, "writeBoatObject has written boat:" + o.getName());
             return 0;
         }
         return -1;
+    }
+//    private DatabaseReference getEventDBRef(String eventUUID){
+//        return fb.child(c.getString(R.string.db_events)).child(eventUUID);
+//    }
+    private DatabaseReference getEventDBRef(Event e){
+        return fb.child(c.getString(R.string.db_events)).child(e.getUuid());
     }
 
     @Contract("null -> false")
@@ -160,8 +165,8 @@ public class FirebaseDB implements IDBManager {
         if (o == null || o.getUUID() == null || currentEvent == null)
             return -1;
         if (isEventExist(currentEvent)) {
-            fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(o.getUuidString()).setValue(o);
-            fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
+            getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(o.getUuidString()).setValue(o);
+            getEventDBRef(currentEvent).child(c.getString(R.string.db_lastbuoyid)).setValue(o.id);
             Log.d("FirebaseDB class", "writeBuoyObject has written buoy:" + o.toString());
             return 0;
         }
@@ -173,7 +178,7 @@ public class FirebaseDB implements IDBManager {
         if (loc == null)
             return -1;
         if (isBoatExist(e, boat)) {
-            fb.child(c.getString(R.string.db_events)).child(e.getUuid()).child(c.getString(R.string.db_boats)).child(boat.userUid).child("aviLocation").setValue(loc);
+            getEventDBRef(e).child(c.getString(R.string.db_boats)).child(boat.userUid).child("aviLocation").setValue(loc);
             return 0;
         }
         return -1;
@@ -181,7 +186,10 @@ public class FirebaseDB implements IDBManager {
 
     @Contract("null, _ -> false")
     private boolean isBoatExist(Event e, DBObject boat) {
-        return !(e == null || !isEventExist(e.getUuid())) && !(boat == null || boat.getUUID() == null) && ds.child(c.getString(R.string.db_events)).child(e.getUuid().toString()).child(c.getString(R.string.db_boats)).hasChild(boat.getUuidString());
+        return !(e == null || !isEventExist(e.getUuid())) &&
+                !(boat == null || boat.getUUID() == null) &&
+                ds.child(c.getString(R.string.db_events)).child(e.getUuid()).child(c.getString(R.string.db_boats)).hasChild(boat.userUid);
+        //TODO: Decide to use ds or getEventDBREF()?
     }
 
     @Contract("null -> false")
@@ -225,7 +233,7 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void removeBuoyObject(String uuid) {
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(uuid).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(uuid).removeValue();
     }
 
     @Override
@@ -245,7 +253,7 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void addUser(User u) {
-        if (u==null)
+        if (u == null)
             return;
         fb.child(c.getString(R.string.db_users)).child(u.Uid).setValue(u);
     }
@@ -301,7 +309,7 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void writeEvent(Event neu) {
-        fb.child(c.getString(R.string.db_events)).child(neu.getUuid()).setValue(neu);
+        getEventDBRef(neu).setValue(neu);
     }
 
     @Override
@@ -372,14 +380,14 @@ public class FirebaseDB implements IDBManager {
             removeAssignments(b);
         }
 
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
     }
 
     @Override
     public void removeAssignment(DBObject buoy, DBObject boat) {
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).removeValue();
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).removeValue();
     }
 
     @Override
@@ -390,10 +398,10 @@ public class FirebaseDB implements IDBManager {
         for (DBObject o : getAssignedBoats(b)) {
             removeAssignment(b, o);
         }
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).removeValue();
         if (b.userUid == null)
             return;
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).removeValue();
     }
 
     @Override
@@ -410,12 +418,12 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void removeBoat(UUID u) {
-        fb.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(getObjectByUUID(u).userUid).removeValue();
+        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(getObjectByUUID(u).userUid).removeValue();
     }
 
     @Override
-    public void deleteEvent(Event event) {
-        fb.child(c.getString(R.string.db_events)).child(event.getUuid()).removeValue();
+    public void deleteEvent(Event e) {
+        getEventDBRef(e).removeValue();
     }
 
     @Override
@@ -482,7 +490,7 @@ public class FirebaseDB implements IDBManager {
      */
     @NonNull
     private String convertToAcceptableDisplayName(String email) {
-        if (email==null)
+        if (email == null)
             return null;
         String e = email;
         e = e.replace('.', ' ');
@@ -522,15 +530,15 @@ public class FirebaseDB implements IDBManager {
     }
 
     @Override
-    public void subscribeToEventDeletion(final Event event, boolean subscribe) {
-        if (event == null) {
+    public void subscribeToEventDeletion(final Event e, boolean subscribe) {
+        if (e == null) {
             return;
         }
         ValueEventListener valeventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null && eventDeleted != null) {
-                    eventDeleted.onEventDeleted(event);
+                    eventDeleted.onEventDeleted(e);
                 }
             }
 
@@ -539,28 +547,28 @@ public class FirebaseDB implements IDBManager {
                 Log.w(TAG, "EventDeleted:onCancelled", databaseError.toException());
             }
         };
-        if (event.getUuid() != null) {
+        if (e.getUuid() != null) {
             if (subscribe) {
-                fb.child(c.getString(R.string.db_events)).child(event.getUuid()).child(c.getString(R.string.db_uuid)).addValueEventListener(valeventListener);
+                getEventDBRef(e).child(c.getString(R.string.db_uuid)).addValueEventListener(valeventListener);
             } else {
-                fb.child(c.getString(R.string.db_events)).child(event.getUuid()).child(c.getString(R.string.db_uuid)).removeEventListener(valeventListener);
+                getEventDBRef(e).child(c.getString(R.string.db_uuid)).removeEventListener(valeventListener);
             }
         }
     }
 
     @Override
     public void writeLeaveEvent(User currentUser, Event currentEvent) {
-        if (currentEvent==null||currentUser==null){
+        if (currentEvent == null || currentUser == null) {
             return;
         }
         DBObject boat = null;
-        for (DBObject o: getAllBoats()){
-            if (o.userUid.equals(currentUser.Uid)){
+        for (DBObject o : getAllBoats()) {
+            if (o.userUid.equals(currentUser.Uid)) {
                 boat = o;
                 break;
             }
         }
-        if (boat!=null){
+        if (boat != null) {
             boat.setLeftEvent(new Date());
         }
         writeBoatObject(boat);
