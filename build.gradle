@@ -22,7 +22,9 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-apply plugin: "org.sonarqube"
+plugins {
+    id "org.sonarqube" version "2.6.1"
+}
 
 
 allprojects {
