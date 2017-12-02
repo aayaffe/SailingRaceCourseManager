@@ -54,7 +54,6 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -137,9 +136,11 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void setReturnedToEvent() {
         if(users.getCurrentUser()!=null) {
-            myBoat = getMyBoat(users.getCurrentUser().Uid);
-            myBoat.setLeftEvent(null);
-            commManager.writeBoatObject(myBoat);
+            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
+            if (myBoat!=null) {
+                myBoat.setLeftEvent(null);
+                commManager.writeBoatObject(myBoat);
+            }
         }
     }
 
@@ -383,30 +384,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             buoys.remove(buoy);
         }
     }
-    @Nullable
-    private DBObject getMyBoat(String uid){
-        for (DBObject ao : commManager.getAllBoats()) {
-            if (isOwnObject(uid, ao)) {
-                return ao;
-            }
-        }
-        return null;
-    }
+
     private Runnable runnable = new Runnable() {
-        @Nullable
-        private DBObject getMyBoat(String uid){
-            for (DBObject ao : commManager.getAllBoats()) {
-                if (isOwnObject(uid, ao)) {
-                    return ao;
-                }
-            }
-            return null;
-        }
         @Override
         public void run() {
             if (users.getCurrentUser()== null) Log.e(TAG,"Current user is null");
             if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
-                myBoat = getMyBoat(users.getCurrentUser().Uid);
+                myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
                 if (myBoat == null) {
                     myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
                     if (isCurrentEventManager(users.getCurrentUser().Uid)) {
@@ -567,7 +551,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         return ret;
     }
     private boolean isOwnObject(String uid, DBObject o) {
-        return o.userUid.equals(uid);
+        return o != null && o.userUid != null && o.userUid.equals(uid);
     }
     @Contract("null, _ -> !null")
     private String getDirDistTXT(Location src, Location dst) {
@@ -687,7 +671,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000,myBoat,commManager.getCurrentEvent(),commManager,iGeo);
+            mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000,myBoat,commManager.getCurrentEvent(),commManager,iGeo, users.getCurrentUser().Uid);
         }
 
         @Override

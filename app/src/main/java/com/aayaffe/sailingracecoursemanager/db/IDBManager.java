@@ -8,6 +8,8 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.google.firebase.database.DatabaseReference;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -57,6 +59,9 @@ public interface IDBManager {
     List<DBObject> getAssignedBoats(DBObject b);
 
     DBObject getBoat(String currentBoatName);
+
+    @Nullable
+    DBObject getBoatByUserUid(String uid);
 
     void assignBuoy(DBObject boat, String selectedBuoyName);
 

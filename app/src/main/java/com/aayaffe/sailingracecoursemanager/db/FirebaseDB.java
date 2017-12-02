@@ -360,6 +360,19 @@ public class FirebaseDB implements IDBManager {
     }
 
     @Override
+    public DBObject getBoatByUserUid(String uid){
+        for (DBObject ao : getAllBoats()) {
+            if (isOwnObject(uid, ao)) {
+                return ao;
+            }
+        }
+        return null;
+    }
+    private boolean isOwnObject(String uid, DBObject o) {
+        return o != null && o.userUid!=null && o.userUid.equals(uid);
+    }
+
+    @Override
     public void assignBuoy(DBObject boat, String uuid) {
         if (ds == null || ds.getValue() == null || currentEvent == null)
             return;

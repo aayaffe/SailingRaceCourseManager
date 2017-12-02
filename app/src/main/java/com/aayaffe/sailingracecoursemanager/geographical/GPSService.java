@@ -32,16 +32,22 @@ public class GPSService extends Service {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (myBoat==null) {
+                myBoat = commManager.getBoatByUserUid(uid);
+            }
+            if (myBoat!=null){
                 myBoat.setLoc(geo.getLoc());
                 myBoat.lastUpdate = new Date().getTime();
                 commManager.updateBoatLocation(event, myBoat, myBoat.getAviLocation());
-                handler.postDelayed(runnable, updateInterval);
+            }
+            handler.postDelayed(runnable, updateInterval);
         }
     };
     private IDBManager commManager;
     private IGeo geo;
     private DBObject myBoat;
     private Event event;
+    private String uid;
 
 
     /**
@@ -62,7 +68,7 @@ public class GPSService extends Service {
     }
 
     /** method for clients */
-    public void update(long interval, DBObject myBoat, Event event, IDBManager commManager, IGeo geo) {
+    public void update(long interval, DBObject myBoat, Event event, IDBManager commManager, IGeo geo, String uid) {
         if (interval<0 || GeneralUtils.isNull(event,commManager,geo))
             return;
         this.commManager = commManager;
@@ -70,6 +76,7 @@ public class GPSService extends Service {
         this.myBoat = myBoat;
         this.event= event;
         this.updateInterval = interval;
+        this.uid = uid;
         Log.d(TAG, "Started GPSService");
         runnable.run();
     }

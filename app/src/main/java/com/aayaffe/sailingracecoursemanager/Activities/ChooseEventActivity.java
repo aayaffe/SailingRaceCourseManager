@@ -179,9 +179,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return true;
             case R.id.action_feedback:
                 Log.d(TAG, "Give feedback pressed");
-                if(BuildConfig.DEBUG){
-                    throw new RuntimeException("For testing purposes only");
-                }
+//                if(BuildConfig.DEBUG){
+//                    throw new RuntimeException("For testing purposes only");
+//                }
                 new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
 
                 return true;

@@ -183,6 +183,8 @@ public class DBObject implements Serializable {
 
     @Exclude
     public Date getLastUpdate() {
+        if (lastUpdate==null)
+            return null;
         return new Date(lastUpdate);
     }
 
