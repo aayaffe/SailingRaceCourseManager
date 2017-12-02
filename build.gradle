@@ -42,7 +42,7 @@ apply plugin: 'jacoco'
 sonarqube {
     properties {
         property "sonar.projectName", "SailingRaceCourseManager"
-        property "sonar.projectKey", "AVI:dev"
+        property "sonar.projectKey", "AVI:dev:develop"
 
         property "sonar.sourceEncoding","UTF-8"
         property "sonar.sources","."

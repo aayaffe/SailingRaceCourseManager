@@ -36,6 +36,7 @@ env:
 script:
   # other script steps might be done before running the actual SonarQube analysis
   - sonar-scanner
+  - ./gradlew sonarqube
 
 notifications:
   email:
