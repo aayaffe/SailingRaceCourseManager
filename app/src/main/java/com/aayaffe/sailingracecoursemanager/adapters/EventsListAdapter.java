@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -47,6 +51,8 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
         User manager = commManager.findUser(event.getManagerUuid());
         final ImageButton delete =(ImageButton)view.findViewById(R.id.delete_event_button);
         final ImageButton viewOnly =(ImageButton)view.findViewById(R.id.view_only_event_button);
+        final ImageView rc_flag = view.findViewById(R.id.rc_icon);
+        final LinearLayout ll2 = view.findViewById(R.id.ll2);
 
         if ((manager!=null && manager.equals(users.getCurrentUser()))||users.isAdmin(users.getCurrentUser())){
             delete.setVisibility(View.VISIBLE);
@@ -58,10 +64,19 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
 
                 }
             });
+
         }
+
         else {
-            delete.setVisibility(View.INVISIBLE);
+            delete.setVisibility(View.GONE);
             delete.setEnabled(false);
+
+        }
+        if (manager!=null && manager.equals(users.getCurrentUser())){
+            rc_flag.setVisibility(View.VISIBLE);
+        }
+        else{
+            rc_flag.setVisibility(View.GONE);
         }
         if (users.isAdmin(users.getCurrentUser())){
             viewOnly.setVisibility(View.VISIBLE);
@@ -73,10 +88,19 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
 
                 }
             });
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll15.getLayoutParams();
+//            params.addRule(RelativeLayout.START_OF, R.id.ll2);
+//            ll15.setLayoutParams(params);
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll2.getLayoutParams();
+//            params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            ll2.setLayoutParams(params);
         }
         else {
-            viewOnly.setVisibility(View.INVISIBLE);
+            viewOnly.setVisibility(View.GONE);
             viewOnly.setEnabled(false);
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll2.getLayoutParams();
+//            params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            ll2.setLayoutParams(params);
         }
         if (manager==null) {
             ((TextView) view.findViewById(android.R.id.text2)).setText(mActivity.getString(R.string.race_officer) + ": " +mActivity.getString(R.string.unknown));

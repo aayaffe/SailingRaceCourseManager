@@ -91,7 +91,7 @@ public class EventInputDialog extends DialogFragment implements DatePickerDialog
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.event_input_dialog, null);
+        v = inflater.inflate(R.layout.dialog_event_input, null);
         Button b = (Button) v.findViewById(R.id.selectDateRange);
         b.setOnClickListener(new View.OnClickListener() {
             @Override

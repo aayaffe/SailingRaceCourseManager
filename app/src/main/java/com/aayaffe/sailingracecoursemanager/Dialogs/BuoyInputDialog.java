@@ -65,7 +65,7 @@ public class BuoyInputDialog extends DialogFragment {
         String title = (buoyId ==-1)?"Add BUOY":"Edit BUOY: "+ buoyId;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater)c.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.buoy_input_dialog, null);
+        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.dialog_buoy_input, null);
         builder.setView(v)
                 .setTitle(title)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {

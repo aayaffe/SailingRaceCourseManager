@@ -37,7 +37,7 @@ public class CourseTypeDialog extends Dialog implements CourseTypeRV.OnRecyclerI
         super.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.setCancelable(true);
 
-        super.setContentView(R.layout.course_type_dialog);
+        super.setContentView(R.layout.dialog_course_type);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.course_type_rv);
         recyclerView.setHasFixedSize(true);

@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.DistanceType;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
@@ -80,7 +79,7 @@ public class DistanceDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.setContentView(R.layout.distance_dialog);
+        super.setContentView(R.layout.dialog_distance);
 
         TextView titleV=(TextView) findViewById(R.id.distance_dialog_title);   //set dialog title
         titleV.setText(R.string.distance_to_mk1_label);

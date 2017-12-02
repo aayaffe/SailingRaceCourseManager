@@ -49,7 +49,7 @@ public class CourseTypeSecondDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.setContentView(R.layout.course_type_second_dialog);
+        super.setContentView(R.layout.dialog_course_type_second);
 
         TextView titleV=(TextView) findViewById(R.id.second_dialog_title);   //set dialog title
         titleV.setText(raceCourseDescriptor.getName() + " Course Options");
