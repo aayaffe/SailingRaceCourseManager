@@ -521,6 +521,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     private int getIconId(String uid, DBObject o) {
         int ret;
+        if (uid==null || o == null)
+            return R.drawable.boatred;
         if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
