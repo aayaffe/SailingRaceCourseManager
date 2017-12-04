@@ -4,6 +4,7 @@ import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,7 @@ public class Event {
     private String eventManager;
     private HashMap<String,DBObject> boats;
     private HashMap<String,DBObject> buoys;
+    public HashMap<String,List<String>> Assignments;
     public int yearStart;
     public int yearEnd;
     public int monthStart;

@@ -27,7 +27,9 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -323,6 +325,22 @@ public class FirebaseDB implements IDBManager {
         FirebaseDB.currentEvent = e;
     }
 
+//    @Override
+//    public List<DBObject> getAssignedBuoys(DBObject b) {
+//        ArrayList<DBObject> ret = new ArrayList<>();
+//        if (b == null || b.userUid == null)
+//            return ret;
+//        if (ds == null || ds.getValue() == null || currentEvent == null)
+//            return ret;
+//
+//        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).getChildren()) {
+//            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
+//            if (o != null)
+//                ret.add(o);
+//        }
+//        return ret;
+//    }
+
     @Override
     public List<DBObject> getAssignedBuoys(DBObject b) {
         ArrayList<DBObject> ret = new ArrayList<>();
@@ -331,46 +349,83 @@ public class FirebaseDB implements IDBManager {
         if (ds == null || ds.getValue() == null || currentEvent == null)
             return ret;
 
-        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).getChildren()) {
-            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
-            if (o != null)
-                ret.add(o);
+        Map<String,List<String>> as = (HashMap<String,List<String>>)ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child("Assignments").getValue();
+        if (as!=null) {
+            List<String> buoys = as.get(b.userUid);
+            if (buoys!=null) {
+                for (String uuid : buoys) {
+                    if (uuid != null) {
+                        DBObject buoy = getBuoy(uuid);
+                        if (buoy != null)
+                            ret.add(buoy);
+                    }
+                }
+            }
         }
         return ret;
     }
+
+//    @Override
+//    public List<DBObject> getAssignedBoats(DBObject b) {
+//        ArrayList<DBObject> ret = new ArrayList<>();
+//        if (ds == null || ds.getValue() == null || currentEvent == null)
+//            return ret;
+//        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).getChildren()) {
+//            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
+//            if (o != null)
+//                ret.add(o);
+//        }
+//        return ret;
+//    }
 
     @Override
     public List<DBObject> getAssignedBoats(DBObject b) {
         ArrayList<DBObject> ret = new ArrayList<>();
+        if (b == null || b.userUid == null)
+            return ret;
         if (ds == null || ds.getValue() == null || currentEvent == null)
             return ret;
-        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).getChildren()) {
-            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
-            if (o != null)
-                ret.add(o);
+        Map<String,List<String>> as = (HashMap<String,List<String>>)ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child("Assignments").getValue();
+        if (as!=null) {
+            for (String userUid : as.keySet()) {
+                if (userUid != null) {
+                    List<String> buoys = as.get(userUid);
+                    if (buoys.contains(b.getUuidString())) {
+                        DBObject boat = getBoat(userUid);
+                        if (boat != null)
+                            ret.add(boat);
+                    }
+                }
+            }
         }
         return ret;
     }
 
-    @Override
-    public DBObject getBoat(String uuid) {
-        if (ds == null || ds.getValue() == null || currentEvent == null || uuid == null || uuid.isEmpty())
-            return null;
-        return ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(uuid).getValue(DBObject.class);
-    }
 
-    @Override
-    public DBObject getBoatByUserUid(String uid){
-        for (DBObject ao : getAllBoats()) {
-            if (isOwnObject(uid, ao)) {
-                return ao;
-            }
-        }
-        return null;
-    }
-    private boolean isOwnObject(String uid, DBObject o) {
-        return o != null && o.userUid!=null && o.userUid.equals(uid);
-    }
+//    @Override
+//    public void assignBuoy(DBObject boat, String uuid) {
+//        if (ds == null || ds.getValue() == null || currentEvent == null)
+//            return;
+//        DBObject buoy = getBuoy(uuid);
+//        if (buoy == null) {
+//            Log.e(TAG, "Error finding buoy for assignment");
+//            return;
+//        }
+//
+//        removeAssignments(boat);
+//        removeAssignments(buoy);
+//        for (DBObject b : getAssignedBoats(buoy)) {
+//            removeAssignment(buoy, b);
+//            removeAssignments(b);
+//        }
+//        for (DBObject b : getAssignedBuoys(boat)) {
+//            removeAssignment(b, boat);
+//            removeAssignments(b);
+//        }
+//
+//        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
+//        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
+//    }
 
     @Override
     public void assignBuoy(DBObject boat, String uuid) {
@@ -393,15 +448,45 @@ public class FirebaseDB implements IDBManager {
             removeAssignments(b);
         }
 
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
+
+        List<String> buoysUUID = new ArrayList<>();
+        /* For Adding more than one buoy:
+        List<DBObject> buoys = getAssignedBuoys(boat);
+        for(DBObject b: buoys){
+            if ((b!=null)&&(b.getUuidString()!=null)){
+                buoysUUID.add(b.getUuidString());
+            }
+        }*/
+        buoysUUID.add(uuid);
+        getEventDBRef(currentEvent).child("Assignments").child(boat.userUid).setValue(buoysUUID);
     }
 
     @Override
     public void removeAssignment(DBObject buoy, DBObject boat) {
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).removeValue();
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).removeValue();
+        List<DBObject> buoys = getAssignedBuoys(boat);
+        if (buoys!=null) buoys.remove(buoy);
+        List<String> buoysUUID = new ArrayList<>();
+        for(DBObject b: buoys){
+            if ((b!=null)&&(b.getUuidString()!=null)){
+                buoysUUID.add(b.getUuidString());
+            }
+        }
+        getEventDBRef(currentEvent).child("Assignments").child(boat.userUid).setValue(buoysUUID);
     }
+
+//    @Override
+//    public void removeAssignments(DBObject b) {
+//        for (DBObject o : getAssignedBuoys(b)) {
+//            removeAssignment(o, b);
+//        }
+//        for (DBObject o : getAssignedBoats(b)) {
+//            removeAssignment(b, o);
+//        }
+//        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).removeValue();
+//        if (b.userUid == null)
+//            return;
+//        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).removeValue();
+//    }
 
     @Override
     public void removeAssignments(DBObject b) {
@@ -411,11 +496,28 @@ public class FirebaseDB implements IDBManager {
         for (DBObject o : getAssignedBoats(b)) {
             removeAssignment(b, o);
         }
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).removeValue();
-        if (b.userUid == null)
-            return;
-        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).removeValue();
     }
+
+    @Override
+    public DBObject getBoat(String uuid) {
+        if (ds == null || ds.getValue() == null || currentEvent == null || uuid == null || uuid.isEmpty())
+            return null;
+        return ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(uuid).getValue(DBObject.class);
+    }
+
+    @Override
+    public DBObject getBoatByUserUid(String uid){
+        for (DBObject ao : getAllBoats()) {
+            if (isOwnObject(uid, ao)) {
+                return ao;
+            }
+        }
+        return null;
+    }
+    private boolean isOwnObject(String uid, DBObject o) {
+        return o != null && o.userUid!=null && o.userUid.equals(uid);
+    }
+
 
     @Override
     public List<Boat> getBoatTypes() {
