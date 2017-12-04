@@ -127,8 +127,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 finish();
             }
         });
-        Intent intent = new Intent(this, GPSService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        if (!viewOnly) {
+            Intent intent = new Intent(this, GPSService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        }
         notification.InitNotification(this);
         setReturnedToEvent();
 
@@ -697,7 +699,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     @Override
     public void onLocationChanged(Location location) {
-        if(location!=null && myBoat!=null){
+        if(location!=null && myBoat!=null && !viewOnly){
             myBoat.setLoc(location);
             drawOwnBoat(myBoat);
         }
