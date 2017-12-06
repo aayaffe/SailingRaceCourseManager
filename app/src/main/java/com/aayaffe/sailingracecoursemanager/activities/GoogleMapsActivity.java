@@ -672,10 +672,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-            mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000,myBoat,commManager.getCurrentEvent(),commManager,iGeo, users.getCurrentUser().Uid);
+            if (users.getCurrentUser()!=null) {
+                GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
+                mService = binder.getService();
+                mBound = true;
+                mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000, myBoat, commManager.getCurrentEvent(), commManager, iGeo, users.getCurrentUser().Uid);
+            }
         }
 
         @Override
