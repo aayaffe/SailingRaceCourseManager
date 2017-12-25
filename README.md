@@ -23,3 +23,7 @@ Installation:
 * [BUILD_VARIANT] is release or staging or debug
 
 This is an app to help Sailing Races officials with laying a race course.
+
+This application was also developed using free software from Jetbrains for OpenSource projects.
+
+<img src="https://raw.githubusercontent.com/aayaffe/SailingRaceCourseManager/master/jetbrains.png" width="100">
