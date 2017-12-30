@@ -55,6 +55,11 @@ public class FirebaseDB implements IDBManager {
         if (db==null){
             db = new FirebaseDB(c);
         }
+        if (fb==null){
+            Log.e(TAG, "fb is null in getInstance");
+            fb = FirebaseDatabase.getInstance()
+                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
+        }
         return db;
 
     }
@@ -72,6 +77,7 @@ public class FirebaseDB implements IDBManager {
             fb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "in onDataChange");
                 ds = dataSnapshot;
                 if (users.getCurrentUser() == null) {
                     Users.setCurrentUser(findUser(uid));
@@ -95,6 +101,7 @@ public class FirebaseDB implements IDBManager {
         auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
+                Log.d(TAG, "in onAuthStateChange");
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (ds != null)
                     setUser(user);
