@@ -28,7 +28,7 @@ public class AssignBuoyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign_buoy);
-        commManager = new FirebaseDB(this);
+        commManager = FirebaseDB.getInstance(this);
         Intent i = getIntent();
         currentBoat = commManager.getBoat(i.getStringExtra("boatUid"));
         setupToolbar();

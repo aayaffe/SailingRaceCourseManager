@@ -46,7 +46,7 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
         rcimg.setImageResource(rcd.getImageID());
         dist2m1 = i.getFloatExtra("Dist2m1",-1);
         windSpeed = i.getDoubleExtra("WindSpeed",-2);
-        IDBManager db = new FirebaseDB(this);
+        IDBManager db = FirebaseDB.getInstance(this);
         final List<Boat> boatTypes =  db.getBoatTypes();
         ArrayAdapter<Boat> boatAdapter =
                 new ArrayAdapter<Boat>(this, R.layout.simple_spinner_item_layuot, boatTypes) {

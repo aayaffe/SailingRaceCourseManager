@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
-        commManager = new FirebaseDB(this);
+        commManager = FirebaseDB.getInstance(this);
         analytics = new Analytics(this);
         onConnectEventListener = new CommManagerEventListener() {
             @Override

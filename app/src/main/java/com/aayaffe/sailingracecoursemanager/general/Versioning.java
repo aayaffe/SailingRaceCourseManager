@@ -20,7 +20,7 @@ public class Versioning {
 
     public Versioning(Context c){
         this.c = c;
-        commManager = new FirebaseDB(c);
+        commManager = FirebaseDB.getInstance(c);
     }
 
     public long getSupportedVersion(){

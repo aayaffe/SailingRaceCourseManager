@@ -43,19 +43,22 @@ public class FirebaseDB implements IDBManager {
     private static DatabaseReference fb;
     private static DataSnapshot ds;
     private static Event currentEvent;
-
-    public void setEventDeleted(EventDeleted eventDeleted) {
-        this.eventDeleted = eventDeleted;
-    }
-
     private EventDeleted eventDeleted;
     private final Context c;
     private String uid;
     private final Users users;
     private final List<CommManagerEventListener> listeneres = new ArrayList<>();
     private boolean connected = false;
+    private static FirebaseDB db;
 
-    public FirebaseDB(Context c) {
+    public static FirebaseDB getInstance(Context c){
+        if (db==null){
+            db = new FirebaseDB(c);
+        }
+        return db;
+
+    }
+    private FirebaseDB(Context c) {
         this.c = c;
         Users.Init(this, PreferenceManager.getDefaultSharedPreferences(c));
         users = Users.getInstance();
@@ -63,11 +66,10 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public int login() {
-        if (fb == null) {
+            Log.d(TAG,"in login function.");
             fb = FirebaseDatabase.getInstance()
                     .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-        }
-        fb.addValueEventListener(new ValueEventListener() {
+            fb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ds = dataSnapshot;
@@ -691,6 +693,10 @@ public class FirebaseDB implements IDBManager {
 
     public interface EventDeleted {
         void onEventDeleted(Event e);
+    }
+
+    public void setEventDeleted(EventDeleted eventDeleted) {
+        this.eventDeleted = eventDeleted;
     }
 
 }

@@ -103,8 +103,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         noGps = findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
-        commManager = new FirebaseDB(this);
-        commManager.login();
+        commManager = FirebaseDB.getInstance(this);
+        //commManager.login();
         Users.Init(commManager,sharedPreferences);
         users = Users.getInstance();
         mapLayer = new GoogleMaps();
@@ -523,7 +523,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     private int getIconId(String uid, DBObject o) {
         int ret;
-        if (uid==null || o == null)
+        if (uid==null || o == null || o.getBuoyType()==null)
             return R.drawable.boatred;
         if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
@@ -588,6 +588,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         firstBoatLoad = true;
         updateWindArrow();
         Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
+        commManager = FirebaseDB.getInstance(this);
         runnable.run();
     }
 
