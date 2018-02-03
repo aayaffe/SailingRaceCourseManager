@@ -40,14 +40,14 @@ import java.util.UUID;
  */
 public class FirebaseDB implements IDBManager {
     private static final String TAG = "FirebaseDB";
-    private static DatabaseReference fb;
-    private static DataSnapshot ds;
+    public static DatabaseReference fb;
+    public static DataSnapshot ds;
     private static Event currentEvent;
     private EventDeleted eventDeleted;
     private final Context c;
     private String uid;
     private final Users users;
-    private final List<CommManagerEventListener> listeneres = new ArrayList<>();
+    public final List<CommManagerEventListener> listeneres = new ArrayList<>();
     private boolean connected = false;
     private static FirebaseDB db;
 
@@ -55,11 +55,11 @@ public class FirebaseDB implements IDBManager {
         if (db==null){
             db = new FirebaseDB(c);
         }
-        if (fb==null){
-            Log.e(TAG, "fb is null in getInstance");
-            fb = FirebaseDatabase.getInstance()
-                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-        }
+//        if (fb==null){
+//            Log.e(TAG, "fb is null in getInstance");
+//            fb = FirebaseDatabase.getInstance()
+//                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
+//        }
         return db;
 
     }
@@ -71,48 +71,48 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public int login() {
-            Log.d(TAG,"in login function.");
-            fb = FirebaseDatabase.getInstance()
-                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-            fb.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "in onDataChange");
-                ds = dataSnapshot;
-                if (users.getCurrentUser() == null) {
-                    Users.setCurrentUser(findUser(uid));
-                }
-                if ((listeneres != null) && (!connected)) {
-                    for (CommManagerEventListener listener : listeneres) {
-                        if (listener != null)
-                            listener.onConnect(new Date());
-                    }
-                }
-                connected = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Is this really necessary?
-            }
-
-        });
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
-                Log.d(TAG, "in onAuthStateChange");
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (ds != null)
-                    setUser(user);
-                else {
-                    if (user != null)
-                        uid = user.getUid();
-                    else
-                        uid = null;
-                }
-            }
-        });
+//            Log.d(TAG,"in login function.");
+//            fb = FirebaseDatabase.getInstance()
+//                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
+//            fb.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.d(TAG, "in onDataChange");
+//                ds = dataSnapshot;
+//                if (users.getCurrentUser() == null) {
+//                    Users.setCurrentUser(findUser(uid));
+//                }
+//                if ((listeneres != null) && (!connected)) {
+//                    for (CommManagerEventListener listener : listeneres) {
+//                        if (listener != null)
+//                            listener.onConnect(new Date());
+//                    }
+//                }
+//                connected = true;
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //Is this really necessary?
+//            }
+//
+//        });
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
+//                Log.d(TAG, "in onAuthStateChange");
+//                final FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (ds != null)
+//                    setUser(user);
+//                else {
+//                    if (user != null)
+//                        uid = user.getUid();
+//                    else
+//                        uid = null;
+//                }
+//            }
+//        });
         return 0;
     }
 
@@ -121,7 +121,7 @@ public class FirebaseDB implements IDBManager {
         setUser(auth.getCurrentUser());
     }
 
-    private void setUser(FirebaseUser user) {
+    public void setUser(FirebaseUser user) {
         if (user != null) {
             uid = user.getUid();
             Log.d(TAG, "Uid " + getLoggedInUid() + " Is logged in.");
@@ -266,7 +266,8 @@ public class FirebaseDB implements IDBManager {
     public void addUser(User u) {
         if (u == null)
             return;
-        fb.child(c.getString(R.string.db_users)).child(u.Uid).setValue(u);
+        if (fb!=null)
+            fb.child(c.getString(R.string.db_users)).child(u.Uid).setValue(u);
     }
 
     @Override

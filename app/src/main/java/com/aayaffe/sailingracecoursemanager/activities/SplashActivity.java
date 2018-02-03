@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.db.CommManagerEventListener;
@@ -30,6 +31,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
+        Intent serviceIntent = new Intent(this,FirebaseBackgroundService.class);
+        startService(serviceIntent);
+        Log.d(TAG,"After starting service.");
         commManager = FirebaseDB.getInstance(this);
         analytics = new Analytics(this);
         onConnectEventListener = new CommManagerEventListener() {

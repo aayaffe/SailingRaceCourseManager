@@ -1,0 +1,24 @@
+<resources>
+    <!--
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=93:DF:D7:D8:46:CC:19:F3:4B:B8:4A:82:36:0C:E5:EB:F2:3B:62:A0%3Bcom.aayaffe.sailingracecoursemanager.map
+
+    You can also add your credentials to an existing key, using this line:
+    93:DF:D7:D8:46:CC:19:F3:4B:B8:4A:82:36:0C:E5:EB:F2:3B:62:A0;com.aayaffe.sailingracecoursemanager.map
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+
+    Debug key::  AIzaSyDBakZSI-fQiWjJTOhSIoPjoiGS2lSOYZU
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyCsMpP2AGsZg2jfD28zS1J-FQPZFFmHk3g
+    </string>
+
+
+</resources>

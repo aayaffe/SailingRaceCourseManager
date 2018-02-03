@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="firebase_base_url" templateMergeStrategy="preserve" translatable="false">
+        https://[YOUR_FIREBASE_URL].firebaseio.com
+    </string>
+</resources>
