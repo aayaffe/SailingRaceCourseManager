@@ -63,8 +63,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         setContentView(R.layout.activity_choose_event);
         analytics = new Analytics(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        commManager = new FirebaseDB(this);
-        commManager.login();
+        commManager = FirebaseDB.getInstance(this);
+        //commManager.login();
         Users.Init(commManager,sharedPreferences);
         users = Users.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

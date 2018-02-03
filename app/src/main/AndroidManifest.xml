@@ -67,6 +67,9 @@
             android:enabled="true"
             android:permission="android.permission.ACCESS_FINE_LOCATION">
         </service>
+        <service
+            android:name="com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService">
+        </service>
 
         <activity android:name=".activities.RaceCourseStatisticsActivity">
         </activity>

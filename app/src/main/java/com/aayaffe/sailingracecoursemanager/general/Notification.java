@@ -11,21 +11,26 @@ import com.aayaffe.sailingracecoursemanager.activities.GoogleMapsActivity;
 
 /**
  * Avi Marine Innovations - www.avimarine.in
- *
+ * <p>
  * Created by Amit Y. on 04/10/2015.
  */
 public class Notification {
     private NotificationManager mNotifyMgr;
 
 
-    public void InitNotification(Context c){
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(c).setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic).setContentTitle("AVI is running!").setContentText("The app is sending and receiving data.");
-        Intent resultIntent = new Intent(c,GoogleMapsActivity.class);
+    public void InitNotification(Context c) {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(c, "AVISAILRACE").
+                setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic).
+                setContentTitle("AVI is running!").
+                setContentText("The app is sending and receiving data.");
+
+        Intent resultIntent = new Intent(c, GoogleMapsActivity.class);
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(c,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(c, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setOngoing(true);
         // Sets an ID for the notification
+//        String id = "avi_channel_01";
         int mNotificationId = 1;
 // Gets an instance of the NotificationManager service
         mNotifyMgr =
@@ -35,7 +40,7 @@ public class Notification {
 
     }
 
-    public void cancelAll(){
+    public void cancelAll() {
         mNotifyMgr.cancelAll();
     }
 }

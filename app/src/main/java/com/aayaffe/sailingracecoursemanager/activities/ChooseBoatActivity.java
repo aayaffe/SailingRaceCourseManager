@@ -28,7 +28,7 @@ public class ChooseBoatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_boat);
-        commManager = new FirebaseDB(this);
+        commManager = FirebaseDB.getInstance(this);
         setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BoatsList);
         mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {

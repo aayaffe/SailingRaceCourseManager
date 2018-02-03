@@ -103,8 +103,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         noGps = findViewById(R.id.gps_indicator);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
-        commManager = new FirebaseDB(this);
-        commManager.login();
+        commManager = FirebaseDB.getInstance(this);
+        //commManager.login();
         Users.Init(commManager,sharedPreferences);
         users = Users.getInstance();
         mapLayer = new GoogleMaps();
@@ -523,7 +523,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     private int getIconId(String uid, DBObject o) {
         int ret;
-        if (uid==null || o == null)
+        if (uid==null || o == null || o.getBuoyType()==null)
             return R.drawable.boatred;
         if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
@@ -588,6 +588,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         firstBoatLoad = true;
         updateWindArrow();
         Log.d(TAG, "New wind arrow icon rotation is " + wa.getDirection());
+        commManager = FirebaseDB.getInstance(this);
         runnable.run();
     }
 
@@ -672,10 +673,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-            mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000,myBoat,commManager.getCurrentEvent(),commManager,iGeo, users.getCurrentUser().Uid);
+            if (users.getCurrentUser()!=null) {
+                GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
+                mService = binder.getService();
+                mBound = true;
+                mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000, myBoat, commManager.getCurrentEvent(), commManager, iGeo, users.getCurrentUser().Uid);
+            }
         }
 
         @Override

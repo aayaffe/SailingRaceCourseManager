@@ -14,11 +14,25 @@ Installation:
 
 1. Download code
 
-2. Add the google-services.json (Downloaded from Firebase console) into the release\staging\debug directory (According to the build flavour required).
+2. Using the keystore.properties.template file create a keystore.properties file in your base directory with the values and passwords of your signing keys.
+(According to this [tutorial](https://developer.android.com/studio/publish/app-signing.html#secure-shared-keystore))
 
-3. Add google-maps-api.xml into the [BUILD_VARIANT]\res\values directory
+3. Add the google-services.json (Downloaded from Firebase console) into the app directory or release\staging\debug directory (According to the build flavor required).
 
-4. Add a firebase_url.xml into the [BUILD_VARIANT]\res\values directory
+4. Add google-maps-api.xml into the [BUILD_VARIANT]\res\values directory (https://developers.google.com/maps/documentation/android-api/start#step_4_get_a_google_maps_api_key)
+
+5. Add a firebase_url.xml into the [BUILD_VARIANT]\res\values directory
+
+6. Enable email authentication in your Firebase project
+
+7. Change the firebase database security rules to:
+
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
 
 * [BUILD_VARIANT] is release or staging or debug
 
