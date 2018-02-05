@@ -51,7 +51,7 @@ public class FirebaseBackgroundService extends Service {
         Users.Init(FirebaseDB.getInstance(this), PreferenceManager.getDefaultSharedPreferences(this));
         users = Users.getInstance();
         FirebaseDB.getInstance(FirebaseBackgroundService.this).fb = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl(this.getString(R.string.firebase_base_url));
+                .getReferenceFromUrl(this.getString(R.string.firebase_database_url));
         FirebaseDB.getInstance(FirebaseBackgroundService.this).fb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
