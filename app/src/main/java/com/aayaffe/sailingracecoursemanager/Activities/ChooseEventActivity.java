@@ -32,12 +32,12 @@ import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
+import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.crash.FirebaseCrash;
 import com.tenmiles.helpstack.HSHelpStack;
 
 import java.util.ArrayList;
@@ -280,6 +280,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             e.monthEnd = monthEnd;
             e.dayStart = dayStart;
             e.dayEnd = dayEnd;
+            e.accessCode = Event.generateAccessCode();
             commManager.writeEvent(e);
             Calendar start = Calendar.getInstance();
             start.set(yearStart,monthStart,dayStart);
@@ -288,8 +289,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             analytics.LogAddEvent(e.getName(),start.getTime(),end.getTime(),users.getCurrentUser());
         }
         else {
-            FirebaseCrash.logcat(Log.DEBUG, TAG,"User not logged in tried to add new activity");
-            FirebaseCrash.report(new Exception("User not logged in tried to add new activity"));
+            Crashlytics.log(Log.DEBUG, TAG,"User not logged in tried to add new activity");
+            Crashlytics.logException(new Exception("User not logged in tried to add new activity"));
         }
     }
 
