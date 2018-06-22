@@ -17,6 +17,7 @@ import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.activities.ChooseEventActivity;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.Query;
 
 /**
@@ -28,18 +29,16 @@ import com.google.firebase.database.Query;
 public class EventsListAdapter extends FirebaseListAdapter<Event> {
     private final IDBManager commManager;
     private final Users users;
+    private final Activity mActivity;
 
     /**
      * @param activity    The activity containing the ListView
-     * @param modelClass  FirebaseDB will marshall the data at a location into an instance of a class that you provide
-     * @param modelLayout This is the layout used to represent a single list item. You will be responsible for populating an
- *                    instance of the corresponding view with the data from an instance of modelClass.
-     * @param ref         The FirebaseDB location to watch for data changes. Can also be a slice of a location, using some
-*                    combination of {@code limit()}, {@code startAt()}, and {@code endAt()}.
+
      * @param users
      */
-    public EventsListAdapter(Activity activity, Class<Event> modelClass, int modelLayout, Query ref, IDBManager commManager, Users users) {
-        super(activity, modelClass, modelLayout, ref);
+    public EventsListAdapter(FirebaseListOptions options, Activity activity, IDBManager commManager, Users users) {
+        super(options);
+        this.mActivity = activity;
         this.commManager = commManager;
         this.users = users;
     }

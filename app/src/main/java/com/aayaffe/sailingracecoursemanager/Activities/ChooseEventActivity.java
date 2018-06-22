@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
+import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -33,6 +34,7 @@ import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
@@ -50,7 +52,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private FirebaseDB commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
-    private  Event selectedEvent;
+    private Event selectedEvent;
     private Analytics analytics;
     private boolean loggedIn = false;
     private static final int RC_SIGN_IN = 100;
@@ -72,8 +74,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         ListView eventsView = (ListView) findViewById(R.id.EventsList);
         eventsView.setItemsCanFocus(false);
 
-        mAdapter = new EventsListAdapter(this, Event.class, R.layout.three_line_list_item,
-                commManager.getFireBaseRef().child(getString(R.string.db_events)),commManager,users);
+        FirebaseListOptions<Event> options = new FirebaseListOptions.Builder<Event>()
+                .setLayout(R.layout.three_line_list_item)
+                .setQuery(commManager.getFireBaseRef().child(getString(R.string.db_events)), Event.class)
+                .build();
+        mAdapter = new EventsListAdapter(options,this,commManager,users);
+        mAdapter.startListening();
         eventsView.setAdapter(mAdapter);
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,11 +148,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
     private List<AuthUI.IdpConfig> getSelectedProviders() {
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-        selectedProviders.add(
-                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
-                            .setPermissions(getGooglePermissions())
-                            .build());
+        selectedProviders.add(new AuthUI.IdpConfig.EmailBuilder()
+                .setRequireName(true)
+                .setAllowNewAccounts(true)
+                .build());
+        selectedProviders.add(new AuthUI.IdpConfig.GoogleBuilder().build());
         return selectedProviders;
     }
 
@@ -202,7 +208,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private void startLoginActivity() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
-                        .setProviders(getSelectedProviders())
+                        .setAvailableProviders(getSelectedProviders())
                         .setLogo(R.mipmap.banner)
                         .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
                         .build(),
@@ -290,7 +296,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAdapter.cleanup();
+        mAdapter.stopListening();
     }
 
     private void enableLogin(Menu menu, boolean toLogin){
