@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
@@ -24,7 +23,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeBuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -32,6 +31,7 @@ import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
+import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -46,7 +46,7 @@ import java.util.List;
 
 import io.doorbell.android.Doorbell;
 
-public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener {
+public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener, AccessCodeBuoyInputDialog.AccessCodeInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
     private FirebaseDB commManager;
@@ -58,6 +58,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private static final int RC_SIGN_IN = 100;
     private Menu menu;
     private SharedPreferences sharedPreferences;
+    private DialogFragment df;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +87,52 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event e  = (Event)parent.getItemAtPosition(position);
-                enterEvent(false,e);
+                eventPressed(false,e);
             }
         });
         showRecentUpdateOnce(this);
     }
 
 
-    private void enterEvent(boolean viewOnly,Event e){
+    private void eventPressed(boolean viewOnly, Event e){
         Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
         selectedEvent = e;
+        if (selectedEvent.accessCode == null || selectedEvent.accessCode.isEmpty()){
+            enterEvent(viewOnly);
+        }
+        else if (viewOnly ||selectedEvent.getManagerUuid().equals(commManager.getLoggedInUid()) || (selectedEvent.getBoats().containsKey(commManager.getLoggedInUid()))) {
+            enterEvent(viewOnly);
+        }
+        else {
+            df = AccessCodeBuoyInputDialog.newInstance(this);
+            df.show(getFragmentManager(), "Enter_Access_Code");
+        }
+    }
+    private void enterEvent(boolean viewOnly){
+        Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
         commManager.setCurrentEvent(selectedEvent);
         intent.putExtra("eventName", selectedEvent.getName());
         intent.putExtra("viewOnly", viewOnly);
         startActivity(intent);
+    }
+
+
+    /**
+     * enter access code click
+     * @param dialog
+     */
+    @Override
+    public void onAccessCodeDialogPositiveClick(DialogFragment dialog) {
+        EditText accessCodeText = (EditText) dialog.getDialog().findViewById(R.id.access_code);
+        if (accessCodeText==null)
+            return;
+        if (accessCodeText.getText()==null)
+            return;
+        if (GeneralUtils.isValid(accessCodeText.getText().toString(),Long.class,0f,999999f)) {
+            if (selectedEvent.accessCode.equals(accessCodeText.getText().toString())) {
+                enterEvent(false);
+            }
+        }
     }
     /** Show the recent updates prompt once per version. */
     public static void showRecentUpdateOnce(Activity activity) {
@@ -334,7 +368,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
     public void viewOnly(Event event) {
-        enterEvent(true, event);
+        eventPressed(true, event);
     }
 }
 

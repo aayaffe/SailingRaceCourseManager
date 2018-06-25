@@ -85,6 +85,9 @@ public class GeneralUtils {
             case Integer:
                 Integer i = tryParseInt(text);
                 return i != null && isInBounds(i, min, max);
+            case Long:
+                Long l = tryParseLong(text);
+                return l!= null && isInBounds(l,min,max);
             default:
                 return false;
         }
@@ -105,7 +108,7 @@ public class GeneralUtils {
     }
 
     enum CLAZZ {
-        Integer,Double,Float
+        Integer,Double,Float,Long
 
     }
 
@@ -133,6 +136,15 @@ public class GeneralUtils {
             return Double.parseDouble(val);
         }catch (Exception e){
             Log.e(TAG, "Failed to parse Double",e);
+            return null;
+        }
+    }
+
+    public static Long tryParseLong(String val){
+        try{
+            return Long.parseLong(val);
+        }catch (Exception e){
+            Log.e(TAG, "Failed to parse Long",e);
             return null;
         }
     }
