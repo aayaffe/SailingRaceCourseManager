@@ -1,9 +1,6 @@
 apply plugin: 'com.android.application'
 
-// Load keystore
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
@@ -28,13 +25,28 @@ sonarqube {
 
 android {
     signingConfigs {
-        release {
-            storeFile = file(keystoreProperties['storeFile'])
-            storePassword = keystoreProperties['storePassword']
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
+//        if (!System.getenv("TRAVIS")) {
+//            release {
+//                storeFile rootProject.file('release.keystore')
+//                storePassword System.getenv("KEYSTORE_PASS")
+//                keyAlias System.getenv("ALIAS_NAME")
+//                keyPassword System.getenv("ALIAS_PASS")
+//            }
+        if (!System.getenv("TRAVIS")) {
+            release {
+                // Load keystore
+                def keystorePropertiesFile = rootProject.file("keystore.properties");
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            }
         }
     }
+
+
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
