@@ -71,7 +71,9 @@ android {
         staging {
             debuggable true
             jniDebuggable false
-            signingConfig signingConfigs.release
+            if (!System.getenv("TRAVIS")) {
+                signingConfig signingConfigs.release
+            }
             renderscriptDebuggable false
             minifyEnabled false
             zipAlignEnabled true
@@ -79,7 +81,9 @@ android {
         debuggableRelease {
             debuggable true
             jniDebuggable false
-            signingConfig signingConfigs.release
+            if (!System.getenv("TRAVIS")) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     packagingOptions {
