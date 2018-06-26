@@ -34,6 +34,7 @@ import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.events.Event;
@@ -331,7 +332,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 openAssignBuoyActvity();
                 return true;
             case R.id.action_show_access_code:
-                showAccessCode();
+                AccessCodeShowDialog.showAccessCode(this,commManager.getCurrentEvent());
                 return true;
             case R.id.action_exit:
                 finish();
@@ -343,26 +344,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 return super.onOptionsItemSelected(item);
 
         }
-    }
-
-    private void showAccessCode() {
-        Log.d(TAG, "Showing Access code");
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        if (commManager.getCurrentEvent().accessCode == null) {
-            alertDialog.setMessage("This event has no access code, and is therefor accessible to everyone");
-        }
-        else{
-            alertDialog.setMessage("The access code to this event is: " + commManager.getCurrentEvent().accessCode);
-        }
-        alertDialog.setTitle("Access Code");
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
     }
 
     public void AddBuoyMenuItemOnClick() {

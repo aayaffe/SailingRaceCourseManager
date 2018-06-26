@@ -689,7 +689,8 @@ public class FirebaseDB implements IDBManager {
         }
         DBObject boat = null;
         for (DBObject o : getAllBoats()) {
-            if (o.userUid.equals(currentUser.Uid)) {
+
+            if ((o.userUid!=null)&&(o.userUid.equals(currentUser.Uid))) {
                 boat = o;
                 break;
             }

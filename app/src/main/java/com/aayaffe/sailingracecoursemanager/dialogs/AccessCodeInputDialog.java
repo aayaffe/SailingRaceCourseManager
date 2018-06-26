@@ -19,14 +19,14 @@ import com.aayaffe.sailingracecoursemanager.R;
  *
  * Created by Amit Y. on 09/02/2016.
  */
-public class AccessCodeBuoyInputDialog extends DialogFragment {
-    private static final String TAG = "AccessCodeBuoyInputDialog";
+public class AccessCodeInputDialog extends DialogFragment {
+    private static final String TAG = "AccessCodeInputDialog";
     public String accessCode;
     private Context c;
     AccessCodeInputDialogListener mListener;
 
-    public static AccessCodeBuoyInputDialog newInstance(Context c) {
-        AccessCodeBuoyInputDialog frag = new AccessCodeBuoyInputDialog();
+    public static AccessCodeInputDialog newInstance(Context c) {
+        AccessCodeInputDialog frag = new AccessCodeInputDialog();
 //        Bundle args = new Bundle();
 //        args.putLong("buoyId", id);
 //        frag.setArguments(args);
@@ -63,12 +63,12 @@ public class AccessCodeBuoyInputDialog extends DialogFragment {
                 .setTitle(title)
                 .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onAccessCodeDialogPositiveClick(AccessCodeBuoyInputDialog.this);
+                        mListener.onAccessCodeDialogPositiveClick(AccessCodeInputDialog.this);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        AccessCodeBuoyInputDialog.this.getDialog().cancel();
+                        AccessCodeInputDialog.this.getDialog().cancel();
                     }
                 });
 

@@ -23,7 +23,8 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeBuoyInputDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeInputDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
@@ -46,7 +47,7 @@ import java.util.List;
 
 import io.doorbell.android.Doorbell;
 
-public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener, AccessCodeBuoyInputDialog.AccessCodeInputDialogListener {
+public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener, AccessCodeInputDialog.AccessCodeInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
     private FirebaseDB commManager;
@@ -104,7 +105,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             enterEvent(viewOnly);
         }
         else {
-            df = AccessCodeBuoyInputDialog.newInstance(this);
+            df = AccessCodeInputDialog.newInstance(this);
             df.show(getFragmentManager(), "Enter_Access_Code");
         }
     }
@@ -174,12 +175,14 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             startLoginActivity();
         }
     }
+
     private List<String> getGooglePermissions() {
         List<String> result = new ArrayList<>();
         result.add(Scopes.EMAIL);
         result.add(Scopes.PROFILE);
         return result;
     }
+
     private List<AuthUI.IdpConfig> getSelectedProviders() {
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
         selectedProviders.add(new AuthUI.IdpConfig.EmailBuilder()
@@ -284,11 +287,16 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
         if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().isEmpty())){
-            if (!eventNameText.getText().toString().matches(".*[\\.\\#\\$\\[\\]]+.*"))
-                addEvent(eventNameText.getText().toString(),((EventInputDialog)dialog).yearStart,
-                        ((EventInputDialog)dialog).yearEnd, ((EventInputDialog)dialog).monthStart,
-                        ((EventInputDialog)dialog).monthEnd,((EventInputDialog)dialog).dayStart,
-                        ((EventInputDialog)dialog).dayEnd);
+            if (!eventNameText.getText().toString().matches(".*[\\.\\#\\$\\[\\]]+.*")) {
+                Event e = addEvent(eventNameText.getText().toString(), ((EventInputDialog) dialog).yearStart,
+                        ((EventInputDialog) dialog).yearEnd, ((EventInputDialog) dialog).monthStart,
+                        ((EventInputDialog) dialog).monthEnd, ((EventInputDialog) dialog).dayStart,
+                        ((EventInputDialog) dialog).dayEnd);
+                if (e!=null) {
+                    AccessCodeShowDialog.showAccessCode(this, e);
+                }
+
+            }
         }
         else {
             Log.d(TAG, "Event not(!) created.");
@@ -297,13 +305,13 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
     }
 
-    private void addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
+    private Event addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
         if (users.getCurrentUser()!=null) {
             if (commManager.getEvent(eventNameText) != null) {
                 Log.d(TAG, "Event not(!) created. Event name exists in DB");
                 Toast t = Toast.makeText(this, R.string.new_event_duplicate_name_toast_message, Toast.LENGTH_LONG);
                 t.show();
-                return;
+                return null;
             }
             Event e = new Event();
             e.setName(eventNameText);
@@ -321,10 +329,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Calendar end = Calendar.getInstance();
             end.set(yearEnd,monthEnd,dayEnd);
             analytics.LogAddEvent(e.getName(),start.getTime(),end.getTime(),users.getCurrentUser());
+            return e;
         }
         else {
             Crashlytics.log(Log.DEBUG, TAG,"User not logged in tried to add new activity");
             Crashlytics.logException(new Exception("User not logged in tried to add new activity"));
+            return null;
         }
     }
 
