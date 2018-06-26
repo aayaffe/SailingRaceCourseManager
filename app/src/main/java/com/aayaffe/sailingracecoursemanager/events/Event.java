@@ -5,6 +5,7 @@ import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -27,6 +28,7 @@ public class Event {
     public int monthEnd;
     public int dayStart;
     public int dayEnd;
+    public String accessCode;
 
 
 
@@ -82,5 +84,11 @@ public class Event {
 
     public void setManagerUuid(String uuid) {
         this.eventManager = uuid;
+    }
+
+    public static String generateAccessCode() {
+        Random rand = new Random();
+        int n = rand.nextInt(899999) + 100000;
+        return String.valueOf(n);
     }
 }

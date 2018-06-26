@@ -290,6 +290,8 @@
     <string name="toggle_button_yes">YES</string>
     <string name="event_input_dialog_title">Add new Event</string>
     <string name="number_picker_out_of_range">Out of range</string>
+    <string name="action_show_access_code">Access Code</string>
+    <string name="access_code">Enter access code</string>
 
 
 </resources>

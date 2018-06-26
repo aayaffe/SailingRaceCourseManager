@@ -20,6 +20,9 @@
     <item android:id="@+id/action_assign_buoys"
         android:title="@string/action_assign"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_show_access_code"
+          android:title="@string/action_show_access_code"
+          app:showAsAction="never"/>
     <item android:id="@+id/action_exit"
         android:title="@string/action_exit"
         app:showAsAction="never"/>

@@ -1,8 +1,10 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -48,8 +50,8 @@ import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.LocationListener;
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.jetbrains.annotations.Contract;
 
@@ -117,7 +119,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setIconsClickListeners();
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
-        FirebaseCrash.log("Current event name = " + currentEventName);
+        Crashlytics.log("Current event name = " + currentEventName);
         commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
         ((FirebaseDB)commManager).setEventDeleted(new FirebaseDB.EventDeleted() {
             @Override
@@ -133,7 +135,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
         notification.InitNotification(this);
         setReturnedToEvent();
-
     }
 
     private void setReturnedToEvent() {
@@ -292,6 +293,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
         if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid)) || viewOnly) {
+            menu.getItem(4).setEnabled(false);
+            menu.getItem(4).setVisible(false);
             menu.getItem(3).setEnabled(false);
             menu.getItem(3).setVisible(false);
             menu.getItem(2).setEnabled(false);
@@ -299,6 +302,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             menu.getItem(1).setEnabled(false);
             menu.getItem(1).setVisible(false);
         } else {
+            menu.getItem(4).setEnabled(true);
+            menu.getItem(4).setVisible(true);
             menu.getItem(3).setEnabled(true);
             menu.getItem(3).setVisible(true);
             menu.getItem(2).setEnabled(true);
@@ -325,6 +330,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             case R.id.action_assign_buoys:
                 openAssignBuoyActvity();
                 return true;
+            case R.id.action_show_access_code:
+                showAccessCode();
+                return true;
             case R.id.action_exit:
                 finish();
                 return true;
@@ -337,7 +345,31 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
     }
 
+    private void showAccessCode() {
+        Log.d(TAG, "Showing Access code");
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        if (commManager.getCurrentEvent().accessCode == null) {
+            alertDialog.setMessage("This event has no access code, and is therefor accessible to everyone");
+        }
+        else{
+            alertDialog.setMessage("The access code to this event is: " + commManager.getCurrentEvent().accessCode);
+        }
+        alertDialog.setTitle("Access Code");
 
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void AddBuoyMenuItemOnClick() {
+        Log.d(TAG, "add buoy menu item clicked");
+        df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
+        df.show(getFragmentManager(), "Add_Buoy");
+    }
     private void addRaceCourseItemClick() {
         Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
         i.putExtra("LEGS",legs);
@@ -615,11 +647,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         }
 
     }
-    public void AddBuoyMenuItemOnClick() {
-        Log.d(TAG, "Plus Fab Clicked");
-        df = BuoyInputDialog.newInstance(-1, BuoyType.getBuoyTypes() ,this);
-        df.show(getFragmentManager(), "Add_Buoy");
-    }
+
     private void addMark(long id, Location loc, Float dir, Float dist, BuoyType buoyType) {
         if (loc == null)
             return;

@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.Date;
 
@@ -36,7 +36,7 @@ public class Analytics {
             params.putString("UID", u.Uid);
             firebaseAnalytics.logEvent(EventName.ADD_EVENT.name(), params);
         } catch (Exception e){
-            FirebaseCrash.report(e);
+            Crashlytics.logException(e);
         }
     }
     public void LogDeleteEvent(Event e, User u){
@@ -48,7 +48,7 @@ public class Analytics {
             params.putString("UID", u.Uid);
             firebaseAnalytics.logEvent(EventName.DELETE_EVENT.name(), params);
         } catch (Exception ex){
-            FirebaseCrash.report(ex);
+            Crashlytics.logException(ex);
         }
     }
 }

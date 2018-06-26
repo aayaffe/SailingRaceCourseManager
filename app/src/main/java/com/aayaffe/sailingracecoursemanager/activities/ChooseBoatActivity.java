@@ -15,6 +15,7 @@ import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 
 import java.util.List;
 
@@ -31,7 +32,11 @@ public class ChooseBoatActivity extends AppCompatActivity {
         commManager = FirebaseDB.getInstance(this);
         setupToolbar();
         ListView boatsView = (ListView) findViewById(R.id.BoatsList);
-        mAdapter = new FirebaseListAdapter<DBObject>(this, DBObject.class, R.layout.two_line_with_action_icon_list_item, commManager.getEventBoatsReference()) {
+        FirebaseListOptions<DBObject> options = new FirebaseListOptions.Builder<DBObject>()
+                .setLayout(R.layout.two_line_with_action_icon_list_item)
+                .setQuery(commManager.getEventBoatsReference(), DBObject.class)
+                .build();
+        mAdapter = new FirebaseListAdapter<DBObject>(options) {
             @Override
             protected void populateView(View view, final DBObject b, int position) {
                 ((TextView)view.findViewById(android.R.id.text1)).setText("Boat: " + b.getName());
@@ -51,6 +56,7 @@ public class ChooseBoatActivity extends AppCompatActivity {
                 }
             }
         };
+        mAdapter.startListening();
         boatsView.setAdapter(mAdapter);
         boatsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,7 +104,7 @@ public class ChooseBoatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAdapter.cleanup();
+        mAdapter.stopListening();
     }
 }
 
