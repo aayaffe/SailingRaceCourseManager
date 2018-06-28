@@ -66,6 +66,9 @@ public class FirebaseBackgroundService extends Service {
                             listener.onConnect(new Date());
                     }
                 }
+                else{
+                    Log.e(TAG, "no listeners registered");
+                }
                 connected = true;
             }
 

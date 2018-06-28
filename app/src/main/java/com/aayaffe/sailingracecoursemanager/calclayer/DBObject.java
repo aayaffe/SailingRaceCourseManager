@@ -30,7 +30,6 @@ public class DBObject implements Serializable {
     private UUID raceCourseUUID;
     private BuoyType buoyType;
     private Long leftEvent;
-    public Map<String,String> assigned;
 
 
     public static final int ORANGE = 0xf49842;

@@ -25,7 +25,6 @@ public class SplashActivity extends AppCompatActivity {
     private Versioning versioning;
     private CommManagerEventListener onConnectEventListener;
     private IDBManager commManager;
-    private Analytics analytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +33,10 @@ public class SplashActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this,FirebaseBackgroundService.class);
         startService(serviceIntent);
         Log.d(TAG,"After starting service.");
-        commManager = FirebaseDB.getInstance(this);
-        analytics = new Analytics(this);
         onConnectEventListener = new CommManagerEventListener() {
             @Override
             public void onConnect(Date time) {
+                Log.d(TAG,"onConnect");
                 if (versioning.getInstalledVersion()<versioning.getSupportedVersion())
                 {
                     alertOnUnsupportedVersion();
@@ -54,6 +52,7 @@ public class SplashActivity extends AppCompatActivity {
                 Log.d(TAG,"commManager disconnected");
             }
         };
+        commManager = FirebaseDB.getInstance(this);
         commManager.setCommManagerEventListener(onConnectEventListener);
         commManager.login();
     }
@@ -68,23 +67,15 @@ public class SplashActivity extends AppCompatActivity {
     private void alertOnUnsupportedVersion() {
         Log.d(TAG, "Version not supported, starting dialog");
         Dialog d = DialogUtils.createDialog(SplashActivity.this, R.string.version_not_supported_dialog_title,
-                R.string.version_not_supported_dialog_message, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final String appPackageName = SplashActivity.this.getPackageName(); // getPackageName() from Context or Activity object
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                } catch (android.content.ActivityNotFoundException e) {
-                    Log.e(TAG,"Error FirebaseDB OnConnect",e);
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                }
-            }
-        }, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
+                R.string.version_not_supported_dialog_message, (dialog, which) -> {
+                    final String appPackageName = SplashActivity.this.getPackageName();
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException e) {
+                        Log.e(TAG,"Error FirebaseDB OnConnect",e);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }, (dialog, which) -> finish());
         d.show();
     }
 }

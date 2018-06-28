@@ -72,48 +72,6 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public int login() {
-//            Log.d(TAG,"in login function.");
-//            fb = FirebaseDatabase.getInstance()
-//                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-//            fb.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d(TAG, "in onDataChange");
-//                ds = dataSnapshot;
-//                if (users.getCurrentUser() == null) {
-//                    Users.setCurrentUser(findUser(uid));
-//                }
-//                if ((listeneres != null) && (!connected)) {
-//                    for (CommManagerEventListener listener : listeneres) {
-//                        if (listener != null)
-//                            listener.onConnect(new Date());
-//                    }
-//                }
-//                connected = true;
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                //Is this really necessary?
-//            }
-//
-//        });
-//        FirebaseAuth auth = FirebaseAuth.getInstance();
-//        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
-//                Log.d(TAG, "in onAuthStateChange");
-//                final FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (ds != null)
-//                    setUser(user);
-//                else {
-//                    if (user != null)
-//                        uid = user.getUid();
-//                    else
-//                        uid = null;
-//                }
-//            }
-//        });
         return 0;
     }
 
