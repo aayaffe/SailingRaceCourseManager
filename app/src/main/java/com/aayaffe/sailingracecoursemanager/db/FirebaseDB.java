@@ -56,11 +56,6 @@ public class FirebaseDB implements IDBManager {
         if (db==null){
             db = new FirebaseDB(c);
         }
-//        if (fb==null){
-//            Log.e(TAG, "fb is null in getInstance");
-//            fb = FirebaseDatabase.getInstance()
-//                    .getReferenceFromUrl(c.getString(R.string.firebase_base_url));
-//        }
         return db;
 
     }
@@ -118,9 +113,7 @@ public class FirebaseDB implements IDBManager {
         }
         return -1;
     }
-//    private DatabaseReference getEventDBRef(String eventUUID){
-//        return fb.child(c.getString(R.string.db_events)).child(eventUUID);
-//    }
+
     private DatabaseReference getEventDBRef(Event e){
         return fb.child(c.getString(R.string.db_events)).child(e.getUuid());
     }
@@ -290,25 +283,10 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void setCurrentEvent(Event e) {
-        //loginToEvent(currentEventName); //TODO: To enable better and finer grained events
         FirebaseDB.currentEvent = e;
     }
 
-//    @Override
-//    public List<DBObject> getAssignedBuoys(DBObject b) {
-//        ArrayList<DBObject> ret = new ArrayList<>();
-//        if (b == null || b.userUid == null)
-//            return ret;
-//        if (ds == null || ds.getValue() == null || currentEvent == null)
-//            return ret;
-//
-//        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).getChildren()) {
-//            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
-//            if (o != null)
-//                ret.add(o);
-//        }
-//        return ret;
-//    }
+
 
     @Override
     public List<DBObject> getAssignedBuoys(DBObject b) {
@@ -334,18 +312,6 @@ public class FirebaseDB implements IDBManager {
         return ret;
     }
 
-//    @Override
-//    public List<DBObject> getAssignedBoats(DBObject b) {
-//        ArrayList<DBObject> ret = new ArrayList<>();
-//        if (ds == null || ds.getValue() == null || currentEvent == null)
-//            return ret;
-//        for (DataSnapshot ps : ds.child(c.getString(R.string.db_events)).child(currentEvent.getUuid()).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).getChildren()) {
-//            DBObject o = getObjectByUUID(UUID.fromString(ps.getValue(String.class)));
-//            if (o != null)
-//                ret.add(o);
-//        }
-//        return ret;
-//    }
 
     @Override
     public List<DBObject> getAssignedBoats(DBObject b) {
@@ -371,31 +337,6 @@ public class FirebaseDB implements IDBManager {
     }
 
 
-//    @Override
-//    public void assignBuoy(DBObject boat, String uuid) {
-//        if (ds == null || ds.getValue() == null || currentEvent == null)
-//            return;
-//        DBObject buoy = getBuoy(uuid);
-//        if (buoy == null) {
-//            Log.e(TAG, "Error finding buoy for assignment");
-//            return;
-//        }
-//
-//        removeAssignments(boat);
-//        removeAssignments(buoy);
-//        for (DBObject b : getAssignedBoats(buoy)) {
-//            removeAssignment(buoy, b);
-//            removeAssignments(b);
-//        }
-//        for (DBObject b : getAssignedBuoys(boat)) {
-//            removeAssignment(b, boat);
-//            removeAssignments(b);
-//        }
-//
-//        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(boat.userUid).child(c.getString(R.string.db_assinged)).child(buoy.getUuidString()).setValue(buoy.getUuidString());
-//        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(buoy.getUuidString()).child(c.getString(R.string.db_assinged)).child(boat.userUid).setValue(boat.getUuidString());
-//    }
-
     @Override
     public void assignBuoy(DBObject boat, String uuid) {
         if (ds == null || ds.getValue() == null || currentEvent == null)
@@ -419,13 +360,6 @@ public class FirebaseDB implements IDBManager {
 
 
         List<String> buoysUUID = new ArrayList<>();
-        /* For Adding more than one buoy:
-        List<DBObject> buoys = getAssignedBuoys(boat);
-        for(DBObject b: buoys){
-            if ((b!=null)&&(b.getUuidString()!=null)){
-                buoysUUID.add(b.getUuidString());
-            }
-        }*/
         buoysUUID.add(uuid);
         getEventDBRef(currentEvent).child("Assignments").child(boat.userUid).setValue(buoysUUID);
     }
@@ -443,19 +377,6 @@ public class FirebaseDB implements IDBManager {
         getEventDBRef(currentEvent).child("Assignments").child(boat.userUid).setValue(buoysUUID);
     }
 
-//    @Override
-//    public void removeAssignments(DBObject b) {
-//        for (DBObject o : getAssignedBuoys(b)) {
-//            removeAssignment(o, b);
-//        }
-//        for (DBObject o : getAssignedBoats(b)) {
-//            removeAssignment(b, o);
-//        }
-//        getEventDBRef(currentEvent).child(c.getString(R.string.db_buoys)).child(b.getUuidString()).child(c.getString(R.string.db_assinged)).removeValue();
-//        if (b.userUid == null)
-//            return;
-//        getEventDBRef(currentEvent).child(c.getString(R.string.db_boats)).child(b.userUid).child(c.getString(R.string.db_assinged)).removeValue();
-//    }
 
     @Override
     public void removeAssignments(DBObject b) {
