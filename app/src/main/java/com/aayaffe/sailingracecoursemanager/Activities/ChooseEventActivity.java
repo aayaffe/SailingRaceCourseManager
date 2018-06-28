@@ -96,7 +96,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
 
     private void eventPressed(boolean viewOnly, Event e){
-        Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
         selectedEvent = e;
         if (selectedEvent.accessCode == null || selectedEvent.accessCode.isEmpty()){
             enterEvent(viewOnly);
@@ -129,10 +128,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             return;
         if (accessCodeText.getText()==null)
             return;
-        if (GeneralUtils.isValid(accessCodeText.getText().toString(),Long.class,0f,999999f)) {
-            if (selectedEvent.accessCode.equals(accessCodeText.getText().toString())) {
+        if (GeneralUtils.isValid(accessCodeText.getText().toString(),Long.class,0f,999999f)&&selectedEvent.accessCode.equals(accessCodeText.getText().toString())) {
                 enterEvent(false);
-            }
         }
     }
     /** Show the recent updates prompt once per version. */
@@ -176,13 +173,6 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
     }
 
-    private List<String> getGooglePermissions() {
-        List<String> result = new ArrayList<>();
-        result.add(Scopes.EMAIL);
-        result.add(Scopes.PROFILE);
-        return result;
-    }
-
     private List<AuthUI.IdpConfig> getSelectedProviders() {
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
         selectedProviders.add(new AuthUI.IdpConfig.EmailBuilder()
@@ -222,11 +212,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return true;
             case R.id.action_feedback:
                 Log.d(TAG, "Give feedback pressed");
-//                if(BuildConfig.DEBUG){
-//                    throw new RuntimeException("For testing purposes only");
-//                }
                 new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
-
                 return true;
             case R.id.action_logout:
                 if (loggedIn) {
