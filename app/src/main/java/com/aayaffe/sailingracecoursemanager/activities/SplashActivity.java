@@ -1,7 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,12 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.R;
+import com.aayaffe.sailingracecoursemanager.db.CommManagerEventListener;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
-import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
-import com.aayaffe.sailingracecoursemanager.db.CommManagerEventListener;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
-import com.aayaffe.sailingracecoursemanager.general.Analytics;
+import com.aayaffe.sailingracecoursemanager.dialogs.DialogUtils;
 import com.aayaffe.sailingracecoursemanager.general.Versioning;
 
 import java.util.Date;
