@@ -32,9 +32,9 @@ android {
                 keyPassword = keystoreProperties['keyPassword']
             }
         }
-        else{
-            environment "AVI_VER", "1.75"
-        }
+//        else{
+//            environment "AVI_VER", "1.75"
+//        }
     }
 
 
