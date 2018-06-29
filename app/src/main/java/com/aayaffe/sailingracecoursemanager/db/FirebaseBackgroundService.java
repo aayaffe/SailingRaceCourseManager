@@ -78,25 +78,21 @@ public class FirebaseBackgroundService extends Service {
             }
 
         });
+
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
-                Log.d(TAG, "in onAuthStateChange");
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (FirebaseDB.ds != null)
+        auth.addAuthStateListener(firebaseAuth -> {
+            Log.d(TAG, "in onAuthStateChange");
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (FirebaseDB.ds != null)
+                FirebaseDB.getInstance(FirebaseBackgroundService.this).setUser(user);
+            else {
+                if (user != null)
                     FirebaseDB.getInstance(FirebaseBackgroundService.this).setUser(user);
-                else {
-                    if (user != null)
-                        FirebaseDB.getInstance(FirebaseBackgroundService.this).setUser(user);
-                    else
-                        FirebaseDB.getInstance(FirebaseBackgroundService.this).setUser(null);
-                }
+                else
+                    FirebaseDB.getInstance(FirebaseBackgroundService.this).setUser(null);
             }
         });
     }
-
-
-
 
 }

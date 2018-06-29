@@ -22,13 +22,6 @@ sonarqube {
 
 android {
     signingConfigs {
-//        if (!System.getenv("TRAVIS")) {
-//            release {
-//                storeFile rootProject.file('release.keystore')
-//                storePassword System.getenv("KEYSTORE_PASS")
-//                keyAlias System.getenv("ALIAS_NAME")
-//                keyPassword System.getenv("ALIAS_PASS")
-//            }
         if (!System.getenv("TRAVIS")) {
             release {
                 // Load keystore

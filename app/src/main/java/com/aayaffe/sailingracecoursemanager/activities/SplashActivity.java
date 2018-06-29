@@ -60,6 +60,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onDestroy();
         if(commManager!=null)
             commManager.removeCommManagerEventListener(onConnectEventListener);
+        Intent serviceIntent = new Intent(this,FirebaseBackgroundService.class);
+        stopService(serviceIntent);
     }
 
     private void alertOnUnsupportedVersion() {
