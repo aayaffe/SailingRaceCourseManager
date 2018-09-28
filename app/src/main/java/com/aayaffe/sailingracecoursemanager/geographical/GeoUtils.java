@@ -155,6 +155,11 @@ public class GeoUtils {
         long diffInMs = new Date().getTime() - d.getTime();
         return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
     }
+
+    public static long ageInSeconds(long l){
+        long diffInMs = new Date().getTime() - l;
+        return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+    }
 }
 enum LengthUnit {
     /**

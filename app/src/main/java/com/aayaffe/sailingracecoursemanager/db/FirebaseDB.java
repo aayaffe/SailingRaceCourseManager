@@ -45,10 +45,14 @@ public class FirebaseDB implements IDBManager {
     private EventDeleted eventDeleted;
     private final Context c;
     private String uid;
-    private final Users users;
-    public final List<CommManagerEventListener> listeneres = new ArrayList<>();
-    private boolean connected = false;
+    public final List<CommManagerEventListener> listeners = new ArrayList<>();
     private static FirebaseDB db;
+
+
+    public void addOndataChangeListener(){
+        
+    }
+
 
     public static FirebaseDB getInstance(Context c){
         if (db==null){
@@ -60,7 +64,6 @@ public class FirebaseDB implements IDBManager {
     private FirebaseDB(Context c) {
         this.c = c;
         Users.Init(this, PreferenceManager.getDefaultSharedPreferences(c));
-        users = Users.getInstance();
     }
 
     @Override
@@ -97,11 +100,12 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public void setCommManagerEventListener(CommManagerEventListener listener) {
-        this.listeneres.add(listener);
+        this.listeners.add(listener);
     }
 
     @Override
     public int writeBoatObject(DBObject o) {
+        Log.v(TAG,"in writeBoatObject");
         if (o == null || o.userUid == null || o.userUid.isEmpty() || currentEvent == null)
             return -1;
         if (isEventExist(currentEvent)) {
@@ -136,6 +140,7 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public int updateBoatLocation(Event e, DBObject boat, AviLocation loc) {
+        Log.v(TAG, "in updateBoatLocation");
         if (loc == null)
             return -1;
         if (isBoatExist(e, boat)) {
@@ -453,8 +458,8 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public synchronized void removeCommManagerEventListener(CommManagerEventListener onConnectEventListener) {
-        if (listeneres != null)
-            listeneres.remove(onConnectEventListener);
+        if (listeners != null)
+            listeners.remove(onConnectEventListener);
     }
 
     /***

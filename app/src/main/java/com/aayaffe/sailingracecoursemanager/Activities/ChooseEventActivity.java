@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
 import com.aayaffe.sailingracecoursemanager.events.Event;
@@ -326,8 +327,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        stopService(new Intent(this, FirebaseBackgroundService.class));
         mAdapter.stopListening();
+        super.onDestroy();
     }
 
     private void enableLogin(Menu menu, boolean toLogin){

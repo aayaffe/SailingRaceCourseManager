@@ -1,6 +1,7 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -91,8 +92,10 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
                     tv2.setText(String.valueOf(Math.round(RaceCourseStatistics.GetSailTime(b, l, mro, dist2m1, windSpeed))));
                     tv1.setTextSize(18);
                     tv1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tv1.setTextColor(Color.WHITE);
                     tv2.setTextSize(18);
                     tv2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tv2.setTextColor(Color.WHITE);
                     tr.addView(tv1);
                     tr.addView(tv2);
                     tl.addView(tr);

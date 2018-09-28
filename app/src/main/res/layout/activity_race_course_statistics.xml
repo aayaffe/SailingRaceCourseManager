@@ -65,8 +65,9 @@
         <TableLayout
             android:id="@+id/statistics_table_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
+            android:paddingStart="15dp"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
@@ -81,6 +82,7 @@
                     android:paddingEnd="15dp"
                     android:paddingStart="15dp"
                     android:text="Rounding Order"
+                    android:textAlignment="viewStart"
                     android:textSize="18sp"
                     android:visibility="visible"/>
 

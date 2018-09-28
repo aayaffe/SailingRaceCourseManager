@@ -90,8 +90,8 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
             return;
         mLastLocation = location;
         mLastLocationMillis = SystemClock.elapsedRealtime();
-        if (ll!= null)
-            ll.onLocationChanged(location);
+//        if (ll!= null)
+//            ll.onLocationChanged(location);
     }
 
     @Override

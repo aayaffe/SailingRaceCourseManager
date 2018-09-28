@@ -23,12 +23,13 @@ public class SplashActivity extends AppCompatActivity {
     private Versioning versioning;
     private CommManagerEventListener onConnectEventListener;
     private IDBManager commManager;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         versioning = new Versioning(this);
-        Intent serviceIntent = new Intent(this,FirebaseBackgroundService.class);
+        serviceIntent = new Intent(this,FirebaseBackgroundService.class);
         startService(serviceIntent);
         Log.d(TAG,"After starting service.");
         onConnectEventListener = new CommManagerEventListener() {
@@ -54,14 +55,20 @@ public class SplashActivity extends AppCompatActivity {
         commManager.setCommManagerEventListener(onConnectEventListener);
         commManager.login();
     }
+    @Override
+    protected void onStop(){
+//        stopService(serviceIntent);
+        super.onStop();
+    }
+
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(commManager!=null)
             commManager.removeCommManagerEventListener(onConnectEventListener);
-        Intent serviceIntent = new Intent(this,FirebaseBackgroundService.class);
-        stopService(serviceIntent);
+//        stopService(serviceIntent);
+        super.onDestroy();
+
     }
 
     private void alertOnUnsupportedVersion() {

@@ -1,11 +1,11 @@
 package com.aayaffe.sailingracecoursemanager.activities;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +33,7 @@ import com.aayaffe.sailingracecoursemanager.Map_Layer.MapClickMethods;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.calclayer.BuoyType;
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
@@ -42,7 +43,6 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
-import com.aayaffe.sailingracecoursemanager.general.Notification;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.GPSService;
 import com.aayaffe.sailingracecoursemanager.geographical.GeoUtils;
@@ -57,13 +57,14 @@ import com.google.android.gms.location.LocationListener;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity implements BuoyInputDialog.BuoyInputDialogListener, LocationListener {
-    private Notification notification = new Notification();
+//    private Notification notification = new Notification();
     private Boolean exit = false;
     public static List<DBObject> buoys;
     public static List<DBObject> boats;
@@ -78,11 +79,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private IGeo iGeo;
     private Handler handler = new Handler();
     private WindArrow wa;
-
     public static IDBManager getCommManager() {
         return commManager;
     }
-
     private static IDBManager commManager;
     private DialogFragment df;
     private static String currentEventName;
@@ -91,29 +90,20 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public static final int NEW_RACE_COURSE_REQUEST = 770;
     private ImageView noGps;
     private DBObject assignedBuoy;
-    GPSService mService;
+    private GPSService mService;
     boolean mBound = false;
     private boolean viewOnly = false;
     private Legs legs;
     private RaceCourseDescriptor rcd;
+    // The BroadcastReceiver used to listen from broadcasts from the @link GPSService.
+    private LocationReceiver myReceiver;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"OnCreate");
         setContentView(R.layout.activity_google_maps);
-        noGps = findViewById(R.id.gps_indicator);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
-        commManager = FirebaseDB.getInstance(this);
-        //commManager.login();
-        Users.Init(commManager,sharedPreferences);
-        users = Users.getInstance();
-        mapLayer = new GoogleMaps();
-        mapLayer.Init(this, this, sharedPreferences,getClickMethods());
-        iGeo = new OwnLocation(getBaseContext(), this,this);
-        wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
+        initClassVars();
         Intent i = getIntent();
         currentEventName = i.getStringExtra("eventName");
         viewOnly = i.getBooleanExtra("viewOnly",false);
@@ -122,20 +112,31 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         Log.d(TAG, "Selected Event name is: " + currentEventName);
         Crashlytics.log("Current event name = " + currentEventName);
         commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
-        ((FirebaseDB)commManager).setEventDeleted(new FirebaseDB.EventDeleted() {
-            @Override
-            public void onEventDeleted(Event e) {
-                commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
-                Log.i(TAG,"Closing activity due to event deletion");
-                finish();
-            }
+        ((FirebaseDB)commManager).setEventDeleted(e -> {
+            commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
+            Log.i(TAG,"Closing activity due to event deletion");
+            finish();
         });
         if (!viewOnly) {
             Intent intent = new Intent(this, GPSService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         }
-        notification.InitNotification(this);
+//        notification.InitNotification(this);
         setReturnedToEvent();
+    }
+
+    private void initClassVars() {
+        noGps = findViewById(R.id.gps_indicator);
+        wa = new WindArrow(((ImageView) findViewById(R.id.windArrow)));
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(unc);
+        commManager = FirebaseDB.getInstance(this);
+        Users.Init(commManager,sharedPreferences);
+        users = Users.getInstance();
+        mapLayer = new GoogleMaps();
+        mapLayer.Init(this, this, sharedPreferences,getClickMethods());
+        iGeo = new OwnLocation(getBaseContext(), this,this);
+        myReceiver = new LocationReceiver();
     }
 
     private void setReturnedToEvent() {
@@ -379,6 +380,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     protected void onResume() {
         super.onResume();
         setReturnedToEvent();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
+                new IntentFilter(GPSService.ACTION_BROADCAST));
         Log.v(TAG, "onResume");
     }
 
@@ -403,23 +406,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            Log.v(TAG,"in run()");
             if (users.getCurrentUser()== null) Log.e(TAG,"Current user is null");
-            if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
-                myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
-                if (myBoat == null) {
-                    myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
-                    if (isCurrentEventManager(users.getCurrentUser().Uid)) {
-                        myBoat.setBuoyType(BuoyType.RACE_OFFICER);
-                    } else myBoat.setBuoyType(BuoyType.MARK_LAYER);
-                    myBoat.userUid = users.getCurrentUser().Uid;
-                    myBoat.setLeftEvent(null);
-                    commManager.writeBoatObject(myBoat);
-                }
-//                myBoat.setLoc(iGeo.getLoc());
-//                myBoat.lastUpdate = new Date().getTime();
-//                myBoat.setLeftEvent(null);
-//                commManager.writeBoatObject(myBoat);
-            }
+
             if (((OwnLocation) iGeo).isGPSFix()) {
                 noGps.setVisibility(View.INVISIBLE);
             } else {
@@ -502,8 +491,14 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         List<UUID> boatsToRemove = new LinkedList<>();
         for(DBObject b:boats){
             //900 == 15 minutes
-            if (GeoUtils.ageInSeconds(b.getLastUpdate())>900){
-                boatsToRemove.add(b.getUUID());
+            if (b.getAviLocation()!=null) {
+                if (GeoUtils.ageInSeconds(b.getAviLocation().lastUpdate) > 900) {
+                    boatsToRemove.add(b.getUUID());
+                }
+            }else{
+                if (GeoUtils.ageInSeconds(b.getLastUpdate()) > 900) {
+                    boatsToRemove.add(b.getUUID());
+                }
             }
         }
         for(UUID u: boatsToRemove){
@@ -671,8 +666,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     public void onStop() {
         super.onStop();
-        //handler.removeCallbacks(runnable);
-
         Log.v(TAG, "onStop");
     }
     /** Defines callbacks for service binding, passed to bindService() */
@@ -686,34 +679,55 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
                 mService = binder.getService();
                 mBound = true;
-                mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000, myBoat, commManager.getCurrentEvent(), commManager, iGeo, users.getCurrentUser().Uid);
+                mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000);
+                mService.requestLocationUpdates();
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            mService.stop();
+            mService.removeLocationUpdates();
+            mService = null;
             mBound = false;
         }
     };
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.v(TAG,"onDestroy");
         handler.removeCallbacks(runnable);
         // Unbind from the service
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        iGeo.stopLocationUpdates();
         if (mBound) {
+            mService.removeLocationUpdates();
+            Log.d(TAG,"Removed location updates");
             unbindService(mConnection);
-            mService.stop();
+            mService = null;
             mBound = false;
         }
+
+        super.onDestroy();
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
+            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
+            if (myBoat == null) {
+                myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
+                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                    myBoat.setBuoyType(BuoyType.RACE_OFFICER);
+                } else myBoat.setBuoyType(BuoyType.MARK_LAYER);
+                myBoat.userUid = users.getCurrentUser().Uid;
+                myBoat.setLeftEvent(null);
+                commManager.writeBoatObject(myBoat);
+            }
+        }
         if(location!=null && myBoat!=null && !viewOnly){
             myBoat.setLoc(location);
             drawOwnBoat(myBoat);
+            myBoat.lastUpdate = new Date().getTime();
+            commManager.updateBoatLocation(commManager.getCurrentEvent(), myBoat, myBoat.getAviLocation());
         }
         if (((OwnLocation) iGeo).isGPSFix()) {
             noGps.setVisibility(View.INVISIBLE);
@@ -725,12 +739,15 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     public void onBackPressed() {
         if (exit) {
-            notification.cancelAll();
+//            notification.cancelAll();
             commManager.writeLeaveEvent(users.getCurrentUser(),commManager.getCurrentEvent());
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
             // Unbind from the service
             if (mBound) {
+                mService.removeLocationUpdates();
                 unbindService(mConnection);
                 mService.stop();
+                mService = null;
                 mBound = false;
             }
             finish();
@@ -744,6 +761,20 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                     exit = false;
                 }
             }, 3 * 1000);
+        }
+    }
+
+    /**
+     * Receiver for broadcasts sent by {@link GPSService}.
+     */
+    private class LocationReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.v(TAG,"onReceive location");
+            Location location = intent.getParcelableExtra(GPSService.EXTRA_LOCATION);
+            if (location != null) {
+                onLocationChanged(location);
+            }
         }
     }
 }
