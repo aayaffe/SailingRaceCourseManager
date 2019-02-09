@@ -234,8 +234,8 @@ public class InitialCourseDescriptor implements Serializable {
         cruisersWL.markRoundingOptions = new ArrayList<>();
         cruisersWL.name = "Cruisers'";
         startfinish = new Mark("SF",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
-        mk1 = new Mark("1",1,new MarkLocation(0,0.5,true, LocationOptions.FROM_MARK_ID,0));
-        Mark mk3 = new Mark("3",2,new MarkLocation(-180,1,true,LocationOptions.FROM_MARK_ID,1));
+        mk1 = new Mark("1",1,new MarkLocation(0,1,true, LocationOptions.FROM_MARK_ID,0));
+        Mark mk3 = new Mark("3",2,new MarkLocation(-180,2,true,LocationOptions.FROM_MARK_ID,1));
         Mark dummyFinish = new Mark("dummyFinish",3,new MarkLocation(0,0.5,true,LocationOptions.FROM_MARK_ID,2),true);
         GeneralUtils.addAll(cruisersWL.marks,startfinish,mk1,mk3,dummyFinish);
         MarkRoundingOrder L1 = new MarkRoundingOrder("L1",0,1,2,3);
