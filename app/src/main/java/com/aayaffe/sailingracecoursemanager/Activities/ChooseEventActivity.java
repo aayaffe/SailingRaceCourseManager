@@ -97,7 +97,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         selectedEvent = e;
         if (selectedEvent.accessCode == null || selectedEvent.accessCode.isEmpty()) {
             enterEvent(viewOnly);
-        } else if (viewOnly || selectedEvent.getManagerUuid().equals(commManager.getLoggedInUid()) || (selectedEvent.getBoats().containsKey(commManager.getLoggedInUid()))) {
+        } else if (viewOnly || selectedEvent.getManagerUuid().equals(commManager.getLoggedInUid()) || (selectedEvent.getBoats()!=null && selectedEvent.getBoats().containsKey(commManager.getLoggedInUid()))) {
             enterEvent(viewOnly);
         } else {
             df = AccessCodeInputDialog.newInstance(this);
