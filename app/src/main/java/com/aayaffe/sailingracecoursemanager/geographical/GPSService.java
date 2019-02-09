@@ -67,7 +67,7 @@ public class GPSService extends Service {
      * than this value.
      */
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+            UPDATE_INTERVAL_IN_MILLISECONDS;
 
     private static final int NOTIFICATION_ID = 12345688;
     /**
@@ -228,7 +228,7 @@ public class GPSService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service started");
-        boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
+        boolean startedFromNotification = intent != null && intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
         // We got here because the user decided to remove location updates from the notification.
@@ -237,7 +237,7 @@ public class GPSService extends Service {
             stopSelf();
         }
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     //    /**
@@ -263,6 +263,7 @@ public class GPSService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.i(TAG, "onBind");
         return mBinder;
     }
 
@@ -282,7 +283,7 @@ public class GPSService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
         removeLocationUpdates();
         stopForeground(true);
         mServiceHandler.removeCallbacksAndMessages(null);
@@ -307,6 +308,7 @@ public class GPSService extends Service {
 
 
     public void stop() {
+        Log.i(TAG,"stop()");
         stopSelf();
     }
 
