@@ -21,24 +21,23 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
-import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
-import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeInputDialog;
-import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
-import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeInputDialog;
+import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeShowDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.EventInputDialog;
 import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
+import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tenmiles.helpstack.HSHelpStack;
 
@@ -51,13 +50,13 @@ import io.doorbell.android.Doorbell;
 public class ChooseEventActivity extends AppCompatActivity implements EventInputDialog.EventInputDialogListener, AccessCodeInputDialog.AccessCodeInputDialogListener {
 
     private static final String TAG = "ChooseEventActivity";
+    private static final int RC_SIGN_IN = 100;
     private FirebaseDB commManager;
     private FirebaseListAdapter<Event> mAdapter;
     private Users users;
     private Event selectedEvent;
     private Analytics analytics;
     private boolean loggedIn = false;
-    private static final int RC_SIGN_IN = 100;
     private Menu menu;
     private SharedPreferences sharedPreferences;
     private DialogFragment df;
@@ -70,46 +69,53 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         analytics = new Analytics(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         commManager = FirebaseDB.getInstance(this);
-        //commManager.login();
-        Users.Init(commManager,sharedPreferences);
+        Users.Init(commManager, sharedPreferences);
         users = Users.getInstance();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ListView eventsView = (ListView) findViewById(R.id.EventsList);
+        ListView eventsView = findViewById(R.id.EventsList);
         eventsView.setItemsCanFocus(false);
-
         FirebaseListOptions<Event> options = new FirebaseListOptions.Builder<Event>()
                 .setLayout(R.layout.three_line_list_item)
                 .setQuery(commManager.getFireBaseRef().child(getString(R.string.db_events)), Event.class)
                 .build();
-        mAdapter = new EventsListAdapter(options,this,commManager,users);
+        mAdapter = new EventsListAdapter(options, this, commManager, users);
         mAdapter.startListening();
         eventsView.setAdapter(mAdapter);
         eventsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event e  = (Event)parent.getItemAtPosition(position);
-                eventPressed(false,e);
+                Event e = (Event) parent.getItemAtPosition(position);
+                eventPressed(false, e);
             }
         });
         showRecentUpdateOnce(this);
     }
 
 
-    private void eventPressed(boolean viewOnly, Event e){
+    private void eventPressed(boolean viewOnly, Event e) {
         selectedEvent = e;
-        if (selectedEvent.accessCode == null || selectedEvent.accessCode.isEmpty()){
+        if (selectedEvent.accessCode == null || selectedEvent.accessCode.isEmpty()) {
             enterEvent(viewOnly);
-        }
-        else if (viewOnly ||selectedEvent.getManagerUuid().equals(commManager.getLoggedInUid()) || (selectedEvent.getBoats().containsKey(commManager.getLoggedInUid()))) {
+        } else if (viewOnly || selectedEvent.getManagerUuid().equals(commManager.getLoggedInUid()) || (selectedEvent.getBoats().containsKey(commManager.getLoggedInUid()))) {
             enterEvent(viewOnly);
-        }
-        else {
+        } else {
             df = AccessCodeInputDialog.newInstance(this);
             df.show(getFragmentManager(), "Enter_Access_Code");
         }
     }
-    private void enterEvent(boolean viewOnly){
+
+    /**
+     * Show the recent updates prompt once per version.
+     */
+    public static void showRecentUpdateOnce(Activity activity) {
+        new OneTimeAlertDialog.Builder(activity, "recent_updates_dialog" + BuildConfig.VERSION_NAME)
+                .setTitle(activity.getString(R.string.disclaimer_title))
+                .setMessage(activity.getString(R.string.disclaimer_message))
+                .show();
+    }
+
+    private void enterEvent(boolean viewOnly) {
         Intent intent = new Intent(getApplicationContext(), GoogleMapsActivity.class);
         commManager.setCurrentEvent(selectedEvent);
         intent.putExtra("eventName", selectedEvent.getName());
@@ -117,6 +123,44 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null)
+            loggedIn = true;
+        if ((auth.getCurrentUser() == null) && (!loggedIn)) {
+            startLoginActivity();
+        }
+    }
+
+    private void startLoginActivity() {
+        Log.d(TAG, "Starign login activity");
+        startActivityForResult(
+                AuthUI.getInstance().createSignInIntentBuilder()
+                        .setAvailableProviders(getSelectedProviders())
+                        .setLogo(R.mipmap.banner)
+                        .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private List<AuthUI.IdpConfig> getSelectedProviders() {
+        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+        selectedProviders.add(new AuthUI.IdpConfig.EmailBuilder()
+                .setRequireName(true)
+                .setAllowNewAccounts(true)
+                .build());
+        selectedProviders.add(new AuthUI.IdpConfig.GoogleBuilder().build());
+        return selectedProviders;
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, FirebaseBackgroundService.class));
+        mAdapter.stopListening();
+        super.onDestroy();
+    }
 
     /**
      * enter access code click
@@ -125,20 +169,13 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     public void onAccessCodeDialogPositiveClick(DialogFragment dialog) {
         EditText accessCodeText = (EditText) dialog.getDialog().findViewById(R.id.access_code);
-        if (accessCodeText==null)
+        if (accessCodeText == null)
             return;
-        if (accessCodeText.getText()==null)
+        if (accessCodeText.getText() == null)
             return;
-        if (GeneralUtils.isValid(accessCodeText.getText().toString(),Long.class,0f,999999f)&&selectedEvent.accessCode.equals(accessCodeText.getText().toString())) {
-                enterEvent(false);
+        if (GeneralUtils.isValid(accessCodeText.getText().toString(), Long.class, 0f, 999999f) && selectedEvent.accessCode.equals(accessCodeText.getText().toString())) {
+            enterEvent(false);
         }
-    }
-    /** Show the recent updates prompt once per version. */
-    public static void showRecentUpdateOnce(Activity activity) {
-        new OneTimeAlertDialog.Builder(activity, "recent_updates_dialog" + BuildConfig.VERSION_NAME)
-                .setTitle(activity.getString(R.string.disclaimer_title))
-                .setMessage(activity.getString(R.string.disclaimer_message))
-                .show();
     }
 
     public void deleteEvent(Event event) {
@@ -146,10 +183,10 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         commManager.deleteEvent(e);
-                        analytics.LogDeleteEvent(e,users.getCurrentUser());
+                        analytics.LogDeleteEvent(e, users.getCurrentUser());
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                     default:
@@ -164,41 +201,19 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser()!=null)
-            loggedIn = true;
-        if ((auth.getCurrentUser() == null)&&(!loggedIn)){
-            startLoginActivity();
-        }
-    }
-
-    private List<AuthUI.IdpConfig> getSelectedProviders() {
-        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
-        selectedProviders.add(new AuthUI.IdpConfig.EmailBuilder()
-                .setRequireName(true)
-                .setAllowNewAccounts(true)
-                .build());
-        selectedProviders.add(new AuthUI.IdpConfig.GoogleBuilder().build());
-        return selectedProviders;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu) {
         this.menu = menu;
         menu.clear();
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_event_toolbar, menu);
-        if (loggedIn)
-        {
-            enableLogin(menu,false);
-        }
-        else{
+        if (loggedIn) {
+            enableLogin(menu, false);
+        } else {
             enableLogin(menu, true);
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -219,26 +234,44 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 if (loggedIn) {
                     Users.logout();
                     enableLogin(menu, true);
-                }
-                else startLoginActivity();
+                    startLoginActivity();
+                } else startLoginActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    
 
-
-    private void startLoginActivity() {
-        startActivityForResult(
-                AuthUI.getInstance().createSignInIntentBuilder()
-                        .setAvailableProviders(getSelectedProviders())
-                        .setLogo(R.mipmap.banner)
-                        .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
-                        .build(),
-                RC_SIGN_IN);
+    private void enableLogin(Menu menu, boolean toLogin) {
+        if (toLogin) {
+            try {
+                MenuItem logItem = menu.findItem(R.id.action_logout);
+                if (logItem != null) {
+                    logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
+                    logItem.setTitle("Login");
+                }
+                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
+                addEventItem.setEnabled(false);
+                addEventItem.setVisible(false);
+//                startLoginActivity();
+            } catch (Exception e) {
+                Log.e(TAG, "Error logging in", e);
+            }
+            loggedIn = false;
+        } else {
+            try {
+                MenuItem logItem = menu.findItem(R.id.action_logout);
+                logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
+                logItem.setTitle("Logout");
+                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
+                addEventItem.setEnabled(true);
+                addEventItem.setVisible(true);
+            } catch (Exception e) {
+                Log.e(TAG, "Error logging out.", e);
+            }
+            loggedIn = true;
+        }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -246,11 +279,11 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode);
         }
-
     }
+
     private void handleSignInResponse(int resultCode) {
         if (resultCode == RESULT_OK) {
-            Log.d(TAG, "Logged in: " +FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Log.d(TAG, "Logged in: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
             enableLogin(menu, false);
             return;
         }
@@ -259,33 +292,32 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Log.d(TAG, "Login provider error");
             Toast.makeText(this, "Login canceled",
                     Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         Toast.makeText(this, "Login Error",
                 Toast.LENGTH_LONG).show();
     }
 
-
     /**
      * Event add dialog positive click listener
+     *
      * @param dialog
      */
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         EditText eventNameText = (EditText) dialog.getDialog().findViewById(R.id.eventname);
-        if ((eventNameText!=null)&&(eventNameText.getText()!=null)&&(!eventNameText.getText().toString().isEmpty())){
+        if ((eventNameText != null) && (eventNameText.getText() != null) && (!eventNameText.getText().toString().isEmpty())) {
             if (!eventNameText.getText().toString().matches(".*[\\.\\#\\$\\[\\]]+.*")) {
                 Event e = addEvent(eventNameText.getText().toString(), ((EventInputDialog) dialog).yearStart,
                         ((EventInputDialog) dialog).yearEnd, ((EventInputDialog) dialog).monthStart,
                         ((EventInputDialog) dialog).monthEnd, ((EventInputDialog) dialog).dayStart,
                         ((EventInputDialog) dialog).dayEnd);
-                if (e!=null) {
+                if (e != null) {
                     AccessCodeShowDialog.showAccessCode(this, e);
                 }
-
             }
-        }
-        else {
+        } else {
             Log.d(TAG, "Event not(!) created.");
             Toast t = Toast.makeText(this, R.string.new_event_name_not_accepted_toast_message, Toast.LENGTH_LONG);
             t.show();
@@ -293,7 +325,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
     private Event addEvent(String eventNameText, int yearStart, int yearEnd, int monthStart, int monthEnd, int dayStart, int dayEnd) {
-        if (users.getCurrentUser()!=null) {
+        if (users.getCurrentUser() != null) {
             if (commManager.getEvent(eventNameText) != null) {
                 Log.d(TAG, "Event not(!) created. Event name exists in DB");
                 Toast t = Toast.makeText(this, R.string.new_event_duplicate_name_toast_message, Toast.LENGTH_LONG);
@@ -312,56 +344,15 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             e.accessCode = Event.generateAccessCode();
             commManager.writeEvent(e);
             Calendar start = Calendar.getInstance();
-            start.set(yearStart,monthStart,dayStart);
+            start.set(yearStart, monthStart, dayStart);
             Calendar end = Calendar.getInstance();
-            end.set(yearEnd,monthEnd,dayEnd);
-            analytics.LogAddEvent(e.getName(),start.getTime(),end.getTime(),users.getCurrentUser());
+            end.set(yearEnd, monthEnd, dayEnd);
+            analytics.LogAddEvent(e.getName(), start.getTime(), end.getTime(), users.getCurrentUser());
             return e;
-        }
-        else {
-            Crashlytics.log(Log.DEBUG, TAG,"User not logged in tried to add new activity");
+        } else {
+            Crashlytics.log(Log.DEBUG, TAG, "User not logged in tried to add new activity");
             Crashlytics.logException(new Exception("User not logged in tried to add new activity"));
             return null;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(this, FirebaseBackgroundService.class));
-        mAdapter.stopListening();
-        super.onDestroy();
-    }
-
-    private void enableLogin(Menu menu, boolean toLogin){
-        if (toLogin) {
-            try {
-                MenuItem logItem = menu.findItem(R.id.action_logout);
-                if (logItem!=null) {
-                    logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
-                    logItem.setTitle("Login");
-                }
-                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
-                addEventItem.setEnabled(false);
-                addEventItem.setVisible(false);
-                startLoginActivity();
-            }catch (Exception e){
-                Log.e(TAG,"Error logging in", e);
-            }
-            loggedIn = false;
-        }
-        else{
-            try {
-                MenuItem logItem = menu.findItem(R.id.action_logout);
-                logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_logout_black_48, null));
-                logItem.setTitle("Logout");
-                MenuItem addEventItem = menu.findItem(R.id.action_add_event);
-                addEventItem.setEnabled(true);
-                addEventItem.setVisible(true);
-
-            }catch (Exception e){
-                Log.e(TAG,"Error logging out.", e);
-            }
-            loggedIn = true;
         }
     }
 

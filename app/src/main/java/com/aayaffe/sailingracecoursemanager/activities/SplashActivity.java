@@ -55,18 +55,11 @@ public class SplashActivity extends AppCompatActivity {
         commManager.setCommManagerEventListener(onConnectEventListener);
         commManager.login();
     }
-    @Override
-    protected void onStop(){
-//        stopService(serviceIntent);
-        super.onStop();
-    }
-
 
     @Override
     protected void onDestroy() {
         if(commManager!=null)
             commManager.removeCommManagerEventListener(onConnectEventListener);
-//        stopService(serviceIntent);
         super.onDestroy();
 
     }
