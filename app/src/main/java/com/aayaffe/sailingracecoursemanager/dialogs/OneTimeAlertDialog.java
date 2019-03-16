@@ -141,15 +141,6 @@ public class OneTimeAlertDialog extends AlertDialog {
             return null;
         }
 
-        /** This operation is not supported. Use `show()` instead.
-         * @throws java.lang.UnsupportedOperationException */
-//        @NonNull
-//        @Override
-//        public AlertDialog create() {
-//            throw new UnsupportedOperationException("Limitation of this subclass. " +
-//                    "Use `show()` or `OneTimeFullAlertDialog` (doesn't exist yet) instead.");
-//        }
-
         private void markShown() {
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
                     .putBoolean(prefsKey, true).apply();

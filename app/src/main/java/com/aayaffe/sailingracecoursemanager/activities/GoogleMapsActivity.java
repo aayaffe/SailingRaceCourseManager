@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -679,7 +680,9 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
                 GPSService.LocalBinder binder = (GPSService.LocalBinder) service;
                 mService = binder.getService();
                 mBound = true;
-                mService.update(Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000);
+                int refreshRate = Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000;
+                Log.i(TAG,"Set refresh rate: "+ refreshRate);
+                mService.update(refreshRate);
                 mService.requestLocationUpdates();
             }
         }
