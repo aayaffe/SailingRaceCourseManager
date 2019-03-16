@@ -139,8 +139,8 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setAvailableProviders(getSelectedProviders())
+                        .setPrivacyPolicyUrl("http://sailrace.avimarine.in/privacypolicy.html")
                         .setLogo(R.mipmap.banner)
-                        .setTosUrl("http://aayaffe.github.io/SailingRaceCourseManager/Privacy%20Policy.html")
                         .build(),
                 RC_SIGN_IN);
     }
