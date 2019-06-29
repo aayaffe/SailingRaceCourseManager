@@ -43,9 +43,9 @@ android {
     defaultConfig {
         applicationId = yourApplicationId
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode 37
-        versionName "1.77"
+        versionName "1.78"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
