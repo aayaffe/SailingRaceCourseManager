@@ -207,6 +207,7 @@
     <string name="launch_activity">Return to map</string>
     <string name="remove_location_updates">Close</string>
     <string name="notification_text">The app is sending and receiving data.</string>
+    <string name="prominent_disclosure_text"><p>AVI Sail Race collects user data including, but not limited to:\n* User location,\n* User email,\n* User name.\nThe data collected is the bare minimum required for the purpose of this application.\n\n<b>The app cannot operate without collecting that data.</b>\n\nFull <a href="http://sailrace.avimarine.in/privacypolicy.html">Privacy Policy</a></p></string>
 
 
 </resources>

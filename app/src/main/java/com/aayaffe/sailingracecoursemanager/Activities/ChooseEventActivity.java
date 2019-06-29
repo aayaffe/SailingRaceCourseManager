@@ -44,6 +44,7 @@ import com.tenmiles.helpstack.HSHelpStack;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import io.doorbell.android.Doorbell;
 
@@ -60,6 +61,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     private Menu menu;
     private SharedPreferences sharedPreferences;
     private DialogFragment df;
+    static final int PROMINENT_DISCLOSURE_ACTIVITY_REQUEST = 9547;  // The request code
 
 
     @Override
@@ -126,6 +128,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG,"On Start");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null)
             loggedIn = true;
@@ -135,7 +138,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     }
 
     private void startLoginActivity() {
-        Log.d(TAG, "Starign login activity");
+        Log.d(TAG, "Starting login activity");
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setAvailableProviders(getSelectedProviders())
@@ -231,15 +234,19 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 new Doorbell(this, 5756, getString(R.string.doorbellioKey)).show();
                 return true;
             case R.id.action_logout:
-                if (loggedIn) {
-                    Users.logout();
-                    enableLogin(menu, true);
-                    startLoginActivity();
-                } else startLoginActivity();
+//                if (loggedIn) {
+                    logout();
+//                } else startLoginActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void logout() {
+        Users.logout();
+        enableLogin(menu, true);
+        startLoginActivity();
     }
 
     private void enableLogin(Menu menu, boolean toLogin) {
@@ -247,13 +254,12 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             try {
                 MenuItem logItem = menu.findItem(R.id.action_logout);
                 if (logItem != null) {
-                    logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null)); //TODO: Resize to match logout
+                    logItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_login_black_48, null));
                     logItem.setTitle("Login");
                 }
                 MenuItem addEventItem = menu.findItem(R.id.action_add_event);
                 addEventItem.setEnabled(false);
                 addEventItem.setVisible(false);
-//                startLoginActivity();
             } catch (Exception e) {
                 Log.e(TAG, "Error logging in", e);
             }
@@ -279,11 +285,17 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         if (requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode);
         }
+        else if (requestCode == PROMINENT_DISCLOSURE_ACTIVITY_REQUEST){
+            handleProminentDisclosureResult(resultCode);
+        }
     }
+
+
 
     private void handleSignInResponse(int resultCode) {
         if (resultCode == RESULT_OK) {
-            Log.d(TAG, "Logged in: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Log.d(TAG, "Logged in: " + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+            startProminentDisclosureActivity();
             enableLogin(menu, false);
             return;
         }
@@ -297,6 +309,21 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         }
         Toast.makeText(this, "Login Error",
                 Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * This method will start the Privacy Policy prominent disclosure Activity.
+     */
+    private void startProminentDisclosureActivity() {
+        Intent i = new Intent(getApplicationContext(), ProminentDisclosureActivity.class);
+        startActivityForResult(i, PROMINENT_DISCLOSURE_ACTIVITY_REQUEST);
+    }
+
+    private void handleProminentDisclosureResult(int resultCode) {
+        if (resultCode != RESULT_OK){
+            Users.logout();
+            loggedIn=false;
+        }
     }
 
     /**
