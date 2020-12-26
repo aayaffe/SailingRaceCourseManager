@@ -20,7 +20,7 @@
         android:contentDescription="@string/course_type"/>
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/course_type_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

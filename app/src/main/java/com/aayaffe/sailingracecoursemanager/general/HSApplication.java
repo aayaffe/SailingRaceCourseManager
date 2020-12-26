@@ -1,9 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.general;
 
-import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.aayaffe.sailingracecoursemanager.R;
 import com.tenmiles.helpstack.HSHelpStack;

@@ -2,7 +2,7 @@ package com.aayaffe.sailingracecoursemanager.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +22,6 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

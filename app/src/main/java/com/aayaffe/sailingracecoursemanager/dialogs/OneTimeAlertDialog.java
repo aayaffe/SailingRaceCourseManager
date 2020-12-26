@@ -28,7 +28,7 @@ package com.aayaffe.sailingracecoursemanager.dialogs;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /** An AlertDialog that will only appear once for the given key.
  *

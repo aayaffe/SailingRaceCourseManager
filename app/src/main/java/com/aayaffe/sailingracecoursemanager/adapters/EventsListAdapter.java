@@ -1,15 +1,13 @@
 package com.aayaffe.sailingracecoursemanager.adapters;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.User;
@@ -18,7 +16,6 @@ import com.aayaffe.sailingracecoursemanager.activities.ChooseEventActivity;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.firebase.database.Query;
 
 /**
  * Avi Marine Innovations - www.avimarine.in
