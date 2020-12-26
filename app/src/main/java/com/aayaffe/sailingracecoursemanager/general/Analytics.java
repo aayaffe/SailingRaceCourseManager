@@ -21,10 +21,13 @@ public class Analytics {
     public enum EventName {
         ADD_EVENT,DELETE_EVENT,ENTER_EVENT,LEAVE_EVENT,ADD_RACECOURSE,ADD_BUOY
     }
-    public Analytics(Context c) {
+    public Analytics(Context c, String userId, Boolean admin) {
         if (firebaseAnalytics == null) {
             firebaseAnalytics = FirebaseAnalytics.getInstance(c);
         }
+        firebaseAnalytics.setUserId(userId);
+        firebaseAnalytics.setUserProperty("role", admin?"admin":null);
+
     }
     public void LogAddEvent(String name, Date start, Date end, User u){
         try{
