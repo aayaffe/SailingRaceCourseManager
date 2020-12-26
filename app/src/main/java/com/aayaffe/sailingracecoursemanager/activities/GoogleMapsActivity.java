@@ -50,7 +50,7 @@ import com.aayaffe.sailingracecoursemanager.geographical.OwnLocation;
 import com.aayaffe.sailingracecoursemanager.geographical.WindArrow;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.android.gms.location.LocationListener;
 
 import org.jetbrains.annotations.Contract;
@@ -109,7 +109,8 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         setIconsClickListeners();
         setupToolbar();
         Log.d(TAG, "Selected Event name is: " + currentEventName);
-        Crashlytics.log("Current event name = " + currentEventName);
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        crashlytics.log("Current event name = " + currentEventName);
         commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),true);
         ((FirebaseDB)commManager).setEventDeleted(e -> {
             commManager.subscribeToEventDeletion(commManager.getCurrentEvent(),false);
@@ -613,6 +614,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_RACE_COURSE_REQUEST && resultCode == RESULT_OK) {
             RaceCourse rc = (RaceCourse) data.getExtras().getSerializable("RACE_COURSE");
             legs = (Legs) data.getExtras().getSerializable("LEGS");

@@ -34,7 +34,7 @@ import com.aayaffe.sailingracecoursemanager.dialogs.OneTimeAlertDialog;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.general.Analytics;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
@@ -377,8 +377,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             analytics.LogAddEvent(e.getName(), start.getTime(), end.getTime(), users.getCurrentUser());
             return e;
         } else {
-            Crashlytics.log(Log.DEBUG, TAG, "User not logged in tried to add new activity");
-            Crashlytics.logException(new Exception("User not logged in tried to add new activity"));
+            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+            crashlytics.log("User not logged in tried to add new activity");
+            crashlytics.log("E/TAG: User not logged in tried to add new activity");
             return null;
         }
     }

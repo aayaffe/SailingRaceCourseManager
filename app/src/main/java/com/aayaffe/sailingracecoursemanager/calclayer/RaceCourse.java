@@ -7,7 +7,7 @@ import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -70,8 +70,9 @@ public class RaceCourse implements Serializable{
         try {
             bouyList = l.parseBuoys(signalBoatLoc, dist2m1, windDir, (float) startLineDist, (float) gateLength, raceCourseUUID, selectedOptions);
         } catch(RaceCourseException e){
-            Crashlytics.log(Log.DEBUG, TAG,"Failed to parse buoys");
-            Crashlytics.logException(e);
+            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+            crashlytics.log("Failed to parse buoys");
+            crashlytics.recordException(e);
             Log.e(TAG,"Failed to parse buoys",e);
             Toast.makeText(context, R.string.error_adding_race_course, Toast.LENGTH_LONG).show();
         }

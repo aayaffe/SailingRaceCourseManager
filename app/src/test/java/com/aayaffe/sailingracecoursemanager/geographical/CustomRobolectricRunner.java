@@ -14,8 +14,8 @@ public class CustomRobolectricRunner extends RobolectricTestRunner {
     public CustomRobolectricRunner(Class<?> testClass)
             throws InitializationError {
         super(testClass);
-        String buildVariant = (BuildConfig.FLAVOR.isEmpty()
-                ? "" : BuildConfig.FLAVOR+ "/") + BuildConfig.BUILD_TYPE;
+        String buildVariant = /*(BuildConfig.FLAVOR.isEmpty()
+                ? "" : BuildConfig.FLAVOR+ "/") + */BuildConfig.BUILD_TYPE;
         String intermediatesPath = BuildConfig.class.getResource("")
                 .toString().replace("file:", "");
         intermediatesPath = intermediatesPath
