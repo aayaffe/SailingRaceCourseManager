@@ -1,1 +1,3 @@
+include ':OrcCertificates'
 include ':app'
+project(':OrcCertificates').projectDir = new File(rootDir, 'orccertificatesimporter/orccertificatesimporter/')
