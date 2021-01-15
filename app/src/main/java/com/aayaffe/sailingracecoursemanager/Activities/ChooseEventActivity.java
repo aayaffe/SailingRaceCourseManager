@@ -25,6 +25,7 @@ import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.R;
 import com.aayaffe.sailingracecoursemanager.Users.Users;
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
+import com.aayaffe.sailingracecoursemanager.db.FeatureFlags;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseDB;
 import com.aayaffe.sailingracecoursemanager.dialogs.AccessCodeInputDialog;
@@ -68,11 +69,15 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_event);
-        analytics = new Analytics(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         commManager = FirebaseDB.getInstance(this);
         Users.Init(commManager, sharedPreferences);
         users = Users.getInstance();
+        analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
+
+        FeatureFlags featureFlags = new FeatureFlags();
+        Log.d(TAG, "bluetooth_race_horn = " + featureFlags.getFlag("bluetooth_race_horn"));
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView eventsView = findViewById(R.id.EventsList);
