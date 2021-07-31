@@ -73,8 +73,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         commManager = FirebaseDB.getInstance(this);
         Users.Init(commManager, sharedPreferences);
         users = Users.getInstance();
-        analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
-
+        if (users.getCurrentUser() != null) {
+            analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
+        }
         FeatureFlags featureFlags = new FeatureFlags();
         Log.d(TAG, "bluetooth_race_horn = " + featureFlags.getFlag("bluetooth_race_horn"));
 
@@ -135,10 +136,20 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         super.onStart();
         Log.d(TAG,"On Start");
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        ListView eventsView = findViewById(R.id.EventsList);
+        if (auth.getCurrentUser()!=null){
+            eventsView.setVisibility(View.VISIBLE);
+        }
+        else {
+            eventsView.setVisibility(View.INVISIBLE);
+        }
         if (auth.getCurrentUser() != null)
             loggedIn = true;
         if ((auth.getCurrentUser() == null) && (!loggedIn)) {
             startLoginActivity();
+        }
+        if (analytics==null && users.getCurrentUser()!= null){
+            analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
         }
     }
 
@@ -302,6 +313,9 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             Log.d(TAG, "Logged in: " + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
             startProminentDisclosureActivity();
             enableLogin(menu, false);
+            if (mAdapter!=null) {
+                mAdapter.notifyDataSetChanged();
+            }
             return;
         }
 
