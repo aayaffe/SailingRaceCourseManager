@@ -4,7 +4,7 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseTiming;
 
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class DistanceDialogTest {
         b.setBoatClass("TestClass1");
         b.setTargettime(12);
         DistanceDialog dd = new DistanceDialog(null, null);
-        assertEquals(4.125, dd.calcDistByClassWind(b,10,50,l),0.0001);
+        assertEquals(4.125, RaceCourseTiming.calcDistByClassWind(b,10,50,l),0.0001);
     }
 
 }

@@ -21,7 +21,7 @@ public class RaceCourseStatisticsTest {
         b.setVmg(arr);
         b.setBoatClass("TestClass1");
         b.setTargettime(12);
-        assertEquals(12.5,RaceCourseStatistics.GetSailTime(b,l,l.markRoundingOptions.get(0),1,10),0.0001);
+        assertEquals(12.5, RaceCourseTiming.GetSailTime(b,l,l.markRoundingOptions.get(0),1,10),0.0001);
 
     }
 
