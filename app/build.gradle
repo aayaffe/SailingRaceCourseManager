@@ -34,16 +34,13 @@ android {
                 keyPassword = keystoreProperties['keyPassword']
             }
         }
-//        else{
-//            environment "AVI_VER", "1.75"
-//        }
     }
 
 
     compileSdkVersion 30
     defaultConfig {
         applicationId = yourApplicationId
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 38
         versionName "1.79"
@@ -115,8 +112,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-core'
