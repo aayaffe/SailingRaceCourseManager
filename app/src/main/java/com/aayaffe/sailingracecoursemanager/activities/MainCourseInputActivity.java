@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.db.FeatureFlags;
 import com.aayaffe.sailingracecoursemanager.dialogs.ClassDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
@@ -213,6 +214,13 @@ public class MainCourseInputActivity extends Activity {
                 });
             }
         });
+        FeatureFlags featureFlags = new FeatureFlags();
+        Log.d(TAG, "orc_certs = " + featureFlags.getFlag("orc_certs"));
+        if (featureFlags.getFlag("orc_certs")){
+            classSelectButton.setVisibility(View.VISIBLE);
+        } else {
+            classSelectButton.setVisibility(View.GONE);
+        }
 
     }
 
