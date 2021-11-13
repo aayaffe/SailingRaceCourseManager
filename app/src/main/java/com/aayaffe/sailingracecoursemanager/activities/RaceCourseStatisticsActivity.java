@@ -21,7 +21,7 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseDescriptor;
-import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseStatistics;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseTiming;
 
 import java.util.List;
 
@@ -87,7 +87,7 @@ public class RaceCourseStatisticsActivity extends AppCompatActivity {
                     TextView tv1 = new TextView(getApplicationContext());
                     tv1.setText(mro.getName());
                     TextView tv2 = new TextView(getApplicationContext());
-                    tv2.setText(String.valueOf(Math.round(RaceCourseStatistics.GetSailTime(b, l, mro, dist2m1, windSpeed))));
+                    tv2.setText(String.valueOf(Math.round(RaceCourseTiming.GetSailTime(b, l, mro, dist2m1, windSpeed))));
                     tv1.setTextSize(18);
                     tv1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     tv1.setTextColor(Color.WHITE);

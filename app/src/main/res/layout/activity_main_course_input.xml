@@ -90,15 +90,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center">
-    <Button
-        android:id="@+id/apply_race_course_input_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cmark_blue_light"
-        android:textColor="@color/cmark_orange_light"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:text="@string/apply_button_text" />
+
+        <Button
+            android:id="@+id/apply_race_course_input_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/cmark_blue_light"
+            android:text="@string/apply_button_text"
+            android:textColor="@color/cmark_orange_light"
+            android:textStyle="bold" />
     <Button
         android:id="@+id/cancel_race_course_input_button"
         android:layout_width="fill_parent"
@@ -117,5 +118,15 @@
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:text="@string/course_statistics_button" />
+
+        <Button
+            android:id="@+id/course_select_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cmark_blue_light"
+            android:textColor="@color/cmark_orange_light"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="@string/course_statistics_button" />
     </LinearLayout>
 </LinearLayout>

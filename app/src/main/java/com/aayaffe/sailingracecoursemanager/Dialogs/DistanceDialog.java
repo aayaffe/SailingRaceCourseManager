@@ -21,6 +21,7 @@ import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescript
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.Legs;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.MarkRoundingOrder;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseDescription.RaceCourseException;
+import com.aayaffe.sailingracecoursemanager.initializinglayer.RaceCourseTiming;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,7 +143,7 @@ public class DistanceDialog extends Dialog {
                         dismiss();
                         break;
                     case 1:
-                        double dist =calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), legs);
+                        double dist = RaceCourseTiming.calcDistByClassWind(boats.get(spinner.getSelectedItemPosition()), windPicker.getNumber(), targetTimePicker.getNumber(), legs);
                         if (dist<0)
                                 Toast.makeText(context, "Unable to calculate course automatically!!", Toast.LENGTH_LONG).show();
                         else {
@@ -175,35 +176,7 @@ public class DistanceDialog extends Dialog {
         void finish(double dist2M1, double startLineLength, double gateLength, double windSpeed);
     }
 
-    /**
-     *
-     * @param b - boat class descriptor
-     * @param wind - wind speed in knots
-     * @param targetTime - in minutes
-     * @return dist2M1 or -1 if faild
-     */
-    public double calcDistByClassWind (Boat b, double wind, double targetTime, Legs l){  //finds the first leg length, since it equals 1 in the factor.
-        //dist2M1 = ((targetTime/speed)-AbsoluteDistance)/RelativeDistance
-        if (GeneralUtils.isNull(b,l)) return -1;
-        MarkRoundingOrder mro = l.defaultMarkRounding;
-        if (mro==null) return -1;
-        double[] Abs = new double[3];
-        double[] Rel = new double[3];
-        for(Boat.PointOfSail p: Boat.PointOfSail.values()) {
-            try {
-                double vmg = b.getVmg(wind, p);
-                double length = l.GetLength(mro, p, DistanceType.Relative);
-                Rel[p.ordinal()] = length * vmg;
-                length = l.GetLength(mro, p, DistanceType.Absolute);
-                Abs[p.ordinal()] = length * vmg;
-            } catch (RaceCourseException e) {
-                Log.e(TAG, "Error calculating!", e);
-                return -1;
-            }
-        }
-        Log.d(TAG,"Dist 2 M1 calculted is: "+ (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]));
-        return (targetTime-(Abs[0]+Abs[1]+Abs[2]))/(Rel[0]+Rel[1]+Rel[2]);
-    }
+
 
 
 }

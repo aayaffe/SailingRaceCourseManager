@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.aayaffe.sailingracecoursemanager.calclayer.RaceCourse;
+import com.aayaffe.sailingracecoursemanager.dialogs.ClassDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.Boat;
 import com.aayaffe.sailingracecoursemanager.initializinglayer.InitialCourseDescriptor;
@@ -194,6 +195,22 @@ public class MainCourseInputActivity extends Activity {
                 i.putExtra("WindSpeed",windSpeed);
 
                 startActivity(i);
+            }
+        });
+        Button classSelectButton = (Button) findViewById(R.id.course_select_button);
+        classSelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ClassDialog dialog = new ClassDialog(context , boats, legs);
+                dialog.show();
+                dialog.setDialogResult((dist2M1, startLine, gate, windSpeed) -> {
+                    //something to do
+                    dist2m1 = (float) dist2M1;
+                    startLineLength = (float) GeoUtils.toNauticalMiles(startLine);
+                    gateLength = (float) GeoUtils.toNauticalMiles(gate);
+                    MainCourseInputActivity.windSpeed = windSpeed;
+                });
             }
         });
 
