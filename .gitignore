@@ -12,11 +12,6 @@
 *.apk
 ######Avi Sail Race Specific keys and values#######
 keystore.properties
-/app/src/release/google-services.json
-/app/src/debug/google-services.json
-/app/src/debuggableRelease/google-services.json
-/app/src/staging/google-services.json
-
 google_maps_api.xml
 firebase_urls.xml
 doorbellio.xml
@@ -31,7 +26,7 @@ doorbellio.xml
 /app/src/debug/res/values/firebase_urls.xml
 
 
-/app/google-services.json
+google-services*.json
 
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
@@ -121,6 +116,5 @@ captures/
 # Keystore files
 *.jks
 
-app/google-services-old.json
 app/release/output.json
 codeiris/
