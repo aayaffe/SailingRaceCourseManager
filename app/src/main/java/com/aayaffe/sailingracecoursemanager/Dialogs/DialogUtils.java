@@ -43,7 +43,7 @@ public class DialogUtils {
             DialogInterface.OnClickListener positiveButtonListener,
             DialogInterface.OnClickListener negativeButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.version_not_supported_dialog_title);
+        builder.setTitle(titleId);
         builder.setMessage(messageId);
         builder.setPositiveButton(R.string.dlg_ok, positiveButtonListener);
         builder.setNegativeButton(R.string.dlg_cancel, negativeButtonListener);

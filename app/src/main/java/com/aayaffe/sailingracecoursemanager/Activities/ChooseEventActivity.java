@@ -40,7 +40,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.tenmiles.helpstack.HSHelpStack;
+//import com.tenmiles.helpstack.HSHelpStack;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -243,7 +243,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
                 return true;
             case R.id.action_get_help:
                 Log.d(TAG, "Get help pressed");
-                HSHelpStack.getInstance(this).showHelp(this);
+//                HSHelpStack.getInstance(this).showHelp(this);
                 return true;
             case R.id.action_feedback:
                 Log.d(TAG, "Give feedback pressed");
