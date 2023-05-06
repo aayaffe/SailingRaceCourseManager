@@ -136,13 +136,11 @@ public class GPSService extends Service {
     }
 
     private void onNewLocation(Location location) {
-        Log.i(TAG, "New location: " + location);
         mLocation = location;
         // Notify anyone listening for broadcasts about the new location.
         Intent intent = new Intent(ACTION_BROADCAST);
         intent.putExtra(EXTRA_LOCATION, location);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
     }
 
 
@@ -206,7 +204,7 @@ public class GPSService extends Service {
                 .setSmallIcon(R.mipmap.sailingracecoursemanager_white_ic)
                 .setTicker(text)
                 .setWhen(System.currentTimeMillis())
-                .setVisibility(VISIBILITY_PUBLIC);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         // Set the Channel ID for Android O.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(CHANNEL_ID); // Channel ID

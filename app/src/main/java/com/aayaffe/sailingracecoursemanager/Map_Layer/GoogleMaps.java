@@ -130,9 +130,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
 
     public void addBuoy(DBObject buoy, String snippet) {
         if (uuidToMarker.containsKey(buoy.getUUID())) {
-            Marker currentMarker;
-            currentMarker = uuidToMarker.get(buoy.getUUID());
-            currentMarker = updateBuoy(buoy, currentMarker, snippet);
+            Marker currentMarker = updateBuoy(buoy, uuidToMarker.get(buoy.getUUID()), snippet);
             if (currentMarker.isInfoWindowShown()) {
                 currentMarker.showInfoWindow();
             }

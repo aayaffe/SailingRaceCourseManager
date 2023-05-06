@@ -46,7 +46,6 @@ public class FirebaseBackgroundService extends Service {
         vel = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "in onDataChange");
                 FirebaseDB.ds = dataSnapshot;
                 if (users.getCurrentUser() == null) {
                     Users.setCurrentUser(FirebaseDB.getInstance(FirebaseBackgroundService.this).findUser(FirebaseDB.getInstance(FirebaseBackgroundService.this).getLoggedInUid()));

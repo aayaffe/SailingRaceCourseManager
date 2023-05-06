@@ -4,9 +4,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.aayaffe.sailingracecoursemanager.db.FirestoreDB;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Avi Marine Innovations - www.avimarine.in
@@ -46,7 +51,6 @@ public class Users {
             currentUser = commManager.findUser(commManager.getLoggedInUid());
         }
         return currentUser;
-
     }
 
     public static void setCurrentUser(User currentUser) {
@@ -57,8 +61,12 @@ public class Users {
             editor.putString("UID", currentUser.Uid);
             editor.apply();
         }
-        if (commManager!=null)
+        if (commManager!=null) {
             commManager.addUser(Users.currentUser);
+            if (Users.currentUser!=null)
+                FirestoreDB.Companion.addUser(Users.currentUser);
+        }
+
     }
     public static void setCurrentUser(String Uid, String displayName) {
         Log.d(TAG,"Uid = "+Uid+" displayName = " + displayName);
