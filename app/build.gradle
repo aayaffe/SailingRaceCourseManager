@@ -9,17 +9,6 @@ tasks.matching { it instanceof Test }.all {
 
 def final yourApplicationId = 'com.aayaffe.sailingracecoursemanager'
 
-sonarqube {
-    properties {
-        property "sonar.projectName", "SailingRaceCourseManager"
-        property "sonar.projectKey", "AVI"
-        //property "sonar.exclusions","build/**,**/*.png"
-        //property "sonar.import_unknown_files", true
-        //property "sonar.android.lint.report", "./build/outputs/lint-results.xml"
-    }
-}
-
-
 android {
     signingConfigs {
         if (!System.getenv("TRAVIS")) {
@@ -94,8 +83,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     namespace 'com.aayaffe.sailingracecoursemanager'
 }
@@ -119,14 +108,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.firebaseui:firebase-ui-database:7.1.1'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     implementation 'com.google.guava:guava:31.1-android'
     implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'com.borax12.materialdaterangepicker:library:2.0'
-//    implementation 'com.tenmiles:helpstack:1.2.0'
     implementation 'io.doorbell:android-sdk:0.4.3@aar'
     implementation 'org.jetbrains:annotations:16.0.2'
+    implementation 'androidx.core:core-ktx:1.10.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.19.0'
@@ -138,3 +128,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.jetbrains.kotlin.android'
