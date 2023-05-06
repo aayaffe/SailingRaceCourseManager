@@ -118,3 +118,4 @@ captures/
 
 app/release/output.json
 codeiris/
+app/debug/output-metadata.json

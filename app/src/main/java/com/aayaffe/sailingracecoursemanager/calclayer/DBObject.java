@@ -208,45 +208,45 @@ public class DBObject implements Serializable {
 
     @Exclude
     public int getIconResourceId() {
-        if (this.getBuoyType() == BuoyType.FLAG_BUOY || this.getBuoyType() == BuoyType.FINISH_LINE || this.getBuoyType() == BuoyType.START_LINE || this.getBuoyType() == BuoyType.START_FINISH_LINE) {
-            switch (this.color) {
-                case Color.RED:
-                    return R.mipmap.flag_buoy_red;
-                case Color.BLUE:
-                    return R.mipmap.flag_buoy_blue;
-                case Color.YELLOW:
-                    return R.mipmap.flag_buoy_yellow;
-                case ORANGE:
-                default:
-                    return R.mipmap.flag_buoy_orange;
-            }
-        } else if (this.getBuoyType() == BuoyType.TOMATO_BUOY || this.getBuoyType() == BuoyType.BUOY || this.getBuoyType() == BuoyType.GATE) {
+//        if (this.getBuoyType() == BuoyType.FLAG_BUOY || this.getBuoyType() == BuoyType.FINISH_LINE || this.getBuoyType() == BuoyType.START_LINE || this.getBuoyType() == BuoyType.START_FINISH_LINE) {
+//            switch (this.color) {
+//                case Color.RED:
+//                    return R.mipmap.flag_buoy_red;
+//                case Color.BLUE:
+//                    return R.mipmap.flag_buoy_blue;
+//                case Color.YELLOW:
+//                    return R.mipmap.flag_buoy_yellow;
+//                case ORANGE:
+//                default:
+//                    return R.mipmap.flag_buoy_orange;
+//            }
+//        } else if (this.getBuoyType() == BuoyType.TOMATO_BUOY || this.getBuoyType() == BuoyType.BUOY || this.getBuoyType() == BuoyType.GATE) {
 
             switch (this.color) {
                 case Color.RED:
-                    return R.mipmap.tomato_buoy_red;
+                    return R.drawable.buoy_red;
                 case Color.BLUE:
-                    return R.mipmap.tomato_buoy_blue;
+                    return R.drawable.buoy_blue;
                 case Color.YELLOW:
-                    return R.mipmap.tomato_buoy_yellow;
+                    return R.drawable.buoy_yellow;
                 case ORANGE:
                 default:
-                    return R.mipmap.tomato_buoy_orange;
+                    return R.drawable.buoy_orange;
             }
-        } else if (this.getBuoyType() == BuoyType.TRIANGLE_BUOY) {
-            switch (this.color) {
-                case Color.RED:
-                    return R.mipmap.triangle_buoy_red;
-                case Color.BLUE:
-                    return R.mipmap.triangle_buoy_blue;
-                case Color.YELLOW:
-                    return R.mipmap.triangle_buoy_yellow;
-                case ORANGE:
-                default:
-                    return R.mipmap.triangle_buoy_orange;
-            }
-        } else
-            return R.mipmap.tomato_buoy_black_empty;
+//        } else if (this.getBuoyType() == BuoyType.TRIANGLE_BUOY) {
+//            switch (this.color) {
+//                case Color.RED:
+//                    return R.mipmap.triangle_buoy_red;
+//                case Color.BLUE:
+//                    return R.mipmap.triangle_buoy_blue;
+//                case Color.YELLOW:
+//                    return R.mipmap.triangle_buoy_yellow;
+//                case ORANGE:
+//                default:
+//                    return R.mipmap.triangle_buoy_orange;
+//            }
+//        } else
+//            return R.mipmap.tomato_buoy_black_empty;
     }
 
     @Override

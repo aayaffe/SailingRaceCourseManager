@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 
@@ -19,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -132,10 +138,34 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             }
         } else if (mapView != null) {
             int resourceID = buoy.getIconResourceId();
-            Marker marker = mapView.addMarker(new MarkerOptions().position(buoy.getLatLng()).icon(BitmapDescriptorFactory.fromResource(resourceID)).title(buoy.getName()).snippet(snippet));
+//            Marker marker = mapView.addMarker(new MarkerOptions().position(buoy.getLatLng()).icon(BitmapDescriptorFactory.fromResource(resourceID)).title(buoy.getName()).snippet(snippet));
+            Marker marker = mapView.addMarker(
+                    new MarkerOptions()
+                            .position(buoy.getLatLng())
+                            .icon(BitmapFromVector(c,resourceID))
+                            .title(buoy.getName())
+                            .anchor(0.5f, 0.5f)
+                            .snippet(snippet));
+
             uuidToMarker.put(buoy.getUUID(), marker);
             uuidToId.put(buoy.getUUID(), marker.getId());
         }
+    }
+    private BitmapDescriptor
+    BitmapFromVector(Context context, int vectorResId)
+    {
+        Drawable vectorDrawable = ContextCompat.getDrawable(
+                context, vectorResId);
+        vectorDrawable.setBounds(
+                0, 0, vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(
+                vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     public Marker addMark(DBObject ao, String caption, int resourceID, int zIndex) {
