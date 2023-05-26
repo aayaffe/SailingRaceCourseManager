@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.GnssStatus;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -78,8 +81,11 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
         mGoogleApiClient.connect();
         LocationManager locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
         if (checkForLocationPermission()){
-            //Deprecated in API 24 only. wait for a while before replacing
-            locationManager.addGpsStatusListener(new MyGPSListener());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                locationManager.registerGnssStatusCallback(new GnssStatusCallback(), null);
+            } else {
+                locationManager.addGpsStatusListener(new MyGPSListener());
+            }
             gpsInitialised = true;
         }
     }
@@ -163,6 +169,21 @@ public class OwnLocation implements IGeo, LocationListener, GoogleApiClient.Conn
                     isGPSFix = true;
                     break;
             }
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private class GnssStatusCallback extends GnssStatus.Callback {
+        @Override
+        public void onFirstFix(int ttffMillis) {
+            super.onFirstFix(ttffMillis);
+            isGPSFix = true;
+        }
+
+        @Override
+        public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
+            super.onSatelliteStatusChanged(status);
+            if (mLastLocation != null)
+                isGPSFix();
         }
     }
 }
