@@ -21,13 +21,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_weight="0.3">
+                android:layout_weight="0.3"
+                android:layout_marginStart="8dp">
 
                 <TextView
                     android:id="@+id/tv_course_type"
@@ -91,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Time"
+                    android:text="Time in minutes"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:visibility="visible"/>

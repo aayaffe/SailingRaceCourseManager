@@ -182,8 +182,7 @@
     <string name="choose_class">Choose Class</string>
     <string name="choose_country">Choose Country</string>
     <string name="choose_boat">Choose Boat</string>
-
-    <string name="wind_speed">Wind Speed</string>
+    <string name="wind_speed">Wind Speed in Knots</string>
     <string name="target_time">Target Time</string>
     <string name="number_of_boats">Number of boats</string>
     <string name="gate_width_boat_lengths">Gate width (Boat lengths)</string>
