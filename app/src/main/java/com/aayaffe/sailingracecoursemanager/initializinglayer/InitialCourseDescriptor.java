@@ -318,9 +318,9 @@ public class InitialCourseDescriptor implements Serializable {
         cruisersTriangle.markRoundingOptions = new ArrayList<>();
         cruisersTriangle.name = "Cruisers Triangle";
         Mark start = new Mark("SF",0,new MarkLocation(0,0,true, LocationOptions.FROM_RACE_COMMITTEE),new GateConfiguration(GateType.START_FINISH_LINE, GateOption.ALWAYS_GATED,-90,0.027, GateReference.RIGHT_MARK,true));
-        Mark mk1 = new Mark("1",1,new MarkLocation(0,0.5,true,LocationOptions.FROM_MARK_ID,0));
-        Mark mk2 = new Mark("2",2,new MarkLocation(-120,1,true,LocationOptions.FROM_MARK_ID,1));
-        Mark mk3 = new Mark("3",3,new MarkLocation(120,1,true,LocationOptions.FROM_MARK_ID,2));
+        Mark mk1 = new Mark("1",1,new MarkLocation(0,1,true,LocationOptions.FROM_MARK_ID,0));
+        Mark mk2 = new Mark("2",2,new MarkLocation(-135,Math.sqrt(2),true,LocationOptions.FROM_MARK_ID,1));
+        Mark mk3 = new Mark("3",3,new MarkLocation(135,Math.sqrt(2),true,LocationOptions.FROM_MARK_ID,2));
         Mark dummyFinish = new Mark("DummyFinish",4,new MarkLocation(0, 0.5 ,true,LocationOptions.FROM_MARK_ID,3),true);
         GeneralUtils.addAll(cruisersTriangle.marks,start,mk1,mk2,mk3,dummyFinish);
         MarkRoundingOrder R1 = new MarkRoundingOrder("R1",0,1,2,3,4);
