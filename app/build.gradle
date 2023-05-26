@@ -31,8 +31,8 @@ android {
         applicationId = yourApplicationId
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 39
-        versionName "1.8"
+        versionCode 40
+        versionName "1.81"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
         resourceConfigurations += ['en']
@@ -79,6 +79,7 @@ android {
         unitTests.all {
             jacoco {
                 includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
             }
         }
     }
@@ -116,7 +117,7 @@ dependencies {
     implementation 'com.borax12.materialdaterangepicker:library:2.0'
     implementation 'io.doorbell:android-sdk:0.4.3@aar'
     implementation 'org.jetbrains:annotations:16.0.2'
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.19.0'
