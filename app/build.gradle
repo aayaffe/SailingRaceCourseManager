@@ -98,9 +98,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.core:core:1.6.0'
+    implementation 'androidx.core:core:1.10.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0' //version 21 breaks the app (very slow map update)
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
