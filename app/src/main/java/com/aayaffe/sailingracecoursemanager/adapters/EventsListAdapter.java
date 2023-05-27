@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.User;
-import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.users.User;
+import com.aayaffe.sailingracecoursemanager.users.Users;
 import com.aayaffe.sailingracecoursemanager.activities.ChooseEventActivity;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -102,7 +102,7 @@ public class EventsListAdapter extends FirebaseListAdapter<Event> {
             ((TextView) view.findViewById(android.R.id.text2)).setText(mActivity.getString(R.string.race_officer) + ": " +mActivity.getString(R.string.unknown));
         }
         else {
-            ((TextView) view.findViewById(android.R.id.text2)).setText(mActivity.getString(R.string.race_officer) + ": " + manager.DisplayName);
+            ((TextView) view.findViewById(android.R.id.text2)).setText(mActivity.getString(R.string.race_officer) + ": " + manager.displayName);
         }
         ((TextView) view.findViewById(R.id.text3)).setText(dates);
     }

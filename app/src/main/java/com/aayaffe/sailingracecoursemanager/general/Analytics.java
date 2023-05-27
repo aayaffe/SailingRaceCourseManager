@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.aayaffe.sailingracecoursemanager.events.Event;
-import com.aayaffe.sailingracecoursemanager.Users.User;
+import com.aayaffe.sailingracecoursemanager.users.User;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -35,8 +35,8 @@ public class Analytics {
             params.putString("EVENT_NAME", name);
             params.putString("DATE_START", start.toString());
             params.putString("DATE_END", end.toString());
-            params.putString("USER_NAME", u.DisplayName);
-            params.putString("UID", u.Uid);
+            params.putString("USER_NAME", u.displayName);
+            params.putString("UID", u.uid);
             firebaseAnalytics.logEvent(EventName.ADD_EVENT.name(), params);
         } catch (Exception e){
             FirebaseCrashlytics.getInstance().recordException(e);
@@ -47,8 +47,8 @@ public class Analytics {
             Bundle params = new Bundle();
             params.putString("EVENT_NAME", e.getName());
             params.putString("EVENT_UUID", e.getUuid());
-            params.putString("USER_NAME", u.DisplayName);
-            params.putString("UID", u.Uid);
+            params.putString("USER_NAME", u.displayName);
+            params.putString("UID", u.uid);
             firebaseAnalytics.logEvent(EventName.DELETE_EVENT.name(), params);
         } catch (Exception ex){
             FirebaseCrashlytics.getInstance().recordException(ex);

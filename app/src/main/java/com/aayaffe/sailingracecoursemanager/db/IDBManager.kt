@@ -1,6 +1,6 @@
 package com.aayaffe.sailingracecoursemanager.db
 
-import com.aayaffe.sailingracecoursemanager.Users.User
+import com.aayaffe.sailingracecoursemanager.users.User
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject
 import com.aayaffe.sailingracecoursemanager.events.Event
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation

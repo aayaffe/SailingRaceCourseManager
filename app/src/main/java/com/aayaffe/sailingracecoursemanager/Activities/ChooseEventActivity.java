@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.aayaffe.sailingracecoursemanager.BuildConfig;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.users.Users;
 import com.aayaffe.sailingracecoursemanager.adapters.EventsListAdapter;
 import com.aayaffe.sailingracecoursemanager.db.FeatureFlags;
 import com.aayaffe.sailingracecoursemanager.db.FirebaseBackgroundService;
@@ -74,7 +74,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
         Users.Init(commManager, sharedPreferences);
         users = Users.getInstance();
         if (users.getCurrentUser() != null) {
-            analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
+            analytics = new Analytics(this, users.getCurrentUser().uid, users.isAdmin(users.getCurrentUser()));
         }
         FeatureFlags featureFlags = new FeatureFlags();
         Log.d(TAG, "bluetooth_race_horn = " + featureFlags.getFlag("bluetooth_race_horn"));
@@ -149,7 +149,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             startLoginActivity();
         }
         if (analytics==null && users.getCurrentUser()!= null){
-            analytics = new Analytics(this, users.getCurrentUser().Uid, users.isAdmin(users.getCurrentUser()));
+            analytics = new Analytics(this, users.getCurrentUser().uid, users.isAdmin(users.getCurrentUser()));
         }
     }
 
@@ -382,7 +382,7 @@ public class ChooseEventActivity extends AppCompatActivity implements EventInput
             }
             Event e = new Event();
             e.setName(eventNameText);
-            e.setManagerUuid(users.getCurrentUser().Uid);
+            e.setManagerUuid(users.getCurrentUser().uid);
             e.yearStart = yearStart;
             e.yearEnd = yearEnd;
             e.monthStart = monthStart;

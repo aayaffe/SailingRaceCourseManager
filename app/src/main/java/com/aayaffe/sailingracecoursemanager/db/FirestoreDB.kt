@@ -1,9 +1,8 @@
 package com.aayaffe.sailingracecoursemanager.db
 
-import com.aayaffe.sailingracecoursemanager.Users.User
+import com.aayaffe.sailingracecoursemanager.users.User
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

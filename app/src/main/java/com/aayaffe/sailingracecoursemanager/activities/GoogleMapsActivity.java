@@ -39,7 +39,7 @@ import com.aayaffe.sailingracecoursemanager.dialogs.BuoyInputDialog;
 import com.aayaffe.sailingracecoursemanager.general.ConfigChange;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.users.Users;
 import com.aayaffe.sailingracecoursemanager.db.IDBManager;
 import com.aayaffe.sailingracecoursemanager.general.GeneralUtils;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -141,7 +141,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     private void setReturnedToEvent() {
         if(users.getCurrentUser()!=null) {
-            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
+            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().uid);
             if (myBoat!=null) {
                 myBoat.setLeftEvent(null);
                 commManager.writeBoatObject(myBoat);
@@ -294,7 +294,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_toolbar, menu);
-        if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().Uid)) || viewOnly) {
+        if ((users.getCurrentUser() == null) || (!isCurrentEventManager(users.getCurrentUser().uid)) || viewOnly) {
             menu.getItem(4).setEnabled(false);
             menu.getItem(4).setVisible(false);
             menu.getItem(3).setEnabled(false);
@@ -420,7 +420,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
 
     public static boolean isCurrentEventManager() {
         Event e = commManager.getCurrentEvent();
-        return e != null && !(users.getCurrentUser() == null || users.getCurrentUser().Uid == null || users.getCurrentUser().Uid.isEmpty() || e.getManagerUuid() == null) && e.getManagerUuid().equals(users.getCurrentUser().Uid);
+        return e != null && !(users.getCurrentUser() == null || users.getCurrentUser().uid == null || users.getCurrentUser().uid.isEmpty() || e.getManagerUuid() == null) && e.getManagerUuid().equals(users.getCurrentUser().uid);
     }
 
     public void addBuoys() {
@@ -439,10 +439,10 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         removeOldMarkers(boats, buoys);
         for (DBObject boat : boats) {
             if((boat==null)||(boat.getLoc() == null) || (users.getCurrentUser() == null)) continue;
-            if ((!isOwnObject(users.getCurrentUser().Uid, boat))) {
-                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), getIconId(users.getCurrentUser().Uid, boat), getZIndex(boat));
+            if ((!isOwnObject(users.getCurrentUser().uid, boat))) {
+                mapLayer.addMark(boat, getDirDistTXT(iGeo.getLoc(), boat.getLoc()), getIconId(users.getCurrentUser().uid, boat), getZIndex(boat));
             }
-            if ((isOwnObject(users.getCurrentUser().Uid, boat))) {
+            if ((isOwnObject(users.getCurrentUser().uid, boat))) {
                 drawOwnBoat(boat);
             }
         }
@@ -464,12 +464,12 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         if (users.getCurrentUser() == null)
             return;
         //int id = getIconId(users.getCurrentUser().DisplayName, boat);
-        int id = getIconId(users.getCurrentUser().Uid, boat);
+        int id = getIconId(users.getCurrentUser().uid, boat);
         mapLayer.addMark(boat, null, id,getZIndex(boat));
         assignBuoyUIUpdate(assignedBuoy);
     }
     private int getZIndex(DBObject boat) {
-        if (isOwnObject(users.getCurrentUser().Uid,boat))
+        if (isOwnObject(users.getCurrentUser().uid,boat))
             return 10;
         return 0;
     }
@@ -696,13 +696,13 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     @Override
     public void onLocationChanged(Location location) {
         if ((users.getCurrentUser() != null) && (commManager.getAllBoats() != null) && !viewOnly) {
-            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().Uid);
+            myBoat = commManager.getBoatByUserUid(users.getCurrentUser().uid);
             if (myBoat == null) {
-                myBoat = new DBObject(users.getCurrentUser().DisplayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
-                if (isCurrentEventManager(users.getCurrentUser().Uid)) {
+                myBoat = new DBObject(users.getCurrentUser().displayName, GeoUtils.toAviLocation(iGeo.getLoc()), Color.BLUE, BuoyType.MARK_LAYER);//TODO Set color properly
+                if (isCurrentEventManager(users.getCurrentUser().uid)) {
                     myBoat.setBuoyType(BuoyType.RACE_OFFICER);
                 } else myBoat.setBuoyType(BuoyType.MARK_LAYER);
-                myBoat.userUid = users.getCurrentUser().Uid;
+                myBoat.userUid = users.getCurrentUser().uid;
                 myBoat.setLeftEvent(null);
                 commManager.writeBoatObject(myBoat);
             }

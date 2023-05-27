@@ -7,8 +7,8 @@ import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.aayaffe.sailingracecoursemanager.R;
-import com.aayaffe.sailingracecoursemanager.Users.User;
-import com.aayaffe.sailingracecoursemanager.Users.Users;
+import com.aayaffe.sailingracecoursemanager.users.User;
+import com.aayaffe.sailingracecoursemanager.users.Users;
 import com.aayaffe.sailingracecoursemanager.calclayer.DBObject;
 import com.aayaffe.sailingracecoursemanager.events.Event;
 import com.aayaffe.sailingracecoursemanager.geographical.AviLocation;
@@ -222,7 +222,7 @@ public class FirebaseDB implements IDBManager {
         if (u == null)
             return;
         if (fb!=null)
-            fb.child(c.getString(R.string.db_users)).child(u.Uid).setValue(u);
+            fb.child(c.getString(R.string.db_users)).child(u.uid).setValue(u);
     }
 
     @Override
@@ -453,7 +453,7 @@ public class FirebaseDB implements IDBManager {
 
     @Override
     public boolean isAdmin(User u) {
-        return u != null && ds.child(c.getString(R.string.db_admins)).hasChild(u.Uid);
+        return u != null && ds.child(c.getString(R.string.db_admins)).hasChild(u.uid);
     }
 
     @Override
@@ -572,7 +572,7 @@ public class FirebaseDB implements IDBManager {
         DBObject boat = null;
         for (DBObject o : getAllBoats()) {
 
-            if ((o.userUid!=null)&&(o.userUid.equals(currentUser.Uid))) {
+            if ((o.userUid!=null)&&(o.userUid.equals(currentUser.uid))) {
                 boat = o;
                 break;
             }
