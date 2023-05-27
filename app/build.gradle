@@ -31,8 +31,8 @@ android {
         applicationId = yourApplicationId
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 40
-        versionName "1.81"
+        versionCode 41
+        versionName "1.82"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
         resourceConfigurations += ['en']

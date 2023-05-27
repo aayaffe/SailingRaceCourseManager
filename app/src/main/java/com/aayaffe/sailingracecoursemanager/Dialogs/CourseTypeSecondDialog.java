@@ -61,14 +61,13 @@ public class CourseTypeSecondDialog extends Dialog {
         addLegsSpinner((LinearLayout) findViewById(R.id.course_type_second_spinner_holder));
 
         finishB = new Button(context);
-        finishB.setText("Done");
+        finishB.setText(R.string.done);
         finishB.setTextSize(25);
         finishB.setTextColor(ContextCompat.getColor(context,R.color.cmark_orange_lighter));
         finishB.setBackgroundResource(R.color.cmark_blue_light);
         finishB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //selectedOptions.put("type", raceCourseDescriptor.getName());
                 for (int i = 0; i < ownLayout.getChildCount() - 1; i = i + 2) {
                     TextView tv = (TextView) ownLayout.getChildAt(i);
                     switch (ownLayout.getChildAt(i + 1).getClass().toString()) {

@@ -318,33 +318,21 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                SettingsMenuItemOnClick();
-                return true;
-            case R.id.action_add_object:
-                AddBuoyMenuItemOnClick();
-                return true;
-            case R.id.action_add_race_course:
-                addRaceCourseItemClick();
-                firstBoatLoad = true;
-                return true;
-            case R.id.action_assign_buoys:
-                openAssignBuoyActvity();
-                return true;
-            case R.id.action_show_access_code:
-                AccessCodeShowDialog.showAccessCode(this,commManager.getCurrentEvent());
-                return true;
-            case R.id.action_exit:
-                finish();
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
+        if (item.getItemId() == R.id.action_add_object) {
+            AddBuoyMenuItemOnClick();
+        } else if (item.getItemId() == R.id.action_add_race_course) {
+            addRaceCourseItemClick();
+            firstBoatLoad = true;
+        } else if (item.getItemId() == R.id.action_assign_buoys) {
+            openAssignBuoyActvity();
+        } else if (item.getItemId() == R.id.action_show_access_code) {
+            AccessCodeShowDialog.showAccessCode(this,commManager.getCurrentEvent());
+        } else if (item.getItemId() == R.id.action_exit) {
+            finish();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     public void AddBuoyMenuItemOnClick() {
@@ -357,8 +345,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         i.putExtra("LEGS",legs);
         i.putExtra("RCD",rcd);
         startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
-//        Intent i = new Intent(getApplicationContext(), AddRaceCourseActivity.class);
-//        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
     }
 
     private void openAssignBuoyActvity() {
@@ -421,7 +407,7 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
             else
                 assignedBuoy = assignedBuoys.get(0);
             drawMapComponents();
-            handler.postDelayed(runnable, Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000);
+            handler.postDelayed(runnable, Integer.parseInt(sharedPreferences.getString("refreshRate", "5")) * 1000L);
             assignBuoyUIUpdate(assignedBuoy);
 
         }
@@ -607,11 +593,6 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
         wa.setDirection(rotation);
     }
 
-    public void SettingsMenuItemOnClick() {
-        Log.d(TAG, "FAB Setting Clicked");
-        Intent i = new Intent(getApplicationContext(), MainCourseInputActivity.class);
-        startActivityForResult(i,NEW_RACE_COURSE_REQUEST);
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

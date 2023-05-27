@@ -57,7 +57,6 @@ public class MainCourseInputActivity extends Activity {
     private static double windSpeed = 15;
 
     private static OnMyCourseInputResult mInputResult;
-    private Context context=this;
     private Legs legs;
 
 
@@ -108,7 +107,7 @@ public class MainCourseInputActivity extends Activity {
         courseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CourseTypeDialog dialog = new CourseTypeDialog(context, coursesInfo);
+                CourseTypeDialog dialog = new CourseTypeDialog(MainCourseInputActivity.this, coursesInfo);
                 dialog.show();
                 dialog.setDialogResult(new CourseTypeDialog.OnMyDialogResult() {
                     @Override
@@ -125,7 +124,7 @@ public class MainCourseInputActivity extends Activity {
         distanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DistanceDialog dialog = new DistanceDialog(context , boats, legs);
+                DistanceDialog dialog = new DistanceDialog(MainCourseInputActivity.this , boats, legs);
                 dialog.show();
                 dialog.setDialogResult(new DistanceDialog.OnMyDialogResult() {
                     @Override
@@ -145,7 +144,7 @@ public class MainCourseInputActivity extends Activity {
         windDirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WindDirDialog dialog = new WindDirDialog(context, windDirection);
+                WindDirDialog dialog = new WindDirDialog(MainCourseInputActivity.this, windDirection);
                 dialog.show();
                 dialog.setDialogResult(new WindDirDialog.OnMyDialogResult() {
                     @Override
@@ -167,7 +166,7 @@ public class MainCourseInputActivity extends Activity {
                 editor.putString("windDir",String.valueOf(windDirection));
                 editor.apply();
 
-                RaceCourse rc = new RaceCourse(context,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength, gateLength ,legs ,courseOptions);  //defultStartLine: 200m
+                RaceCourse rc = new RaceCourse(MainCourseInputActivity.this,  GeoUtils.toAviLocation(iGeo.getLoc()) , (int)windDirection ,dist2m1, startLineLength, gateLength ,legs ,courseOptions);  //defultStartLine: 200m
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("RACE_COURSE", rc);
                 resultIntent.putExtra("LEGS", legs);
@@ -203,7 +202,7 @@ public class MainCourseInputActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                ClassDialog dialog = new ClassDialog(context , boats, legs);
+                ClassDialog dialog = new ClassDialog(MainCourseInputActivity.this , boats, legs);
                 dialog.show();
                 dialog.setDialogResult((dist2M1, startLine, gate, windSpeed) -> {
                     //something to do
