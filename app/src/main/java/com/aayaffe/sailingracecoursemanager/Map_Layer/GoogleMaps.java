@@ -140,7 +140,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
             Marker marker = mapView.addMarker(
                     new MarkerOptions()
                             .position(buoy.getLatLng())
-                            .icon(BitmapFromVector(c,resourceID))
+                            .icon(bitmapFromVector(c,resourceID))
                             .title(buoy.getName())
                             .anchor(0.5f, 0.5f)
                             .snippet(snippet));
@@ -150,7 +150,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
         }
     }
     private BitmapDescriptor
-    BitmapFromVector(Context context, int vectorResId)
+    bitmapFromVector(Context context, int vectorResId)
     {
         Drawable vectorDrawable = ContextCompat.getDrawable(
                 context, vectorResId);
@@ -178,7 +178,14 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
                 }
                 return m;
             } else if (mapView != null) {
-                m = mapView.addMarker(new MarkerOptions().position(ao.getLatLng()).title(ao.getName()).snippet(caption).icon(BitmapDescriptorFactory.fromResource(resourceID)));
+                m = mapView.addMarker(
+                        new MarkerOptions()
+                                .position(ao.getLatLng())
+                                .title(ao.getName())
+                                .snippet(caption)
+                                .icon(bitmapFromVector(c,resourceID))
+                                .anchor(0.5f, 0.5f)
+                                .zIndex(1.1f));
                 uuidToMarker.put(ao.getUUID(), m);
                 uuidToId.put(ao.getUUID(), m.getId());
                 return m;
@@ -191,7 +198,7 @@ public class GoogleMaps implements GoogleMap.OnInfoWindowClickListener, GoogleMa
 
     private Marker updateMark(DBObject ao, Marker m, String caption, int resourceID, int zIndex) {
         if (isValid(ao)) {
-            m.setIcon(BitmapDescriptorFactory.fromResource(resourceID));
+            m.setIcon(bitmapFromVector(c,resourceID));
             m.setZIndex(zIndex);
             m.setPosition(ao.getLatLng());
             m.setSnippet(caption);

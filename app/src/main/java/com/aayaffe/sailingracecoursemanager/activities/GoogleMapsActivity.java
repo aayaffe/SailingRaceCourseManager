@@ -532,32 +532,32 @@ public class GoogleMapsActivity extends /*FragmentActivity*/AppCompatActivity im
     private int getIconId(String uid, DBObject o) {
         int ret;
         if (uid==null || o == null || o.getBuoyType()==null)
-            return R.drawable.boatred;
+            return R.drawable.boat_red;
         if (isOwnObject(uid, o)) {
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
-                    ret = R.drawable.boatgold;
+                    ret = R.drawable.boat_gold_red;
                     if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEventAsDate()!=null)
-                        ret = R.drawable.boatred;
+                        ret = R.drawable.boat_red;
                     break;
                 case RACE_OFFICER:
-                    ret = R.drawable.managergold;
+                    ret = R.drawable.boat_rc_gold;
                     break;
                 default:
-                    ret = R.drawable.boatred;
+                    ret = R.drawable.boat_red;
             }
         } else {
             switch (o.getBuoyType()) {
                 case MARK_LAYER:
-                    ret = R.drawable.boatcyan;
+                    ret = R.drawable.boat_cyan;
                     if (AviLocation.Age(o.getAviLocation()) > 60 || o.getLeftEventAsDate()!=null)
-                        ret = R.drawable.boatred;
+                        ret = R.drawable.boat_red;
                     break;
                 case RACE_OFFICER:
-                    ret = R.drawable.managerblue;
+                    ret = R.drawable.boat_rc_blue;
                     break;
                 default:
-                    ret = R.drawable.boatred;
+                    ret = R.drawable.boat_red;
             }
         }
         return ret;
